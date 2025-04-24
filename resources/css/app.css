@@ -121,7 +121,7 @@ body {
     background-color: var(--hover-bg-color);
     list-style: none;
     padding: 10px 0;
-    min-width: 220px;
+    min-width: 245px;
     display: none;
     flex-direction: column;
     border-radius: 8px;
@@ -248,3 +248,4 @@ body {
         padding: 6px 10px;
     }
 }
+

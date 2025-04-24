@@ -4,13 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>@yield('title', 'Sobat Dagang')</title>
-        <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
+        <link rel="icon" href="{{ asset('img/logoIcon.png') }}" type="image/png">
         @vite('resources/css/app.css')
 
     </head>
 <body>
 
-        @if (!Auth::check())
+    @if (!Auth::check())
         @include('component.navbar.guest')
     @elseif (Auth::check() && Auth::user()->role === 'admin')
         @include('component.navbar.admin')
@@ -23,11 +23,7 @@
     <main>
         @yield('content')
     </main>
-
-    {{-- Footer --}}
     @include('component.footer')
-
-    <!-- Script JS jika ada -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
