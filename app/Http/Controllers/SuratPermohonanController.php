@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class SuratPermohonanController extends Controller
+class SuratPermohonanController
 {
-    //
+    // Tampilkan form permohonan
+    public function index()
+    {
+        return view('form_permohonan'); // Pastikan file resources/views/form_permohonan.blade.php ada
+    }
+
 }
