@@ -108,47 +108,10 @@
                 <button type="button" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Draft</button>
                 <button type="submit" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Ajukan</button>
             </div>
-
-            <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
-            <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const kecamatanSelect = new TomSelect("#kecamatan", {
-                        create: false,
-                        sortField: { field: "text" },
-                        placeholder: "Pilih Kecamatan...",
-                        allowEmptyOption: true
-                    });
-
-                    const kelurahanSelect = new TomSelect("#kelurahan", {
-                        create: false,
-                        sortField: { field: "text" },
-                        plugins: ['disabled_options']
-                    });
-
-                    const kelurahanList = {
-                        bacukiki: ["Galung Maloang", "Lemoe", "Lompoe", "Watang Bacukiki"],
-                        bacukiki_barat: ["Bumi Harapan", "Cappa Galung", "Kampung Baru", "Lumpue", "Sumpang Minangae", "Tiro Sompe"],
-                        soreang: ["Bukit Harapan", "Bukit Indah", "Kampung Pisang", "Lakessi", "Ujung Baru", "Ujung Lare", "Watang Soreang"],
-                        ujung: ["Labukkang", "Lapadde", "Mallusetasi", "Ujung Bulu", "Ujung Sabbang"]
-                    };
-
-                    document.getElementById('kecamatan').addEventListener('change', function() {
-                        const selectedKecamatan = this.value;
-                        kelurahanSelect.clearOptions();
-
-                        if (kelurahanList[selectedKecamatan]) {
-                            kelurahanList[selectedKecamatan].forEach(function(kelurahan) {
-                                kelurahanSelect.addOption({value: kelurahan.toLowerCase().replace(/\s+/g, '_'), text: kelurahan});
-                            });
-                            kelurahanSelect.enable();
-                        } else {
-                            kelurahanSelect.disable();
-                        }
-                    });
-                });
-            </script>
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
+@vite('resources/js/form_permohonan.js')
 @endsection
