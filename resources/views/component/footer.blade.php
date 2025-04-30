@@ -15,7 +15,7 @@
         <p class="font-semibold">Kontak Kami :</p>
         <div class="flex items-center space-x-3">
           <img src="{{ asset('img/whatsapp.png') }}" alt="WhatsApp" class="w-5 h-5">
-          <a href="https://wa.me/08" target="">WhatsApp</a>
+          <a href="https://wa.me/+6282292644433" target="">WhatsApp</a>
         </div>
         <div class="flex items-center space-x-3">
           <img src="{{ asset('img/instagram.png') }}" alt="Instagram" class="w-5 h-5">
