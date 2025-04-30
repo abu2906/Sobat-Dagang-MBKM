@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const riwayatBtn = document.querySelector("#btnRiwayat");
     const ajukanSection = document.querySelector("#formPermohonan");
     const riwayatSection = document.querySelector("#riwayatPermohonan");
-  
+
     if (ajukanBtn && riwayatBtn) {
       ajukanBtn.addEventListener("click", function (e) {
         e.preventDefault();

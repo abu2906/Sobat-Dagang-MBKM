@@ -1,4 +1,4 @@
-@extends('layout.user')
+@extends('layouts.admin')
 
 @section('tab')
 

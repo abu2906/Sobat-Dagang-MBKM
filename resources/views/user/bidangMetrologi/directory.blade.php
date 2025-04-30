@@ -1,4 +1,4 @@
-@extends('layout.user')
+@extends('layouts.user')
 
 @section('tab')
 
@@ -110,8 +110,6 @@
             }
         }
     </script>
-
-
 
     <!-- Tabel Alat Ukur -->
     <div class="overflow-x-auto rounded-lg shadow-sm mt-6">

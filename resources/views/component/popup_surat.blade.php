@@ -5,7 +5,6 @@
     
     <h2 class="text-xl font-bold mb-4">Sertifikat</h2>
     
-    
     <img id="sertifikat-image" src="" class="w-full rounded border">
   </div>
 </div>

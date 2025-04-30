@@ -1,4 +1,4 @@
-@extends('layout.user')
+@extends('layouts.user')
 
 @section('tab')
     <div class="absolute left-1/2 transform -translate-x-1/2 top-[40px] z-10">
