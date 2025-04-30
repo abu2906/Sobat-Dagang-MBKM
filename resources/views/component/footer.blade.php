@@ -34,7 +34,6 @@
       <img src="{{ asset('img/phone-icon.png') }}" alt="Telepon" class="w-5 h-5">
       <span >(0421) 21426</span>
     </div>
-</div>
+  </div>
     </div>
-  </footer>
-  
+</footer>
