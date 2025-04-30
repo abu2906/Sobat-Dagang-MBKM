@@ -24,6 +24,22 @@ Route::get('/', function () {
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 
+Route::get('/register', function () {
+    return view('register');
+})->name('register');
+
+Route::get('/forgotpass', function () {
+    return view('forgotpass');
+})->name('forgotpass');
+
+Route::get('/resetpass', function () {
+    return view('resetpass');
+})->name('resetpass');
+
+Route::get('/halal', function () {
+    return view('halal');
+})->name('halal');
+
 Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/permohonan-perizinan', [PerizinanController::class, 'index'])->name('permohonan-perizinan');
@@ -36,3 +52,4 @@ Route::get('/surat-permohonan', [SuratPermohonanController::class, 'index'])->na
 Route::get('/regulasi-metrologi', [RegulasiMetrologiController::class, 'index'])->name('regulasi-metrologi');
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
 Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
+
