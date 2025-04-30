@@ -1,43 +1,51 @@
 @extends('layouts.home')
-@section('content')
-<div class="relative w-full h-64">
-    <img src="{{ asset('img/bgFormIzin.png') }}" alt="Port Background" class="w-full h-full object-cover">
-    <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center"></div>
-</div>
 
-<div class="container mx-auto px-4 mt-6">
-    <div class="flex justify-center mb-6">
-        <input type="text" placeholder="Cari" class="w-1/2 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+@section('title', 'Ajukan Surat Permohonan')
+
+@section('content')
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+    <div class="relative w-full h-64">
+        <img src="{{ asset('img/bgFormIzin.png') }}" alt="Port Background" class="w-full h-full object-cover">
+        <a href=""
+        class="absolute left-14 top-1/2 transform -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 text-black hover:bg-black hover:text-white hover:border-white transition-all duration-300 shadow-lg hover:scale-110">
+            <span class="material-symbols-outlined text-2xl">
+                arrow_back
+            </span>
+        </a>
     </div>
 
-    <div class="flex justify-center mb-6">
+    <div class="flex justify-center mb-6 mt-8">
         <div class="bg-blue-100 p-1 rounded-full flex">
-            <button class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">AJUKAN SURAT PERMOHONAN</button>
-            <button class="text-black font-semibold py-2 px-6 rounded-full transition-all">RIWAYAT SURAT</button>
+            <button onclick="window.location.href='{{ route('form_permohonan') }}'"
+            class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
+            AJUKAN SURAT PERMOHONAN
+            </button>
+            <button onclick="window.location.href='{{ route('riwayat_surat') }}'"
+                class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
+                RIWAYAT SURAT
+            </button>
         </div>
     </div>
-
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-2xl shadow-lg mb-16">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-4xl shadow-lg mb-16">
         <h2 class="text-xl font-semibold text-center mb-6">Form Surat Permohonan</h2>
         <form method="POST" action="" enctype="multipart/form-data">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-roboto">
                 <div>
-                    <label>Nama Lengkap</label>
-                    <input type="text" name="nama_lengkap" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Nama Lengkap Anda">
-                </div>
-                <div>
-                    <label>Jenis Surat</label>
-                    <select name="jenis_surat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Pilih Jenis Surat</option>
+                    <label for="jenis_surat">Jenis Surat</label>
+                    <select id="jenis_surat" name="jenis_surat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="surat_rekomendasi">Surat Rekomendasi</option>
                         <option value="surat_keterangan">Surat Keterangan</option>
                         <option value="dan_lainnya">Dan Lainnya</option>
                     </select>
                 </div>
-                <div>
+                <div class="mb-4">
                     <label for="kecamatan">Kecamatan</label>
-                    <select id="kecamatan" name="kecamatan" placeholder="Pilih Kecamatan..." class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="kecamatan" name="kecamatan"
+                        class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
                         <option value="">Pilih Kecamatan</option>
                         <option value="bacukiki">Bacukiki</option>
                         <option value="bacukiki_barat">Bacukiki Barat</option>
@@ -46,72 +54,100 @@
                     </select>
                 </div>
                 <div>
-                    <label>Titik Koordinat</label>
-                    <input type="text" name="titik_koordinat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Titik Koordinat Usaha Anda">
+                    <label for="titik_koordinat">Titik Koordinat</label>
+                    <input id="titik_koordinat" type="text" name="titik_koordinat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Titik Koordinat Usaha Anda">
                 </div>
-                <div>
+                <div class="mb-4">
                     <label for="kelurahan">Kelurahan</label>
-                    <select id="kelurahan" name="kelurahan" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" disabled>
+                    <select id="kelurahan" name="kelurahan"
+                        class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                        disabled>
                         <option value="">Pilih Kelurahan</option>
                     </select>
                 </div>
                 <div>
-                    <label>Foto Usaha</label>
-                    <input type="file" name="foto_usaha" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="foto_usaha">Foto Usaha</label>
+                    <div class="flex items-center space-x-2">
+                        <label for="foto_usaha" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
+                        <span id="file-foto_usaha" class="text-gray-500">Tidak ada file yang dipilih</span>
+                        <input type="file" id="foto_usaha" name="foto_usaha" class="hidden"
+                            onchange="document.getElementById('file-foto_usaha').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                    </div>
                 </div>
                 <div>
-                    <label>Alamat Lengkap</label>
-                    <input type="text" name="alamat_lengkap" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Alamat Lengkap Anda">
+                    <label for="foto_ktp">Foto KTP (Kartu Tanda Penduduk)</label>
+                    <div class="flex items-center space-x-2">
+                        <label for="foto_ktp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
+                        <span id="file-foto_ktp" class="text-gray-500">Tidak ada file yang dipilih</span>
+                        <input type="file" id="foto_ktp" name="foto_ktp" class="hidden"
+                            onchange="document.getElementById('file-foto_ktp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                    </div>
                 </div>
                 <div>
-                    <label>Foto KTP</label>
-                    <input type="file" name="foto_ktp" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="dokumen_nib">Dokumen NIB (Nomor Induk Berusaha)</label>
+                    <div class="flex items-center space-x-2">
+                        <label for="dokumen_nib" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
+                        <span id="file-dokumen_nib" class="text-gray-500">Tidak ada file yang dipilih</span>
+                        <input type="file" id="dokumen_nib" name="dokumen_nib" class="hidden"
+                            onchange="document.getElementById('file-dokumen_nib').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                    </div>
                 </div>
                 <div>
-                    <label>Email Aktif</label>
-                    <input type="email" name="email" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Email Anda">
+                    <label for="npwp">NPWP</label>
+                    <div class="flex items-center space-x-2">
+                        <label for="npwp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
+                        <span id="npwp" class="text-gray-500">Tidak ada file yang dipilih</span>
+                        <input type="file" id="npwp" name="npwp" class="hidden"
+                            onchange="document.getElementById('npwp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                    </div>
                 </div>
                 <div>
-                    <label>Dokumen NIB</label>
-                    <input type="file" name="dokumen_nib" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="akta_perusahaan">Akta Perusahaan</label>
+                    <div class="flex items-center space-x-2">
+                        <label for="akta_perusahaan" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
+                        <span id="akta_perusahaan" class="text-gray-500">Tidak ada file yang dipilih</span>
+                        <input type="file" id="akta_perusahaan" name="akta_perusahaan" class="hidden"
+                            onchange="document.getElementById('akta_perusahaan').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                    </div>
                 </div>
                 <div>
-                    <label>Nomor HP/Telepon</label>
-                    <input type="text" name="nomor_hp" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Nomor HP Aktif Anda">
-                </div>
-                <div>
-                    <label>NPWP</label>
-                    <input type="text" name="npwp" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan NPWP Anda">
-                </div>
-                <div>
-                    <label>NIB (Nomor Induk Berusaha)</label>
-                    <input type="text" name="nib" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan NIB Anda">
-                </div>
-                <div>
-                    <label>Akta Perusahaan</label>
-                    <input type="text" name="akta_perusahaan" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Akta Usaha Anda">
-                </div>
-                <div>
-                    <label>Jenis Kelamin</label>
-                    <select name="jenis_kelamin" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label for="jenis_kelamin">Jenis Kelamin</label>
+                    <select id="jenis_kelamin" name="jenis_kelamin" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Pilih Jenis Kelamin</option>
                         <option value="laki-laki">Laki-Laki</option>
                         <option value="perempuan">Perempuan</option>
                     </select>
                 </div>
-                <div>
-                    <label>NIK (Nomor Induk Kependudukan)</label>
-                    <input type="text" name="nik" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan NIK Anda">
-                </div>
             </div>
             <div class="flex justify-center mt-6 mb-4 space-x-4">
                 <button type="button" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Draft</button>
-                <button type="submit" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Ajukan</button>
+                <button type="button" id="btn-ajukan" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
+                    Ajukan
+                </button>
+            </div>
+            <div id="modal-verifikasi" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+                <div class="bg-white rounded-2xl shadow-xl p-6 w-11/12 max-w-md">
+                    <h2 class="text-lg font-semibold mb-4">Konfirmasi Pengajuan</h2>
+                    <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin mengajukan surat permohonan ini?</p>
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal()"
+                                class="px-4 py-2 bg-gray-200 text-black rounded-full hover:bg-gray-300 transition-all">
+                            Batal
+                        </button>
+                        <button type="submit"
+                                class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
+                            Ya, Ajukan
+                        </button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 </div>
 @endsection
+<<<<<<< HEAD
 @section('scripts')
 @vite('resources/js/form_permohonan.js')
 @endsection
+=======
+>>>>>>> Andif
