@@ -55,13 +55,29 @@ Route::get('/berita/{id}/edit', [adminBeritaController::class, 'edit']);
 //     Route::get('/tempe', function () { return view('harga-pasar.tempe'); })->name('tempe');
 // });
 
+Route::get('/register', function () {
+    return view('register');
+})->name('register');
 
+Route::get('/forgotpass', function () {
+    return view('forgotpass');
+})->name('forgotpass');
 
-// Route halaman lain
+Route::get('/resetpass', function () {
+    return view('resetpass');
+})->name('resetpass');
+
+Route::get('/halal', function () {
+    return view('halal');
+})->name('halal');
+
+Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
 Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name('sertifikasi-ikm');
 Route::get('/directory-book-metrologi', [DirectoryBookMetrologiController::class, 'index'])->name('directory-book-metrologi');
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
+
+Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
 
