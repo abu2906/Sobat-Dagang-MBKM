@@ -10,7 +10,7 @@ class homeController
     public function index()
     {
         $daftarBerita= $this->getDummyData();
-        return view('home', compact('daftarBerita'));
+        return view('pages.home', compact('daftarBerita'));
     }
 
     public function getDummyData()

@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <title>Daftar - Sobat Dagang</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite('resources/css/app.css') 
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
 <body class="bg-primary font-sans h-screen flex">
     <div class="flex flex-col sm:flex-row w-full h-full">
