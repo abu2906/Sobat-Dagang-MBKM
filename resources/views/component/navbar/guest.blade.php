@@ -1,7 +1,7 @@
 <nav class="navbar">
     <div class="navbar-left">
         <a href="/">
-            <img src="{{ asset('img/logo.png') }}" alt="Logo" class="logo">
+            <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="logo">
         </a>
     </div>
 
@@ -15,34 +15,49 @@
                     <li class="dropdown-submenu">
                         <a href="#"><strong>PERDAGANGAN</strong></a>
                         <ul class="submenu">
-                            <li><a href="{{ route('form_permohonan') }}"><strong>Permohonan Perizinan/Non Perizinan</strong></a></li>
+                            <li>
+                                <a href="{{ route('form.permohonan') }}">
+                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                {{-- @guest
+                                    <a href="{{ route('login') }}">
+                                <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                @else
+                                @if (Auth::user()->role === 'user')
+                                <a href="{{ route('form.permohonan') }}">
+                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                @endif
+                                @endguest --}}
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown-submenu">
                         <a href="#"><strong>INDUSTRI</strong></a>
                         <ul class="submenu">
-                            <li><a href="{{ route('directory-book') }}"><strong>Directory Book</strong></a></li>
-                            <li><a href="{{ route('data-ikm') }}"><strong>Data IKM</strong></a></li>
-                            <li><a href="{{ route('sertifikasi-ikm') }}"><strong>Sertifikasi IKM</strong></a></li>
+                            <li><a href="#"><strong>Directory Book</strong></a></li>
+                            <li><a href="#"><strong>Data IKM</strong></a></li>
+                            <li><a href="#"><strong>Sertifikasi IKM</strong></a></li>
                         </ul>
                     </li>
                     <li class="dropdown-submenu">
                         <a href="#"><strong>METROLOGI</strong></a>
                         <ul class="submenu">
-                            <li><a href="{{ route('directory-book-metrologi') }}"><strong>Directory Book</strong></a></li>
-                            <li><a href=""><strong>Surat Permohonan</strong></a></li>
-                            <li><a href=""><strong>Regulasi</strong></a></li>
+                            <li><a href="#"><strong>Directory Book</strong></a></li>
+                            <li><a href="#"><strong>Surat Permohonan</strong></a></li>
+                            <li><a href="#"><strong>Regulasi</strong></a></li>
                         </ul>
                     </li>
-                    <li><a href="{{ route('persuratan') }}"><strong>PERSURATAN</strong></a></li>
+                    <li><a href="#"><strong>PERSURATAN</strong></a></li>
                 </ul>
             </li>
-            <li><a href="""><strong>PELAPORAN</strong></a></li>
+            <li><a href=""><strong>PELAPORAN</strong></a></li>
             <li><a href=""><strong>FAQ</strong></a></li>
         </ul>
     </div>
 
     <div class=" navbar-right">
-                    <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
+        <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
     </div>
 </nav>
