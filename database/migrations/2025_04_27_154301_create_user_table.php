@@ -13,8 +13,9 @@ class CreateUserTable extends Migration
     {
         Schema::create('user', function (Blueprint $table) {
             $table->id('id_user'); // Primary Key
-            $table->unsignedBigInteger('id_kecematan'); // Foreign Key
-            $table->unsignedBigInteger('id_kelurahan'); // Foreign Key
+            $table->string('kecamatan');
+            $table->string('kelurahan');
+            $table->string('kabupaten');
             $table->string('password');
             $table->string('nik')->unique();
             $table->string('nib')->nullable();
@@ -24,16 +25,6 @@ class CreateUserTable extends Migration
             $table->string('telp');
             $table->string('email')->unique();
             $table->timestamps();
-
-            // Foreign Key Constraints
-            $table->foreign('id_kecematan')
-                  ->references('id_kecematan')
-                  ->on('kecamatan')
-                  ->onDelete('cascade');
-            $table->foreign('id_kelurahan')
-                  ->references('id_kelurahan')
-                  ->on('kelurahan')
-                  ->onDelete('cascade');
         });
     }
 
@@ -42,6 +33,6 @@ class CreateUserTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user');
     }
 }
