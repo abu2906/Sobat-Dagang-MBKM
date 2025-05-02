@@ -12,7 +12,7 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle"><strong>PELAYANAN</strong> <span class="dropdown-icon">▼</span></a>
                 <ul class="dropdown-menu">
-                    <li class="dropdown-submenu" >
+                    <li class="dropdown-submenu">
                         <a href="#"><strong>PERDAGANGAN</strong></a>
                         <ul class="submenu">
                             <li><a href="{{ route('form_permohonan') }}"><strong>Permohonan Perizinan/Non Perizinan</strong></a></li>
@@ -42,7 +42,7 @@
         </ul>
     </div>
 
-    <div class="navbar-right">
-        <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
+    <div class=" navbar-right">
+                    <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
     </div>
 </nav>
