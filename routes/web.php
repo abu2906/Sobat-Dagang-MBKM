@@ -12,6 +12,8 @@ use App\Http\Controllers\PersuratanController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
 
+use App\Http\Controllers\DashboardPerdaganganController;
+
 
 // Halaman utama (home) yang mengarah ke view pages.home
 Route::get('/', [homeController::class, 'index'])->name('home');
@@ -46,6 +48,9 @@ Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPeng
 
 // admin perdagangan
 Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
+Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
+Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
+Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
 
 //Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
