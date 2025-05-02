@@ -1,7 +1,7 @@
 <nav class="navbar">
     <div class="navbar-left">
         <a href="/">
-            <img src="{{ asset('img/logo.png') }}" alt="Logo" class="logo">
+            <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="logo">
         </a>
     </div>
 
@@ -15,8 +15,23 @@
                     <li class="dropdown-submenu" >
                         <a href="#"><strong>PERDAGANGAN</strong></a>
                         <ul class="submenu">
-                            <li><a href="#"><strong>Permohonan Perizinan/Non Perizinan</strong></a></li>
-                        </ul>
+                            <li>
+                                <a href="{{ route('form.permohonan') }}">
+                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                {{-- @guest
+                                    <a href="{{ route('login') }}">
+                                        <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                    </a>
+                                @else
+                                    @if (Auth::user()->role === 'user')
+                                        <a href="{{ route('form.permohonan') }}">
+                                            <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                        </a>
+                                    @endif
+                                @endguest --}}
+                            </li>
+                        </ul>                        
                     </li>
                     <li class="dropdown-submenu">
                         <a href="#"><strong>INDUSTRI</strong></a>
@@ -29,9 +44,9 @@
                     <li class="dropdown-submenu">
                         <a href="#"><strong>METROLOGI</strong></a>
                         <ul class="submenu">
-                            <li><a href="#"><strong>Directory Book</strong></a></li>
-                            <li><a href="#"><strong>Surat Permohonan</strong></a></li>
-                            <li><a href="#"><strong>Regulasi</strong></a></li>
+                            <li><a href="{{ route('administrasi-metrologi') }}"><strong>Surat Permohonan Tera/Teraulang</strong></a></li>
+                            <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Milik Saya</strong></a></li>
+                            <!-- <li><a href="#"><strong>Regulasi</strong></a></li> -->
                         </ul>
                     </li>
                     <li><a href="#"><strong>PERSURATAN</strong></a></li>

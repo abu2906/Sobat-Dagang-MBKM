@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="min-h-screen flex flex-col bg-gray-100">
 
     <div class="relative">
         @include('component.navbar.user')
@@ -34,10 +34,11 @@
     </div>
 
     {{-- Konten utama --}}
-    <main class="relative ml-20 mr-20 p-6 rounded-lg">
+    <main class="flex-grow relative mx-5 md:mx-20 p-6 rounded-lg min-h-[calc(100vh-250px)]">
         @yield('content')
     </main>
 
+    <!-- @include('component.footer') -->
 </body>
 
 </html>

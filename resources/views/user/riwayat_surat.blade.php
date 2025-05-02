@@ -9,7 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <div class="relative w-full h-64">
-    <img src="{{ asset('img/bgFormIzin.png') }}" alt="Background" class="w-full h-full object-cover" />
+    <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Background" class="w-full h-full object-cover" />
 
     <a href="{{ url()->previous() }}"
        class="absolute left-14 top-1/2 transform -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 text-black hover:bg-black hover:text-white transition-all duration-300 shadow-lg hover:scale-110">
@@ -18,19 +18,25 @@
 </div>
 <div class="container mx-auto px-4 -mt-8">
     <div class="flex justify-center mb-6">
-        <div class="relative w-1/2 shadow-xl rounded-full bg-white shadow-gray-400/40">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
-            <input type="text" placeholder="Cari"
-                   class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent" />
+        <div class="relative w-full max-w-2xl mx-auto">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                search
+            </span>
+            <input
+                type="text"
+                placeholder="Cari"
+                class="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+            />
         </div>
+
     </div>
     <div class="flex justify-center mb-6">
         <div class="bg-blue-100 p-1 rounded-full flex gap-1">
-            <button onclick="window.location.href='{{ route('form_permohonan') }}'"
+            <button onclick="window.location.href='{{ route('form.permohonan') }}'"
                     class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
                 AJUKAN SURAT PERMOHONAN
             </button>
-            <button onclick="window.location.href='{{ route('riwayat_surat') }}'"
+            <button onclick="window.location.href='{{ route('riwayat.surat') }}'"
                     class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
                 RIWAYAT SURAT
             </button>
