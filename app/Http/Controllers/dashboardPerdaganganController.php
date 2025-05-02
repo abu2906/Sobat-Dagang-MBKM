@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Surat;
 use App\Models\HargaBarang;
 use App\Models\Notifikasi;
+use Illuminate\Support\Facades\Log;
 
 class DashboardPerdaganganController extends Controller
 {
@@ -46,4 +47,10 @@ class DashboardPerdaganganController extends Controller
 
         return redirect()->back()->with('success', 'Barang berhasil ditambahkan!');
     }
+
+    public function formUpdateHarga()
+    {
+    return view('admin.bidangPerdagangan.updateHarga');
+    }
+
 }

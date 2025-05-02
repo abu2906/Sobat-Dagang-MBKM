@@ -1,4 +1,4 @@
-@extends('layouts.menuAdminPerdagangan')
+@extends('layouts.admin')
 @section('title', 'Review Pengajuan')
 @section('fullwidth')
 @endsection

@@ -1,43 +1,33 @@
+@php
+    use Illuminate\Support\Facades\Auth;
+@endphp
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Dashboard' }}</title>
+    <title>@yield('title', 'Admin Dinas Perdagangan')</title>
+    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
+    <link rel="icon" href="{{ asset('assets/img/icon/logoIcon.png') }}" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
+<body x-data="{ open: true }" class="bg-gray-100 font-sans overflow-hidden">
 
-<body class="bg-gray-100">
+    @if (Auth::check() && Auth::user()->role === 'admin_perdagangan')
+        @include('component.navbar.admin_perdagangan')
+    @elseif (Auth::check() && Auth::user()->role === 'admin_industri')
+        @include('component.navbar.admin_industri')
+    @elseif (Auth::check() && Auth::user()->role === 'admin_metrologi')
+        @include('component.navbar.admin_metrologi')
+    @endif
 
-    <div class="relative">
-        @include('component.navbar.admin')
-        <!-- Gambar Background -->
-        <div class="h-[150px] w-full bg-cover bg-[center_87%] relative"
-            style="background-image: url('/assets/img/background/kepalaDinas_SuperAdmin.png');">
+    @include('component.navbar.adminPerdagangan')
 
-            <!-- Tombol Kembali -->
-            <a href="{{ url()->previous() }}"
-                class="absolute top-4 left-4 z-10 inline-flex items-center justify-center w-10 h-10 text-white hover:text-gray-300">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </a>
-
-
-            <!-- Tombol Tab -->
-            @yield('tab')
-
+    <div class="flex-1 relative z-0 p-0 overflow-y-auto">
+            @yield('content')
         </div>
 
     </div>
-
-    {{-- Konten utama --}}
-    <main class="relative ml-20 mr-20 p-6 rounded-lg">
-        @yield('content')
-    </main>
-
 </body>
-
 </html>

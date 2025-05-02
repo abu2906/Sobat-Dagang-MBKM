@@ -11,7 +11,7 @@
     </head>
 <body>
 
-    @if (!Auth::check())
+    {{-- @if (!Auth::check())
         @include('component.navbar.guest')
     @elseif (Auth::check() && Auth::user()->role === 'admin')
         @include('component.navbar.admin')
@@ -19,7 +19,7 @@
         @include('component.navbar.user')
     @elseif (Auth::check() && Auth::user()->role === 'guest')
         @include('component.navbar.guest')      
-    @endif
+    @endif --}}
 
     <main>
         @yield('content')

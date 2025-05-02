@@ -48,6 +48,8 @@ Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan'])
 Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
 Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
 Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
+Route::get('/update-harga', [DashboardPerdaganganController::class, 'formUpdateHarga']);
+Route::post('/update-harga', [DashboardPerdaganganController::class, 'store'])->name('updateHarga.store');
 
 //Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
