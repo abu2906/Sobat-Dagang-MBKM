@@ -5,7 +5,7 @@
 <div class="w-full h-36">
     <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}"
          alt="Background"
-         class="w-full h-full object-cover">
+         class="w-full h-full object-cover">    
 </div>
 
 <div class="flex items-center justify-center px-4 -mt-6">

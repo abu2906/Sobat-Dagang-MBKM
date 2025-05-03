@@ -23,7 +23,6 @@ Route::get('/register', [authController::class, 'showFormRegister'])->name('regi
 Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
 Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
 
-
 // Menampilkan berita berdasarkan ID
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 
@@ -44,12 +43,18 @@ Route::get('/pelaporan', [PelaporanController::class, 'Pelaporan']);
 Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
 
 // admin perdagangan
-Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
 Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
 Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
 Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
 Route::get('/update-harga', [DashboardPerdaganganController::class, 'formUpdateHarga']);
 Route::post('/update-harga', [DashboardPerdaganganController::class, 'store'])->name('updateHarga.store');
+
+// admin master
+Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan'])->name('review.pengajuan');
+Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
+Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
+
+
 
 //Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 Route::get('/about', [AboutController::class, 'index'])->name('about');

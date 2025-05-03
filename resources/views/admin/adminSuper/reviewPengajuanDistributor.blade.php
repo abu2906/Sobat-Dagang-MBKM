@@ -14,13 +14,13 @@
 
     <div class="flex justify-center my-12">
         <div class="bg-blue-100 p-1 rounded-full flex gap-1">
-            <button onclick="window.location.href=''" class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
+            <button onclick="window.location.href='{{ route('review.pengajuan') }}'" class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
                 PENGAJUAN DISTRIBUTOR 
             </button>
-            <button onclick="window.location.href=''" class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
+            <button onclick="window.location.href='{{ route('lihat.laporan') }}'" class="bg-blue-100 text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
                 LAPORAN DISTRIBUSI
             </button>
-            <button onclick="window.location.href=''" class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
+            <button onclick="window.location.href='{{ route('tambah.barang-distribusi') }}'" class="bg-blue-100 text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
                 TAMBAHKAN BARANG
             </button>
         </div>

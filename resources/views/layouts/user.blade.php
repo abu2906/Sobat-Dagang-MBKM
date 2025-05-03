@@ -25,7 +25,6 @@
                 </svg>
             </a>
 
-
             <!-- Tombol Tab -->
             @yield('tab')
 

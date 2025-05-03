@@ -77,7 +77,7 @@ class homeController
     public function kelolaBerita()
     {
         $daftarBerita = $this->getDummyData();
-        return view('admin.kelola_berita', compact('daftarBerita'));
+        return view('admin.adminSuper.kelola_berita', compact('daftarBerita'));
     }
 
     public function show($id)
