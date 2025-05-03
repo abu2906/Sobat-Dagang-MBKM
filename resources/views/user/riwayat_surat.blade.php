@@ -11,10 +11,14 @@
 <div class="relative w-full h-64">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Background" class="object-cover w-full h-full" />
 =======
     <img src="{{ asset('img/bgFormIzin.png') }}" alt="Background" class="w-full h-full object-cover" />
 >>>>>>> refs/remotes/origin/main
+=======
+    <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Background" class="object-cover w-full h-full" />
+>>>>>>> e088a74 (Ambil file dari branch Andif (admin super dan user perdaganagn)  ke main)
 =======
     <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Background" class="object-cover w-full h-full" />
 >>>>>>> e088a74 (Ambil file dari branch Andif (admin super dan user perdaganagn)  ke main)
@@ -36,6 +40,7 @@
                 placeholder="Cari"
                 class="w-full py-3 pl-12 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-base" />
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         <div class="relative w-1/2 shadow-xl rounded-full bg-white shadow-gray-400/40">
             <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
@@ -44,11 +49,16 @@
 >>>>>>> refs/remotes/origin/main
 =======
 >>>>>>> e088a74 (Ambil file dari branch Andif (admin super dan user perdaganagn)  ke main)
+=======
+>>>>>>> e088a74 (Ambil file dari branch Andif (admin super dan user perdaganagn)  ke main)
         </div>
     </div>
     <div class="flex justify-center mb-6">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e088a74 (Ambil file dari branch Andif (admin super dan user perdaganagn)  ke main)
 =======
 >>>>>>> e088a74 (Ambil file dari branch Andif (admin super dan user perdaganagn)  ke main)
         <div class="flex gap-1 p-1 bg-blue-100 rounded-full">
@@ -59,6 +69,7 @@
             <button onclick="window.location.href='{{ route('riwayat.surat') }}'"
                 class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         <div class="bg-blue-100 p-1 rounded-full flex gap-1">
             <button onclick="window.location.href='{{ route('form_permohonan') }}'"
@@ -68,6 +79,8 @@
             <button onclick="window.location.href='{{ route('riwayat_surat') }}'"
                     class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
 >>>>>>> refs/remotes/origin/main
+=======
+>>>>>>> e088a74 (Ambil file dari branch Andif (admin super dan user perdaganagn)  ke main)
 =======
 >>>>>>> e088a74 (Ambil file dari branch Andif (admin super dan user perdaganagn)  ke main)
                 RIWAYAT SURAT
