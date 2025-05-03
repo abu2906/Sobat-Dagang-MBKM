@@ -15,7 +15,7 @@
         <!-- Kiri -->
         <div class="w-full sm:w-1/2 bg-primary text-white flex flex-col justify-center items-center p-8">
             <div class="flex justify-center w-full mt-6 mb-6">
-                <img src="{{ asset('image/disdag.png') }}" alt="Logo" class="w-28">
+                <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo" class="w-28">
             </div>
         
             <div class="flex flex-col justify-center items-center h-full">
@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="relative w-[300px] mx-auto text-right text-sm">
-                    <a href="{{ route('forgotpass') }}" class="text-link font-bold hover:underline">Lupa kata sandi?</a>
+                    <a href="{{ route('forgot-password') }}" class="text-link font-bold hover:underline">Lupa kata sandi?</a>
                 </div>
 
                 <div class="relative w-[150px] mx-auto">

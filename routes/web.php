@@ -1,25 +1,38 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
+
 
 use App\Http\Controllers\PelaporanController;
-use App\Http\Controllers\authController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\DirectoryBookController;
 use App\Http\Controllers\DataIKMController;
+use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
-use App\Http\Controllers\homeController;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
+
 
 
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
 
 // Controller untuk authentication
-Route::get('/login', [authController::class, 'showFormLogin'])->name('login');
-Route::get('/register', [authController::class, 'showFormRegister'])->name('register');
-Route::get('/forgot-password', [authController::class, 'showforgotPassword'])->name('forgot-password');
-Route::get('/change-password', [authController::class, 'showChangePassword'])->name('forgot-password');
+Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
+Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
+Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
+Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
+
+
+
+
+// Controller untuk user
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Controller untuk berita 
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
@@ -44,8 +57,16 @@ Route::get('/administrasi-metrologi',[PersuratanController::class, 'showAdminist
 Route::get('/directory-book-metrologi',[DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
 
 
-// Proses dengan metode post untuk autentikasi login
-Route::post('/login', [authController::class, 'login-process']);
+//Route for test
+Route::get('/test/{viewPath}', function ($viewPath) {
+    $bladePath = str_replace('-', '_', str_replace('/', '.', $viewPath));
+
+    if (View::exists($bladePath)) {
+        return view($bladePath);
+    }
+
+    return abort(404, "View '$bladePath' tidak ditemukan.");
+})->where('viewPath', '.*');
 
 
 

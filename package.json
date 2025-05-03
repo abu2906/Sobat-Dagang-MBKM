@@ -1,8 +1,6 @@
 {
     "private": true,
-    "scripts": {
-        
-    },
+    "scripts": {},
     "devDependencies": {
         "autoprefixer": "^10.4.21",
         "axios": "^1.7.4",
