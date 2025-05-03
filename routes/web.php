@@ -23,6 +23,7 @@ Route::get('/', [homeController::class, 'index'])->name('Home');
 
 // Controller untuk authentication
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'submitFormLogin'])->name('login.submit');
 Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
@@ -32,7 +33,7 @@ Route::get('/change-password', [AuthController::class, 'showChangePassword'])->n
 
 
 // Controller untuk user
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
 // Controller untuk berita 
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');

@@ -36,7 +36,7 @@
         rounded-[40px] sm:rounded-bl-[40px] sm:rounded-tl-[40px] sm:rounded-tr-none sm:rounded-br-none shadow-xl">
             <h3 class="text-2xl font-bold mb-6 text-center">Masuk Ke Akun Anda</h3>
 
-            <form action="#" method="POST" class="w-full max-w-md space-y-4">
+            <form action="{{ route('login.submit') }}" method="POST" class="w-full max-w-md space-y-4">
                 @csrf
 
                 <!-- Username -->
@@ -69,6 +69,8 @@
                         Masuk
                     </button>
                 </div>     
+
+                
             </form>
         </div>
     </div>

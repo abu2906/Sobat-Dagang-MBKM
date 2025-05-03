@@ -7,10 +7,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Kabupaten;
-use App\Models\Kecamatan;
-use App\Models\Kelurahan;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Disdag;
 
 class AuthController extends Controller
 {
@@ -25,14 +24,61 @@ class AuthController extends Controller
         $wilayah = json_decode($json, true);
         return view('pages.auth.register', compact('wilayah'));
     }
+    
+    public function submitFormLogin(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+    
+        $identifier = $request->username;
+    
+        // 1. Coba login disdag via NIP
+        $disdag = Disdag::where('nip', $identifier)->first();
+    
+        if ($disdag && Hash::check($request->password, $disdag->password)) {
+            Auth::login($disdag);
 
+//tidak terhubung pi ketampilan baru users
+            switch ($disdag->role) {
+                case 'master_admin':
+                    return redirect()->intended(route('user.dashboard'));
+                case 'admin_perdagangan':
+                    return redirect()->intended('/admin/perdagangan');
+                case 'admin_industri':
+                    return redirect()->intended('/admin/industri');
+                case 'admin_metrologi':
+                    return redirect()->intended('/admin/metrologi');
+                case 'kabid_perdagangan':
+                    return redirect()->intended('/kabid/perdagangan');
+                case 'kabid_industri':
+                    return redirect()->intended('/kabid/industri');
+                case 'kabid_metrologi':
+                    return redirect()->intended('/kabid/metrologi');
+                case 'kepala_dinas':
+                    return redirect()->intended('/kepaladinas');
+                default:
+                    return redirect('/dashboard');
+            }
+        }
+    
+        $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
+    
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user);
+            return redirect()->intended(route('user.dashboard'));
+        }
+    
+        return redirect()->route('login')->with('error', 'Username atau password salah');
+    }
+    
+    
     public function submitRegister(Request $request)
     {
-        // Debugging: Lihat semua data yang diterima
         Log::info('Data registrasi yang diterima:', $request->all());
         
         try {
-            // Validasi input
             $validated = $request->validate([
                 'nama' => 'required|string|max:255',
                 'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
@@ -49,7 +95,6 @@ class AuthController extends Controller
             
             Log::info('Validasi berhasil, data valid:', $validated);
 
-            // Buat user baru
             $user = new User;
             $user->nama = $validated['nama'];
             $user->jenis_kelamin = $validated['jenis_kelamin'];
@@ -62,21 +107,19 @@ class AuthController extends Controller
             $user->alamat_lengkap = $validated['alamat_lengkap'];
             $user->nik = $validated['nik'];
             $user->nib = $validated['nib'];
-            
-            // Simpan user ke database
+           
             Log::info('Mencoba menyimpan user ke database');
             $user->save();
             Log::info('User berhasil disimpan dengan ID: ' . $user->id_user);
         } catch (\Exception $e) {
-            // Tangkap error dan log
+
             Log::error('Error saat registrasi: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
             
-            // Kembalikan pesan error ke pengguna
+
             return back()->withInput()->withErrors(['general' => 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage()]);
         }
 
-        // Redirect ke halaman login dengan pesan sukses
         return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan login.');
     }
 };
