@@ -16,7 +16,7 @@ use App\Http\Controllers\PersuratanController;
 use App\Http\Controllers\homeController;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
-
+use App\Http\Controllers\DashboardPerdaganganController;
 
 
 // Controller untuk halaman utama (homepage)
@@ -33,10 +33,14 @@ Route::get('/change-password', [AuthController::class, 'showChangePassword'])->n
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
-// Controller untuk berita 
+// Menampilkan berita berdasarkan ID
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
-Route::get('/admin/kelola-berita', [homeController::class, 'index']);
-Route::get('/berita/{id}/edit', [homeController::class, 'edit']);
+
+// Menampilkan halaman admin untuk kelola berita
+Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
+
+// Menampilkan halaman edit berita
+Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
 
 Route::get('/halal', function () {
     return view('halal');
@@ -84,10 +88,12 @@ Route::get('/test/{viewPath}', function ($viewPath) {
     return abort(404, "View '$bladePath' tidak ditemukan.");
 })->where('viewPath', '.*');
 
-
-
-// Route Pelaporan Penyaluran
-//Route::get('/pelaporan-penyaluran', [PelaporanPenyaluranController::class, 'index'])->name('pelaporan_penyaluran');
+Route::get('/form-permohonan', function () {
+    return view('user.form_permohonan');
+})->name('form.permohonan');
+Route::get('/riwayat-surat', function () {
+    return view('user.riwayat_surat');
+})->name('riwayat.surat');
 
 // Route::put('/berita/{id}', [\App\Http\Controllers\BeritaController::class, 'update'])->name('berita.update');
 // Route::delete('/berita/{id}', [\App\Http\Controllers\BeritaController::class, 'destroy'])->name('berita.destroy');

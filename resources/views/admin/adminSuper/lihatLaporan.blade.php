@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<div class="flex justify-center my-6">
+<div class="flex justify-center my-4">
     <div class="bg-blue-100 p-1 rounded-full flex gap-1">
         <button onclick="window.location.href='{{ route('review.pengajuan') }}'" class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
             PENGAJUAN DISTRIBUTOR
@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<div class="container mx-auto px-4 py-2">
+<div class="container mx-auto px-4">
     <h2 class="text-center text-2xl font-bold mb-4 uppercase tracking-wide text-[#083358]">LAPORAN PENYALURAN PUPUK BERSUBSIDI</h2>
 
     <div class="grid md:grid-cols-2 gap-6 mb-8">
