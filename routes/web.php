@@ -14,7 +14,6 @@ use App\Http\Controllers\DashboardController;
 
 use App\Http\Controllers\DashboardPerdaganganController;
 
-
 // Halaman utama (home) yang mengarah ke view pages.home
 Route::get('/', [homeController::class, 'index'])->name('home');
 Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
@@ -69,7 +68,6 @@ Route::get('/admin/managemen-uttp-metrologi', [DashboardController::class, 'show
 Route::get('/admin/persuratan-metrologi', [DashboardController::class, 'showMetrologi'])->name('persuratan-metrologi');
 
 Route::get('/admin/directory-book-metrologi',[DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
-Route::get('/directory-book-metrologi',[DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
 Route::get('/directory-book-metrologi',[DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
 
 // form permohonan route auth fiks
