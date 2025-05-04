@@ -9,7 +9,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <div class="relative w-full h-64">
+<<<<<<< HEAD
     <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Background" class="object-cover w-full h-full" />
+=======
+    <img src="{{ asset('img/bgFormIzin.png') }}" alt="Background" class="w-full h-full object-cover" />
+>>>>>>> refs/remotes/origin/main
 
     <a href="{{ url()->previous() }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
@@ -18,6 +22,7 @@
 </div>
 <div class="container px-4 mx-auto -mt-8">
     <div class="flex justify-center mb-6">
+<<<<<<< HEAD
         <div class="relative w-full max-w-2xl mx-auto">
             <span class="absolute text-gray-500 -translate-y-1/2 material-symbols-outlined left-4 top-1/2">
                 search
@@ -26,10 +31,16 @@
                 type="text"
                 placeholder="Cari"
                 class="w-full py-3 pl-12 pr-4 text-sm border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-base" />
+=======
+        <div class="relative w-1/2 shadow-xl rounded-full bg-white shadow-gray-400/40">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
+            <input type="text" placeholder="Cari"
+                   class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent" />
+>>>>>>> refs/remotes/origin/main
         </div>
-
     </div>
     <div class="flex justify-center mb-6">
+<<<<<<< HEAD
         <div class="flex gap-1 p-1 bg-blue-100 rounded-full">
             <button onclick="window.location.href='{{ route('form.permohonan') }}'"
                 class="px-6 py-2 font-semibold text-black transition-all rounded-full hover:bg-gray-100">
@@ -37,6 +48,15 @@
             </button>
             <button onclick="window.location.href='{{ route('riwayat.surat') }}'"
                 class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
+=======
+        <div class="bg-blue-100 p-1 rounded-full flex gap-1">
+            <button onclick="window.location.href='{{ route('form_permohonan') }}'"
+                    class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
+                AJUKAN SURAT PERMOHONAN
+            </button>
+            <button onclick="window.location.href='{{ route('riwayat_surat') }}'"
+                    class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
+>>>>>>> refs/remotes/origin/main
                 RIWAYAT SURAT
             </button>
         </div>

@@ -1,38 +1,46 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
+
 
 use App\Http\Controllers\PelaporanController;
-use App\Http\Controllers\authController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\DirectoryBookController;
 use App\Http\Controllers\DataIKMController;
+use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
 use App\Http\Controllers\homeController;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
 
-use App\Http\Controllers\DashboardPerdaganganController;
 
 
-// Halaman utama (home) yang mengarah ke view pages.home
-Route::get('/', [homeController::class, 'index'])->name('home');
+// Controller untuk halaman utama (homepage)
+Route::get('/', [homeController::class, 'index'])->name('Home');
 
 // Controller untuk authentication
-Route::get('/login', [authController::class, 'showFormLogin'])->name('login');
-Route::get('/register', [authController::class, 'showFormRegister'])->name('register');
-Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
-Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
+Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'submitFormLogin'])->name('login.submit');
+Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
+Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
+Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
 
-// Menampilkan berita berdasarkan ID
+
+
+
+// Controller untuk user
+Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+
+// Controller untuk berita 
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
+Route::get('/admin/kelola-berita', [homeController::class, 'index']);
+Route::get('/berita/{id}/edit', [homeController::class, 'edit']);
 
-// Menampilkan halaman admin untuk kelola berita
-Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
-
-// Menampilkan halaman edit berita
-Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
-
-// Halaman-halaman lain
 Route::get('/halal', function () {
     return view('halal');
 })->name('halal');
@@ -61,7 +69,7 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
 Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name('sertifikasi-ikm');
-//Route::get('/directory-book-metrologi', [DirectoryBookMetrologiController::class, 'index'])->name('directory-book-metrologi');
+Route::get('/directory-book-metrologi', [DirectoryBookMetrologiController::class, 'index'])->name('directory-book-metrologi');
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
 Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
 
@@ -69,25 +77,21 @@ Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdminis
 Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
 
 
-// Proses dengan metode post untuk autentikasi login
-//Route::post('/login', [authController::class, 'login-process']);
-Route::get('/login', [authController::class, 'showFormLogin'])->name('login');
+//Route for test
+Route::get('/test/{viewPath}', function ($viewPath) {
+    $bladePath = str_replace('-', '_', str_replace('/', '.', $viewPath));
 
-// form permohonan route auth fiks
-// Route::middleware(['auth'])->group(function () {
-//     Route::get('/form-permohonan', function () {
-//         return view('user.form_permohonan'); // pastikan nama file sudah benar
-//     })->name('form.permohonan');
-// });
+    if (View::exists($bladePath)) {
+        return view($bladePath);
+    }
 
-//ini untuk testing
-Route::get('/form-permohonan', function () {
-    return view('user.form_permohonan');
-})->name('form.permohonan');
-Route::get('/riwayat-surat', function () {
-    return view('user.riwayat_surat');
-})->name('riwayat.surat');
+    return abort(404, "View '$bladePath' tidak ditemukan.");
+})->where('viewPath', '.*');
 
+
+
+// Route Pelaporan Penyaluran
+//Route::get('/pelaporan-penyaluran', [PelaporanPenyaluranController::class, 'index'])->name('pelaporan_penyaluran');
 
 // Route::put('/berita/{id}', [\App\Http\Controllers\BeritaController::class, 'update'])->name('berita.update');
 // Route::delete('/berita/{id}', [\App\Http\Controllers\BeritaController::class, 'destroy'])->name('berita.destroy');

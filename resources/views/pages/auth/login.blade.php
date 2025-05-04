@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 <body class="bg-primary font-sans h-screen flex">
     <div class="flex flex-col sm:flex-row w-full h-full">
@@ -14,7 +15,7 @@
         <!-- Kiri -->
         <div class="w-full sm:w-1/2 bg-primary text-white flex flex-col justify-center items-center p-8">
             <div class="flex justify-center w-full mt-6 mb-6">
-                <img src="{{ asset('assets\img\icon\logo.png') }}" alt="Logo" class="w-28">
+                <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo" class="w-28">
             </div>
         
             <div class="flex flex-col justify-center items-center h-full">
@@ -35,7 +36,7 @@
         rounded-[40px] sm:rounded-bl-[40px] sm:rounded-tl-[40px] sm:rounded-tr-none sm:rounded-br-none shadow-xl">
             <h3 class="text-2xl font-bold mb-6 text-center">Masuk Ke Akun Anda</h3>
 
-            <form action="#" method="POST" class="w-full max-w-md space-y-4">
+            <form action="{{ route('login.submit') }}" method="POST" class="w-full max-w-md space-y-4">
                 @csrf
 
                 <!-- Username -->
@@ -59,7 +60,7 @@
                 </div>
 
                 <div class="relative w-[300px] mx-auto text-right text-sm">
-                    <a href="{{ route('forgotpass') }}" class="text-link font-bold hover:underline">Lupa kata sandi?</a>
+                    <a href="{{ route('forgot-password') }}" class="text-link font-bold hover:underline">Lupa kata sandi?</a>
                 </div>
 
                 <div class="relative w-[150px] mx-auto">
@@ -68,6 +69,8 @@
                         Masuk
                     </button>
                 </div>     
+
+                
             </form>
         </div>
     </div>
