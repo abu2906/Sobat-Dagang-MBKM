@@ -2,26 +2,49 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Authenticatable
 {
-    protected $table = 'user'; // 👈 WAJIB
-    protected $primaryKey = 'id_user'; // kalau kamu pakai id_user
+    use HasFactory, Notifiable;
+
+    // Nama tabel
+    protected $table = 'user';
+
+    // Primary key custom
+    protected $primaryKey = 'id_user';
+
+    // Autoincrement aktif
+    public $incrementing = true;
+
+    // Primary key bukan UUID (string), tapi integer
+    protected $keyType = 'int';
+
+    // Timestamps aktif
+    public $timestamps = true;
+
+    // Kolom yang bisa diisi mass-assignment
     protected $fillable = [
         'nama',
+        'nik',
+        'nib',
+        'alamat_lengkap',
         'jenis_kelamin',
-        'kabupaten',
-        'kecamatan',
-        'kelurahan',
+        'telp',
         'email',
         'telp',
         'password',
-        'alamat_lengkap',
-        'nik',
-        'nib'
+        'kabupaten',
+        'kecamatan',
+        'kelurahan',
+    ];
+
+    // Kolom yang harus disembunyikan saat serialisasi
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 }

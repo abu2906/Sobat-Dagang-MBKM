@@ -40,6 +40,26 @@ body {
     background-color: var(--secondary-dark);
 }
 
+.bg-primary {
+    background-color: var(--primary-color);
+}
+
+.bg-primary-dark {
+    background-color: var(--primary-dark);
+}
+
+.bg-secondary {
+    background-color: var(--secondary-color);
+}
+
+.bg-secondary-dark {
+    background-color: var(--secondary-dark);
+}
+
+.text-link {
+    color: var(--link);
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;

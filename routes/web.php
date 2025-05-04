@@ -1,16 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
+
 
 use App\Http\Controllers\PelaporanController;
-use App\Http\Controllers\authController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DirectoryBookController;
 use App\Http\Controllers\DataIKMController;
+use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
-use App\Http\Controllers\homeController;
+use App\Models\Kecamatan;
+use App\Models\Kelurahan;
+
 
 use App\Http\Controllers\DashboardPerdaganganController;
 
@@ -19,10 +25,18 @@ use App\Http\Controllers\DashboardPerdaganganController;
 Route::get('/', [homeController::class, 'index'])->name('home');
 
 // Controller untuk authentication
-Route::get('/login', [authController::class, 'showFormLogin'])->name('login');
+Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'submitFormLogin'])->name('login.submit');
+Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
+Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
+Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
 
-Route::get('/register', [authController::class, 'showFormRegister'])->name('register');
-Route::post('/register', [authController::class, 'submitRegister'])->name('register.submit');
+
+
+
+// Controller untuk user
+Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
 Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
 Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
@@ -69,9 +83,16 @@ Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdminis
 Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
 
 
-// Proses dengan metode post untuk autentikasi login
-//Route::post('/login', [authController::class, 'login-process']);
-Route::get('/login', [authController::class, 'showFormLogin'])->name('login');
+//Route for test
+Route::get('/test/{viewPath}', function ($viewPath) {
+    $bladePath = str_replace('-', '_', str_replace('/', '.', $viewPath));
+
+    if (View::exists($bladePath)) {
+        return view($bladePath);
+    }
+
+    return abort(404, "View '$bladePath' tidak ditemukan.");
+})->where('viewPath', '.*');
 
 // form permohonan route auth fiks
 // Route::middleware(['auth'])->group(function () {
