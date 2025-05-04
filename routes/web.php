@@ -30,9 +30,6 @@ Route::post('/register', [AuthController::class, 'submitRegister'])->name('regis
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
 
-
-
-
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 
