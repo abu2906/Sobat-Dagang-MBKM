@@ -14,7 +14,6 @@ use App\Http\Controllers\DataIKMController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
-use App\Http\Controllers\homeController;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 
@@ -30,9 +29,7 @@ Route::get('/register', [AuthController::class, 'showFormRegister'])->name('regi
 Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
-
-
-
+Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
@@ -52,14 +49,12 @@ Route::get('/pelaporan', [PelaporanController::class, 'Pelaporan']);
 Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
 
 // admin perdagangan
-<<<<<<< HEAD
 Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
 Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
 Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
 Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
 
 //Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
-=======
 Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
 Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
 Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
@@ -75,7 +70,6 @@ Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBara
 
 //Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
->>>>>>> bfe58919f1bd319846337f11c151e4dfe29875bd
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
 Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name('sertifikasi-ikm');

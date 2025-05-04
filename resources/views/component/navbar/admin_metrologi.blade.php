@@ -1,6 +1,6 @@
-<div class="w-64 bg-[#0c3454] text-white min-h-screen flex flex-col justify-between space-y-4 p-4">
-    <div class="text-xl font-bold mb-4">
-        <img src="{{ asset('/assets/img/logo/dinasPerdagangan.png') }}" alt="Logo Dinas Perdagangan">
+<div class="w-60 bg-[#0c3454] text-white min-h-screen flex flex-col justify-between space-y-2 p-4">
+    <div class="text-xl font-bold mb-2">
+        <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo Dinas Perdagangan">
     </div>
     {{-- Navigasi --}}
     <div>
@@ -40,7 +40,9 @@
     <div class="space-y-4">
         {{-- Profil Admin --}}
         <div class="flex items-center gap-3">
-            <img src="{{ asset('images/user.png') }}" alt="Profile" class="w-10 h-10 rounded-full border">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12c2.67 0 8 1.34 8 4v2H4v-2c0-2.66 5.33-4 8-4zm0-2a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+            </svg>
             <div>
                 <div class="text-sm font-semibold">{{ Auth::user()->name ?? 'Admin' }}</div>
                 <div class="text-xs text-gray-300">Administrator</div>

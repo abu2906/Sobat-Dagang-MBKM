@@ -26,17 +26,21 @@
             <ul class="space-y-2 text-sm">
                 @php
                 $menuItems = [
-                ['href' => '#', 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Alat Ukur Valid'],
-                ['href' => '#', 'icon' => 'folder.png', 'label' => 'Management UTTP'],
-                ['href' => '#', 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                ['href' => route('dashboard-admin-metrologi'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                ['href' => route('alat-ukur-metrologi'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Alat Ukur Valid'],
+                ['href' => route('managemen-uttp-metrologi'), 'icon' => 'folder.png', 'label' => 'Management UTTP'],
+                ['href' => route('persuratan-metrologi'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
 
                 @foreach ($menuItems as $item)
                 <li>
+                    @php
+                        $subHref = substr($item['href'], 7, -2);
+                    @endphp
                     <a href="{{ $item['href'] }}"
-                        class="flex items-center px-3 py-2 transition duration-200 rounded-full hover:bg-blue-500/20 hover:border hover:border-blue-500/40 hover:font-bold">
+                        class="flex items-center px-3 py-2 transition duration-200 rounded-full hover:bg-blue-500/20 hover:border hover:border-blue-500/40 hover:font-bold
+                        {{ Route::is($subHref) ? 'bg-white text-black font-semibold hover:text-black' : 'hover:bg-white' }} ">
                         <img src="{{ asset('assets/img/icon/' . $item['icon']) }}" class="w-5 h-5" alt="{{ $item['label'] }}">
                         <span x-show="open" class="ml-3">{{ $item['label'] }}</span>
                     </a>

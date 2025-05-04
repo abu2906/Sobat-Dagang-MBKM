@@ -3,6 +3,7 @@
 @section('content')
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
     <div class="bg-white p-4 shadow rounded text-center">
+        <img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-12 h-12">
         <p class="text-gray-600">Jumlah Surat Masuk</p>
         <h2 class="text-2xl font-bold">1.204</h2>
     </div>

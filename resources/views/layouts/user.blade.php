@@ -35,11 +35,7 @@ w
     </div>
 
     {{-- Konten utama --}}
-<<<<<<< HEAD
     <main class="flex-grow relative mx-5 md:mx-20 p-6 rounded-lg min-h-[calc(100vh-250px)]">
-=======
-    <main class="relative p-6 ml-20 mr-20 rounded-lg">
->>>>>>> bfe58919f1bd319846337f11c151e4dfe29875bd
         @yield('content')
     </main>
     

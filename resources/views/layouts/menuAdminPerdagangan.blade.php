@@ -20,20 +20,6 @@ use Illuminate\Support\Facades\Auth;
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<<<<<<< HEAD
-<body x-data="{ open: true }" class="bg-gray-100 font-sans overflow-hidden">
-
-    <div class="flex h-screen relative z-[100]">
-
-        @if (!Auth::check())
-            @include('component.navbar.admin_metrologi')
-        @elseif (Auth::check() && Auth::user()->role === 'admin')
-            @include('component.navbar.admin_perdagangan')
-        @elseif (Auth::check() && Auth::user()->role === 'user')
-            @include('component.navbar.admin_industri')
-        @endif
-        @include('component.navbar.coba')
-=======
 
 <body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
 
@@ -111,7 +97,6 @@ use Illuminate\Support\Facades\Auth;
                 </div>
             </div>
         </div>
->>>>>>> bfe58919f1bd319846337f11c151e4dfe29875bd
 
         <div class="flex-1 relative z-0 {{ View::hasSection('fullwidth') ? '' : 'p-6' }} overflow-y-auto">
             @yield('content')
@@ -119,9 +104,4 @@ use Illuminate\Support\Facades\Auth;
 
     </div>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-
-</html>
->>>>>>> bfe58919f1bd319846337f11c151e4dfe29875bd
