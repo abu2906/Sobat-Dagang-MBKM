@@ -14,6 +14,7 @@ use App\Http\Controllers\DataIKMController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
+use App\Http\Controllers\homeController;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 
@@ -51,12 +52,30 @@ Route::get('/pelaporan', [PelaporanController::class, 'Pelaporan']);
 Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
 
 // admin perdagangan
+<<<<<<< HEAD
 Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
 Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
 Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
 Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
 
 //Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
+=======
+Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
+Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
+Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
+Route::get('/update-harga', [DashboardPerdaganganController::class, 'formUpdateHarga']);
+Route::post('/update-harga', [DashboardPerdaganganController::class, 'store'])->name('updateHarga.store');
+
+// admin master
+Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan'])->name('review.pengajuan');
+Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
+Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
+
+
+
+//Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+>>>>>>> bfe58919f1bd319846337f11c151e4dfe29875bd
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
 Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name('sertifikasi-ikm');
@@ -64,8 +83,8 @@ Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
 Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
 
-Route::get('/administrasi-metrologi',[PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
-Route::get('/directory-book-metrologi',[DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
+Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
+Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
 
 Route::get('/admin/dashboard-metrologi', [DashboardController::class, 'showMetrologi'])->name('dashboard-admin-metrologi');
 Route::get('/admin/alat-ukur-metrologi', [DashboardController::class, 'showMetrologi'])->name('alat-ukur-metrologi');
@@ -120,5 +139,3 @@ Route::get('/riwayat-surat', function () {
 //     Route::get('/tahu', function () { return view('harga-pasar.tahu'); })->name('tahu');
 //     Route::get('/tempe', function () { return view('harga-pasar.tempe'); })->name('tempe');
 // });
-
-?>

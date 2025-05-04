@@ -1,11 +1,11 @@
-<div id="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-  <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-2xl relative">
+<div id="modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+  <div class="relative w-full max-w-2xl p-6 bg-white rounded-lg shadow-2xl">
     <!-- Tombol Close -->
-    <button onclick="toggleModal(false)" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
-    
-    <h2 class="text-xl font-bold mb-4">Sertifikat</h2>
-    
-    <img id="sertifikat-image" src="" class="w-full rounded border">
+    <button onclick="toggleModal(false)" class="absolute text-2xl text-gray-500 top-2 right-2 hover:text-gray-800">&times;</button>
+
+    <h2 class="mb-4 text-xl font-bold">Sertifikat</h2>
+
+    <img id="sertifikat-image" src="" class="w-full border rounded">
   </div>
 </div>
 

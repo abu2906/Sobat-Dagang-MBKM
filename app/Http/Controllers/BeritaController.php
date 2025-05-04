@@ -4,14 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class homeController
+class BeritaController
 {
+    // Menampilkan daftar berita di dashboard
     public function index()
     {
-        $daftarBerita = $this->getDummyData();
-        return view('pages.home', compact('daftarBerita'));
+        $beritas = $this->getDummyData();
+        return view('dashboard', compact('beritas'));
     }
 
+    // Menampilkan detail berita berdasarkan ID
+    public function show($id)
+    {
+        $beritas = $this->getDummyData();
+        $berita = $beritas[$id] ?? null;
+
+        if (!$berita) {
+            abort(404, 'Berita tidak ditemukan');
+        }
+
+        return view('beritaUtama', compact('berita'));
+    }
+
+    // Fungsi untuk mengambil data dummy berita
     public function getDummyData()
     {
         return [
@@ -72,27 +87,5 @@ class homeController
                 'isi' => 'Isi lengkap berita 8 di sini. Upaya memperluas pasar ekspor bagi produk Parepare semakin intensif melalui berbagai kerja sama dengan negara-negara di Asia...'
             ]
         ];
-    }
-    public function kelolaBerita()
-    {
-        $daftarBerita = $this->getDummyData();
-        return view('admin.adminSuper.kelola_berita', compact('daftarBerita'));
-    }
-
-    public function show($id)
-    {
-        $daftarBerita = $this->getDummyData();
-        $berita = $daftarBerita[$id] ?? null;
-
-        if (!$berita) {
-            abort(404, 'Berita tidak ditemukan');
-        }
-
-        return view('beritaUtama', compact('berita'));
-    }
-
-    public function showAboutPage()
-    {
-        return view('pages.aboutUs');
     }
 }

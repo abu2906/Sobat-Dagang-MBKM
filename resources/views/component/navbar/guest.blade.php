@@ -12,10 +12,25 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle"><strong>PELAYANAN</strong> <span class="dropdown-icon">▼</span></a>
                 <ul class="dropdown-menu">
-                    <li class="dropdown-submenu" >
+                    <li class="dropdown-submenu">
                         <a href="#"><strong>PERDAGANGAN</strong></a>
                         <ul class="submenu">
-                            <li><a href="#"><strong>Permohonan Perizinan/Non Perizinan</strong></a></li>
+                            <li>
+                                <a href="{{ route('form.permohonan') }}">
+                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                {{-- @guest
+                                    <a href="{{ route('login') }}">
+                                <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                @else
+                                @if (Auth::user()->role === 'user')
+                                <a href="{{ route('form.permohonan') }}">
+                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                @endif
+                                @endguest --}}
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown-submenu">
@@ -42,7 +57,7 @@
         </ul>
     </div>
 
-    <div class="navbar-right">
+    <div class=" navbar-right">
         <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
     </div>
 </nav>
