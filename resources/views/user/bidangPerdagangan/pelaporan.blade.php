@@ -1,6 +1,7 @@
 @extends('layouts.home')
 @section('title', 'Pelaporan')
 @section('content')
+
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>

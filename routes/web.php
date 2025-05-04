@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DirectoryBookController;
 use App\Http\Controllers\DataIKMController;
 use App\Http\Controllers\SertifikasiIKMController;
@@ -19,7 +20,10 @@ Route::get('/', [homeController::class, 'index'])->name('home');
 
 // Controller untuk authentication
 Route::get('/login', [authController::class, 'showFormLogin'])->name('login');
+
 Route::get('/register', [authController::class, 'showFormRegister'])->name('register');
+Route::post('/register', [authController::class, 'submitRegister'])->name('register.submit');
+
 Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
 Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
 
@@ -29,6 +33,7 @@ Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama'
 
 // Menampilkan halaman admin untuk kelola berita
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
+Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
 
 // Menampilkan halaman edit berita
 Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');

@@ -13,10 +13,11 @@ class CreateBeritaTable extends Migration
     {
         Schema::create('berita', function (Blueprint $table) {
             $table->id('id_berita'); // Primary Key
-            $table->unsignedBigInteger('id_disdag'); // Foreign Key
+            $table->unsignedBigInteger('id_disdag')->nullable(); // Foreign Key
             $table->string('judul');
             $table->text('isi');
             $table->string('lampiran')->nullable(); // file attachment (bisa kosong)
+            $table->date('tanggal'); // Tanggal berita
             $table->timestamps();
 
             // Set foreign key constraint
@@ -26,6 +27,7 @@ class CreateBeritaTable extends Migration
                 ->onDelete('cascade'); // Kalau admin dihapus, beritanya juga dihapus otomatis
         });
     }
+
 
     /**
      * Reverse the migrations.
