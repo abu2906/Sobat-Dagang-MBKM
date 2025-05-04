@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\View;
 
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\DirectoryBookController;
