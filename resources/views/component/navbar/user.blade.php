@@ -22,3 +22,75 @@
         </button>
     </div>
 </nav>
+
+<nav class="navbar">
+    <div class="navbar-left">
+        <a href="/">
+            <img src="{{ asset('img/icon/logo.png') }}" alt="Logo" class="logo">
+        </a>
+    </div>
+
+    <div class="navbar-center">
+        <ul id="nav-menu" class="nav-menu">
+            <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
+            <li><a href="{{ route('about') }}"><strong>ABOUT US</strong></a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle"><strong>PELAYANAN</strong> <span class="dropdown-icon">▼</span></a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-submenu">
+                        <a href="#"><strong>PERDAGANGAN</strong></a>
+                        <ul class="submenu">
+                            <li>
+                                <a href="{{ route('form.permohonan') }}">
+                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                {{-- @guest
+                                    <a href="{{ route('login') }}">
+                                <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                @else
+                                @if (Auth::user()->role === 'user')
+                                <a href="{{ route('form.permohonan') }}">
+                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
+                                </a>
+                                @endif
+                                @endguest --}}
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#"><strong>INDUSTRI</strong></a>
+                        <ul class="submenu">
+                            <li><a href="#"><strong>Directory Book</strong></a></li>
+                            <li><a href="#"><strong>Data IKM</strong></a></li>
+                            <li><a href="#"><strong>Sertifikasi IKM</strong></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a href="#"><strong>METROLOGI</strong></a>
+                        <ul class="submenu">
+                            <li><a href="#"><strong>Directory Book</strong></a></li>
+                            <li><a href="#"><strong>Surat Permohonan</strong></a></li>
+                            <li><a href="#"><strong>Regulasi</strong></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><strong>PERSURATAN</strong></a></li>
+                </ul>
+            </li>
+            <li><a href=""><strong>PELAPORAN</strong></a></li>
+            <li><a href=""><strong>FAQ</strong></a></li>
+        </ul>
+    </div>
+
+    <div class=" navbar-right">
+        <button class="text-white px-4 py-1 rounded-md text-sm font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white hover:text-gray-600 cursor-pointer"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A8.966 8.966 0 0112 15c2.132 0 4.087.745 5.621
+                    1.996M15 10a3 3 0 11-6 0 3 3 0
+                    016 0zm6 2a9 9 0 11-18 0 9 9 0
+                    0118 0z" />
+            </svg>
+        </button>
+    </div>
+</nav>
