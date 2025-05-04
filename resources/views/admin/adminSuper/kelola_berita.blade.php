@@ -8,7 +8,7 @@
 </head>
 
     <div class="relative w-full h-64">
-        <img src="{{ asset('img/bgKelolaBerita.png') }}" alt="Port Background" class="w-full h-full object-cover">
+        <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.png') }}" alt="Port Background" class="w-full h-full object-cover">
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10">
             <h1 class="text-5xl font-bold text-[#FAA31E]">Kelola Berita</h1>
         </div>
@@ -43,7 +43,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($beritas as $item)
+                @foreach ($daftarBerita as $item)
                     <tr>
                         <td class="border px-4 py-2">{{ $item->id }}</td>
                         <td class="border px-4 py-2">{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}</td>

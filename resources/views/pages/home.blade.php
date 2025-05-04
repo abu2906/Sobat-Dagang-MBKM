@@ -4,8 +4,8 @@
 
 @section('content')
 
-<div class="relative w-full overflow-visible pb-12">
-    <div class="absolute top-0 right-0 w-[60%] h-[540px] bg-cover bg-center shadow-lg rounded-tl-3xl rounded-bl-3xl z-0" style="background-image: url('{{ asset('img/dashboard.jpg') }}');"></div>
+<div class="relative w-full pb-12 overflow-visible">
+    <div class="absolute top-0 right-0 w-[60%] h-[540px] bg-cover bg-center shadow-lg rounded-tl-3xl rounded-bl-3xl z-0" style="background-image: url('{{ asset('assets/img/dashboard.jpg') }}');"></div>
     <div class="relative z-10 pt-24 pl-8 pr-8">
         <div class="bg-white rounded-xl shadow-md p-6 max-w-md border-l-8 border-b-8 ml-[100px]" style="border-color: #083358;">
             <h2 class="mb-3 text-2xl font-bold text-gray-800">Halo, Sobat Dagang!</h2>
@@ -76,7 +76,7 @@
             <a href=""
                 class="border-2 border-[#083358] rounded-xl p-4 flex flex-col items-center bg-white shadow-sm
                    hover:bg-indigo-50 hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out transform">
-                <img src="{{ asset('assets/img/Produk/' . $item['image']) }}" alt="{{ $item['name'] }}" class="object-contain w-16 h-16">
+                <img src="{{ asset('assets/img/icon/hargaPasar/' . $item['image']) }}" alt="{{ $item['name'] }}" class="object-contain w-16 h-16">
                 <p class="mt-3 text-sm font-semibold">{{ $item['name'] }}</p>
             </a>
             @endforeach
