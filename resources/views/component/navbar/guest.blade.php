@@ -1,7 +1,7 @@
 <nav class="navbar">
     <div class="navbar-left">
         <a href="/">
-            <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="logo">
+            <img src="{{ asset('img/logo.png') }}" alt="Logo" class="logo">
         </a>
     </div>
 
@@ -15,23 +15,8 @@
                     <li class="dropdown-submenu" >
                         <a href="#"><strong>PERDAGANGAN</strong></a>
                         <ul class="submenu">
-                            <li>
-                                <a href="{{ route('form.permohonan') }}">
-                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
-                                </a>
-                                {{-- @guest
-                                    <a href="{{ route('login') }}">
-                                        <strong>Permohonan Perizinan/Non Perizinan</strong>
-                                    </a>
-                                @else
-                                    @if (Auth::user()->role === 'user')
-                                        <a href="{{ route('form.permohonan') }}">
-                                            <strong>Permohonan Perizinan/Non Perizinan</strong>
-                                        </a>
-                                    @endif
-                                @endguest --}}
-                            </li>
-                        </ul>                        
+                            <li><a href="#"><strong>Permohonan Perizinan/Non Perizinan</strong></a></li>
+                        </ul>
                     </li>
                     <li class="dropdown-submenu">
                         <a href="#"><strong>INDUSTRI</strong></a>

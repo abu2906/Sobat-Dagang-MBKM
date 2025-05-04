@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function showMetrologi()
+    public function index()
     {
-        return view('admin.bidangMetrologi.dashboard');
+        return view('user.dashboard');
     }
 }

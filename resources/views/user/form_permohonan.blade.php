@@ -5,10 +5,10 @@
 @section('content')
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-    <link rel="stylesheet" href="asserts/css/app.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
     <div class="relative w-full h-64">
-        <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Port Background" class="w-full h-full object-cover">
+        <img src="{{ asset('img/bgFormIzin.png') }}" alt="Port Background" class="w-full h-full object-cover">
         <a href=""
         class="absolute left-14 top-1/2 transform -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 text-black hover:bg-black hover:text-white hover:border-white transition-all duration-300 shadow-lg hover:scale-110">
             <span class="material-symbols-outlined text-2xl">
@@ -19,11 +19,11 @@
 
     <div class="flex justify-center mb-6 mt-8">
         <div class="bg-blue-100 p-1 rounded-full flex">
-            <button onclick="window.location.href='{{ route('form.permohonan') }}'"
+            <button onclick="window.location.href='{{ route('form_permohonan') }}'"
             class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
             AJUKAN SURAT PERMOHONAN
             </button>
-            <button onclick="window.location.href='{{ route('riwayat.surat') }}'"
+            <button onclick="window.location.href='{{ route('riwayat_surat') }}'"
                 class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
                 RIWAYAT SURAT
             </button>
