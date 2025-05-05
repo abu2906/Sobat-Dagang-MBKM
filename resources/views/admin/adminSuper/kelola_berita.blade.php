@@ -1,18 +1,11 @@
-@extends('layouts.home')
+@extends('layouts.admin')
 
 @section('title', 'Kelola Berita')
 
 @section('content')
 
-<head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
-</head>
-
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.png') }}" alt="Port Background" class="object-cover w-full h-full">
+    <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         <h1 class="text-5xl font-bold text-[#FAA31E]">Kelola Berita</h1>
     </div>
@@ -56,7 +49,9 @@
             @foreach ($daftarBerita as $index => $item)
             <tr>
                 <td class="px-4 py-2 text-center border">{{ $index + 1 }}</td>
-                <td class="px-4 py-2 text-center border">{{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->format('d M Y') : '-' }}</td>
+                <td class="px-4 py-2 text-center border">
+                    {{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('l, d F Y') : '-' }}
+                </td>
                 <td class="px-4 py-2 border ">{{ $item->judul }}</td>
                 <td class="flex items-center justify-center px-4 py-2 space-x-2 border">
                     <button
@@ -81,31 +76,27 @@
 </div>
 
 <div id="modalEdit" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-    <div class="p-8 bg-white rounded-lg shadow-xl w-120">
+    <div class="relative max-w-xl w-full max-h-[90vh] overflow-y-auto p-8 bg-white rounded-lg shadow-xl">
         <h3 class="mb-6 text-2xl font-semibold text-center">Edit Berita</h3>
         <form method="POST" id="editForm" action="" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            <!-- Judul Berita -->
             <div class="mb-4">
                 <label for="judul_edit" class="block text-sm font-medium text-gray-700">Judul Berita</label>
-                <input type="text" id="judul_edit" name="judul" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Judul Berita" required>
+                <input type="text" id="judul_edit" name="judul" class="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500" required>
             </div>
 
-            <!-- Tanggal Berita -->
             <div class="mb-4">
                 <label for="tanggal_edit" class="block text-sm font-medium text-gray-700">Tanggal Berita</label>
-                <input type="date" id="tanggal_edit" name="tanggal" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <input type="date" id="tanggal_edit" name="tanggal" class="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500" required>
             </div>
 
-            <!-- Isi Berita -->
             <div class="mb-4">
                 <label for="summernote_edit" class="block text-sm font-medium text-gray-700">Isi Berita</label>
-                <textarea id="summernote_edit" name="isi" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <textarea id="summernote_edit" name="isi" class="w-full p-3 border rounded-md resize-none focus:ring-2 focus:ring-blue-500"></textarea>
             </div>
 
-            <!-- Gambar Lampiran -->
             <div class="mb-4">
                 <label for="gambar_edit" class="block text-sm font-medium text-gray-700">Lampiran (Gambar)</label>
                 <div class="flex items-center space-x-3">
@@ -116,45 +107,44 @@
             </div>
 
             <div class="flex justify-end mt-6 space-x-3">
-                <button type="button" onclick="closeModal('edit')" class="px-4 py-2 text-black bg-gray-300 rounded-full hover:bg-gray-400">
-                    Batal
-                </button>
-                <button type="submit" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition">
-                    Simpan
-                </button>
+                <button type="button" onclick="closeModal('edit')" class="px-4 py-2 text-black bg-gray-300 rounded-full hover:bg-gray-400">Batal</button>
+                <button type="submit" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition">Simpan</button>
             </div>
+
+            @if ($errors->any())
+            <div class="p-4 mt-4 text-red-700 bg-red-100 border border-red-400 rounded">
+                <ul class="pl-5 list-disc">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
         </form>
     </div>
 </div>
 
-
-
 <div id="modalTambah" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-    <div class="p-8 bg-white rounded-lg shadow-xl w-120">
+    <div class="relative max-w-xl w-full max-h-[90vh] overflow-y-auto p-8 bg-white rounded-lg shadow-xl">
         <h3 class="mb-6 text-2xl font-semibold text-center">Tambah Berita</h3>
-
         <form action="{{ route('tambah.berita') }}" method="POST" id="tambahForm" enctype="multipart/form-data">
             @csrf
 
-            <!-- Judul Berita -->
             <div class="mb-4">
                 <label for="judul_tambah" class="block text-sm font-medium text-gray-700">Judul Berita</label>
                 <input type="text" name="judul" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Judul Berita" required>
             </div>
 
-            <!-- Tanggal Berita -->
             <div class="mb-4">
                 <label for="tanggal_tambah" class="block text-sm font-medium text-gray-700">Tanggal Berita</label>
                 <input type="date" name="tanggal" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             </div>
 
-            <!-- Isi Berita -->
             <div class="mb-4">
                 <label for="konten_tambah" class="block text-sm font-medium text-gray-700">Isi Berita</label>
-                <textarea name="isi" id="summernote" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Isi Berita" required></textarea>
+                <textarea name="isi" id="summernote" class="resize-none w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Isi Berita" required></textarea>
             </div>
 
-            <!-- Gambar Lampiran -->
             <div class="mb-4">
                 <label for="gambar_tambah" class="block text-sm font-medium text-gray-700">Lampiran (Gambar)</label>
                 <div class="flex items-center space-x-3">
@@ -190,7 +180,6 @@
     </div>
 </div>
 
-<!-- Modal Delete -->
 <div id="modalDelete" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
     <div class="w-11/12 max-w-md p-6 bg-white shadow-xl rounded-2xl">
         <h2 class="mb-4 text-lg font-semibold">Hapus Berita</h2>
@@ -211,8 +200,6 @@
         </div>
     </div>
 </div>
-
-
 @endsection
 
 
