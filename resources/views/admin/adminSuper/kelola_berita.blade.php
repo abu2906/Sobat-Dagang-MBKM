@@ -196,6 +196,7 @@
         <h2 class="mb-4 text-lg font-semibold">Hapus Berita</h2>
         <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin menghapus berita ini?</p>
         <div class="flex justify-end space-x-3">
+            @foreach ($daftarBerita as $index => $item)
             <form method="POST" action="{{ route('berita.destroy', $item->id_berita) }}">
                 @csrf
                 @method('DELETE')
@@ -208,6 +209,7 @@
                     </button>
                 </div>
             </form>
+            @endforeach
         </div>
     </div>
 </div>
