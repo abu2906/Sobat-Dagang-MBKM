@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\View;
 
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\DirectoryBookController;
@@ -13,7 +14,6 @@ use App\Http\Controllers\DataIKMController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
-use App\Http\Controllers\homeController;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use App\Http\Controllers\DashboardPerdaganganController;
@@ -21,6 +21,7 @@ use App\Http\Controllers\DashboardPerdaganganController;
 
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
+Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
 
 // Controller untuk authentication
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
@@ -52,6 +53,12 @@ Route::get('/pelaporan', [PelaporanController::class, 'Pelaporan']);
 Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
 
 // admin perdagangan
+Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
+Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
+Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
+Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
+
+//Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
 Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
 Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
@@ -70,12 +77,17 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
 Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name('sertifikasi-ikm');
+Route::get('/directory-book-metrologi', [DirectoryBookMetrologiController::class, 'index'])->name('directory-book-metrologi');
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
 Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
 
 Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
 Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
 
+Route::get('/admin/dashboard-metrologi', [DashboardController::class, 'showMetrologi'])->name('dashboard-admin-metrologi');
+Route::get('/admin/alat-ukur-metrologi', [DashboardController::class, 'showMetrologi'])->name('alat-ukur-metrologi');
+Route::get('/admin/managemen-uttp-metrologi', [DashboardController::class, 'showMetrologi'])->name('managemen-uttp-metrologi');
+Route::get('/admin/persuratan-metrologi', [DashboardController::class, 'showMetrologi'])->name('persuratan-metrologi');
 
 //Route for test
 Route::get('/test/{viewPath}', function ($viewPath) {
@@ -94,6 +106,10 @@ Route::get('/form-permohonan', function () {
 Route::get('/riwayat-surat', function () {
     return view('user.riwayat_surat');
 })->name('riwayat.surat');
+
+
+// Route Pelaporan Penyaluran
+//Route::get('/pelaporan-penyaluran', [PelaporanPenyaluranController::class, 'index'])->name('pelaporan_penyaluran');
 
 // Route::put('/berita/{id}', [\App\Http\Controllers\BeritaController::class, 'update'])->name('berita.update');
 // Route::delete('/berita/{id}', [\App\Http\Controllers\BeritaController::class, 'destroy'])->name('berita.destroy');

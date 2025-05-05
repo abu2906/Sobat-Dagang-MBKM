@@ -6,7 +6,6 @@
 
 <head>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <div class="relative w-full h-64">
     <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Port Background" class="object-cover w-full h-full">

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-// Semua Function yang digunakan dalam halaman utama (Homepage) dimasukkan disini
 class homeController
 {
     public function index()
@@ -90,5 +89,10 @@ class homeController
         }
 
         return view('beritaUtama', compact('berita'));
+    }
+
+    public function showAboutPage()
+    {
+        return view('pages.aboutUs');
     }
 }
