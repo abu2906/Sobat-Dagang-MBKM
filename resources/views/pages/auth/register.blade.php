@@ -173,7 +173,7 @@
             <!-- Tombol -->
             <div class="col-span-2 flex justify-center mt-6">
                <button type="submit"
-                   class="w-[150px] bg-secondary hover:bg-secondary-dark text-white font-semibold py-2 rounded-full shadow transition duration-200">
+                   class="w-[150px] bg-secondary hover:bg-[var(--secondary-dark)] text-white font-semibold py-2 rounded-full shadow transition duration-200">
                    Daftar
                </button>
             </div>

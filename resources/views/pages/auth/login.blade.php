@@ -60,12 +60,12 @@
                 </div>
 
                 <div class="relative w-[300px] mx-auto text-right text-sm">
-                    <a href="{{ route('forgot-password') }}" class="text-link font-bold hover:underline">Lupa kata sandi?</a>
+                    <a href="{{ route('forgot.password') }}" class="text-link font-bold hover:underline">Lupa kata sandi?</a>
                 </div>
 
                 <div class="relative w-[150px] mx-auto">
                     <button type="submit"
-                        class="w-full bg-secondary hover:bg-secondary-dark text-white font-semibold py-2 rounded-full shadow transition duration-200">
+                        class="w-full bg-secondary hover:bg-[var(--secondary-dark)] text-white font-semibold py-2 rounded-full shadow transition duration-200">
                         Masuk
                     </button>
                 </div>     

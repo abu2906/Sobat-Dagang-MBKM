@@ -122,4 +122,28 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan login.');
     }
+
+        public function logout(Request $request)
+    {
+        Auth::logout(); // keluar dari session
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login'); // arahkan ke halaman login
+    }
+
+        public function showforgotPassword()
+    {
+        return view('pages.auth.forgotpass');
+    }
+
+        public function showchangePassword()
+    {
+        return view('pages.auth.changepass');
+    }
+
+            public function showverification()
+    {
+        return view('pages.auth.verification');
+    }
 };

@@ -27,8 +27,10 @@ Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'submitFormLogin'])->name('login.submit');
 Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
-Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
-Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
+Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
+Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
+Route::get('/verification', [AuthController::class, 'showverification'])->name('verification');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');

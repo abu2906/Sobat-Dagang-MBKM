@@ -29,7 +29,7 @@ body {
     background-color: var(--primary-color);
 }
 
-.bg-primary-dark {
+.bg-primary-dark:hover {
     background-color: var(--primary-dark);
 }
 
@@ -37,9 +37,10 @@ body {
     background-color: var(--secondary-color);
 }
 
-.bg-secondary-dark {
+.bg-secondary-dark:hover {
     background-color: var(--secondary-dark);
 }
+
 
 .text-link {
     color: var(--link);
