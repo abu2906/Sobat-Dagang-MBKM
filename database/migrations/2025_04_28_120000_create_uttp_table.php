@@ -13,14 +13,15 @@ class CreateUttpTable extends Migration
     {
         Schema::create('uttp', function (Blueprint $table) {
             $table->id('id_uttp'); // Primary key
-            $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('id_user'); // Duplikat
+            $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
             $table->unsignedBigInteger('id_alat_tera');
             $table->foreign('id_alat_tera')->references('id_alat_tera')->on('alat_tera')->onDelete('cascade');
             $table->unsignedBigInteger('id_jenis_alat');
             $table->foreign('id_jenis_alat')->references('id_jenis_alat')->on('jenis_alat')->onDelete('cascade');
             $table->unsignedBigInteger('id_cap');
             $table->foreign('id_cap')->references('id_cap')->on('cap_tanda_tera')->onDelete('cascade');
-            
+
             $table->date('tanggal')->nullable();
             $table->string('no_registrasi')->nullable();
             $table->string('nama_pemilik')->nullable();

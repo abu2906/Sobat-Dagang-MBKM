@@ -105,8 +105,8 @@ class AuthController extends Controller
             $user->telp = $validated['telp'];
             $user->password = Hash::make($validated['password']);
             $user->alamat_lengkap = $validated['alamat_lengkap'];
-            $user->nik = $validated['nik'];
-            $user->nib = $validated['nib'];
+            $user->nik = Hash::make($validated['nik']);
+            $user->nib = Hash::make($validated['nib']);
 
             Log::info('Mencoba menyimpan user ke database');
             $user->save();

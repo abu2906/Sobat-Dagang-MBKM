@@ -14,8 +14,10 @@ use App\Http\Controllers\DataIKMController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
+use App\Http\Controllers\homeController;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
+use App\Models\Berita;
 
 
 use App\Http\Controllers\DashboardPerdaganganController;
@@ -23,6 +25,9 @@ use App\Http\Controllers\DashboardPerdaganganController;
 
 // Halaman utama (home) yang mengarah ke view pages.home
 Route::get('/', [homeController::class, 'index'])->name('home');
+// Route untuk menampilkan berita berdasarkan ID
+Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
+
 
 // Controller untuk authentication
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
@@ -41,13 +46,12 @@ Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user
 Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
 Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
 
-
-// Menampilkan berita berdasarkan ID
-Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
-
 // Menampilkan halaman admin untuk kelola berita
-Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
+Route::get('/admin/kelola-berita', [BeritaController::class, 'show'])->name('kelola.berita');
 Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
+Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
+Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+
 
 // Menampilkan halaman edit berita
 Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');

@@ -28,16 +28,16 @@
     <div class="relative px-6 py-8 overflow-visible md:px-16">
         <div class="relative flex gap-8 overflow-visible overflow-x-auto scrollbar-hide" style="scroll-snap-type: x mandatory;">
             @foreach ($daftarBerita as $berita)
-            <a href="{{ route('berita.utama', $berita->id) }}"
+            <a href="{{ route('berita.utama', urlencode($berita->judul)) }}"
                 class="relative z-0 flex-none min-w-0 overflow-hidden transition-all duration-500 ease-in-out transform bg-white shadow-md w-72 rounded-2xl hover:-translate-y-2 hover:shadow-glow snap-start group group-hover:z-10">
 
                 <div class="overflow-hidden rounded-2xl">
-                    <img src="{{ $berita->gambar }}" alt="{{ $berita->judul }}"
+                    <img src="{{ asset('storage/' . $berita->lampiran) }}" alt="{{ $berita->judul }}"
                         class="object-cover w-full transition-transform duration-500 ease-in-out h-72 rounded-2xl group-hover:scale-110 ">
                 </div>
 
                 <div class="absolute text-xs font-semibold text-white top-3 left-3">
-                    {{ \Carbon\Carbon::parse($berita->created_at)->translatedFormat('l, d M Y') }}
+                    {{ \Carbon\Carbon::parse($berita->tanggal)->translatedFormat('l, d M Y') }}
                 </div>
 
                 <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent rounded-b-2xl">

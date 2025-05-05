@@ -17,12 +17,12 @@ export default {
             },
 
             colors: {
-                primary: '#083458', 
-                'primary-dark': '#062b48',
-                secondary: '#F49F1E',
-                'secondary-dark': '#d88d13',
-                link:'#0671E0',
-              },
+                primary: "#083458",
+                "primary-dark": "#062b48",
+                secondary: "#F49F1E",
+                "secondary-dark": "#d88d13",
+                link: "#0671E0",
+            },
         },
     },
     plugins: [],

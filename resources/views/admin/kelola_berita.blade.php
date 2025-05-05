@@ -37,6 +37,12 @@
 </div>
 
 <div class="container px-4 pb-12 mx-auto">
+    @if(session('success'))
+    <div class="mb-4 text-green-600">
+        {{ session('success') }}
+    </div>
+    @endif
+
     <table class="min-w-full overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
         <thead>
             <tr class="bg-[#083358] text-white font-semibold">
@@ -47,73 +53,80 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($daftarBerita as $item)
+            @foreach ($daftarBerita as $index => $item)
             <tr>
-                <td class="px-4 py-2 border">{{ $item->id }}</td>
-                <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }}</td>
-                <td class="px-4 py-2 border">{{ $item->judul }}</td>
+                <td class="px-4 py-2 text-center border">{{ $index + 1 }}</td>
+                <td class="px-4 py-2 text-center border">{{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->format('d M Y') : '-' }}</td>
+                <td class="px-4 py-2 border ">{{ $item->judul }}</td>
                 <td class="flex items-center justify-center px-4 py-2 space-x-2 border">
-                    <button onclick="openModal('edit', {{ $item->id }})" class="text-[#083358] hover:text-black">
+                    <button
+                        onclick="openModal('edit', this)"
+                        data-id="{{ $item->id_berita }}"
+                        data-judul="{{ $item->judul }}"
+                        data-tanggal="{{ $item->tanggal }}"
+                        data-isi="{{ htmlentities($item->isi) }}"
+                        class="text-[#083358] hover:text-black">
                         <span class="material-symbols-outlined">edit</span>
                     </button>
-                    <button onclick="openModal('delete', {{ $item->id }})" class="text-[#083358] hover:text-black">
+                    <button onclick="openModal('delete', {{ $item->id_berita }})" class="text-[#083358] hover:text-black">
                         <span class="material-symbols-outlined">delete</span>
                     </button>
+
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
+
 </div>
 
 <div id="modalEdit" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
     <div class="p-8 bg-white rounded-lg shadow-xl w-120">
         <h3 class="mb-6 text-2xl font-semibold text-center">Edit Berita</h3>
-        <form action="#" method="POST" id="tambahForm" enctype="multipart/form-data">
+        <form method="POST" id="editForm" action="" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
             <!-- Judul Berita -->
             <div class="mb-4">
-                <label for="judul_tambah" class="block text-sm font-medium text-gray-700">Judul Berita</label>
-                <input type="text" id="judul_tambah" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Judul Berita" required>
+                <label for="judul_edit" class="block text-sm font-medium text-gray-700">Judul Berita</label>
+                <input type="text" id="judul_edit" name="judul" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Judul Berita" required>
             </div>
 
             <!-- Tanggal Berita -->
             <div class="mb-4">
-                <label for="tanggal_tambah" class="block text-sm font-medium text-gray-700">Tanggal Berita</label>
-                <input type="date" id="tanggal_tambah" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <label for="tanggal_edit" class="block text-sm font-medium text-gray-700">Tanggal Berita</label>
+                <input type="date" id="tanggal_edit" name="tanggal" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             </div>
 
             <!-- Isi Berita -->
             <div class="mb-4">
-                <label for="konten_tambah" class="block text-sm font-medium text-gray-700">Isi Berita</label>
-                <textarea id="summernote_edit" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Isi Berita" required></textarea>
+                <label for="summernote_edit" class="block text-sm font-medium text-gray-700">Isi Berita</label>
+                <textarea id="summernote_edit" name="isi" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
             </div>
 
             <!-- Gambar Lampiran -->
             <div class="mb-4">
-                <label for="gambar_tambah" class="block text-sm font-medium text-gray-700">Lampiran (Gambar)</label>
+                <label for="gambar_edit" class="block text-sm font-medium text-gray-700">Lampiran (Gambar)</label>
                 <div class="flex items-center space-x-3">
-                    <label for="gambar_tambah" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
+                    <label for="gambar_edit" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer hover:bg-[#083358] hover:text-white transition">Pilih File</label>
                     <span id="file-name-edit" class="text-gray-500">Tidak ada file yang dipilih</span>
-                    <input type="file" id="gambar_edit" name="lampiran" class="hidden" ...
-                        onchange="document.getElementById('file-name-edit').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
-
+                    <input type="file" id="gambar_edit" name="lampiran" class="hidden" onchange="document.getElementById('file-name-edit').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
             </div>
 
             <div class="flex justify-end mt-6 space-x-3">
-                <button type="button" onclick="closeModal('edit')"
-                    class="px-4 py-2 text-black transition-all bg-gray-300 rounded-full hover:bg-gray-300">
+                <button type="button" onclick="closeModal('edit')" class="px-4 py-2 text-black bg-gray-300 rounded-full hover:bg-gray-400">
                     Batal
                 </button>
-                <button type="button" onclick=""
-                    class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
+                <button type="submit" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition">
                     Simpan
                 </button>
             </div>
         </form>
     </div>
 </div>
+
 
 
 <div id="modalTambah" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
@@ -183,25 +196,48 @@
         <h2 class="mb-4 text-lg font-semibold">Hapus Berita</h2>
         <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin menghapus berita ini?</p>
         <div class="flex justify-end space-x-3">
-            <button type="button" onclick="closeModal('delete')"
-                class="px-4 py-2 text-black transition-all bg-gray-300 rounded-full hover:bg-gray-300">
-                Batal
-            </button>
-            <button type="button" onclick="deleteItem()"
-                class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
-                Ya, Hapus
-            </button>
+            <form method="POST" action="{{ route('berita.destroy', $item->id_berita) }}">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('delete')" class="px-4 py-2 text-black bg-gray-300 rounded-full hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-6 py-2 text-white transition bg-red-600 rounded-full hover:bg-red-700">
+                        Hapus
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+
 @endsection
+
 
 <script>
     // Fungsi untuk membuka modal
-    function openModal(type, id) {
+    function openModal(type, button) {
         if (type === 'edit') {
-            // Tampilkan modal Edit dan sembunyikan yang lain
-            document.getElementById('modalEdit').classList.remove('hidden');
+            // Ambil data dari atribut data-xxx
+            const beritaId = button.getAttribute('data-id');
+            const judul = button.getAttribute('data-judul');
+            const isi = button.getAttribute('data-isi');
+
+            // Menghapus tag HTML dengan menggunakan elemen dummy
+            const dummy = document.createElement("div");
+            dummy.innerHTML = isi; // Memasukkan konten HTML
+            const plainText = dummy.innerText; // Mengambil teks polos tanpa tag HTML
+
+            // Isi field judul dan isi berita di form
+            document.getElementById('judul_edit').value = judul;
+            document.getElementById('tanggal_edit').value = ''; // Kosongkan atau isi dengan tanggal yang sesuai
+            $('#summernote_edit').summernote('code', plainText); // Isi Summernote dengan teks polos
+
+            // Set action form untuk edit data
+            document.getElementById('editForm').action = `/admin/${beritaId}`;
+
             $(document).ready(function() {
                 $("#summernote_edit").summernote({
                     tabsize: 2,
@@ -214,8 +250,8 @@
                     ],
                 });
             });
+            document.getElementById('modalEdit').classList.remove('hidden');
         } else if (type === 'delete') {
-            // Tampilkan modal Delete dan sembunyikan yang lain
             document.getElementById('modalDelete').classList.remove('hidden');
         } else if (type === 'tambah') {
             // Tampilkan modal Tambah dan sembunyikan yang lain
