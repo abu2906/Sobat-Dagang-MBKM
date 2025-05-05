@@ -1,10 +1,6 @@
 {
     "private": true,
-    "type": "module",
-    "scripts": {
-        "build": "vite build",
-        "dev": "vite"
-    },
+    "scripts": {},
     "devDependencies": {
         "autoprefixer": "^10.4.21",
         "axios": "^1.7.4",
@@ -15,10 +11,6 @@
         "vite": "^6.0.11"
     },
     "dependencies": {
-<<<<<<< HEAD
-        "@tailwindcss/vite": "^4.1.4",
-=======
->>>>>>> Andif
         "tom-select": "^2.4.3"
     }
 }

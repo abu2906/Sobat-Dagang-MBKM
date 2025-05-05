@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class RiwayatSuratController{
+class RiwayatSuratController
+{
     public function index()
     {
         // Ambil data riwayat surat dari database kalau tersedia
