@@ -76,7 +76,7 @@
             <a href=""
                 class="border-2 border-[#083358] rounded-xl p-4 flex flex-col items-center bg-white shadow-sm
                    hover:bg-indigo-50 hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out transform">
-                <img src="{{ asset('assets/img/Produk/' . $item['image']) }}" alt="{{ $item['name'] }}" class="object-contain w-16 h-16">
+                <img src="{{ asset('assets/img/icon/hargaPasar/' . $item['image']) }}" alt="{{ $item['name'] }}" class="object-contain w-16 h-16">
                 <p class="mt-3 text-sm font-semibold">{{ $item['name'] }}</p>
             </a>
             @endforeach

@@ -11,6 +11,6 @@ class adminBeritaController{
         $beritaController = new BeritaController();
         $beritas = $beritaController->getDummyData();
 
-        return view('admin.kelola_berita', compact('beritas'));
+        return view('admin.adminSuper.kelola_berita', compact('beritas'));
     }
 }

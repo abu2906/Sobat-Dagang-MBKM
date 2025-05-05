@@ -15,7 +15,7 @@ class BeritaController
     public function show()
     {
         $daftarBerita = Berita::orderBy('created_at', 'desc')->get();
-        return view('admin.kelola_berita', compact('daftarBerita'));
+        return view('admin.adminSuper.kelola_berita', compact('daftarBerita'));
     }
 
     public function tambahberita(Request $request)

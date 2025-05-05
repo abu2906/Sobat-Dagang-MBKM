@@ -25,6 +25,16 @@ class PelaporanController extends Controller
 
     public function reviewPengajuan()
     {
-        return view('admin.bidangPerdagangan.reviewPengajuanDistributor');
+        return view('admin.adminSuper.reviewPengajuanDistributor');
+    }
+
+    public function lihatLaporan()
+    {
+        return view('admin.adminSuper.lihatLaporan');
+    }
+
+    public function tambahBarangDistribusi()
+    {
+        return view('admin.adminSuper.tambahBarangDistribusi');
     }
 }

@@ -14,7 +14,7 @@ class CreateDisdagTable extends Migration
         Schema::create('disdag', function (Blueprint $table) {
             $table->id('id_disdag'); // Primary Key
             $table->string('password');
-            $table->string('nip')->unique();
+            $table->string('nib')->nullable();
             $table->string('email')->unique();
             $table->string('telp')->nullable();
             $table->enum('role', [
@@ -24,8 +24,7 @@ class CreateDisdagTable extends Migration
                 'admin_metrologi',
                 'kabid_perdagangan',
                 'kabid_industri',
-                'kabid_metrologi',
-                'kepala_dinas'
+                'kabid_metrologi'
             ]);
             $table->timestamps();
         });

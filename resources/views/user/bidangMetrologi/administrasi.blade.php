@@ -80,7 +80,7 @@
 								class="text-xs font-medium text-green-700 bg-green-100 px-4 py-1 rounded-full">Disetujui</span>
 						</td>
 						<td class="px-5 text-center py-3 border-b">
-							<button
+							<button onclick="toggleModal(true, 'path/sertifikat-abu.jpg')"
 								class="px-4 py-1 text-sm text-[#1e3a8a] border border-[#1e3a8a] rounded-full hover:bg-[#1e3a8a] hover:text-white transition">
 								Lihat Surat
 							</button>
@@ -93,7 +93,7 @@
 							<span class="text-xs font-medium text-red-700 bg-red-100 px-6 py-1 rounded-full">Ditolak</span>
 						</td>
 						<td class="px-5 text-center py-3">
-							<button 
+							<button onclick="toggleModal(true, 'path/sertifikat-abu.jpg')"
 								class="px-4 py-1 text-sm text-[#1e3a8a] border border-[#1e3a8a] rounded-full hover:bg-[#1e3a8a] hover:text-white transition">
 								Lihat Surat
 							</button>

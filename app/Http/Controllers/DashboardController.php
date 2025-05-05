@@ -10,4 +10,8 @@ class DashboardController extends Controller
     {
         return view('user.dashboard');
     }
+    public function showMetrologi()
+    {
+        return view('admin.bidangMetrologi.dashboard');
+    }
 }
