@@ -24,10 +24,10 @@ Route::get('/', [homeController::class, 'index'])->name('Home');
 Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
 
 // Controller untuk authentication
-Route::get('/login', [authController::class, 'showFormLogin'])->name('login');
-Route::post('/login', [authController::class, 'submitFormLogin'])->name('login.submit');
-Route::get('/register', [authController::class, 'showFormRegister'])->name('register');
-Route::post('/register', [authController::class, 'submitRegister'])->name('register.submit');
+Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'submitFormLogin'])->name('login.submit');
+Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 
