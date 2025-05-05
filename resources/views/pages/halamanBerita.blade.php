@@ -8,8 +8,8 @@
     <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
         
         <!-- Tombol Kembali -->
-        <a href="{{ route('dashboard') }}" class="text-sm text-blue-500 hover:text-blue-700 mb-6 inline-block">
-            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Dashboard
+        <a href="{{ route('Home') }}" class="text-sm text-blue-500 hover:text-blue-700 mb-6 inline-block">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Halaman Utama
         </a>
         
         <!-- Judul -->

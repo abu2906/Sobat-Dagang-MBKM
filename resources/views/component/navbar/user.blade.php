@@ -3,6 +3,7 @@
     <div class="flex items-center space-x-2">
         <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="h-12">
     </div>
+<<<<<<< HEAD
     <div class="flex items-center space-x-4">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white hover:text-gray-600 cursor-pointer"
             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,6 +66,8 @@
         </a>
     </div>
 
+=======
+>>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f
     <div class="navbar-center">
         <ul id="nav-menu" class="nav-menu">
             <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
@@ -104,9 +107,8 @@
                     <li class="dropdown-submenu">
                         <a href="#"><strong>METROLOGI</strong></a>
                         <ul class="submenu">
-                            <li><a href="#"><strong>Directory Book</strong></a></li>
-                            <li><a href="#"><strong>Surat Permohonan</strong></a></li>
-                            <li><a href="#"><strong>Regulasi</strong></a></li>
+                            <li><a href="{{ route('administrasi-metrologi') }}"><strong>Surat Permohonan Tera/Teraulang</strong></a></li>
+                            <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Milik Saya</strong></a></li>
                         </ul>
                     </li>
                     <li><a href="#"><strong>PERSURATAN</strong></a></li>
@@ -116,8 +118,15 @@
             <li><a href=""><strong>FAQ</strong></a></li>
         </ul>
     </div>
-
-    <div class=" navbar-right">
+    <div class="flex items-center space-x-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white hover:text-gray-600 cursor-pointer"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002
+                    6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67
+                    6.165 6 8.388 6 11v3.159c0 .538-.214
+                    1.055-.595 1.436L4 17h5m6 0v1a3 3 0
+                    11-6 0v-1m6 0H9" />
+        </svg>
         <button class="text-white px-4 py-1 rounded-md text-sm font-semibold">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white hover:text-gray-600 cursor-pointer"
                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,5 +137,9 @@
             </svg>
         </button>
     </div>
+<<<<<<< HEAD
 </nav>
 @endauth
+=======
+</nav>
+>>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f

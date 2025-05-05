@@ -5,14 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sertifikasi Halal</title>
-  @vite('resources/css/app.css')
+  <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="flex flex-col min-h-screen bg-white">
 
   <!-- Header -->
   <header class="bg-[#0d3b66] py-4 px-6 flex items-center justify-between">
-    <img src="{{ asset('image/disdag.png') }}" alt="Logo Dinas Perdagangan" class="h-10">
+    <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo Dinas Perdagangan" class="h-10">
     <div class="flex items-center space-x-4">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405M19 13v-2a7 7 0 10-14 0v2m2 4h10" />

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-// Semua Function yang digunakan dalam halaman utama (Homepage) dimasukkan disini
 class homeController
 {
     public function index()
@@ -19,7 +18,7 @@ class homeController
             1 => (object)[
                 'id' => 1,
                 'judul' => 'Wamendag: IEU-CEPA jadi solusi strategis di tengah situasi global',
-                'gambar' => asset('img/dashboard.jpg'),
+                'gambar' => asset('/assets/img/dashboard.jpg'),
                 'created_at' => '17-02-2025',
                 'isi' => 'Isi lengkap berita 1 di sini. Penjelasan mengenai IEU-CEPA dalam konteks global saat ini...'
             ],
@@ -89,6 +88,11 @@ class homeController
             abort(404, 'Berita tidak ditemukan');
         }
 
-        return view('beritaUtama', compact('berita'));
+        return view('pages.halamanBerita', compact('berita'));
+    }
+
+    public function showAboutPage()
+    {
+        return view('pages.aboutUs');
     }
 }

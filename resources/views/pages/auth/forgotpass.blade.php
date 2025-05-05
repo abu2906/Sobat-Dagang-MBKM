@@ -5,7 +5,10 @@
   <title>Lupa Kata Sandi - Sobat Dagang</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
+<<<<<<< HEAD
   <script src="https://cdn.tailwindcss.com"></script>
+=======
+>>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-primary min-h-screen flex flex-col justify-center items-center font-sans">

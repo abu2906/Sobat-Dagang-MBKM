@@ -5,12 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }}</title>
-    <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
+<<<<<<< HEAD
 <body class="bg-gray-100">
+=======
+<body class="min-h-screen flex flex-col bg-gray-100">
+
+>>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f
     <div class="relative">
         @include('component.navbar.user')
 
@@ -34,11 +39,15 @@
     </div>
 
     {{-- Konten utama --}}
-    <main class="relative p-6 ml-20 mr-20 rounded-lg">
+    <main class="flex-grow relative mx-5 md:mx-20 p-6 rounded-lg min-h-[calc(100vh-250px)]">
         @yield('content')
     </main>
 
+<<<<<<< HEAD
     @include('component.footer')
+=======
+    @yield('footer')
+>>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f
     <script src="{{ asset('/assets/js/app.js') }}"></script>
 </body>
 
