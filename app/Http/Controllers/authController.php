@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Disdag;
 
-class AuthController extends Controller
+class authController extends Controller
 {
     public function showFormLogin()
     {
@@ -45,7 +45,7 @@ class AuthController extends Controller
                 case 'master_admin':
                     return redirect()->intended(route('user.dashboard'));
                 case 'admin_perdagangan':
-                    return redirect()->intended('/admin/perdagangan');
+                    return redirect()->intended(route('dashboard.perdagangan'));
                 case 'admin_industri':
                     return redirect()->intended('/admin/industri');
                 case 'admin_metrologi':
@@ -70,7 +70,8 @@ class AuthController extends Controller
             return redirect()->intended(route('user.dashboard'));
         }
 
-        return redirect()->route('login')->with('error', 'Username atau password salah');
+        // Jika login gagal, kirimkan pesan error ke session
+        return redirect()->route('login')->withErrors(['login_error' => 'Username atau password salah']);
     }
 
 
@@ -105,8 +106,8 @@ class AuthController extends Controller
             $user->telp = $validated['telp'];
             $user->password = Hash::make($validated['password']);
             $user->alamat_lengkap = $validated['alamat_lengkap'];
-            $user->nik = Hash::make($validated['nik']);
-            $user->nib = Hash::make($validated['nib']);
+            $user->nik = $validated['nik'];
+            $user->nib = $validated['nib'];
 
             Log::info('Mencoba menyimpan user ke database');
             $user->save();
@@ -121,5 +122,29 @@ class AuthController extends Controller
         }
 
         return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan login.');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout(); // keluar dari session
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login'); // arahkan ke halaman login
+    }
+
+    public function showforgotPassword()
+    {
+        return view('pages.auth.forgotpass');
+    }
+
+    public function showchangePassword()
+    {
+        return view('pages.auth.changepass');
+    }
+
+    public function showverification()
+    {
+        return view('pages.auth.verification');
     }
 };

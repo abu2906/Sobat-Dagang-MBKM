@@ -1,4 +1,4 @@
-@extends('layouts.home')
+@extends('layouts.menuAdminPerdagangan')
 
 @section('title', 'Kelola Berita')
 
@@ -12,7 +12,7 @@
 </head>
 
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.png') }}" alt="Port Background" class="object-cover w-full h-full">
+    <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         <h1 class="text-5xl font-bold text-[#FAA31E]">Kelola Berita</h1>
     </div>
@@ -123,6 +123,15 @@
                     Simpan
                 </button>
             </div>
+            @if ($errors->any())
+            <div class="p-4 mb-4 text-red-700 bg-red-100 border border-red-400 rounded">
+                <ul class="pl-5 list-disc">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
         </form>
     </div>
 </div>
