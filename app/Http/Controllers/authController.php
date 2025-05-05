@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Disdag;
 
-class AuthController extends Controller
+class authController extends Controller
 {
     public function showFormLogin()
     {
