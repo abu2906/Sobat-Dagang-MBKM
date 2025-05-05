@@ -46,7 +46,6 @@
                         <ul class="submenu">
                             <li><a href="{{ route('administrasi-metrologi') }}"><strong>Surat Permohonan Tera/Teraulang</strong></a></li>
                             <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Milik Saya</strong></a></li>
-                            <!-- <li><a href="#"><strong>Regulasi</strong></a></li> -->
                         </ul>
                     </li>
                     <li><a href="#"><strong>PERSURATAN</strong></a></li>

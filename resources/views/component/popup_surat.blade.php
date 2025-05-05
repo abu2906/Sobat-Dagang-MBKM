@@ -3,20 +3,21 @@
     <!-- Tombol Close -->
     <button onclick="toggleModal(false)" class="absolute text-2xl text-gray-500 top-2 right-2 hover:text-gray-800">&times;</button>
 
-    <h2 class="mb-4 text-xl font-bold">Sertifikat</h2>
+    <h2 class="mb-4 text-xl font-bold"></h2>
 
-    <img id="sertifikat-image" src="" class="w-full border rounded">
+    <img id="image" src="" class="w-full border rounded">
   </div>
 </div>
 
 <script>
   function toggleModal(show, imageUrl = '', ) {
     const modal = document.getElementById('modal');
-    const img = document.getElementById('sertifikat-image');
+    const img = document.getElementById('image');
     if (show) {
       modal.classList.remove('hidden');
       if (imageUrl) img.src = imageUrl;
-    } else {
+    } 
+    else {
       modal.classList.add('hidden');
       img.src = '';
     }
