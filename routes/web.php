@@ -28,23 +28,21 @@ Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'submitFormLogin'])->name('login.submit');
 Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
-Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
-Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
+
+// Masih dalam tahap pengembangan
+// Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
+// Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
-
-// Menampilkan berita berdasarkan ID
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
-
-// Menampilkan halaman admin untuk kelola berita
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
 
 // Menampilkan halaman edit berita
 Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
 
 Route::get('/halal', function () {
-    return view('halal');
+    return view('user.halal');
 })->name('halal');
 
 //user perdagangan 
@@ -58,7 +56,6 @@ Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'in
 Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
 Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
 
-//Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
 Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
 Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
 Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
@@ -70,10 +67,6 @@ Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan'])
 Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
 Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
 
-
-
-//Route::get('/regulasi', [RegulasiController::class, 'index'])->name('regulasi');
-Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
 Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name('sertifikasi-ikm');

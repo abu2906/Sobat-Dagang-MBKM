@@ -38,6 +38,8 @@
     <main class="flex-grow relative mx-5 md:mx-20 p-6 rounded-lg min-h-[calc(100vh-250px)]">
         @yield('content')
     </main>
+
+    @yield('footer')
     <script src="{{ asset('/assets/js/app.js') }}"></script>
 </body>
 

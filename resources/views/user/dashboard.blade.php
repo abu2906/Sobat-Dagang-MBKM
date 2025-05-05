@@ -1,21 +1,21 @@
 @extends('layouts.user')
 
 @section('tab')
-<section class="bg-white py-4 px-4">
-    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-4 items-center">
-        <!-- Teks -->
-        <div class="md:pl-10">
-            <h1 class="text-3xl font-bold text-[#325472] mb-4">
+<section class="bg-white py-12 px-4">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+        <!-- Teks Sambutan -->
+        <div>
+            <h1 class="text-3xl font-bold text-[#2E3C51] mb-4">
                 Selamat datang di Sobat Dagang Kota Parepare
             </h1>
-            <p class="text-base text-[#5d83a3] leading-relaxed max-w-md">
+            <p class="text-base text-[#6B7280] leading-relaxed max-w-md">
                 Kami siap melayani Anda dalam Pengurusan Perizinan, Pelaporan, dan fasilitas perdagangan lainnya secara mudah dan cepat
             </p>
         </div>
-    
+
         <!-- Ilustrasi -->
-        <div class="flex justify-center md:justify-end md:pr-10">
-            <img src="{{ asset('assets/img/form.png') }}" alt="Ilustrasi Formulir" class="w-64 md:w-72">
+        <div class="flex justify-center md:justify-end">
+            <img src="{{ asset('image/ilustrasi-checklist.png') }}" alt="Ilustrasi Formulir" class="w-72 md:w-80">
         </div>
     </div>
 </section>
@@ -95,4 +95,8 @@
     
 </div>
 
+@endsection
+
+@section('footer')
+    @include('component.footer')
 @endsection

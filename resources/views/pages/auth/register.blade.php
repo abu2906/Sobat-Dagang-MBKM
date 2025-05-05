@@ -4,17 +4,9 @@
     <meta charset="UTF-8">
     <title>Daftar - Sobat Dagang</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-=======
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
->>>>>>> b6837dfc048029817d2644643f4e39e0e21a11b1
 </head>
 <body class="bg-primary font-sans h-screen flex">
     <div class="flex flex-col sm:flex-row w-full h-full">
@@ -191,11 +183,7 @@
         <!-- Kanan -->
         <div class="w-full sm:w-1/2 bg-primary text-white flex flex-col justify-center items-center p-8">
             <div class="flex justify-center w-full mt-6 mb-6">
-<<<<<<< HEAD
-                <img src="{{ asset('assets/img/logo/dinasPerdagangan.png') }}" alt="Logo" class="w-28">
-=======
                 <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo" class="w-28">
->>>>>>> b6837dfc048029817d2644643f4e39e0e21a11b1
             </div>
         
 
