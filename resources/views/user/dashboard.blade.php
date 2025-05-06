@@ -1,6 +1,8 @@
 @extends('layouts.user')
 
 @section('tab')
+
+@section('content')
 <section class="px-4 py-12 bg-white">
     <div class="grid items-center gap-8 mx-auto max-w-7xl md:grid-cols-2">
         <!-- Teks Sambutan -->
@@ -15,13 +17,11 @@
 
         <!-- Ilustrasi -->
         <div class="flex justify-center md:justify-end">
-            <img src="{{ asset('image/ilustrasi-checklist.png') }}" alt="Ilustrasi Formulir" class="w-72 md:w-80">
+            <img src="{{ asset('assets\img\icon\ilustrasi-checklist.png') }}" alt="Ilustrasi Formulir" class="w-72 md:w-80">
         </div>
     </div>
 </section>
-@endsection
 
-@section('content')
 <!-- Tombol utama -->
 <div class="flex justify-center mt-10 space-x-20">
     <div class="relative group w-[300px]">
