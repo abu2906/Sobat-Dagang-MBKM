@@ -63,9 +63,13 @@
                         class="text-[#083358] hover:text-black">
                         <span class="material-symbols-outlined">edit</span>
                     </button>
-                    <button onclick="openModal('delete', {{ $item->id_berita }})" class="text-[#083358] hover:text-black">
+                    <button
+                        onclick="openModal('delete', this)"
+                        data-id="{{ $item->id_berita }}"
+                        class="text-[#083358] hover:text-black">
                         <span class="material-symbols-outlined">delete</span>
                     </button>
+
 
                 </td>
             </tr>
@@ -110,9 +114,8 @@
                 <button type="button" onclick="closeModal('edit')" class="px-4 py-2 text-black bg-gray-300 rounded-full hover:bg-gray-400">Batal</button>
                 <button type="submit" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition">Simpan</button>
             </div>
-
             @if ($errors->any())
-            <div class="p-4 mt-4 text-red-700 bg-red-100 border border-red-400 rounded">
+            <div class="p-4 mb-4 text-red-700 bg-red-100 border border-red-400 rounded">
                 <ul class="pl-5 list-disc">
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -184,22 +187,26 @@
     <div class="w-11/12 max-w-md p-6 bg-white shadow-xl rounded-2xl">
         <h2 class="mb-4 text-lg font-semibold">Hapus Berita</h2>
         <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin menghapus berita ini?</p>
-        <div class="flex justify-end space-x-3">
-            <form method="POST" action="{{ route('berita.destroy', $item->id_berita) }}">
-                @csrf
-                @method('DELETE')
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closeModal('delete')" class="px-4 py-2 text-black bg-gray-300 rounded-full hover:bg-gray-400">
-                        Batal
-                    </button>
-                    <button type="submit" class="px-6 py-2 text-white transition bg-red-600 rounded-full hover:bg-red-700">
-                        Hapus
-                    </button>
-                </div>
-            </form>
-        </div>
+        <form id="formDelete" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeModal('delete')" class="px-4 py-2 text-black bg-gray-300 rounded-full hover:bg-gray-400">
+                    Batal
+                </button>
+                <button type="submit" class="px-6 py-2 text-white transition bg-red-600 rounded-full hover:bg-red-700">
+                    Hapus
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> origin/Robert-Database
 @endsection
 
 
@@ -239,6 +246,9 @@
             });
             document.getElementById('modalEdit').classList.remove('hidden');
         } else if (type === 'delete') {
+            const beritaId = button.getAttribute('data-id');
+            const form = document.getElementById('formDelete');
+            form.action = `/admin/${beritaId}`;
             document.getElementById('modalDelete').classList.remove('hidden');
         } else if (type === 'tambah') {
             // Tampilkan modal Tambah dan sembunyikan yang lain

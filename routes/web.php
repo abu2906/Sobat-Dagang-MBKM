@@ -15,9 +15,6 @@ use App\Http\Controllers\DataIKMController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
-use App\Models\Kecamatan;
-use App\Models\Kelurahan;
-use App\Models\Berita;
 
 
 use App\Http\Controllers\DashboardPerdaganganController;

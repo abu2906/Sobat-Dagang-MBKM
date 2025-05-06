@@ -11,8 +11,6 @@ class Disdag extends Authenticatable
 
     protected $fillable = [
         'nip',
-        'nik',
-        'nib',
         'email',
         'password',
         'telp',

@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="relative w-[300px] mx-auto text-right text-sm">
-                    <a href="{{ route('forgot-password') }}" class="font-bold text-link hover:underline">Lupa kata sandi?</a>
+                    <a href="" class="font-bold text-link hover:underline">Lupa kata sandi?</a>
                 </div>
 
                 <div class="relative w-[150px] mx-auto">
@@ -71,8 +71,15 @@
                         Masuk
                     </button>
                 </div>
-
-
+                @if ($errors->any())
+                <div class="p-4 mb-4 text-red-700 bg-red-100 border border-red-400 rounded">
+                    <ul class="pl-5 list-disc">
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
             </form>
         </div>
     </div>

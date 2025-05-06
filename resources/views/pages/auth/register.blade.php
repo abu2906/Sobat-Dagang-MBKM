@@ -186,6 +186,15 @@
                                 Daftar
                             </button>
                         </div>
+                        @if ($errors->any())
+                        <div class="p-4 mb-4 text-red-700 bg-red-100 border border-red-400 rounded">
+                            <ul class="pl-5 list-disc">
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
 
                     </form>
                 </div>
