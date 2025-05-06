@@ -3,71 +3,38 @@
     <div class="flex items-center space-x-2">
         <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="h-12">
     </div>
-<<<<<<< HEAD
+
     <div class="flex items-center space-x-4">
+        <!-- Icon Notifikasi -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white hover:text-gray-600 cursor-pointer"
             fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002
-                    6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67
-                    6.165 6 8.388 6 11v3.159c0 .538-.214
-                    1.055-.595 1.436L4 17h5m6 0v1a3 3 0
-                    11-6 0v-1m6 0H9" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002
+                   6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67
+                   6.165 6 8.388 6 11v3.159c0 .538-.214
+                   1.055-.595 1.436L4 17h5m6 0v1a3 3 0
+                   11-6 0v-1m6 0H9" />
         </svg>
+
+        <!-- Profil -->
         <div x-data="{ showProfile: false }" class="relative">
-            <!-- Tombol Profil di Navbar -->
             <button @click="showProfile = true" class="text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-7 w-7 text-white hover:text-gray-600 cursor-pointer">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                  </svg>                  
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                     class="h-7 w-7 text-white hover:text-gray-600 cursor-pointer">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0
+                             a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15
+                             9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
             </button>
 
-            <!-- Panel Profil -->
-            <div x-show="showProfile" x-transition @click.outside="showProfile = false"
-                class="fixed top-20 right-4 bg-white rounded-2xl shadow-xl w-80 z-50 border border-blue-400">
-
-                <div class="p-6 relative">
-                    <!-- Tombol Tutup -->
-                    <button @click="showProfile = false"
-                        class="absolute top-2 right-2 text-xl text-gray-500 hover:text-gray-700">
-                        &times;
-                    </button>
-                
-                    <!-- Info Pengguna -->
-                    <div class="text-center">
-                        <h2 class="font-semibold text-lg">Profile Anda</h2>
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=0D8ABC&color=fff"
-                             class="w-24 h-24 rounded-full mx-auto mt-4" alt="Foto Profil">
-                    
-                        <h3 class="mt-2 font-bold">{{ Auth::user()->name ?? '-' }}</h3>
-                        <p class="text-sm text-gray-600">{{ Auth::user()->email ?? '-' }}</p>
-                    </div>
-                
-                    <!-- Tombol Logout -->
-                    <div class="mt-6 text-center">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="border border-black rounded-full px-4 py-1 font-medium hover:bg-gray-100 transition">
-                                Keluar →
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
+            @include('component.profile')
         </div>
-        
     </div>
 </nav>
 @else
-<nav class="navbar">
-    <div class="navbar-left">
-        <a href="/">
-            <img src="{{ asset('img/icon/logo.png') }}" alt="Logo" class="logo">
-        </a>
-    </div>
 
-=======
->>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f
     <div class="navbar-center">
         <ul id="nav-menu" class="nav-menu">
             <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
@@ -137,9 +104,6 @@
             </svg>
         </button>
     </div>
-<<<<<<< HEAD
 </nav>
 @endauth
-=======
 </nav>
->>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f

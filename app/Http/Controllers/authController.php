@@ -125,13 +125,13 @@ class AuthController extends Controller
 
         public function logout(Request $request)
     {
-        Auth::logout(); // keluar dari session
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login'); // arahkan ke halaman login
+        return redirect()->route('login');
     }
-
+    
         public function showforgotPassword()
     {
         return view('pages.auth.forgotpass');

@@ -30,9 +30,12 @@ Route::get('/register', [AuthController::class, 'showFormRegister'])->name('regi
 Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
+
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
 

@@ -10,12 +10,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<<<<<<< HEAD
-<body class="bg-gray-100">
-=======
 <body class="min-h-screen flex flex-col bg-gray-100">
-
->>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f
     <div class="relative">
         @include('component.navbar.user')
 
@@ -43,11 +38,8 @@
         @yield('content')
     </main>
 
-<<<<<<< HEAD
     @include('component.footer')
-=======
-    @yield('footer')
->>>>>>> 1c10773644da8a1f3cc5c2eae76f7a429ef9864f
+
     <script src="{{ asset('/assets/js/app.js') }}"></script>
 </body>
 
