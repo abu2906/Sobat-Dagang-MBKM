@@ -4,9 +4,6 @@
 
 @section('content')
 
-<head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-</head>
 <div class="relative w-full h-64">
     <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Port Background" class="object-cover w-full h-full">
     <a href=""
@@ -19,11 +16,11 @@
 
 <div class="flex justify-center mt-8 mb-6">
     <div class="flex p-1 bg-blue-100 rounded-full">
-        <button onclick="window.location.href='{{ route('form.permohonan') }}'"
+        <button onclick="window.location.href='{{ route('bidangPerdagangan.formPermohonan') }}'"
             class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
             AJUKAN SURAT PERMOHONAN
         </button>
-        <button onclick="window.location.href='{{ route('riwayat.surat') }}'"
+        <button onclick="window.location.href='{{ route('bidangPerdagangan.riwayatSurat') }}'"
             class="px-6 py-2 font-semibold text-black transition-all rounded-full hover:bg-gray-100">
             RIWAYAT SURAT
         </button>
@@ -31,7 +28,29 @@
 </div>
 <div class="max-w-4xl p-6 mx-auto mb-16 bg-white shadow-lg rounded-4xl">
     <h2 class="mb-6 text-xl font-semibold text-center">Form Surat Permohonan</h2>
-    <form method="POST" action="" enctype="multipart/form-data">
+
+    @if (session('success'))
+    <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 border border-green-200 rounded-lg" role="alert">
+        {{ session('success') }}
+    </div>
+    @endif
+    @if (session('error'))
+        <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+    @if ($errors->any())
+        <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg">
+            <strong>Terjadi kesalahan:</strong>
+            <ul class="mt-1 ml-4 list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('ajukanPermohonan') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 font-roboto">
             <div>
@@ -68,55 +87,52 @@
             <div>
                 <label for="foto_usaha">Foto Usaha</label>
                 <div class="flex items-center space-x-2">
-                    <label for="foto_usaha" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
-                    <span id="file-foto_usaha" class="text-gray-500">Tidak ada file yang dipilih</span>
+                    <label for="foto_usaha" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <span id="file-foto_usaha" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
                     <input type="file" id="foto_usaha" name="foto_usaha" class="hidden"
+                        accept="image/*"
                         onchange="document.getElementById('file-foto_usaha').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
             </div>
             <div>
                 <label for="foto_ktp">Foto KTP (Kartu Tanda Penduduk)</label>
                 <div class="flex items-center space-x-2">
-                    <label for="foto_ktp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
-                    <span id="file-foto_ktp" class="text-gray-500">Tidak ada file yang dipilih</span>
+                    <label for="foto_ktp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <span id="file-foto_ktp" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
                     <input type="file" id="foto_ktp" name="foto_ktp" class="hidden"
+                     accept="image/*"
                         onchange="document.getElementById('file-foto_ktp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
             </div>
             <div>
                 <label for="dokumen_nib">Dokumen NIB (Nomor Induk Berusaha)</label>
                 <div class="flex items-center space-x-2">
-                    <label for="dokumen_nib" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
-                    <span id="file-dokumen_nib" class="text-gray-500">Tidak ada file yang dipilih</span>
+                    <label for="dokumen_nib" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <span id="file-dokumen_nib" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
                     <input type="file" id="dokumen_nib" name="dokumen_nib" class="hidden"
+                        accept=".pdf"
                         onchange="document.getElementById('file-dokumen_nib').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
             </div>
             <div>
-                <label for="npwp">NPWP</label>
+                <label for="file-npwp">NPWP</label>
                 <div class="flex items-center space-x-2">
-                    <label for="npwp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
-                    <span id="npwp" class="text-gray-500">Tidak ada file yang dipilih</span>
+                    <label for="npwp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <span id="file-npwp" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
                     <input type="file" id="npwp" name="npwp" class="hidden"
-                        onchange="document.getElementById('npwp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onchange="document.getElementById('file-npwp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
             </div>
             <div>
-                <label for="akta_perusahaan">Akta Perusahaan</label>
+                <label for="file-akta_perusahaan">Akta Perusahaan</label>
                 <div class="flex items-center space-x-2">
-                    <label for="akta_perusahaan" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white">Pilih File</label>
-                    <span id="akta_perusahaan" class="text-gray-500">Tidak ada file yang dipilih</span>
+                    <label for="akta_perusahaan" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <span id="file-akta_perusahaan" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
                     <input type="file" id="akta_perusahaan" name="akta_perusahaan" class="hidden"
-                        onchange="document.getElementById('akta_perusahaan').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                        accept=".pdf"
+                        onchange="document.getElementById('file-akta_perusahaan').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
-            </div>
-            <div>
-                <label for="jenis_kelamin">Jenis Kelamin</label>
-                <select id="jenis_kelamin" name="jenis_kelamin" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Pilih Jenis Kelamin</option>
-                    <option value="laki-laki">Laki-Laki</option>
-                    <option value="perempuan">Perempuan</option>
-                </select>
             </div>
         </div>
         <div class="flex justify-center mt-6 mb-4 space-x-4">
@@ -142,5 +158,6 @@
             </div>
         </div>
     </form>
+
 </div>
 @endsection

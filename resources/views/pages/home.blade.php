@@ -49,6 +49,7 @@
             @endforeach
         </div>
     </div>
+    
     <div class="bg-[#083358] text-white px-6 md:px-16 py-4 mt-10 z-10 shadow-lg">
         <div class="flex items-center justify-center">
             <h3 class="justify-center text-lg font-bold md:text-2xl">Sobat Harga</h3>

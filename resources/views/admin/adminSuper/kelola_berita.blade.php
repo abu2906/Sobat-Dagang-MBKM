@@ -132,7 +132,6 @@
         <h3 class="mb-6 text-2xl font-semibold text-center">Tambah Berita</h3>
         <form action="{{ route('tambah.berita') }}" method="POST" id="tambahForm" enctype="multipart/form-data">
             @csrf
-
             <div class="mb-4">
                 <label for="judul_tambah" class="block text-sm font-medium text-gray-700">Judul Berita</label>
                 <input type="text" name="judul" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Judul Berita" required>
@@ -201,12 +200,6 @@
         </form>
     </div>
 </div>
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> origin/Robert-Database
 @endsection
 
 

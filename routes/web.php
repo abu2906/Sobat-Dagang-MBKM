@@ -15,8 +15,6 @@ use App\Http\Controllers\DataIKMController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
-
-
 use App\Http\Controllers\DashboardPerdaganganController;
 
 
@@ -57,9 +55,15 @@ Route::get('/halal', function () {
 })->name('halal');
 
 //user perdagangan
-Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran']);
-Route::get('/pelaporan', [PelaporanController::class, 'Pelaporan']);
-Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
+Route::get('/bidang-perdagangan/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran']);
+Route::get('/bidang-perdagangan/pelaporan', [PelaporanController::class, 'Pelaporan']);
+Route::get('/bidang-perdagangan/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
+Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
+Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
+Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/pengajuan', [DashboardPerdaganganController::class, 'store']);
+});
 
 // admin perdagangan
 Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
@@ -109,12 +113,12 @@ Route::get('/test/{viewPath}', function ($viewPath) {
     return abort(404, "View '$bladePath' tidak ditemukan.");
 })->where('viewPath', '.*');
 
-Route::get('/form-permohonan', function () {
-    return view('user.form_permohonan');
-})->name('form.permohonan');
-Route::get('/riwayat-surat', function () {
-    return view('user.riwayat_surat');
-})->name('riwayat.surat');
+// Route::get('/form-permohonan', function () {
+//     return view('user.form_permohonan');
+// })->name('form.permohonan');
+// Route::get('/riwayat-surat', function () {
+//     return view('user.riwayat_surat');
+// })->name('riwayat.surat');
 
 
 // Route Pelaporan Penyaluran

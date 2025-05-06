@@ -29,11 +29,11 @@
 
         
         <div class="bg-blue-100 p-1 rounded-full flex gap-1">
-            <button onclick="window.location.href='{{ route('form.permohonan') }}'"
+            <button onclick="window.location.href='{{ route('bidangPerdagangan.formPermohonan') }}'"
                     class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
                 AJUKAN SURAT PERMOHONAN
             </button>
-            <button onclick="window.location.href='{{ route('riwayat.surat') }}'"
+            <button onclick="window.location.href='{{ route('bidangPerdagangan.riwayatSurat') }}'"
                     class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
 
                 RIWAYAT SURAT
@@ -52,63 +52,108 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Row 1 -->
-                <tr class="text-gray-700 hover:bg-gray-50">
-                    <td class="px-4 py-3 border-b">1</td>
-                    <td class="px-4 py-3 border-b">2025-04-20</td>
-                    <td class="px-4 py-3 border-b">Surat Rekomendasi</td>
-                    <td class="px-4 py-3 border-b">
-                        <span class="px-3 py-1 text-sm font-medium text-green-700 bg-green-100 rounded-full">Disetujui</span>
-                    </td>
-                    <td class="px-4 py-3 border-b">
-                        <button onclick="openModal('https://drive.google.com/your-pdf-url')" class="text-blue-600 hover:underline">
-                            Lihat
-                        </button>
-                    </td>
-                </tr>
-
-                <!-- Row 2 -->
-                <tr class="text-gray-700 hover:bg-gray-50">
-                    <td class="px-4 py-3 border-b">2</td>
-                    <td class="px-4 py-3 border-b">2025-04-22</td>
-                    <td class="px-4 py-3 border-b">Surat Keterangan</td>
-                    <td class="px-4 py-3 border-b">
-                        <span class="px-3 py-1 text-sm font-medium text-yellow-700 bg-yellow-100 rounded-full">Menunggu</span>
-                    </td>
-                    <td class="px-4 py-3 border-b">
-                        <button onclick="openModal('https://drive.google.com/your-pdf-url')" class="text-blue-600 hover:underline">
-                            Lihat
-                        </button>
-                    </td>
-                </tr>
-
-                <!-- Row 3 -->
-                <tr class="text-gray-700 hover:bg-gray-50">
-                    <td class="px-4 py-3 border-b rounded-bl-xl">3</td>
-                    <td class="px-4 py-3 border-b">2025-04-23</td>
-                    <td class="px-4 py-3 border-b">Dan Lainnya</td>
-                    <td class="px-4 py-3 border-b">
-                        <span class="px-3 py-1 text-sm font-medium text-red-700 bg-red-100 rounded-full">Ditolak</span>
-                    </td>
-                    <td class="px-4 py-3 border-b">
-                        <button onclick="openModal('')" class="text-blue-600 hover:underline">
-                            Lihat
-                        </button>
-                    </td>
-                </tr>
+                @foreach ($riwayatSurat as $index => $item)
+                    <tr class="border-b">
+                        <td class="px-4 py-3 text-center">{{ $index + 1 }}</td>
+                        <td class="px-4 py-3 text-center">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
+                        <td class="px-4 py-3 text-center">
+                            @if($item->jenis_surat == 'surat_rekomendasi')
+                                Surat Rekomendasi
+                            @elseif($item->jenis_surat == 'surat_keterangan')
+                                Surat Keterangan
+                            @elseif($item->jenis_surat == 'dan_lainnya')
+                                Lainnya
+                            @else
+                                {{ $item->jenis_surat }}
+                            @endif
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            @if ($item->status == 'disetujui')
+                                <span class="text-green-600 font-medium">Disetujui</span>
+                            @elseif ($item->status == 'ditolak')
+                                <span class="text-red-600 font-medium">Ditolak</span>
+                            @else
+                                <span class="text-yellow-400 font-medium">Menunggu</span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="openBalasanModal('{{ $item->balasan ? asset('storage/' . $item->balasan) : '' }}')"
+                                class="px-4 py-2 bg-[#8CC5F3] text-black font-bold rounded-full hover:bg-[#7bb6e0] transition-all">
+                                Lihat
+                            </button>
+                        </td>                        
+                    </tr>
+                @endforeach
             </tbody>
+                      
         </table>
     </div>
 </div>
 
-<!-- Modal -->
-<div id="modal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-800 bg-opacity-50">
-    <div class="p-6 bg-white rounded-lg w-96">
-        <h3 class="mb-4 text-lg font-semibold">Lihat Balasan Surat</h3>
-        <iframe id="modalContent" class="w-full h-64" src="" frameborder="0"></iframe>
-        <a id="downloadBtn" href="" download class="inline-block mt-4 text-blue-600 hover:underline">Unduh PDF</a>
-        <button id="closeModal" class="px-4 py-2 mt-4 text-white bg-red-500 rounded">Tutup</button>
+<!-- Modal Balasan -->
+<div id="modal-balasan" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="w-11/12 max-w-md p-6 bg-white rounded-2xl shadow-xl text-center">
+        <div id="balasanContent">
+            <!-- Konten balasan akan diisi oleh JavaScript -->
+        </div>
+        <div class="mt-6">
+            <button onclick="closeBalasanModal()" class="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400">
+                Tutup
+            </button>
+        </div>
     </div>
 </div>
 
 @endsection
+
+<script>
+    function openBalasanModal(fileUrl) {
+        const modal = document.getElementById("modal-balasan");
+        const content = document.getElementById("balasanContent");
+
+        if (fileUrl) {
+            content.innerHTML = `
+                <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div class="relative bg-white rounded-xl shadow-xl p-6 w-full max-w-sm text-center">
+                        <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeBalasanModal()">
+                            &times;
+                        </button>
+
+                        <div class="flex justify-center mb-4">
+                            <div class="bg-yellow-400 rounded-full w-24 h-24 flex items-center justify-center">
+                                <img src="/assets/img/icon/pdf.png" alt="PDF" class="w-auto h-16">
+                            </div>
+                        </div>
+
+                        <h2 class="text-lg font-semibold mb-4">Balasan Surat Anda</h2>
+
+                        <div class="flex justify-center space-x-4">
+                            <a href="${fileUrl}" target="_blank"
+                               class="bg-[#083358] hover:bg-[#8CC5F3] text-white font-medium py-2 px-6 rounded-full">
+                               Lihat
+                            </a>
+                            <a href="${fileUrl}" download
+                               class="bg-[#083358] hover:bg-[#8CC5F3] text-white font-medium py-2 px-6 rounded-full">
+                               Unduh
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            content.innerHTML = `
+                <div class="text-center">
+                <span class="material-symbols-outlined text-red-600" style="font-size: 6rem;">cancel</span>
+                <h2 class="text-lg font-semibold mb-4 text-red-600">Belum ada balasan untuk surat ini.</h2>
+            </div>
+            `;
+        }
+
+        modal.classList.remove("hidden");
+    }
+
+    function closeBalasanModal() {
+        const modal = document.getElementById("modal-balasan");
+        modal.classList.add("hidden");
+    }
+</script>

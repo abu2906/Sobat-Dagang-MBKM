@@ -10,7 +10,7 @@ class HomeController extends Controller
     // Menampilkan halaman utama dengan daftar berita
     public function index()
     {
-        $daftarBerita = Berita::orderBy('created_at', 'desc')->get();
+        $daftarBerita = Berita::orderBy('tanggal', 'desc')->get();
         return view('pages.home', compact('daftarBerita'));
     }
 

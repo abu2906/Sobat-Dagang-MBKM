@@ -8,6 +8,10 @@ use App\Models\Surat;
 use App\Models\HargaBarang;
 use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Exception;
+use Illuminate\Support\Str;
+use App\Models\PermohonanSurat;
 
 class DashboardPerdaganganController extends Controller
 {
@@ -52,4 +56,66 @@ class DashboardPerdaganganController extends Controller
     {
         return view('admin.bidangPerdagangan.updateHarga');
     }
+
+
+    public function formPermohonan()
+    {
+        return view('user.bidangPerdagangan.formPermohonan');
+    }
+
+    public function riwayatSurat()
+    {
+    // $riwayatSurat = PermohonanSurat::where('user_id', auth()->id())->latest()->get();
+    $riwayatSurat = PermohonanSurat::all();
+    return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
+    }
+
+    public function ajukanPermohonan(Request $request)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'jenis_surat' => 'required|in:surat_rekomendasi,surat_keterangan,dan_lainnya',
+            'kecamatan' => 'required|string',
+            'kelurahan' => 'nullable|string',
+            'titik_koordinat' => 'required|string',
+            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+            'dokumen_nib' => 'required|mimes:pdf|max:10240',
+            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:10240',
+            'akta_perusahaan' => 'required|mimes:pdf|max:10240',
+        ]);
+    
+        try {
+            // Simpan file satu per satu
+            $fotoUsahaPath = $request->file('foto_usaha')->store('uploads');
+            $fotoKTPPath = $request->file('foto_ktp')->store('uploads');
+            $dokumenNibPath = $request->file('dokumen_nib')->store('uploads');
+            $npwpPath = $request->file('npwp')->store('uploads');
+            $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('uploads');
+    
+            // Buat id_permohonan unik
+            $idPermohonan = Str::uuid()->toString();
+    
+            DB::table('form_permohonan')->insert([
+                'id_permohonan' => $idPermohonan,
+                // 'id_user' => auth()->user()->id,
+                'id_user' => null,
+                'id_kecamatan' => $request->kecamatan,
+                'id_kelurahan' => $request->kelurahan,
+                'tgl_pengajuan' => now()->toDateString(),
+                'jenis_surat' => $request->jenis_surat,
+                'titik_koordinat' => $request->titik_koordinat,
+                'file_surat' => null,
+                'status' => 'pending',
+            ]);
+    
+            return redirect()->route('bidangPerdagangan.riwayatSurat')->with('success', 'Pengajuan surat berhasil diajukan.');
+    
+        } catch (Exception $e) {
+            Log::error('Gagal mengajukan surat: ' . $e->getMessage());
+            dd($e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat mengirim pengajuan. Silakan coba lagi.');
+        }
+    }
+    
 }

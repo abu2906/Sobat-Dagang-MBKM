@@ -54,16 +54,4 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.remove('hidden');
     }
 
-    // Tutup modal saat tombol close diklik
-    document.getElementById('closeModal').addEventListener('click', function() {
-        const modal = document.getElementById('modal');
-        modal.classList.add('hidden');
-    });
-    // Tutup modal jika pengguna mengklik di luar modal
-    document.getElementById('modal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.add('hidden');
-        }
-    });
-
 });

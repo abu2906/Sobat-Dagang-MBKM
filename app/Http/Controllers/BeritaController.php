@@ -10,11 +10,10 @@ use Illuminate\Support\Facades\Storage;
 class BeritaController
 {
 
-
     // Menampilkan detail berita berdasarkan ID
     public function show()
     {
-        $daftarBerita = Berita::orderBy('created_at', 'desc')->get();
+        $daftarBerita = Berita::orderBy('tanggal', 'desc')->get();
         return view('admin.adminSuper.kelola_berita', compact('daftarBerita'));
     }
 
@@ -24,7 +23,7 @@ class BeritaController
             'judul' => 'required|string|max:255',
             'tanggal' => 'required|date',
             'isi' => 'required|string',
-            'lampiran' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'lampiran' => 'required|image|mimes:jpg,jpeg,png,webp|max:51200',
         ]);
 
         $lampiranPath = null;
