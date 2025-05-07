@@ -13,6 +13,8 @@ use Exception;
 use Illuminate\Support\Str;
 use App\Models\PermohonanSurat;
 use App\Models\Barang;
+use App\Models\IndexKategori;
+
 class DashboardPerdaganganController extends Controller
 {
     public function index()
@@ -30,26 +32,42 @@ class DashboardPerdaganganController extends Controller
 
     public function formTambahBarang()
     {
-        return view('admin.bidangPerdagangan.tambahBarang');
+        $kategori = IndexKategori::all();
+        return view('admin.bidangPerdagangan.tambahBarang', compact('kategori'));
     }
 
     public function storeBarang(Request $request)
     {
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
+            'nama_barang' => 'required|string',
+            'kategori_lama' => 'nullable|string',
+            'kategori_baru' => 'nullable|string',
         ]);
 
-        $namaBarang = $request->nama_barang;
-        $kategori = $request->kategori_lama ?: $request->kategori_baru;
+        $idKategori = null;
 
-        // Simpan ke database (sesuaikan nama model dan tabel)
-        // Contoh:
-        // Barang::create([
-        //     'nama' => $namaBarang,
-        //     'kategori' => $kategori,
-        // ]);
+        if ($request->kategori_lama === 'tambah_baru' && $request->filled('kategori_baru')) {
+            $kategoriBaru = IndexKategori::create([
+                'nama_kategori' => $request->kategori_baru,
+            ]);
+            $idKategori = $kategoriBaru->id_index_kategori;
+        } elseif (is_numeric($request->kategori_lama)) {
+            $kategoriLama = IndexKategori::find($request->kategori_lama);
+            if ($kategoriLama) {
+                $idKategori = $kategoriLama->id_index_kategori;
+            }
+        }
 
-        return redirect()->back()->with('success', 'Barang berhasil ditambahkan!');
+        if (!$idKategori) {
+            return back()->withErrors(['kategori' => 'Kategori tidak valid.'])->withInput();
+        }
+
+        Barang::create([
+            'nama_barang' => $request->nama_barang,
+            'id_index_kategori' => $idKategori,
+        ]);
+
+        return redirect()->back()->with('success', 'Barang berhasil ditambahkan.');
     }
 
     public function formUpdateHarga()
@@ -59,23 +77,22 @@ class DashboardPerdaganganController extends Controller
 
     public function deleteBarang()
     {
-        // $barangs = Barang::all();
-        // return view('admin.bidangPerdagangan.hapusBarang', compact('barangs'));
-        return view('admin.bidangPerdagangan.hapusBarang');
+        $barangs = Barang::with('kategori')->get(); // eager load kategori
+        return view('admin.bidangPerdagangan.hapusBarang', compact('barangs'));
     }
     public function destroy($id)
     {
-    $barang = Barang::findOrFail($id);
-    $barang->delete();
+        $barang = Barang::findOrFail($id);
+        $barang->delete();
 
-    return redirect()->back()->with('success', 'Barang berhasil dihapus.');
+        return redirect()->back()->with('success', 'Barang berhasil dihapus.');
     }
 
     public function laporanPupuk()
     {
         return view('admin.bidangPerdagangan.lihatLaporan');
     }
-    
+
     public function formPermohonan()
     {
         return view('user.bidangPerdagangan.formPermohonan');
@@ -83,9 +100,9 @@ class DashboardPerdaganganController extends Controller
 
     public function riwayatSurat()
     {
-    // $riwayatSurat = PermohonanSurat::where('user_id', auth()->id())->latest()->get();
-    $riwayatSurat = PermohonanSurat::all();
-    return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
+        // $riwayatSurat = PermohonanSurat::where('user_id', auth()->id())->latest()->get();
+        $riwayatSurat = PermohonanSurat::all();
+        return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
     }
 
     public function ajukanPermohonan(Request $request)
@@ -94,7 +111,7 @@ class DashboardPerdaganganController extends Controller
         $validated = $request->validate([
             'jenis_surat' => 'required|in:surat_rekomendasi,surat_keterangan,dan_lainnya',
             'kecamatan' => 'required|string',
-            'kelurahan' => 'nullable|string',
+            'kelurahan' => 'required|string',
             'titik_koordinat' => 'required|string',
             'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:10240',
             'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:10240',
@@ -103,7 +120,7 @@ class DashboardPerdaganganController extends Controller
             'akta_perusahaan' => 'required|mimes:pdf|max:10240',
             'surat' => 'required|file|mimes:pdf,doc,docx|max:10240',
         ]);
-    
+
         try {
             // Simpan file satu per satu
             $fotoUsahaPath = $request->file('foto_usaha')->store('uploads');
@@ -112,30 +129,42 @@ class DashboardPerdaganganController extends Controller
             $npwpPath = $request->file('npwp')->store('uploads');
             $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('uploads');
             $fileSuratPath = $request->file('surat')->store('uploads');
-    
+
             // Buat id_permohonan unik
             $idPermohonan = Str::uuid()->toString();
-    
+
+            // Simpan ke tabel form_permohonan
             DB::table('form_permohonan')->insert([
-                'id_permohonan' => $idPermohonan,
-                // 'id_user' => auth()->user()->id,
-                'id_user' => null,
-                'id_kecamatan' => $request->kecamatan,
-                'id_kelurahan' => $request->kelurahan,
+                'id_permohonan' => $idPermohonan,  // Masukkan UUID yang baru dibuat
+                // 'id_user' => auth()->id() ?? null, // atau null jika belum login
+                'kecamatan' => $request->kecamatan,
+                'kelurahan' => $request->kelurahan,
                 'tgl_pengajuan' => now()->toDateString(),
                 'jenis_surat' => $request->jenis_surat,
                 'titik_koordinat' => $request->titik_koordinat,
                 'file_surat' => $fileSuratPath,
-                'status' => 'pending',
+                'status' => 'menunggu',
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
-    
-            return redirect()->route('bidangPerdagangan.riwayatSurat')->with('success', 'Pengajuan surat berhasil diajukan.');
-    
+
+            // Simpan ke tabel document_user
+            DB::table('document_user')->insert([
+                'id_permohonan' => $idPermohonan,  // Masukkan id_permohonan yang sama ke document_user
+                'npwp' => $npwpPath,
+                'akta_perusahaan' => $aktaPerusahaanPath,
+                'foto_ktp' => $fotoKTPPath,
+                'foto_usaha' => $fotoUsahaPath,
+                'dokument_nib' => $dokumenNibPath,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return redirect()->route('bidangPerdagangan.riwayatSurat')
+                ->with('success', 'Pengajuan surat berhasil diajukan.');
         } catch (Exception $e) {
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
-            dd($e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat mengirim pengajuan. Silakan coba lagi.');
+            return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
     }
-    
 }

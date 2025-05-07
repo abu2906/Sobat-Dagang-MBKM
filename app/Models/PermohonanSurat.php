@@ -16,4 +16,8 @@ class PermohonanSurat extends Model
         'status',
         'file_balasan',
     ];
+    public function document()
+    {
+        return $this->hasOne(DocumentUser::class, 'id_permohonan', 'id_permohonan');
+    }
 }

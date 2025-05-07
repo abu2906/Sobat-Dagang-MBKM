@@ -144,7 +144,7 @@
 
             <div class="mb-4">
                 <label for="konten_tambah" class="block text-sm font-medium text-gray-700">Isi Berita</label>
-                <textarea name="isi" id="summernote" class="resize-none w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Isi Berita" required></textarea>
+                <textarea name="isi" id="summernote" class="w-full p-3 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Isi Berita" required></textarea>
             </div>
 
             <div class="mb-4">
@@ -211,6 +211,7 @@
             const beritaId = button.getAttribute('data-id');
             const judul = button.getAttribute('data-judul');
             const isi = button.getAttribute('data-isi');
+            const tanggal = button.getAttribute('data-tanggal');
 
             // Menghapus tag HTML dengan menggunakan elemen dummy
             const dummy = document.createElement("div");
@@ -219,7 +220,7 @@
 
             // Isi field judul dan isi berita di form
             document.getElementById('judul_edit').value = judul;
-            document.getElementById('tanggal_edit').value = ''; // Kosongkan atau isi dengan tanggal yang sesuai
+            document.getElementById('tanggal_edit').value = tanggal; // Kosongkan atau isi dengan tanggal yang sesuai
             $('#summernote_edit').summernote('code', plainText); // Isi Summernote dengan teks polos
 
             // Set action form untuk edit data
