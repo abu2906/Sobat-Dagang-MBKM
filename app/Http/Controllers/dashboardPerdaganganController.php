@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Str;
 use App\Models\PermohonanSurat;
-
+use App\Models\Barang;
 class DashboardPerdaganganController extends Controller
 {
     public function index()
@@ -57,7 +57,25 @@ class DashboardPerdaganganController extends Controller
         return view('admin.bidangPerdagangan.updateHarga');
     }
 
+    public function deleteBarang()
+    {
+        // $barangs = Barang::all();
+        // return view('admin.bidangPerdagangan.hapusBarang', compact('barangs'));
+        return view('admin.bidangPerdagangan.hapusBarang');
+    }
+    public function destroy($id)
+    {
+    $barang = Barang::findOrFail($id);
+    $barang->delete();
 
+    return redirect()->back()->with('success', 'Barang berhasil dihapus.');
+    }
+
+    public function laporanPupuk()
+    {
+        return view('admin.bidangPerdagangan.lihatLaporan');
+    }
+    
     public function formPermohonan()
     {
         return view('user.bidangPerdagangan.formPermohonan');
@@ -83,6 +101,7 @@ class DashboardPerdaganganController extends Controller
             'dokumen_nib' => 'required|mimes:pdf|max:10240',
             'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:10240',
             'akta_perusahaan' => 'required|mimes:pdf|max:10240',
+            'surat' => 'required|file|mimes:pdf,doc,docx|max:10240',
         ]);
     
         try {
@@ -92,6 +111,7 @@ class DashboardPerdaganganController extends Controller
             $dokumenNibPath = $request->file('dokumen_nib')->store('uploads');
             $npwpPath = $request->file('npwp')->store('uploads');
             $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('uploads');
+            $fileSuratPath = $request->file('surat')->store('uploads');
     
             // Buat id_permohonan unik
             $idPermohonan = Str::uuid()->toString();
@@ -105,7 +125,7 @@ class DashboardPerdaganganController extends Controller
                 'tgl_pengajuan' => now()->toDateString(),
                 'jenis_surat' => $request->jenis_surat,
                 'titik_koordinat' => $request->titik_koordinat,
-                'file_surat' => null,
+                'file_surat' => $fileSuratPath,
                 'status' => 'pending',
             ]);
     

@@ -20,7 +20,7 @@
 
     @if (Auth::check() && Auth::user()->role === 'admin_perdagangan')
         @include('component.navbar.admin_perdagangan')
-    @elseif (Auth::check() && Auth::user()->role === 'admin_industri')
+    @elseif (Auth::check() && Auth::user()->role === 'admin_industri')b
         @include('component.navbar.admin_industri')
     @elseif (Auth::check() && Auth::user()->role === 'admin_metrologi')
         @include('component.navbar.admin_metrologi')

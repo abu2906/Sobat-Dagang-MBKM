@@ -125,6 +125,19 @@
                 </div>
             </div>
             <div>
+                <label for="file-surat">File Surat Permohonan</label>
+                <div class="flex items-center space-x-2">
+                    <label for="surat" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
+                        Pilih File
+                    </label>
+                    <span id="file-surat" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
+                    <input type="file" id="surat" name="surat" class="hidden" required
+                        accept=".pdf,.doc,.docx"
+                        onchange="document.getElementById('file-surat').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                </div>
+            </div>
+            
+            <div>
                 <label for="file-akta_perusahaan">Akta Perusahaan</label>
                 <div class="flex items-center space-x-2">
                     <label for="akta_perusahaan" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
