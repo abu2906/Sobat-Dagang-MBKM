@@ -29,26 +29,15 @@ Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'submitFormLogin'])->name('login.submit');
 Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
-
-// Masih dalam tahap pengembangan
-// Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot-password');
-// Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
+Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
+Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
-
+Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
 Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
 Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
-
-// Menampilkan halaman admin untuk kelola berita
-Route::get('/admin/kelola-berita', [BeritaController::class, 'show'])->name('kelola.berita');
-Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
-Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
-Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-
-
-// Menampilkan halaman edit berita
-Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
 
 Route::get('/halal', function () {
     return view('user.halal');
@@ -87,8 +76,12 @@ Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBara
 Route::get('/admin/kelola-pengguna', [DashboardController::class, 'kelolaAdmin'])->name('kelola.admin');
 Route::post('/admin/kelola-pengguna', [DashboardController::class, 'tambahpengguna'])->name('tambah.pengguna');
 
-
-
+// Menampilkan halaman admin master  untuk kelola berita
+Route::get('/admin/kelola-berita', [BeritaController::class, 'show'])->name('kelola.berita');
+Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
+Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
+Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
 
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
