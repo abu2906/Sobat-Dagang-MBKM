@@ -2,46 +2,109 @@
 @section('title', 'Hapus Data Barang')
 
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="w-full h-32">
-    <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}"
-         alt="Background"
-         class="w-full h-full object-cover">
+    <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full">
 </div>
 
 <div class="bg-white py-4 px-6 md:px-10 min-h-[calc(100vh-8rem)]">
     <h2 class="text-center text-lg md:text-xl font-bold mb-4 text-[#083358]">Tabel Data Barang</h2>
-
+    @if (session('success'))
+    <div class="mt-4 font-semibold text-green-600">
+        {{ session('success') }}
+    </div>
+    @endif
     <div class="overflow-x-auto rounded-xl border border-gray-200 bg-[#083358] text-white shadow-md">
         <table class="min-w-full text-sm text-left">
-            <tr class=" font-semibold">
-                <tr>
-                    <th class="py-3 px-4">No</th>
-                    <th class="py-3 px-4">Nama Barang</th>
-                    <th class="py-3 px-4">Kategori Barang</th>
-                    <th class="py-3 px-4">Aksi</th>
+            <thead>
+                <tr class="font-semibold">
+                    <th class="px-4 py-3 text-center">No</th>
+                    <th class="px-4 py-3 text-center">Nama Barang</th>
+                    <th class="px-4 py-3 text-center">Kategori Barang</th>
+                    <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                {{-- @forelse ($barangs as $index => $barang)
-                    <tr class="border-b">
-                        <td class="py-2 px-4">{{ $index + 1 }}</td>
-                        <td class="py-2 px-4">{{ $barang->nama_barang }}</td>
-                        <td class="py-2 px-4">{{ $barang->kategori }}</td>
-                        <td class="py-2 px-4">
-                            <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus barang ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded-full text-xs">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+                @forelse ($barangs as $index => $barang)
+                <tr class="text-black bg-white border-b-2 border-r-2 border-gray-300">
+                    <td class="px-4 py-2 text-center border-r-2 border-gray-300">{{ $index + 1 }}</td>
+                    <td class="px-4 py-2 text-center border-r-2 border-gray-300">{{ $barang->nama_barang }}</td>
+                    <td class="px-4 py-2 text-center border-r-2 border-gray-300">{{ $barang->kategori->nama_kategori ?? 'Tidak Ada Kategori' }}</td>
+                    <td class="px-4 py-2 text-center border-r-2 border-gray-300">
+                        <button type="button" class="px-4 py-1 text-xs text-white bg-red-600 rounded-full hover:bg-red-700 open-modal-button" data-id="{{ $barang->id_barang }}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="4" class="text-center py-4 text-gray-500">Tidak ada data barang</td>
-                    </tr>
-                @endforelse --}}
+                <tr>
+                    <td colspan="4" class="py-4 text-center text-black bg-white border-b border-gray-300">Tidak ada data barang</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Modal Konfirmasi -->
+<div id="modal-verifikasi" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="w-11/12 max-w-md p-6 bg-white shadow-xl rounded-2xl">
+        <h2 class="mb-4 text-lg font-semibold">Konfirmasi Penghapusan</h2>
+        <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin menghapus barang ini?</p>
+        <div class="flex justify-end space-x-3">
+            <button type="button" onclick="closeModal()"
+                class="px-4 py-2 text-black transition-all bg-gray-200 rounded-full hover:bg-gray-300">
+                Batal
+            </button>
+            <button type="button" id="confirm-delete" class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Open the modal when the delete button is clicked
+        const openModalButtons = document.querySelectorAll('.open-modal-button');
+        const modal = document.getElementById('modal-verifikasi');
+        const confirmDeleteButton = document.getElementById('confirm-delete');
+        let itemToDelete = null;
+
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                itemToDelete = this.getAttribute('data-id');
+                modal.classList.remove('hidden'); // Show the modal
+            });
+        });
+
+        // Close the modal
+        function closeModal() {
+            modal.classList.add('hidden');
+            itemToDelete = null;
+        }
+
+        // Confirm the delete action
+        confirmDeleteButton.addEventListener('click', function() {
+            if (itemToDelete) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/dashboard-perdagangan/barang/${itemToDelete}`;
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                form.innerHTML = `
+                    <input type="hidden" name="_token" value="${csrfToken}">
+                    <input type="hidden" name="_method" value="DELETE">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+            closeModal();
+        });
+
+        // Close the modal if 'Batal' is clicked
+        const cancelButton = document.querySelector('.bg-gray-200');
+        cancelButton.addEventListener('click', closeModal);
+    });
+</script>
+
 @endsection

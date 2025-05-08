@@ -1,10 +1,12 @@
 @php
-    use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 @endphp
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Dinas Perdagangan')</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
@@ -16,22 +18,24 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 </head>
-<body x-data="{ open: true }" class="bg-gray-100 font-sans overflow-hidden">
+
+<body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
 
     @if (Auth::check() && Auth::user()->role === 'admin_perdagangan')
-        @include('component.navbar.admin_perdagangan')
+    @include('component.navbar.admin_perdagangan')
     @elseif (Auth::check() && Auth::user()->role === 'admin_industri')b
-        @include('component.navbar.admin_industri')
+    @include('component.navbar.admin_industri')
     @elseif (Auth::check() && Auth::user()->role === 'admin_metrologi')
-        @include('component.navbar.admin_metrologi')
+    @include('component.navbar.admin_metrologi')
     @endif
 
     @include('component.navbar.adminPerdagangan')
 
-    <div class="flex-1 relative z-0 p-0 overflow-y-auto">
-            @yield('content')
-        </div>
+    <div class="relative z-0 flex-1 p-0 overflow-y-auto">
+        @yield('content')
+    </div>
 
     </div>
 </body>
+
 </html>
