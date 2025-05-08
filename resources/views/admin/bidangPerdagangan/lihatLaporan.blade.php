@@ -9,8 +9,7 @@
     </div>
 </div>
 <div class="container mx-auto px-4">
-    <h2 class="text-center text-2xl font-bold mb-4 uppercase tracking-wide text-[#083358]">LAPORAN PENYALURAN PUPUK BERSUBSIDI</h2>
-
+    <h2 class="mt-6 text-center text-2xl font-bold mb-6 uppercase tracking-wide text-[#083358]">LAPORAN PENYALURAN PUPUK BERSUBSIDI</h2>
     <div class="grid md:grid-cols-2 gap-6 mb-8">
         <!-- Kiri: Pie Chart -->
         <div class="bg-white rounded-lg shadow p-4 flex flex-col items-center">
@@ -63,8 +62,7 @@
             <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center text-white">▼</div>
         </div>
     </div>
-
-    <div class="overflow-x-auto shadow rounded-xl border border-gray-200">
+    <div class="overflow-x-auto shadow rounded-xl border border-gray-200 mb-10">
         <table class="min-w-full text-sm text-center">
             <thead class="bg-[#083358] text-xs text-white">
                 <tr>

@@ -56,8 +56,8 @@
                 class="px-4 py-2 text-black transition-all bg-gray-200 rounded-full hover:bg-gray-300">
                 Batal
             </button>
-            <button type="button" id="confirm-delete" class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
-                Ya, Hapus
+            <button type="button" id="confirm-delete" class="px-4 py-2 text-white rounded-full bg-red-600 hover:bg-red-700 transition-all">
+                Hapus
             </button>
         </div>
     </div>

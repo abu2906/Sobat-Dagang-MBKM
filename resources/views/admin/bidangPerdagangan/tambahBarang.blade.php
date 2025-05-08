@@ -54,7 +54,7 @@
 
             <div class="flex justify-center">
                 <button type="submit"
-                    class="bg-[#083358] text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-800 transition">
+                    class="bg-[#083358] text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-300 hover:text-black transition">
                     Tambah
                 </button>
             </div>

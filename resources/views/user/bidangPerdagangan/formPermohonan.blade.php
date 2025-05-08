@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Port Background" class="object-cover w-full h-full">
+    <img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Port Background" class="object-cover w-full h-full">
     <a href=""
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">
@@ -56,9 +56,9 @@
             <div>
                 <label for="jenis_surat">Jenis Surat</label>
                 <select id="jenis_surat" name="jenis_surat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="surat_rekomendasi">Surat Rekomendasi</option>
-                    <option value="surat_keterangan">Surat Keterangan</option>
-                    <option value="dan_lainnya">Dan Lainnya</option>
+                    <option value="surat_rekomendasi_perdagangan">Surat Rekomendasi</option>
+                    <option value="surat_keterangan_perdagangan">Surat Keterangan</option>
+                    <option value="dan_lainnya_perdagangan">Dan Lainnya</option>
                 </select>
             </div>
             <div class="mb-4">
@@ -136,10 +136,6 @@
                         onchange="document.getElementById('file-surat').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
             </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/Robert-Database
             <div>
                 <label for="file-akta_perusahaan">Akta Perusahaan</label>
                 <div class="flex items-center space-x-2">
