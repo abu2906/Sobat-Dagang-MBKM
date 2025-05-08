@@ -136,7 +136,6 @@
                         onchange="document.getElementById('file-surat').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
             </div>
-            
             <div>
                 <label for="file-akta_perusahaan">Akta Perusahaan</label>
                 <div class="flex items-center space-x-2">

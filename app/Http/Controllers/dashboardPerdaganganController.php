@@ -128,6 +128,18 @@ class DashboardPerdaganganController extends Controller
                 'file_surat' => $fileSuratPath,
                 'status' => 'pending',
             ]);
+            
+            $idDokumen = Str::uuid()->toString();
+            DB::table('dokumen_user')->insert([
+                'id_dokumen'      => $idDokumen,
+                'id_permohonan'    => $idPermohonan,
+                'id_user'          => null, // atau auth()->user()->id jika ingin menggunakan user login
+                'npwp'             => $npwpPath,
+                'akta_perusahaan'  => $aktaPerusahaanPath,
+                'dokumen_nib'      => $dokumenNibPath,
+                'foto_ktp'         => $fotoKTPPath,
+                'foto_usaha'       => $fotoUsahaPath,
+            ]);            
     
             return redirect()->route('bidangPerdagangan.riwayatSurat')->with('success', 'Pengajuan surat berhasil diajukan.');
     
