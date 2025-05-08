@@ -34,20 +34,21 @@ class AuthController extends Controller
     
         $identifier = $request->username;
     
-        // 1. Coba login disdag via NIP
+        // 1. Coba login menggunakan NIP dan ambil data dari tabel disdag
         $disdag = Disdag::where('nip', $identifier)->first();
     
         if ($disdag && Hash::check($request->password, $disdag->password)) {
+            // Login berhasil menggunakan NIP
             Auth::login($disdag);
-
-//tidak terhubung pi ketampilan baru users
+    
+            // Redirect berdasarkan role dari tabel disdag
             switch ($disdag->role) {
                 case 'master_admin':
                     return redirect()->intended(route('user.dashboard'));
                 case 'admin_perdagangan':
                     return redirect()->intended('/admin/perdagangan');
                 case 'admin_industri':
-                    return redirect()->intended('/admin/industri');
+                    return redirect()->intended(route('admin.industri.dashboard'));
                 case 'admin_metrologi':
                     return redirect()->intended('/admin/metrologi');
                 case 'kabid_perdagangan':
@@ -63,16 +64,21 @@ class AuthController extends Controller
             }
         }
     
+        // 2. Coba login menggunakan NIK atau NIB dan ambil data dari tabel user
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
     
         if ($user && Hash::check($request->password, $user->password)) {
+            // Login berhasil menggunakan NIK/NIB
             Auth::login($user);
+    
+            // Karena tabel user tidak memiliki kolom role, arahkan ke dashboard default
             return redirect()->intended(route('user.dashboard'));
         }
     
+        // Jika login gagal
         return redirect()->route('login')->with('error', 'Username atau password salah');
     }
-    
+       
     
     public function submitRegister(Request $request)
     {

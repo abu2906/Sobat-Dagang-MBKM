@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Dinas Perdagangan')</title>
+    <title>@yield('title', 'Admin Dinas Perindustrian')</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <link rel="icon" href="{{ asset('assets/img/icon/logoIcon.png') }}" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,20 +14,12 @@
 </head>
 <body x-data="{ open: true }" class="bg-gray-100 font-sans overflow-hidden">
 
-    @if (Auth::check() && Auth::user()->role === 'admin_perdagangan')
-        @include('component.navbar.admin_perdagangan')
-    @elseif (Auth::check() && Auth::user()->role === 'admin_industri')
-        @include('component.navbar.adminIndustri')
-    @elseif (Auth::check() && Auth::user()->role === 'admin_metrologi')
-        @include('component.navbar.admin_metrologi')
-    @endif
+    @include('component.navbar.adminIndustri')
 
-    @include('component.navbar.adminPerdagangan')
-
-    <div class="flex-1 relative z-0 p-0 overflow-y-auto">
-            @yield('content')
-        </div>
-
+    <!-- Main Content Area -->
+    <div :class="open ? 'ml-64' : 'ml-20'" class="flex-1 relative z-0 p-0 overflow-y-auto transition-all duration-300">
+        @yield('content')
     </div>
+
 </body>
 </html>

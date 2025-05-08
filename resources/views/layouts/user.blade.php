@@ -7,7 +7,10 @@
     <title>{{ $title ?? 'Dashboard' }}</title>
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-papg+..." crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
 </head>
 
 <body class="min-h-screen flex flex-col bg-gray-100">

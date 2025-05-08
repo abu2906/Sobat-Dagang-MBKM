@@ -8,6 +8,7 @@ use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminIndustriController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\DirectoryBookController;
 use App\Http\Controllers\DataIKMController;
@@ -17,7 +18,7 @@ use App\Http\Controllers\PersuratanController;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use App\Http\Controllers\DashboardPerdaganganController;
-
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
@@ -34,7 +35,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
-Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
+Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
+Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
+Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
+
+// Admin Industri
+
+    Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
+        Route::get('dashboard', [AdminIndustriController::class, 'dashboard'])->name('dashboard');
+        Route::get('dataIKM', [AdminIndustriController::class, 'data'])->name('dataIKM');
+    });
+
+
+
 
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
