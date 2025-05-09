@@ -17,20 +17,23 @@ use Illuminate\Support\Facades\Auth;
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 </head>
 
 <body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
 
     @if (Auth::check() && Auth::user()->role === 'admin_perdagangan')
     @include('component.navbar.admin_perdagangan')
-    @elseif (Auth::check() && Auth::user()->role === 'admin_industri')b
+    @elseif (Auth::check() && Auth::user()->role === 'admin_industri')
     @include('component.navbar.admin_industri')
     @elseif (Auth::check() && Auth::user()->role === 'admin_metrologi')
     @include('component.navbar.admin_metrologi')
     @endif
 
-    @include('component.navbar.adminPerdagangan')
-
+    {{-- @include('component.navbar.adminPerdagangan') --}}
+    @include('component.navbar.kabidPerdagangan')
     <div class="relative z-0 flex-1 p-0 overflow-y-auto">
         @yield('content')
     </div>

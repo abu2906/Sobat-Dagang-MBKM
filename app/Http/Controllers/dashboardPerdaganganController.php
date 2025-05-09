@@ -16,7 +16,8 @@ use App\Models\Barang;
 use App\Models\DocumentUser;
 use App\Models\IndexKategori;
 use Illuminate\Support\Facades\Storage;
-
+use Carbon\Carbon;
+use App\Models\DistribusiPupuk;
 class DashboardPerdaganganController extends Controller
 {
     public function index()
@@ -304,5 +305,92 @@ class DashboardPerdaganganController extends Controller
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
+    }
+
+    public function dashboardKabid()
+    {
+        return view('admin.kabid.perdagangan.perdagangan');
+    }
+
+    public function analisisPasar(Request $request)
+    {
+        // Dummy data (sementara, karena belum ada database)
+        $tanggalHariIni = Carbon::today()->format('Y-m-d');
+        $tanggalKemarin = Carbon::yesterday()->format('Y-m-d');
+
+        $dataHarga = collect([
+            (object)[
+                'tanggal' => $tanggalKemarin,
+                'beras' => 12000,
+                'cabai' => 18000,
+                'minyak' => 15000,
+                'telur' => 22000,
+                'tempe' => 10000,
+                'daun_bawang' => 5000,
+            ],
+            (object)[
+                'tanggal' => $tanggalHariIni,
+                'beras' => 13000,
+                'cabai' => 19000,
+                'minyak' => 17000,
+                'telur' => 23000,
+                'tempe' => 11000,
+                'daun_bawang' => 5500,
+            ]
+        ]);
+
+        // Trend Chart
+        $trendChartData = [
+            'labels' => ['Beras', 'Cabai', 'Minyak', 'Telur', 'Tempe', 'Daun Bawang'],
+            'datasets' => [[
+                'label' => 'Harga Hari Ini',
+                'data' => [13000, 19000, 17000, 23000, 11000, 5500],
+                'backgroundColor' => [
+                    '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'
+                ]
+            ]]
+        ];
+
+        // Perbandingan Chart
+        $perbandinganChartData = [
+            'labels' => ['Beras', 'Cabai', 'Minyak', 'Telur', 'Tempe', 'Daun Bawang'],
+            'datasets' => [
+                [
+                    'label' => 'Kemarin',
+                    'data' => [12000, 18000, 15000, 22000, 10000, 5000],
+                    'backgroundColor' => '#6c757d'
+                ],
+                [
+                    'label' => 'Hari Ini',
+                    'data' => [13000, 19000, 17000, 23000, 11000, 5500],
+                    'backgroundColor' => '#007bff'
+                ]
+            ]
+        ];
+
+        // Top Naik & Turun
+        $selisih = [
+            'beras' => 1000,
+            'cabai' => 1000,
+            'minyak' => 2000,
+            'telur' => 1000,
+            'tempe' => 1000,
+            'daun_bawang' => 500,
+        ];
+
+        $topNaik = collect($selisih)->map(function ($val, $key) {
+            return ['komoditas' => ucfirst($key), 'selisih' => $val];
+        })->sortByDesc('selisih')->take(5)->values();
+
+        $topTurun = collect([]); // Tidak ada data turun dalam dummy ini
+
+        return view('admin.kabid.perdagangan.analisisPasar', compact(
+            'dataHarga', 'trendChartData', 'perbandinganChartData', 'topNaik', 'topTurun'
+        ));
+    }
+
+    public function distribusiPupuk()
+    {
+        return view('admin.kabid.perdagangan.distribusiPupuk');
     }
 }

@@ -77,7 +77,6 @@ Route::get('/detail-surat/{id}/view-{type}', [DashboardPerdaganganController::cl
 
 Route::get('/dokumen/{type}/{id}', [DashboardPerdaganganController::class, 'downloadDokumen'])->name('dokumen.lihat');
 
-
 // admin master
 Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
 Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
@@ -93,6 +92,11 @@ Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->
 Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
 Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
 Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
+
+//kabid
+Route::get('/kabid-perdagangan/dashboard', [DashboardPerdaganganController::class, 'dashboardKabid'])->name('kabid.perdagangan');
+Route::get('/kabid-perdagangan/analisis-pasar', [DashboardPerdaganganController::class, 'analisisPasar'])->name('analisis.pasar');
+Route::get('/kabid-perdagangan/distribusi-pupuk', [DashboardPerdaganganController::class, 'distribusiPupuk'])->name('distribusi.pupuk');
 
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
