@@ -65,9 +65,17 @@ Route::get('/hapus-barang', [DashboardPerdaganganController::class, 'deleteBaran
 Route::delete('/dashboard-perdagangan/barang/{id}', [DashboardPerdaganganController::class, 'destroy'])->name('barang.destroy');
 Route::get('/lihat-laporan-distribusi-pupuk', [DashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');
 Route::get('/kelola-surat', [DashboardPerdaganganController::class, 'kelolaSurat'])->name('perdagangan.kelolaSurat');
-Route::get('/detail-permohonan', function () {
-    return view('admin.bidangPerdagangan.detailPermohonan');
-});
+Route::get('/detail-surat/{id_permohonan}', [DashboardPerdaganganController::class, 'detailSurat'])
+    ->where('id_permohonan', '[0-9a-fA-F\-]+')
+    ->name('perdagangan.detailSurat');
+
+// view Document
+Route::get('/detail-surat/{id}/view-{type}', [DashboardPerdaganganController::class, 'viewDokumen'])
+    ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
+    ->name('dokumen.view');
+
+Route::get('/dokumen/{type}/{id}', [DashboardPerdaganganController::class, 'downloadDokumen'])->name('dokumen.lihat');
+
 
 // admin master
 Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan'])->name('review.pengajuan');

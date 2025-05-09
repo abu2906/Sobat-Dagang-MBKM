@@ -10,14 +10,14 @@
 </div>
 <div class="container px-4 mx-auto -mt-8">
     <div class="flex justify-center mb-6">
-        <div class="relative w-1/2 shadow-xl rounded-full bg-white shadow-gray-400/40">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
+        <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
+            <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
             <input type="text" placeholder="Cari"
-                   class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent" />
+                class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <a href="#" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
+    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-4">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Masuk</p>
@@ -25,7 +25,7 @@
             </div>
         </a>
 
-        <a href="#" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Terverifikasi</p>
@@ -33,7 +33,7 @@
             </div>
         </a>
 
-        <a href="#" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/surat_ditolak.png') }}" alt="Ditolak" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Ditolak</p>
@@ -41,7 +41,7 @@
             </div>
         </a>
 
-        <a href="#" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Draft Surat Balasan</p>
@@ -55,45 +55,48 @@
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
                     <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                    <th class="px-4 py-3 border-b">ID Surat</th>
                     <th class="px-4 py-3 border-b">Nama Pemohon</th>
+                    <th class="px-4 py-3 border-b">Jenis Surat</th>
                     <th class="px-4 py-3 border-b">Tanggal Dikirim</th>
                     <th class="px-4 py-3 border-b">Status</th>
                     <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                {{-- @foreach ($data as $index => $item) --}}
-                    <tr class="text-center border-b">
-                        <td class="px-4 py-2">tes</td>
-                        <td class="px-4 py-2">tes</td>
-                        <td class="px-4 py-2">tes</td>
-                        <td class="px-4 py-2">tes</td>
-                        {{-- <td class="px-4 py-2">{{ $index + 1 }}</td>
-                        <td class="px-4 py-2">{{ $item->id_surat }}</td>
-                        <td class="px-4 py-2">{{ $item->nama_pemohon }}</td>
-                        <td class="px-4 py-2">{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td> --}}
-                        <td class="px-4 py-3 text-center">
-                            {{-- @if ($item->status == 'disetujui')
-                                <span class="text-green-600 font-medium">Disetujui</span>
-                            @elseif ($item->status == 'ditolak')
-                                <span class="text-red-600 font-medium">Ditolak</span>
-                            @else
-                                <span class="text-yellow-400 font-medium">Menunggu</span>
-                            @endif --}}
-                        </td>
-                        <td class="px-4 py-2">
-                            <a href="#"
-                               class="inline-block px-4 py-1.5 rounded-full bg-[#083358] text-white text-sm font-semibold transition hover:bg-blue-300 hover:text-black">
-                                Lihat Permohonan
-                            </a>
-                        </td>
-                        
-                    </tr>
-                {{-- @endforeach --}}
+                @foreach ($dataSurat as $index => $item)
+                <tr class="text-center border-b">
+                    <td class="px-4 py-2">{{ $index + 1 }}</td>
+                    <td class="px-4 py-2">Null</td>
+                    @php
+                    $jenisSuratMap = [
+                    'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                    'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                    'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                    ];
+                    @endphp
+                    <td class="px-4 py-2">
+                        {{ $jenisSuratMap[$item->jenis_surat] ?? $item->jenis_surat }}
+                    </td>
+                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                    <td class="px-4 py-3 text-center">
+                        @if ($item->status == 'disetujui')
+                        <span class="font-medium text-green-600">Disetujui</span>
+                        @elseif ($item->status == 'ditolak')
+                        <span class="font-medium text-red-600">Ditolak</span>
+                        @else
+                        <span class="font-medium text-yellow-400">Menunggu</span>
+                        @endif
+                    </td>
+                    <td class="px-4 py-2">
+                        <a href="{{ route('perdagangan.detailSurat', $item->id_permohonan) }}"
+                            class="inline-block px-4 py-1.5 rounded-full bg-[#083358] text-white text-sm font-semibold transition hover:bg-blue-300 hover:text-black">
+                            Lihat Permohonan
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
             </tbody>
-                  
         </table>
-    </div>  
+    </div>
 </div>
 @endsection

@@ -13,14 +13,16 @@ use Exception;
 use Illuminate\Support\Str;
 use App\Models\PermohonanSurat;
 use App\Models\Barang;
+use App\Models\DocumentUser;
 use App\Models\IndexKategori;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardPerdaganganController extends Controller
 {
     public function index()
     {
         $dataSurat = $this->getSuratPerdaganganData();
-        
+
         return view('admin.bidangPerdagangan.dashboardPerdagangan', $dataSurat);
     }
     private function getSuratPerdaganganData()
@@ -41,30 +43,84 @@ class DashboardPerdaganganController extends Controller
 
     public function kelolaSurat()
     {
-    $rekapSurat = $this->getSuratPerdaganganData();
+        $rekapSurat = $this->getSuratPerdaganganData();
+        $dataSurat = PermohonanSurat::whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    // Ambil daftar surat perdagangan dengan nama pemohon
-    // $dataSurat = DB::table('form_permohonan')
-    //     ->join('users', 'form_permohonan.id_user', '=', 'users.id')
-    //     ->whereIn('form_permohonan.jenis_surat', [
-    //         'surat_rekomendasi_perdagangan',
-    //         'surat_keterangan_perdagangan',
-    //         'dan_lainnya_perdagangan',
-    //     ])
-    //     ->select(
-    //         'form_permohonan.id as id_surat',
-    //         'form_permohonan.created_at',
-    //         'form_permohonan.status',
-    //         'users.name as nama'
-    //     )
-    //     ->orderByDesc('form_permohonan.created_at')
-    //     ->get();
-
-    // Gabungkan dan kirim ke view
-    return view('admin.bidangPerdagangan.kelolaSurat', array_merge([
-        // 'dataSurat' => $dataSurat
-    ], $rekapSurat));
+        return view('admin.bidangPerdagangan.kelolaSurat', [
+            'dataSurat' => $dataSurat,
+            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+        ]);
     }
+    public function detailSurat($id)
+    {
+        $data = PermohonanSurat::where('id_permohonan', $id)->first();
+        $dokumen = DocumentUser::where('id_permohonan', $id)->first();
+
+        return view('admin.bidangPerdagangan.detailPermohonan', [
+            'data' => $data,
+            'dokumen' => $dokumen,
+        ]);
+    }
+
+    public function viewDokumen($id, $type)
+    {
+        $dokumen = DB::table('document_user')->where('id_permohonan', $id)->first();
+
+        if (!$dokumen) {
+            return abort(404, 'Dokumen tidak ditemukan.');
+        }
+
+        $filePath = match (strtoupper($type)) {
+            'NIB' => $dokumen->dokument_nib ?? null,
+            'NPWP' => $dokumen->npwp ?? null,
+            'KTP' => $dokumen->foto_ktp ?? null,
+            'AKTA' => $dokumen->akta_perusahaan ?? null,
+            'USAHA' => $dokumen->foto_usaha ?? null,
+            'SURAT' => DB::table('form_permohonan')->where('id_permohonan', $id)->value('file_surat'),
+            default => null,
+        };
+
+        if (!$filePath || !Storage::disk('public')->exists($filePath)) {
+            return abort(404, 'File tidak ditemukan.');
+        }
+
+        return response()->file(storage_path("app/public/{$filePath}"));
+    }
+    public function downloadDokumen($type, $id)
+    {
+        // Ambil data dokumen berdasarkan id_permohonan
+        $dokumen = DB::table('document_user')->where('id_permohonan', $id)->first();
+
+        // Jika dokumen tidak ditemukan, tampilkan halaman 404
+        if (!$dokumen) {
+            abort(404, 'Dokumen tidak ditemukan.');
+        }
+
+        // Tentukan path file berdasarkan tipe
+        $filePath = match ($type) {
+            'npwp' => $dokumen->npwp,
+            'akta' => $dokumen->akta_perusahaan,
+            'nib' => $dokumen->dokument_nib,
+            'ktp' => $dokumen->foto_ktp,
+            'surat' => $dokumen->file_permohonan ?? null,
+            default => null,
+        };
+
+        // Cek apakah path file valid dan file ada di penyimpanan
+        if (!$filePath || !Storage::disk('local')->exists("private/$filePath")) {
+            abort(404, 'File tidak tersedia.');
+        }
+
+        // Kembalikan file jika ditemukan
+        return response()->file(storage_path("app/private/$filePath"));
+    }
+
+
     public function detailPermohonan($id)
     {
         // $data = DB::table('form_permohonan')
@@ -78,10 +134,10 @@ class DashboardPerdaganganController extends Controller
         //         'users.jenis_kelamin'
         //     )
         //     ->first();
-    
+
         return view('admin.bidangPerdagangan.detailPermohonan', compact('data'));
     }
-    
+
 
     public function formTambahBarang()
     {
@@ -155,11 +211,11 @@ class DashboardPerdaganganController extends Controller
     {
         // $userId = auth()->user()->id;
 
-        // $riwayat = DB::table('form_permohonan') 
+        // $riwayat = DB::table('form_permohonan')
         // ->where('id_user', $userId)
         // ->orderBy('tgl_pengajuan', 'desc')
         // ->get();
-        
+
         $riwayatSurat = PermohonanSurat::all();
         return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
     }
@@ -182,12 +238,12 @@ class DashboardPerdaganganController extends Controller
 
         try {
             // Simpan file satu per satu
-            $fotoUsahaPath = $request->file('foto_usaha')->store('uploads');
-            $fotoKTPPath = $request->file('foto_ktp')->store('uploads');
-            $dokumenNibPath = $request->file('dokumen_nib')->store('uploads');
-            $npwpPath = $request->file('npwp')->store('uploads');
-            $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('uploads');
-            $fileSuratPath = $request->file('surat')->store('uploads');
+            $fotoUsahaPath = $request->file('foto_usaha')->store('DokumentUser', 'public');
+            $fotoKTPPath = $request->file('foto_ktp')->store('DokumentUser', 'public');
+            $dokumenNibPath = $request->file('dokumen_nib')->store('DokumentUser', 'public');
+            $npwpPath = $request->file('npwp')->store('DokumentUser', 'public');
+            $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('DokumentUser', 'public');
+            $fileSuratPath = $request->file('surat')->store('DokumentUser', 'public');
 
             // Buat id_permohonan unik
             $idPermohonan = Str::uuid()->toString();
