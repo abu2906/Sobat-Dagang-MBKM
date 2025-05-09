@@ -9,6 +9,7 @@
     <link rel="icon" href="{{ asset('assets/img/icon/logoIcon.png') }}" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    
 </head>
 
 <body>

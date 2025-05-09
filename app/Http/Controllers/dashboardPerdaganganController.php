@@ -19,16 +19,69 @@ class DashboardPerdaganganController extends Controller
 {
     public function index()
     {
-        return view('admin.bidangPerdagangan.dashboardPerdagangan', [
-            // 'jumlahSuratMasuk' => Surat::count(),
-            // 'jumlahTerverifikasi' => Surat::where('status', 'terverifikasi')->count(),
-            // 'jumlahDitolak' => Surat::where('status', 'ditolak')->count(),
-            // 'jumlahDraft' => Surat::where('status', 'draft')->count(),
-            // 'suratMasuk' => Surat::latest()->take(5)->get(),
-            // 'daftarHarga' => HargaBarang::latest()->take(4)->get(),
-            // 'notifikasi' => Notifikasi::latest()->take(4)->get(),
-        ]);
+        $dataSurat = $this->getSuratPerdaganganData();
+        
+        return view('admin.bidangPerdagangan.dashboardPerdagangan', $dataSurat);
     }
+    private function getSuratPerdaganganData()
+    {
+        $jenis = [
+            'surat_rekomendasi_perdagangan',
+            'surat_keterangan_perdagangan',
+            'dan_lainnya_perdagangan',
+        ];
+
+        return [
+            'totalSuratPerdagangan' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'disetujui')->count(),
+            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        ];
+    }
+
+    public function kelolaSurat()
+    {
+    $rekapSurat = $this->getSuratPerdaganganData();
+
+    // Ambil daftar surat perdagangan dengan nama pemohon
+    // $dataSurat = DB::table('form_permohonan')
+    //     ->join('users', 'form_permohonan.id_user', '=', 'users.id')
+    //     ->whereIn('form_permohonan.jenis_surat', [
+    //         'surat_rekomendasi_perdagangan',
+    //         'surat_keterangan_perdagangan',
+    //         'dan_lainnya_perdagangan',
+    //     ])
+    //     ->select(
+    //         'form_permohonan.id as id_surat',
+    //         'form_permohonan.created_at',
+    //         'form_permohonan.status',
+    //         'users.name as nama'
+    //     )
+    //     ->orderByDesc('form_permohonan.created_at')
+    //     ->get();
+
+    // Gabungkan dan kirim ke view
+    return view('admin.bidangPerdagangan.kelolaSurat', array_merge([
+        // 'dataSurat' => $dataSurat
+    ], $rekapSurat));
+    }
+    public function detailPermohonan($id)
+    {
+        // $data = DB::table('form_permohonan')
+        //     ->join('users', 'form_permohonan.id_user', '=', 'users.id')
+        //     ->where('form_permohonan.id', $id)
+        //     ->select(
+        //         'form_permohonan.*',
+        //         'users.name as nama',
+        //         'users.email',
+        //         'users.no_telp',
+        //         'users.jenis_kelamin'
+        //     )
+        //     ->first();
+    
+        return view('admin.bidangPerdagangan.detailPermohonan', compact('data'));
+    }
+    
 
     public function formTambahBarang()
     {
@@ -100,7 +153,13 @@ class DashboardPerdaganganController extends Controller
 
     public function riwayatSurat()
     {
-        // $riwayatSurat = PermohonanSurat::where('user_id', auth()->id())->latest()->get();
+        // $userId = auth()->user()->id;
+
+        // $riwayat = DB::table('form_permohonan') 
+        // ->where('id_user', $userId)
+        // ->orderBy('tgl_pengajuan', 'desc')
+        // ->get();
+        
         $riwayatSurat = PermohonanSurat::all();
         return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
     }
@@ -109,7 +168,7 @@ class DashboardPerdaganganController extends Controller
     {
         // Validasi input
         $validated = $request->validate([
-            'jenis_surat' => 'required|in:surat_rekomendasi,surat_keterangan,dan_lainnya',
+            'jenis_surat' => 'required|in:surat_rekomendasi_perdagangan,surat_keterangan_perdagangan,dan_lainnya_perdagangan',
             'kecamatan' => 'required|string',
             'kelurahan' => 'required|string',
             'titik_koordinat' => 'required|string',

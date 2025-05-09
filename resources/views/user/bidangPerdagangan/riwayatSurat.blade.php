@@ -4,12 +4,9 @@
 
 @section('content')
 
-<head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-</head>
 <div class="relative w-full h-64">
     
-    <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Background" class="object-cover w-full h-full" />
+    <img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full" />
 
     <a href="{{ url()->previous() }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
@@ -26,7 +23,6 @@
     </div>
     <div class="flex justify-center mb-6">
 
-        
         <div class="bg-blue-100 p-1 rounded-full flex gap-1">
             <button onclick="window.location.href='{{ route('bidangPerdagangan.formPermohonan') }}'"
                     class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
@@ -34,12 +30,11 @@
             </button>
             <button onclick="window.location.href='{{ route('bidangPerdagangan.riwayatSurat') }}'"
                     class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
-
                 RIWAYAT SURAT
             </button>
         </div>
     </div>
-    <div class="container px-4 pb-12 mx-auto">
+    <div class="container px-4 pb-4 mx-auto">
         <table class="min-w-full overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
@@ -56,11 +51,11 @@
                         <td class="px-4 py-3 text-center">{{ $index + 1 }}</td>
                         <td class="px-4 py-3 text-center">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                         <td class="px-4 py-3 text-center">
-                            @if($item->jenis_surat == 'surat_rekomendasi')
+                            @if($item->jenis_surat == 'surat_rekomendasi_perdagangan')
                                 Surat Rekomendasi
-                            @elseif($item->jenis_surat == 'surat_keterangan')
+                            @elseif($item->jenis_surat == 'surat_keterangan_perdagangan')
                                 Surat Keterangan
-                            @elseif($item->jenis_surat == 'dan_lainnya')
+                            @elseif($item->jenis_surat == 'dan_lainnya_perdagangan')
                                 Lainnya
                             @else
                                 {{ $item->jenis_surat }}
@@ -83,10 +78,36 @@
                         </td>                        
                     </tr>
                 @endforeach
-            </tbody>
-                      
+            </tbody>      
         </table>
     </div>
+    <div class="flex justify-center my-8">
+        <div class="border border-gray-300 rounded-md p-4 flex items-center space-x-4 bg-white shadow-sm">
+            <div class="flex-shrink-0">
+                <div class="w-6 h-6 rounded-full border border-black flex items-center justify-center text-black text-sm font-bold">
+                    i
+                </div>
+            </div>
+            <div class="text-sm text-black">
+                <div class="space-y-1 text-sm">
+                    <div class="flex">
+                        <span class="font-bold w-24">Menunggu</span>
+                        <span>: Surat sedang dalam tahap pemeriksaan atau validasi.</span>
+                    </div>
+                    <div class="flex">
+                        <span class="font-bold w-24">Selesai</span>
+                        <span>: Surat telah disetujui dan dapat diunduh.</span>
+                    </div>
+                    <div class="flex">
+                        <span class="font-bold w-24">Ditolak</span>
+                        <span>: Permohonan tidak disetujui, silahkan lihat detail alasan.</span>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    
+      
 </div>
 
 <!-- Modal Balasan -->

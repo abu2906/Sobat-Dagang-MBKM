@@ -25,7 +25,7 @@ class CreateDisdagTable extends Migration
                 'kabid_perdagangan',
                 'kabid_industri',
                 'kabid_metrologi',
-                'kepala dinas'
+                'kepala_dinas'
             ]);
             $table->timestamps();
         });
