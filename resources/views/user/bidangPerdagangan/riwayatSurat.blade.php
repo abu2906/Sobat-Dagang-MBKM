@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="relative w-full h-64">
-    
+
     <img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full" />
 
     <a href="{{ url()->previous() }}"
@@ -24,13 +24,13 @@
     </div>
     <div class="flex justify-center mb-6">
 
-        <div class="bg-blue-100 p-1 rounded-full flex gap-1">
+        <div class="flex gap-1 p-1 bg-blue-100 rounded-full">
             <button onclick="window.location.href='{{ route('bidangPerdagangan.formPermohonan') }}'"
-                    class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
+                class="px-6 py-2 font-semibold text-black transition-all rounded-full hover:bg-gray-100">
                 AJUKAN SURAT PERMOHONAN
             </button>
             <button onclick="window.location.href='{{ route('bidangPerdagangan.riwayatSurat') }}'"
-                    class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
+                class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
                 RIWAYAT SURAT
             </button>
         </div>
@@ -48,72 +48,72 @@
             </thead>
             <tbody>
                 @foreach ($riwayatSurat as $index => $item)
-                    <tr class="border-b">
-                        <td class="px-4 py-3 text-center">{{ $index + 1 }}</td>
-                        <td class="px-4 py-3 text-center">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
-                        <td class="px-4 py-3 text-center">
-                            @if($item->jenis_surat == 'surat_rekomendasi_perdagangan')
-                                Surat Rekomendasi
-                            @elseif($item->jenis_surat == 'surat_keterangan_perdagangan')
-                                Surat Keterangan
-                            @elseif($item->jenis_surat == 'dan_lainnya_perdagangan')
-                                Lainnya
-                            @else
-                                {{ $item->jenis_surat }}
-                            @endif
-                        </td>
-                        <td class="px-4 py-3 text-center">
-                            @if ($item->status == 'disetujui')
-                                <span class="text-green-600 font-medium">Disetujui</span>
-                            @elseif ($item->status == 'ditolak')
-                                <span class="text-red-600 font-medium">Ditolak</span>
-                            @else
-                                <span class="text-yellow-400 font-medium">Menunggu</span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-3 text-center">
-                            <button onclick="openBalasanModal('{{ $item->balasan ? asset('storage/' . $item->balasan) : '' }}')"
-                                class="px-4 py-2 bg-[#8CC5F3] text-black font-bold rounded-full hover:bg-[#7bb6e0] transition-all">
-                                Lihat
-                            </button>
-                        </td>                        
-                    </tr>
+                <tr class="border-b">
+                    <td class="px-4 py-3 text-center">{{ $index + 1 }}</td>
+                    <td class="px-4 py-3 text-center">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
+                    <td class="px-4 py-3 text-center">
+                        @if($item->jenis_surat == 'surat_rekomendasi_perdagangan')
+                        Surat Rekomendasi
+                        @elseif($item->jenis_surat == 'surat_keterangan_perdagangan')
+                        Surat Keterangan
+                        @elseif($item->jenis_surat == 'dan_lainnya_perdagangan')
+                        Lainnya
+                        @else
+                        {{ $item->jenis_surat }}
+                        @endif
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        @if ($item->status == 'disetujui')
+                        <span class="font-medium text-green-600">Disetujui</span>
+                        @elseif ($item->status == 'ditolak')
+                        <span class="font-medium text-red-600">Ditolak</span>
+                        @else
+                        <span class="font-medium text-yellow-400">Menunggu</span>
+                        @endif
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="openBalasanModal('{{ $item->balasan ? asset('storage/' . $item->balasan) : '' }}')"
+                            class="px-4 py-2 bg-[#8CC5F3] text-black font-bold rounded-full hover:bg-[#7bb6e0] transition-all">
+                            Lihat
+                        </button>
+                    </td>
+                </tr>
                 @endforeach
-            </tbody>      
+            </tbody>
         </table>
     </div>
     <div class="flex justify-center my-8">
-        <div class="border border-gray-300 rounded-md p-4 flex items-center space-x-4 bg-white shadow-sm">
+        <div class="flex items-center p-4 space-x-4 bg-white border border-gray-300 rounded-md shadow-sm">
             <div class="flex-shrink-0">
-                <div class="w-6 h-6 rounded-full border border-black flex items-center justify-center text-black text-sm font-bold">
+                <div class="flex items-center justify-center w-6 h-6 text-sm font-bold text-black border border-black rounded-full">
                     i
                 </div>
             </div>
             <div class="text-sm text-black">
                 <div class="space-y-1 text-sm">
                     <div class="flex">
-                        <span class="font-bold w-24">Menunggu</span>
+                        <span class="w-24 font-bold">Menunggu</span>
                         <span>: Surat sedang dalam tahap pemeriksaan atau validasi.</span>
                     </div>
                     <div class="flex">
-                        <span class="font-bold w-24">Selesai</span>
+                        <span class="w-24 font-bold">Selesai</span>
                         <span>: Surat telah disetujui dan dapat diunduh.</span>
                     </div>
                     <div class="flex">
-                        <span class="font-bold w-24">Ditolak</span>
+                        <span class="w-24 font-bold">Ditolak</span>
                         <span>: Permohonan tidak disetujui, silahkan lihat detail alasan.</span>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>
-    
-      
+
+
 </div>
 
 <!-- Modal Balasan -->
 <div id="modal-balasan" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-    <div class="w-11/12 max-w-md p-6 bg-white rounded-2xl shadow-xl text-center">
+    <div class="w-11/12 max-w-md p-6 text-center bg-white shadow-xl rounded-2xl">
         <div id="balasanContent">
             <!-- Konten balasan akan diisi oleh JavaScript -->
         </div>
@@ -135,18 +135,18 @@
         if (fileUrl) {
             content.innerHTML = `
                 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div class="relative bg-white rounded-xl shadow-xl p-6 w-full max-w-sm text-center">
-                        <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeBalasanModal()">
+                    <div class="relative w-full max-w-sm p-6 text-center bg-white shadow-xl rounded-xl">
+                        <button class="absolute text-gray-500 top-2 right-2 hover:text-gray-700" onclick="closeBalasanModal()">
                             &times;
                         </button>
 
                         <div class="flex justify-center mb-4">
-                            <div class="bg-yellow-400 rounded-full w-24 h-24 flex items-center justify-center">
+                            <div class="flex items-center justify-center w-24 h-24 bg-yellow-400 rounded-full">
                                 <img src="/assets/img/icon/pdf.png" alt="PDF" class="w-auto h-16">
                             </div>
                         </div>
 
-                        <h2 class="text-lg font-semibold mb-4">Balasan Surat Anda</h2>
+                        <h2 class="mb-4 text-lg font-semibold">Balasan Surat Anda</h2>
 
                         <div class="flex justify-center space-x-4">
                             <a href="${fileUrl}" target="_blank"
@@ -164,8 +164,8 @@
         } else {
             content.innerHTML = `
                 <div class="text-center">
-                <span class="material-symbols-outlined text-red-600" style="font-size: 6rem;">cancel</span>
-                <h2 class="text-lg font-semibold mb-4 text-red-600">Belum ada balasan untuk surat ini.</h2>
+                <span class="text-red-600 material-symbols-outlined" style="font-size: 6rem;">cancel</span>
+                <h2 class="mb-4 text-lg font-semibold text-red-600">Belum ada balasan untuk surat ini.</h2>
             </div>
             `;
         }
