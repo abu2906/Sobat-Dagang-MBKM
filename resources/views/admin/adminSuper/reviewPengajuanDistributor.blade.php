@@ -13,40 +13,43 @@
              class="object-cover w-full h-full -ml-16">
 </div>
 
-<div class="flex justify-center my-12">
-    <div class="bg-blue-100 p-1 rounded-full flex gap-1">
-        <button onclick="window.location.href='{{ route('review.pengajuan') }}'" class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
-            PENGAJUAN DISTRIBUTOR 
-        </button>
-        <button onclick="window.location.href='{{ route('lihat.laporan') }}'" class="bg-blue-100 text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
-            LAPORAN DISTRIBUSI
-        </button>
-        <button onclick="window.location.href='{{ route('tambah.barang-distribusi') }}'" class="bg-blue-100 text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
-            TAMBAHKAN BARANG
-        </button>
-    </div>
-</div>
 
-<div class="max-w-6xl mx-auto px-4 mb-10">
+<div class="max-w-6xl mx-auto px-4 mb-12 my-6">
 <h2 class="text-2xl font-bold text-[#083358] mb-4 text-center">Daftar Pengajuan Distributor</h2>
 
 <div class="overflow-x-auto bg-white rounded-lg shadow">
     <table class="min-w-full text-sm text-left text-gray-700">
         <thead class="bg-[#083358] text-white">
             <tr>
+                <th class="px-6 py-3">No</th>
                 <th class="px-6 py-3">Nama Distributor</th>
                 <th class="px-6 py-3">Dokumen NIB</th>
                 <th class="px-6 py-3">Status</th>
+                <th class="px-6 py-3">Aksi</th>
             </tr>
         </thead>
         <tbody>
-            <tr class="border-b hover:bg-gray-50">
-                <td class="px-6 py-4">PT Subur Makmur</td>
-                <td class="px-6 py-4">
-                    <a href="#" class="text-blue-600 hover:underline" target="_blank">Lihat Dokumen</a>
-                </td>
-                <td class="px-6 py-4">
-                    <div class="flex gap-2">
+            @foreach($distributor as $index => $itemDistributor)
+                <tr>
+                    <td class="px-6 py-3">{{ $index + 1 }}</td>
+                    <td class="px-6 py-3">{{ $itemDistributor->nama_distributor }}</td>
+                    <td class="px-6 py-3">
+                        <a href="{{ asset('storage/' . $itemDistributor->dokumen_nib) }}" target="_blank" class="text-blue-500">Lihat Dokumen</a>
+                    </td>
+                    <td class="px-6 py-3">
+                        <span class="inline-block py-1 px-3 rounded-full 
+                            @if($itemDistributor->status == 'Menunggu')
+                                bg-yellow-500 text-yellow-800
+                            @elseif($itemDistributor->status == 'Disetujui')
+                                bg-green-600 text-white
+                            @else
+                                bg-red-600 text-white
+                            @endif
+                        ">
+                            {{ $itemDistributor->status }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-3">
                         <button class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-semibold">
                             Terima
                         </button>
@@ -56,10 +59,11 @@
                         <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-semibold">
                             Tolak
                         </button>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
+
     </table>
 </div>
 </div>

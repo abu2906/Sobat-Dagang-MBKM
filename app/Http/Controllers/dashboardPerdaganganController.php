@@ -153,18 +153,41 @@ class DashboardPerdaganganController extends Controller
 
     public function riwayatSurat()
     {
-        // $userId = auth()->user()->id;
+        // $query = PermohonanSurat::where('user_id', auth()->id()); 
+        $query = PermohonanSurat::query();
+        if (request('search')) {
+        $search = strtolower(trim(request('search'))); // lowercase & trim input
 
-        // $riwayat = DB::table('form_permohonan') 
-        // ->where('id_user', $userId)
-        // ->orderBy('tgl_pengajuan', 'desc')
-        // ->get();
-        
-        $riwayatSurat = PermohonanSurat::all();
+        $mapping = [
+            'surat rekomendasi' => 'surat_rekomendasi_perdagangan',
+            'rekomendasi' => 'surat_rekomendasi_perdagangan',
+            'surat keterangan' => 'surat_keterangan_perdagangan',
+            'keterangan' => 'surat_keterangan_perdagangan',
+            'lainnya' => 'dan_lainnya_perdagangan',
+        ];
+
+        $matchedJenis = null;
+        foreach ($mapping as $key => $value) {
+            if (str_contains($search, $key)) {
+                $matchedJenis = $value;
+                break;
+            }
+        }
+
+        $query->where(function ($q) use ($search, $matchedJenis) {
+            if ($matchedJenis) {
+                $q->where('jenis_surat', $matchedJenis);
+            } else {
+                $q->whereRaw('LOWER(status) LIKE ?', ["%$search%"])
+                  ->orWhereRaw('DATE_FORMAT(tanggal_pengajuan, "%d-%m-%Y") LIKE ?', ["%$search%"]);
+            }
+        });
+        }
+        $riwayatSurat = $query->latest()->get();
         return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
     }
 
-    public function ajukanPermohonan(Request $request)
+     public function ajukanPermohonan(Request $request)
     {
         // Validasi input
         $validated = $request->validate([

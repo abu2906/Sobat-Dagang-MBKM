@@ -15,11 +15,12 @@
 </div>
 <div class="container px-4 mx-auto -mt-8">
     <div class="flex justify-center mb-6">
-        <div class="relative w-1/2 shadow-xl rounded-full bg-white shadow-gray-400/40">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
-            <input type="text" placeholder="Cari"
-                   class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent" />
-        </div>
+        <form action="{{ route('bidangPerdagangan.riwayatSurat') }}" method="GET" class="relative w-1/2 shadow-xl rounded-full bg-white shadow-gray-400/40">
+    <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari"
+        class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent" />
+</form>
+
     </div>
     <div class="flex justify-center mb-6">
 
