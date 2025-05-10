@@ -16,6 +16,7 @@ use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
 use App\Http\Controllers\DashboardPerdaganganController;
 use App\Http\Controllers\PelaporanPenyaluranController;
+use App\Http\Controllers\SobatHargaController;
 
 // Halaman utama (home) yang mengarah ke view pages.home
 Route::get('/', [homeController::class, 'index'])->name('home');
@@ -44,6 +45,8 @@ Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submit
 Route::get('/halal', function () {
     return view('user.halal');
 })->name('halal');
+Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
+Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
 
 //user perdagangan
 Route::get('/bidang-perdagangan/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
