@@ -69,6 +69,13 @@ Route::get('/detail-surat/{id_permohonan}', [DashboardPerdaganganController::cla
     ->where('id_permohonan', '[0-9a-fA-F\-]+')
     ->name('perdagangan.detailSurat');
 
+//Surat Ditolak
+Route::put('/permohonan/{id}/tolak', [DashboardPerdaganganController::class, 'tolak'])->name('permohonan.tolak');
+Route::put('/surat/{id}/setujui', [DashboardPerdaganganController::class, 'setujui'])->name('surat.setujui');
+Route::put('/permohonan/{id}/keterangan', [DashboardPerdaganganController::class, 'simpanketerangan'])->name('permohonan.keterangan');
+Route::put('/permohonan/{id}/rekomendasi', [DashboardPerdaganganController::class, 'simpanRekomendasi'])->name('permohonan.rekomendasi');
+
+
 // view Document
 Route::get('/detail-surat/{id}/view-{type}', [DashboardPerdaganganController::class, 'viewDokumen'])
     ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
@@ -122,8 +129,9 @@ Route::get('/test/{viewPath}', function ($viewPath) {
     return abort(404, "View '$bladePath' tidak ditemukan.");
 })->where('viewPath', '.*');
 
-// Route::get('/form-permohonan', function () {
-//     return view('user.form_permohonan');
+Route::get('/surat-rekomendasi', function () {
+    return view('SuratBalasan.surat-rekomendasi');
+});
 // })->name('form.permohonan');
 // Route::get('/riwayat-surat', function () {
 //     return view('user.riwayat_surat');
