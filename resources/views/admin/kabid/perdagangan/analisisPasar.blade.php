@@ -8,26 +8,27 @@
         <!-- KIRI -->
         <div class="w-full lg:w-[67.5%] flex flex-col space-y-4">
             <!-- Dropdown Pasar -->
-            <div x-data="{ open: false, selected: 'Pasar Lakessi', options: ['Pasar Lakessi', 'Pasar Sumpang'] }"
-                class="relative w-full">
-                <button @click="open = !open"
-                    class="bg-[#083458] text-white rounded-xl px-6 py-2 w-full flex justify-between items-center flex-1 mt-2">
-                    <span x-text="selected" class="font-bold"></span>
-                    <svg class="w-5 h-5 transform transition-transform" :class="{ 'rotate-180': open }" fill="white"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" />
-                    </svg>
-                </button>
-                <ul x-show="open" @click.away="open = false"
-                    class="absolute z-10 bg-white w-full mt-1 rounded-xl shadow-md text-gray-700 overflow-hidden">
-                    <template x-for="option in options" :key="option">
-                        <li>
-                            <button @click="selected = option; open = false"
-                                class="w-full text-left px-6 py-2 hover:bg-blue-100" x-text="option"></button>
-                        </li>
-                    </template>
-                </ul>
+            <div x-data="{ open: false, selected: '{{ $selectedLokasi }}', options: @js($lokasiOptions) }" class="relative w-full">
+                <form method="GET" action="{{ route('analisis.pasar') }}" x-ref="form">
+                    <input type="hidden" name="start_date" :value="document.querySelector('[name=start_date]').value">
+                    <input type="hidden" name="end_date" :value="document.querySelector('[name=end_date]').value">
+                    <input type="hidden" name="lokasi" :value="selected">
+
+                    <button type="button" @click="open = !open" class="bg-[#083458] text-white rounded-xl px-6 py-2 w-full flex justify-between items-center mt-2">
+                        <span x-text="selected" class="font-bold"></span>
+                        <svg class="w-5 h-5 transform transition-transform" :class="{ 'rotate-180': open }" fill="white" viewBox="0 0 20 20">
+                            <path d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" />
+                        </svg>
+                    </button>
+
+                    <ul x-show="open" @click.away="open = false" x-transition class="absolute z-10 bg-white w-full mt-1 rounded-xl shadow-md text-gray-700 overflow-hidden">
+                        <template x-for="option in options" :key="option">
+                            <li>
+                                <button type="button" @click="selected = option; $nextTick(() => $refs.form.submit())" class="w-full text-left px-6 py-2 hover:bg-blue-100" x-text="option"></button>
+                            </li>
+                        </template>
+                    </ul>
+                </form>
             </div>
 
             <!-- Filter -->
@@ -36,183 +37,239 @@
                     <span class="material-symbols-outlined">discover_tune</span>
                     <span>Filter</span>
                 </div>
-                <div class="flex flex-col md:flex-row items-center gap-4">
-                    <!-- Periode -->
+                <form method="GET" action="{{ route('analisis.pasar') }}" class="flex flex-col md:flex-row items-center gap-4">
+                    <input type="hidden" name="lokasi" value="{{ $selectedLokasi }}">
                     <div class="flex items-center bg-blue-100 rounded-xl px-4 py-2 w-full md:w-1/2">
                         <label class="mr-2 font-semibold">Periode</label>
-                        <input type="date" class="bg-transparent outline-none w-full text-sm" value="2025-04-01">
+                        <input type="date" name="start_date" class="bg-transparent outline-none w-full text-sm" value="{{ $startDate }}" onchange="this.form.submit()">
                     </div>
-                    <!-- Sampai -->
                     <div class="flex items-center bg-blue-100 rounded-xl px-4 py-2 w-full md:w-1/2">
                         <label class="mr-2 font-semibold">Sampai</label>
-                        <input type="date" class="bg-transparent outline-none w-full text-sm" value="2025-04-01">
+                        <input type="date" name="end_date" class="bg-transparent outline-none w-full text-sm" value="{{ $endDate }}" onchange="this.form.submit()">
                     </div>
-                </div>
+                </form>
             </div>
 
             <!-- Tabel -->
-            <div class="bg-white rounded-xl shadow overflow-x-auto flex-grow">
-                <table class="min-w-full text-sm text-center">
-                    <thead class="bg-[#0B3A6A] text-white">
-                        <tr>
-                            <th class="px-2 py-2">TANGGAL</th>
-                            <th>BERAS</th>
-                            <th>CABAI</th>
-                            <th>GULA</th>
-                            <th>BAWANG</th>
-                            <th>DAGING AYAM</th>
-                            <th>IKAN</th>
-                            <th>MINYAK</th>
-                            <th>TELUR</th>
-                            <th>TEPUNG</th>
-                            <th>DAGING SAPI</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
-                        @for($i = 0; $i < 7; $i++)
-                        <tr class="border-b">
-                            <td class="py-1">20-4-2025</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                            <td>23.000</td>
-                        </tr>
-                        @endfor
-                    </tbody>
-                </table>
-            </div>
+            @if ($selectedLokasi == 'Pasar Sumpang')
+                <div class="bg-white rounded-xl shadow overflow-x-auto flex-grow scrollbar-hide overflow-scroll" style="max-height: 500px; overflow: auto;">
+                    <table class="min-w-full text-sm text-center whitespace-nowrap">
+                        <thead class="bg-[#083458] text-white">
+                            <tr>
+                                <th class="px-4 py-2 sticky top-0 left-0 z-20 bg-[#083458]">TANGGAL</th>
+                                @foreach ($barangs as $barang)
+                                    <th class="px-4 py-2 sticky top-0 z-10 bg-[#083458]">{{ strtoupper($barang->nama_barang) }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            @foreach ($tanggalList as $tanggal)
+                                <tr class="border-b">
+                                    <td class="py-2 px-4 sticky left-0 z-10 bg-white">
+                                        {{ \Carbon\Carbon::parse($tanggal)->format('d-m-Y') }}
+                                    </td>
+                                    @foreach ($barangs as $barang)
+                                        @php
+                                            $harga = $dataHarga[$tanggal][$barang->id_barang] ?? '-';
+                                        @endphp
+                                        <td class="px-4">{{ is_numeric($harga) ? number_format($harga, 0, ',', '.') : $harga }}</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="bg-white rounded-xl shadow overflow-x-auto flex-grow scrollbar-hide overflow-scroll" style="max-height: 500px; overflow: auto;">
+                    <table class="min-w-full text-sm text-center whitespace-nowrap">
+                        <thead class="bg-[#083458] text-white">
+                            <tr>
+                                <th class="px-4 py-2 sticky top-0 left-0 z-20 bg-[#083458]">TANGGAL</th>
+                                @foreach ($barangs as $barang)
+                                    <th class="px-4 py-2 sticky top-0 z-10 bg-[#083458]">{{ strtoupper($barang->nama_barang) }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            @foreach ($tanggalList as $tanggal)
+                                <tr class="border-b">
+                                    <td class="py-2 px-4 sticky left-0 z-10 bg-white">
+                                        {{ \Carbon\Carbon::parse($tanggal)->format('d-m-Y') }}
+                                    </td>
+                                    @foreach ($barangs as $barang)
+                                        @php
+                                            $harga = $dataHarga[$tanggal][$barang->id_barang] ?? '-';
+                                        @endphp
+                                        <td class="px-4">{{ is_numeric($harga) ? number_format($harga, 0, ',', '.') : $harga }}</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         </div>
-
+        
         <!-- KANAN -->
-        <div class="w-full lg:w-[30%] flex flex-col space-y-4">
-            <!-- Trend Harga Bapok -->
-            <div class="bg-white rounded-xl shadow p-4 mb-4">
-                <h3 class="font-semibold text-center text-gray-800">Trend Harga Bapok</h3>
-                <div class="flex flex-col lg:flex-row items-center">
-                    <div class="w-full lg:w-1/2">
-                        <canvas id="trendBapokChart"></canvas>
+        @if ($selectedLokasi == 'Pasar Sumpang')
+            <!-- Pasar Sumpang content -->
+            <div class="w-full lg:w-[30%] flex flex-col space-y-4">
+                <div class="bg-white rounded-xl shadow p-4 mb-4">
+                    <h3 class="font-semibold text-center text-black mb-3">Tren Harga Bahan Pokok</h3>
+                    <div class="flex space-x-6">
+                        <div class="w-1/2">
+                            <canvas id="topHargaPieChart"></canvas>
+                        </div>
+                        <div class="w-1/2 space-y-1 max-h-48 overflow-y-auto hide-scrollbar">
+                            @foreach ($top10HargaTertinggi as $item)
+                                <div class="flex items-center text-sm">
+                                    <span class="inline-block w-3 h-3 rounded-full mr-2" style="background-color: {{ $item['color'] }}"></span>
+                                    <span class="text-gray-800 truncate">{{ $item['label'] }}</span>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="w-full lg:w-1/2 mt-4 lg:mt-0 flex flex-col items-start justify-center px-4">
-                        <ul class="text-sm space-y-1">
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#0b294a"></span> Cabai</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#37587c"></span> Daging sapi</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#4e6e8f"></span> Daging ayam</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#6f8ea9"></span> Minyak</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#92aec0"></span> Beras</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#f16b8a"></span> Ikan</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#f27d9c"></span> Bawang</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#f498ac"></span> Telur</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#f8b6c5"></span> Tepung</li>
-                            <li><span class="inline-block w-4 h-4 rounded mr-2" style="background-color:#fbd6df"></span> Tomat</li>
+                </div>
+
+                <div class="bg-white rounded-xl shadow p-4 text-sm flex-grow flex flex-col justify-between">
+                    <div>
+                        <div class="mb-2 font-semibold text-gray-700">Top 5 Harga Naik</div>
+                        <ul class="text-blue-600 space-y-1">
+                            @foreach ($topHargaNaik as $item)
+                                <li>{{ $item['label'] }} (Naik: Rp{{ number_format($item['price_change']) }})</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <div class="mb-2 font-semibold text-gray-700">Top 5 Harga Turun</div>
+                        <ul class="text-red-600 space-y-1">
+                            @foreach ($topHargaTurun as $item)
+                                <li>{{ $item['label'] }} (Turun: Rp{{ number_format($item['price_change']) }})</li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
+        @elseif ($selectedLokasi == 'Pasar Lakessi')
+        <div class="w-full lg:w-[30%] flex flex-col space-y-4">
+            <div class="bg-white rounded-xl shadow p-4 mb-4">
+                <h3 class="font-semibold text-center text-black mb-3">Tren Harga Bahan Pokok</h3>
+                <div class="flex space-x-6">
+                    <div class="w-1/2">
+                        <canvas id="topHargaPieChart"></canvas>
+                    </div>
+                    <div class="w-1/2 space-y-1 max-h-48 overflow-y-auto hide-scrollbar">
+                        @foreach ($top10HargaTertinggi as $item)
+                            <div class="flex items-center text-sm">
+                                <span class="inline-block w-3 h-3 rounded-full mr-2" style="background-color: {{ $item['color'] }}"></span>
+                                <span class="text-gray-800 truncate">{{ $item['label'] }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
 
-            <!-- Top Harga -->
             <div class="bg-white rounded-xl shadow p-4 text-sm flex-grow flex flex-col justify-between">
                 <div>
                     <div class="mb-2 font-semibold text-gray-700">Top 5 Harga Naik</div>
-                    <ul class="text-blue-600 space-y-1">
-                        <li>Cabai <span class="float-right">+Rp 5.000</span></li>
-                        <li>Daging Sapi <span class="float-right">+Rp 3.000</span></li>
-                        <li>Daging Ayam <span class="float-right">+Rp 2.000</span></li>
-                        <li>Minyak <span class="float-right">+Rp 1.000</span></li>
-                        <li>Beras <span class="float-right">+Rp 500</span></li>
+                    <ul class="text-green-600 space-y-1">
+                        @foreach ($topHargaNaik as $item)
+                            <li>{{ $item['label'] }} (Naik: Rp{{ number_format($item['price_change']) }})</li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="mt-4">
                     <div class="mb-2 font-semibold text-gray-700">Top 5 Harga Turun</div>
                     <ul class="text-red-600 space-y-1">
-                        <li>Ikan <span class="float-right">-Rp 3.000</span></li>
-                        <li>Ikan <span class="float-right">-Rp 3.000</span></li>
-                        <li>Bawang <span class="float-right">-Rp 2.000</span></li>
-                        <li>Telur <span class="float-right">-Rp 1.000</span></li>
-                        <li>Tepung <span class="float-right">-Rp 500</span></li>
+                        @foreach ($topHargaTurun as $item)
+                            <li>{{ $item['label'] }} (Turun: Rp{{ number_format($item['price_change']) }})</li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
-        </div>
+        </div>        
+        @endif
+
     </div>
 
-    <!-- Grafik Batang -->
-    <div class="bg-white rounded-lg shadow p-4">
-        <h2 class="text-gray-700 font-semibold mb-4">Perbandingan Harga Kemarin dan Hari Ini</h2>
-        <div class="w-full overflow-x-auto">
-            <div class="min-w-[1000px] h-25">
-                <canvas id="barChart"></canvas>
+    @if ($selectedLokasi == 'Pasar Sumpang' || $selectedLokasi == 'Pasar Lakessi')
+        <div class="bg-white rounded-lg shadow p-4">
+            <h2 class="text-gray-700 font-semibold mb-4">Perbandingan Harga Kemarin dan Hari Ini</h2>
+            <div class="w-full overflow-x-auto">
+                <div class="min-w-[1000px] h-25">
+                    <canvas id="barChart"></canvas>
+                </div>
             </div>
         </div>
-    </div>
-
+    @endif
 </div>
+
 <script>
-    const ctx = document.getElementById('barChart').getContext('2d');
-    const barChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Beras', 'Cabai', 'Gula', 'Bawang', 'Daging Ayam', 'Ikan', 'Minyak', 'Telur', 'Tepung', 'Daging Sapi'],
-            datasets: [{
-                label: 'Harga Kemarin',
-                data: [23000, 24000, 25000, 23000, 22000, 21000, 25000, 21000, 22000, 26000],
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }, {
-                label: 'Harga Hari Ini',
-                data: [24000, 26000, 24500, 23500, 22500, 20500, 25500, 21500, 22500, 26500],
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    const trendCtx = document.getElementById('trendBapokChart').getContext('2d');
-    const trendBapokChart = new Chart(trendCtx, {
-        type: 'doughnut',
-        data: {
-            labels: [
-                'Cabai', 'Daging sapi', 'Daging ayam', 'Minyak', 'Beras',
-                'Ikan', 'Bawang', 'Telur', 'Tepung', 'Tomat'
-            ],
-            datasets: [{
-                data: [12, 10, 10, 9, 9, 8, 7, 6, 5, 4],
-                backgroundColor: [
-                    '#0b294a', '#37587c', '#4e6e8f', '#6f8ea9', '#92aec0',
-                    '#f16b8a', '#f27d9c', '#f498ac', '#f8b6c5', '#fbd6df'
-                ],
-                borderWidth: 1,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            cutout: '60%',
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: {
-                    label: function(context) {
-                        return `${context.label}: ${context.raw}`;
+    document.addEventListener('DOMContentLoaded', function () {
+        const ctx = document.getElementById('topHargaPieChart');
+        if (ctx) {
+            const dataPie = @json($top10HargaTertinggi);
+            new Chart(ctx.getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: dataPie.map(i => i.label),
+                    datasets: [{
+                        data: dataPie.map(i => i.harga),
+                        backgroundColor: dataPie.map(i => i.color),
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            color: '#fff',
+                            formatter: (value, ctx) => {
+                                const total = ctx.chart.data.datasets[0].data.reduce((a, b) => Number(a) + Number(b), 0);
+                                return (value / total * 100).toFixed(1) + '%';
+                            },
+                            font: { weight: 'bold', size: 12 }
+                        }
                     }
-                }}
-            }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+
+        const ctxBar = document.getElementById('barChart');
+        if (ctxBar) {
+            new Chart(ctxBar.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: @json($barChartData['labels']),
+                    datasets: [
+                        {
+                            label: 'Harga Hari Ini',
+                            data: @json($barChartData['today']),
+                            backgroundColor: '#3b82f6'
+                        },
+                        {
+                            label: 'Harga Kemarin',
+                            data: @json($barChartData['yesterday']),
+                            backgroundColor: '#f87171'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: { display: true, text: 'Harga (Rp)' }
+                        }
+                    }
+                }
+            });
         }
     });
-
 </script>
 @endsection

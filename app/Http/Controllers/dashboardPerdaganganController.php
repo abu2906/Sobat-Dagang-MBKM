@@ -17,7 +17,7 @@ use App\Models\DocumentUser;
 use App\Models\IndexKategori;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\Models\DistribusiPupuk;
+use App\Models\IndexHarga;  
 class DashboardPerdaganganController extends Controller
 {
     public function index()
@@ -182,9 +182,39 @@ class DashboardPerdaganganController extends Controller
 
     public function formUpdateHarga()
     {
-        return view('admin.bidangPerdagangan.updateHarga');
+        $kategoris = IndexKategori::orderBy('nama_kategori')->get();
+        $barangs = Barang::orderBy('nama_barang')->get();
+
+        return view('admin.bidangPerdagangan.updateHarga', compact('kategoris', 'barangs'));
+    }
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id_index_kategori' => 'required|exists:index_kategori,id_index_kategori',
+            'id_barang' => 'required|exists:barang,id_barang',
+            'harga' => 'required|numeric',
+            'tanggal' => 'required|date',
+            'lokasi' => 'required|string',
+        ]);
+
+    IndexHarga::create([
+        'id_index_kategori' => $request->id_index_kategori,
+        'id_barang' => $request->id_barang,
+        'harga' => $request->harga,
+        'tanggal' => $request->tanggal,
+        'lokasi' => $request->lokasi,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    return back()->with('success', 'Harga barang berhasil diperbarui.');
     }
 
+    public function getByKategori($id)
+    {
+        $barangs = Barang::where('id_index_kategori', $id)->get(['id_barang', 'nama_barang']);
+        return response()->json($barangs);
+    }
     public function deleteBarang()
     {
         $barangs = Barang::with('kategori')->get(); // eager load kategori
@@ -307,90 +337,4 @@ class DashboardPerdaganganController extends Controller
         }
     }
 
-    public function dashboardKabid()
-    {
-        return view('admin.kabid.perdagangan.perdagangan');
-    }
-
-    public function analisisPasar(Request $request)
-    {
-        // Dummy data (sementara, karena belum ada database)
-        $tanggalHariIni = Carbon::today()->format('Y-m-d');
-        $tanggalKemarin = Carbon::yesterday()->format('Y-m-d');
-
-        $dataHarga = collect([
-            (object)[
-                'tanggal' => $tanggalKemarin,
-                'beras' => 12000,
-                'cabai' => 18000,
-                'minyak' => 15000,
-                'telur' => 22000,
-                'tempe' => 10000,
-                'daun_bawang' => 5000,
-            ],
-            (object)[
-                'tanggal' => $tanggalHariIni,
-                'beras' => 13000,
-                'cabai' => 19000,
-                'minyak' => 17000,
-                'telur' => 23000,
-                'tempe' => 11000,
-                'daun_bawang' => 5500,
-            ]
-        ]);
-
-        // Trend Chart
-        $trendChartData = [
-            'labels' => ['Beras', 'Cabai', 'Minyak', 'Telur', 'Tempe', 'Daun Bawang'],
-            'datasets' => [[
-                'label' => 'Harga Hari Ini',
-                'data' => [13000, 19000, 17000, 23000, 11000, 5500],
-                'backgroundColor' => [
-                    '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'
-                ]
-            ]]
-        ];
-
-        // Perbandingan Chart
-        $perbandinganChartData = [
-            'labels' => ['Beras', 'Cabai', 'Minyak', 'Telur', 'Tempe', 'Daun Bawang'],
-            'datasets' => [
-                [
-                    'label' => 'Kemarin',
-                    'data' => [12000, 18000, 15000, 22000, 10000, 5000],
-                    'backgroundColor' => '#6c757d'
-                ],
-                [
-                    'label' => 'Hari Ini',
-                    'data' => [13000, 19000, 17000, 23000, 11000, 5500],
-                    'backgroundColor' => '#007bff'
-                ]
-            ]
-        ];
-
-        // Top Naik & Turun
-        $selisih = [
-            'beras' => 1000,
-            'cabai' => 1000,
-            'minyak' => 2000,
-            'telur' => 1000,
-            'tempe' => 1000,
-            'daun_bawang' => 500,
-        ];
-
-        $topNaik = collect($selisih)->map(function ($val, $key) {
-            return ['komoditas' => ucfirst($key), 'selisih' => $val];
-        })->sortByDesc('selisih')->take(5)->values();
-
-        $topTurun = collect([]); // Tidak ada data turun dalam dummy ini
-
-        return view('admin.kabid.perdagangan.analisisPasar', compact(
-            'dataHarga', 'trendChartData', 'perbandinganChartData', 'topNaik', 'topTurun'
-        ));
-    }
-
-    public function distribusiPupuk()
-    {
-        return view('admin.kabid.perdagangan.distribusiPupuk');
-    }
 }
