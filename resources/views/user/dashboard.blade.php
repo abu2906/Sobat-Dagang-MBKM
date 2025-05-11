@@ -47,9 +47,8 @@
     
         <!-- Submenu -->
         <div class="absolute left-0 w-full hidden group-hover:block bg-[#CAE2F6] shadow-lg rounded overflow-hidden">
-            <a href="#" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9] rounded-t">Surat Permohonan</a>
-            <a href="#" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9]">Regulasi</a>
-            <a href="#" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9] rounded-b">Direktory Book</a>
+            <a href="{{ route('administrasi-metrologi') }}" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9] rounded-t">Administrasi Persuratan</a>
+            <a href="{{ route('directory-metrologi') }}" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9] rounded-b">Alat Milik Saya</a>
         </div>            
     </div>
 </div>

@@ -92,6 +92,8 @@ class AuthController extends Controller
                 'nik' => 'required|string|unique:user',
                 'nib' => 'nullable|string',
             ]);
+
+            
             
             Log::info('Validasi berhasil, data valid:', $validated);
 
@@ -111,6 +113,8 @@ class AuthController extends Controller
             Log::info('Mencoba menyimpan user ke database');
             $user->save();
             Log::info('User berhasil disimpan dengan ID: ' . $user->id_user);
+
+            return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan login.');
         } catch (\Exception $e) {
 
             Log::error('Error saat registrasi: ' . $e->getMessage());
@@ -119,8 +123,6 @@ class AuthController extends Controller
 
             return back()->withInput()->withErrors(['general' => 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage()]);
         }
-
-        return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan login.');
     }
 
         public function logout(Request $request)

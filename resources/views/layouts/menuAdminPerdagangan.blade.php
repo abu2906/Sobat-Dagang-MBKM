@@ -1,16 +1,8 @@
 @php
-<<<<<<< HEAD
     use Illuminate\Support\Facades\Auth;
 @endphp
 <!DOCTYPE html>
 <html lang="id">
-=======
-use Illuminate\Support\Facades\Auth;
-@endphp
-<!DOCTYPE html>
-<html lang="id">
-
->>>>>>> bfe58919f1bd319846337f11c151e4dfe29875bd
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

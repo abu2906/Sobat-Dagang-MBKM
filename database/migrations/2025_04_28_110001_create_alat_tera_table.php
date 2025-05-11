@@ -12,7 +12,7 @@ class CreateAlatTeraTable extends Migration
     public function up(): void
     {
         Schema::create('alat_tera', function (Blueprint $table) {
-            $table->id('id_alat_tera'); // Primary key
+            $table->id('id_alat_tera');
             $table->string('jenis');
             $table->string('nama_alat');
             $table->timestamps();
