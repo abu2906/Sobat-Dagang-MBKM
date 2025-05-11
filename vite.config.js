@@ -17,7 +17,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    // server: {
-    //     host: '0.0.0.0', // agar bisa diakses dari IP mana saja
-    // },
 });

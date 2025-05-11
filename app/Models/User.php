@@ -35,6 +35,7 @@ class User extends Authenticatable
         'jenis_kelamin',
         'telp',
         'email',
+        'telp',
         'password',
         'kabupaten',
         'kecamatan',

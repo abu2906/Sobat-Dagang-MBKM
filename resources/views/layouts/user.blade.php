@@ -10,7 +10,8 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="min-h-screen flex flex-col bg-gray-100">
+<body class="flex flex-col min-h-screen bg-gray-100">
+
     <div class="relative">
         @include('component.navbar.user')
 

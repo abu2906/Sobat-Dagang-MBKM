@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <link rel="icon" href="{{ asset('assets/img/icon/logoIcon.png') }}" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
-    @if (!Auth::check())
+    {{-- @if (!Auth::check())
     @include('component.navbar.guest')
     @elseif (Auth::check() && Auth::user()->role === 'admin')
     @include('component.navbar.admin')
@@ -21,8 +22,8 @@
     @include('component.navbar.user')
     @elseif (Auth::check() && Auth::user()->role === 'guest')
     @include('component.navbar.guest')
-    @endif
-
+    @endif --}}
+    @include('component.navbar.guest')
     <main>
         @yield('content')
     </main>

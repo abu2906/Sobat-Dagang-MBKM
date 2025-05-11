@@ -8,48 +8,389 @@ use App\Models\Surat;
 use App\Models\HargaBarang;
 use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB;
+use Exception;
+use Illuminate\Support\Str;
+use App\Models\PermohonanSurat;
+use App\Models\Barang;
+use App\Models\DocumentUser;
+use App\Models\IndexKategori;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use App\Models\DistribusiPupuk;
 class DashboardPerdaganganController extends Controller
 {
     public function index()
     {
-        return view('admin.bidangPerdagangan.dashboardPerdagangan', [
-            // 'jumlahSuratMasuk' => Surat::count(),
-            // 'jumlahTerverifikasi' => Surat::where('status', 'terverifikasi')->count(),
-            // 'jumlahDitolak' => Surat::where('status', 'ditolak')->count(),
-            // 'jumlahDraft' => Surat::where('status', 'draft')->count(),
-            // 'suratMasuk' => Surat::latest()->take(5)->get(),
-            // 'daftarHarga' => HargaBarang::latest()->take(4)->get(),
-            // 'notifikasi' => Notifikasi::latest()->take(4)->get(),
+        $dataSurat = $this->getSuratPerdaganganData();
+
+        return view('admin.bidangPerdagangan.dashboardPerdagangan', $dataSurat);
+    }
+    private function getSuratPerdaganganData()
+    {
+        $jenis = [
+            'surat_rekomendasi_perdagangan',
+            'surat_keterangan_perdagangan',
+            'dan_lainnya_perdagangan',
+        ];
+
+        return [
+            'totalSuratPerdagangan' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'disetujui')->count(),
+            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        ];
+    }
+
+    public function kelolaSurat()
+    {
+        $rekapSurat = $this->getSuratPerdaganganData();
+        $dataSurat = PermohonanSurat::whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.bidangPerdagangan.kelolaSurat', [
+            'dataSurat' => $dataSurat,
+            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+        ]);
+    }
+    public function detailSurat($id)
+    {
+        $data = PermohonanSurat::where('id_permohonan', $id)->first();
+        $dokumen = DocumentUser::where('id_permohonan', $id)->first();
+
+        return view('admin.bidangPerdagangan.detailPermohonan', [
+            'data' => $data,
+            'dokumen' => $dokumen,
         ]);
     }
 
+    public function viewDokumen($id, $type)
+    {
+        $dokumen = DB::table('document_user')->where('id_permohonan', $id)->first();
+
+        if (!$dokumen) {
+            return abort(404, 'Dokumen tidak ditemukan.');
+        }
+
+        $filePath = match (strtoupper($type)) {
+            'NIB' => $dokumen->dokument_nib ?? null,
+            'NPWP' => $dokumen->npwp ?? null,
+            'KTP' => $dokumen->foto_ktp ?? null,
+            'AKTA' => $dokumen->akta_perusahaan ?? null,
+            'USAHA' => $dokumen->foto_usaha ?? null,
+            'SURAT' => DB::table('form_permohonan')->where('id_permohonan', $id)->value('file_surat'),
+            default => null,
+        };
+
+        if (!$filePath || !Storage::disk('public')->exists($filePath)) {
+            return abort(404, 'File tidak ditemukan.');
+        }
+
+        return response()->file(storage_path("app/public/{$filePath}"));
+    }
+    public function downloadDokumen($type, $id)
+    {
+        // Ambil data dokumen berdasarkan id_permohonan
+        $dokumen = DB::table('document_user')->where('id_permohonan', $id)->first();
+
+        // Jika dokumen tidak ditemukan, tampilkan halaman 404
+        if (!$dokumen) {
+            abort(404, 'Dokumen tidak ditemukan.');
+        }
+
+        // Tentukan path file berdasarkan tipe
+        $filePath = match ($type) {
+            'npwp' => $dokumen->npwp,
+            'akta' => $dokumen->akta_perusahaan,
+            'nib' => $dokumen->dokument_nib,
+            'ktp' => $dokumen->foto_ktp,
+            'surat' => $dokumen->file_permohonan ?? null,
+            default => null,
+        };
+
+        // Cek apakah path file valid dan file ada di penyimpanan
+        if (!$filePath || !Storage::disk('local')->exists("private/$filePath")) {
+            abort(404, 'File tidak tersedia.');
+        }
+
+        // Kembalikan file jika ditemukan
+        return response()->file(storage_path("app/private/$filePath"));
+    }
+
+
+    public function detailPermohonan($id)
+    {
+        // $data = DB::table('form_permohonan')
+        //     ->join('users', 'form_permohonan.id_user', '=', 'users.id')
+        //     ->where('form_permohonan.id', $id)
+        //     ->select(
+        //         'form_permohonan.*',
+        //         'users.name as nama',
+        //         'users.email',
+        //         'users.no_telp',
+        //         'users.jenis_kelamin'
+        //     )
+        //     ->first();
+
+        return view('admin.bidangPerdagangan.detailPermohonan', compact('data'));
+    }
+
+
     public function formTambahBarang()
     {
-        return view('admin.bidangPerdagangan.tambahBarang');
+        $kategori = IndexKategori::all();
+        return view('admin.bidangPerdagangan.tambahBarang', compact('kategori'));
     }
 
     public function storeBarang(Request $request)
     {
         $request->validate([
-            'nama_barang' => 'required|string|max:255',
+            'nama_barang' => 'required|string',
+            'kategori_lama' => 'nullable|string',
+            'kategori_baru' => 'nullable|string',
         ]);
 
-        $namaBarang = $request->nama_barang;
-        $kategori = $request->kategori_lama ?: $request->kategori_baru;
+        $idKategori = null;
 
-        // Simpan ke database (sesuaikan nama model dan tabel)
-        // Contoh:
-        // Barang::create([
-        //     'nama' => $namaBarang,
-        //     'kategori' => $kategori,
-        // ]);
+        if ($request->kategori_lama === 'tambah_baru' && $request->filled('kategori_baru')) {
+            $kategoriBaru = IndexKategori::create([
+                'nama_kategori' => $request->kategori_baru,
+            ]);
+            $idKategori = $kategoriBaru->id_index_kategori;
+        } elseif (is_numeric($request->kategori_lama)) {
+            $kategoriLama = IndexKategori::find($request->kategori_lama);
+            if ($kategoriLama) {
+                $idKategori = $kategoriLama->id_index_kategori;
+            }
+        }
 
-        return redirect()->back()->with('success', 'Barang berhasil ditambahkan!');
+        if (!$idKategori) {
+            return back()->withErrors(['kategori' => 'Kategori tidak valid.'])->withInput();
+        }
+
+        Barang::create([
+            'nama_barang' => $request->nama_barang,
+            'id_index_kategori' => $idKategori,
+        ]);
+
+        return redirect()->back()->with('success', 'Barang berhasil ditambahkan.');
     }
 
     public function formUpdateHarga()
     {
         return view('admin.bidangPerdagangan.updateHarga');
+    }
+
+    public function deleteBarang()
+    {
+        $barangs = Barang::with('kategori')->get(); // eager load kategori
+        return view('admin.bidangPerdagangan.hapusBarang', compact('barangs'));
+    }
+    public function destroy($id)
+    {
+        $barang = Barang::findOrFail($id);
+        $barang->delete();
+
+        return redirect()->back()->with('success', 'Barang berhasil dihapus.');
+    }
+
+    public function laporanPupuk()
+    {
+        return view('admin.bidangPerdagangan.lihatLaporan');
+    }
+
+    public function formPermohonan()
+    {
+        return view('user.bidangPerdagangan.formPermohonan');
+    }
+
+    public function riwayatSurat()
+    {
+        // $query = PermohonanSurat::where('user_id', auth()->id()); 
+        $query = PermohonanSurat::query();
+        if (request('search')) {
+        $search = strtolower(trim(request('search'))); // lowercase & trim input
+
+        $mapping = [
+            'surat rekomendasi' => 'surat_rekomendasi_perdagangan',
+            'rekomendasi' => 'surat_rekomendasi_perdagangan',
+            'surat keterangan' => 'surat_keterangan_perdagangan',
+            'keterangan' => 'surat_keterangan_perdagangan',
+            'lainnya' => 'dan_lainnya_perdagangan',
+        ];
+
+        $matchedJenis = null;
+        foreach ($mapping as $key => $value) {
+            if (str_contains($search, $key)) {
+                $matchedJenis = $value;
+                break;
+            }
+        }
+
+        $query->where(function ($q) use ($search, $matchedJenis) {
+            if ($matchedJenis) {
+                $q->where('jenis_surat', $matchedJenis);
+            } else {
+                $q->whereRaw('LOWER(status) LIKE ?', ["%$search%"])
+                  ->orWhereRaw('DATE_FORMAT(tanggal_pengajuan, "%d-%m-%Y") LIKE ?', ["%$search%"]);
+            }
+        });
+        }
+        $riwayatSurat = $query->latest()->get();
+        return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
+    }
+
+     public function ajukanPermohonan(Request $request)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'jenis_surat' => 'required|in:surat_rekomendasi_perdagangan,surat_keterangan_perdagangan,dan_lainnya_perdagangan',
+            'kecamatan' => 'required|string',
+            'kelurahan' => 'required|string',
+            'titik_koordinat' => 'required|string',
+            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+            'dokumen_nib' => 'required|mimes:pdf|max:10240',
+            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:10240',
+            'akta_perusahaan' => 'required|mimes:pdf|max:10240',
+            'surat' => 'required|file|mimes:pdf,doc,docx|max:10240',
+        ]);
+
+        try {
+            // Simpan file satu per satu
+            $fotoUsahaPath = $request->file('foto_usaha')->store('DokumentUser', 'public');
+            $fotoKTPPath = $request->file('foto_ktp')->store('DokumentUser', 'public');
+            $dokumenNibPath = $request->file('dokumen_nib')->store('DokumentUser', 'public');
+            $npwpPath = $request->file('npwp')->store('DokumentUser', 'public');
+            $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('DokumentUser', 'public');
+            $fileSuratPath = $request->file('surat')->store('DokumentUser', 'public');
+
+            // Buat id_permohonan unik
+            $idPermohonan = Str::uuid()->toString();
+
+            // Simpan ke tabel form_permohonan
+            DB::table('form_permohonan')->insert([
+                'id_permohonan' => $idPermohonan,  // Masukkan UUID yang baru dibuat
+                // 'id_user' => auth()->id() ?? null, // atau null jika belum login
+                'kecamatan' => $request->kecamatan,
+                'kelurahan' => $request->kelurahan,
+                'tgl_pengajuan' => now()->toDateString(),
+                'jenis_surat' => $request->jenis_surat,
+                'titik_koordinat' => $request->titik_koordinat,
+                'file_surat' => $fileSuratPath,
+                'status' => 'menunggu',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Simpan ke tabel document_user
+            DB::table('document_user')->insert([
+                'id_permohonan' => $idPermohonan,  // Masukkan id_permohonan yang sama ke document_user
+                'npwp' => $npwpPath,
+                'akta_perusahaan' => $aktaPerusahaanPath,
+                'foto_ktp' => $fotoKTPPath,
+                'foto_usaha' => $fotoUsahaPath,
+                'dokument_nib' => $dokumenNibPath,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return redirect()->route('bidangPerdagangan.riwayatSurat')
+                ->with('success', 'Pengajuan surat berhasil diajukan.');
+        } catch (Exception $e) {
+            Log::error('Gagal mengajukan surat: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
+        }
+    }
+
+    public function dashboardKabid()
+    {
+        return view('admin.kabid.perdagangan.perdagangan');
+    }
+
+    public function analisisPasar(Request $request)
+    {
+        // Dummy data (sementara, karena belum ada database)
+        $tanggalHariIni = Carbon::today()->format('Y-m-d');
+        $tanggalKemarin = Carbon::yesterday()->format('Y-m-d');
+
+        $dataHarga = collect([
+            (object)[
+                'tanggal' => $tanggalKemarin,
+                'beras' => 12000,
+                'cabai' => 18000,
+                'minyak' => 15000,
+                'telur' => 22000,
+                'tempe' => 10000,
+                'daun_bawang' => 5000,
+            ],
+            (object)[
+                'tanggal' => $tanggalHariIni,
+                'beras' => 13000,
+                'cabai' => 19000,
+                'minyak' => 17000,
+                'telur' => 23000,
+                'tempe' => 11000,
+                'daun_bawang' => 5500,
+            ]
+        ]);
+
+        // Trend Chart
+        $trendChartData = [
+            'labels' => ['Beras', 'Cabai', 'Minyak', 'Telur', 'Tempe', 'Daun Bawang'],
+            'datasets' => [[
+                'label' => 'Harga Hari Ini',
+                'data' => [13000, 19000, 17000, 23000, 11000, 5500],
+                'backgroundColor' => [
+                    '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'
+                ]
+            ]]
+        ];
+
+        // Perbandingan Chart
+        $perbandinganChartData = [
+            'labels' => ['Beras', 'Cabai', 'Minyak', 'Telur', 'Tempe', 'Daun Bawang'],
+            'datasets' => [
+                [
+                    'label' => 'Kemarin',
+                    'data' => [12000, 18000, 15000, 22000, 10000, 5000],
+                    'backgroundColor' => '#6c757d'
+                ],
+                [
+                    'label' => 'Hari Ini',
+                    'data' => [13000, 19000, 17000, 23000, 11000, 5500],
+                    'backgroundColor' => '#007bff'
+                ]
+            ]
+        ];
+
+        // Top Naik & Turun
+        $selisih = [
+            'beras' => 1000,
+            'cabai' => 1000,
+            'minyak' => 2000,
+            'telur' => 1000,
+            'tempe' => 1000,
+            'daun_bawang' => 500,
+        ];
+
+        $topNaik = collect($selisih)->map(function ($val, $key) {
+            return ['komoditas' => ucfirst($key), 'selisih' => $val];
+        })->sortByDesc('selisih')->take(5)->values();
+
+        $topTurun = collect([]); // Tidak ada data turun dalam dummy ini
+
+        return view('admin.kabid.perdagangan.analisisPasar', compact(
+            'dataHarga', 'trendChartData', 'perbandinganChartData', 'topNaik', 'topTurun'
+        ));
+    }
+
+    public function distribusiPupuk()
+    {
+        return view('admin.kabid.perdagangan.distribusiPupuk');
     }
 }

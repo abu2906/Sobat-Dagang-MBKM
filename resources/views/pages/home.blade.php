@@ -28,16 +28,16 @@
     <div class="relative px-6 py-8 overflow-visible md:px-16">
         <div class="relative flex gap-8 overflow-visible overflow-x-auto scrollbar-hide" style="scroll-snap-type: x mandatory;">
             @foreach ($daftarBerita as $berita)
-            <a href="{{ route('berita.utama', $berita->id) }}"
+            <a href="{{ route('berita.utama', urlencode($berita->judul)) }}"
                 class="relative z-0 flex-none min-w-0 overflow-hidden transition-all duration-500 ease-in-out transform bg-white shadow-md w-72 rounded-2xl hover:-translate-y-2 hover:shadow-glow snap-start group group-hover:z-10">
 
                 <div class="overflow-hidden rounded-2xl">
-                    <img src="{{ $berita->gambar }}" alt="{{ $berita->judul }}"
+                    <img src="{{ asset('storage/' . $berita->lampiran) }}" alt="{{ $berita->judul }}"
                         class="object-cover w-full transition-transform duration-500 ease-in-out h-72 rounded-2xl group-hover:scale-110 ">
                 </div>
 
                 <div class="absolute text-xs font-semibold text-white top-3 left-3">
-                    {{ \Carbon\Carbon::parse($berita->created_at)->translatedFormat('l, d M Y') }}
+                    {{ \Carbon\Carbon::parse($berita->tanggal)->translatedFormat('l, d M Y') }}
                 </div>
 
                 <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent rounded-b-2xl">
@@ -49,40 +49,39 @@
             @endforeach
         </div>
     </div>
+    
     <div class="bg-[#083358] text-white px-6 md:px-16 py-4 mt-10 z-10 shadow-lg">
         <div class="flex items-center justify-center">
-            <h3 class="justify-center text-lg font-bold md:text-2xl">Harga Pasar Terkini</h3>
+            <h3 class="justify-center text-lg font-bold md:text-2xl">Sobat Harga</h3>
         </div>
     </div>
     <div class="max-w-6xl px-4 py-10 mx-auto">
         <div class="grid grid-cols-2 gap-6 sm:grid-cols-5">
-            @php
-            $items = [
-            ['name' => 'Beras', 'image' => 'beras.png', 'route' => 'harga-pasar.beras'],
-            ['name' => 'Cabe', 'image' => 'cabe.png', 'route' => 'harga-pasar.cabe'],
-            ['name' => 'Ayam', 'image' => 'ayam.png', 'route' => 'harga-pasar.ayam'],
-            ['name' => 'Bawang', 'image' => 'bawang.png', 'route' => 'harga-pasar.bawang'],
-            ['name' => 'Telur', 'image' => 'telur.png', 'route' => 'harga-pasar.telur'],
-            ['name' => 'Daging', 'image' => 'daging.png', 'route' => 'harga-pasar.daging'],
-            ['name' => 'Ikan', 'image' => 'ikan.png', 'route' => 'harga-pasar.ikan'],
-            ['name' => 'Tahu', 'image' => 'tahu.png', 'route' => 'harga-pasar.tahu'],
-            ['name' => 'Tempe', 'image' => 'tempe.png', 'route' => 'harga-pasar.tempe'],
-            ['name' => 'Tomat', 'image' => 'tomat.png', 'route' => 'harga-pasar.tomat'],
-            ];
-            @endphp
+        @php
+        $items = [
+            ['name' => 'Beras', 'image' => 'beras.png'],
+            ['name' => 'Cabe', 'image' => 'cabe.png'],
+            ['name' => 'Ayam', 'image' => 'ayam.png'],
+            ['name' => 'Bawang', 'image' => 'bawang.png'],
+            ['name' => 'Telur', 'image' => 'telur.png'],
+            ['name' => 'Daging', 'image' => 'daging.png'],
+            ['name' => 'Ikan', 'image' => 'ikan.png'],
+            ['name' => 'Tahu', 'image' => 'tahu.png'],
+            ['name' => 'Tempe', 'image' => 'tempe.png'],
+            ['name' => 'Tomat', 'image' => 'tomat.png'],
+        ];
+        @endphp
 
-            @foreach ($items as $item)
-            {{-- {{ route($item['route']) }} --}}
-            <a href=""
-                class="border-2 border-[#083358] rounded-xl p-4 flex flex-col items-center bg-white shadow-sm
-                   hover:bg-indigo-50 hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out transform">
-                <img src="{{ asset('assets/img/icon/hargaPasar/' . $item['image']) }}" alt="{{ $item['name'] }}" class="object-contain w-16 h-16">
-                <p class="mt-3 text-sm font-semibold">{{ $item['name'] }}</p>
-            </a>
-            @endforeach
-        </div>
+        @foreach ($items as $item)
+        <a href="{{ route('harga-pasar.kategori', ['kategori' => strtolower($item['name'])]) }}"
+        class="border-2 border-[#083358] rounded-xl p-4 flex flex-col items-center bg-white shadow-sm
+                hover:bg-indigo-50 hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out transform">
+            <img src="{{ asset('assets/img/icon/hargaPasar/' . $item['image']) }}" alt="{{ $item['name'] }}" class="object-contain w-16 h-16">
+            <p class="mt-3 text-sm font-semibold">{{ $item['name'] }}</p>
+        </a>
+        @endforeach
     </div>
-
+    </div>
 </div>
 
 <!-- Custom Styling -->

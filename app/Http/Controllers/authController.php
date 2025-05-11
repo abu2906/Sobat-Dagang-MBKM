@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Disdag;
 
-class AuthController extends Controller
+class authController extends Controller
 {
     public function showFormLogin()
     {
@@ -24,28 +24,28 @@ class AuthController extends Controller
         $wilayah = json_decode($json, true);
         return view('pages.auth.register', compact('wilayah'));
     }
-    
+
     public function submitFormLogin(Request $request)
     {
         $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
-    
+
         $identifier = $request->username;
-    
+
         // 1. Coba login disdag via NIP
         $disdag = Disdag::where('nip', $identifier)->first();
-    
+
         if ($disdag && Hash::check($request->password, $disdag->password)) {
             Auth::login($disdag);
 
-//tidak terhubung pi ketampilan baru users
+            //tidak terhubung pi ketampilan baru users
             switch ($disdag->role) {
                 case 'master_admin':
                     return redirect()->intended(route('user.dashboard'));
                 case 'admin_perdagangan':
-                    return redirect()->intended('/admin/perdagangan');
+                    return redirect()->intended(route('dashboard.perdagangan'));
                 case 'admin_industri':
                     return redirect()->intended('/admin/industri');
                 case 'admin_metrologi':
@@ -62,22 +62,23 @@ class AuthController extends Controller
                     return redirect('/dashboard');
             }
         }
-    
+
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
-    
+
         if ($user && Hash::check($request->password, $user->password)) {
             Auth::login($user);
             return redirect()->intended(route('user.dashboard'));
         }
-    
-        return redirect()->route('login')->with('error', 'Username atau password salah');
+
+        // Jika login gagal, kirimkan pesan error ke session
+        return redirect()->route('login')->withErrors(['login_error' => 'Username atau password salah']);
     }
-    
-    
+
+
     public function submitRegister(Request $request)
     {
         Log::info('Data registrasi yang diterima:', $request->all());
-        
+
         try {
             $validated = $request->validate([
                 'nama' => 'required|string|max:255',
@@ -109,7 +110,7 @@ class AuthController extends Controller
             $user->alamat_lengkap = $validated['alamat_lengkap'];
             $user->nik = $validated['nik'];
             $user->nib = $validated['nib'];
-           
+
             Log::info('Mencoba menyimpan user ke database');
             $user->save();
             Log::info('User berhasil disimpan dengan ID: ' . $user->id_user);
@@ -119,7 +120,7 @@ class AuthController extends Controller
 
             Log::error('Error saat registrasi: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
-            
+
 
             return back()->withInput()->withErrors(['general' => 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage()]);
         }

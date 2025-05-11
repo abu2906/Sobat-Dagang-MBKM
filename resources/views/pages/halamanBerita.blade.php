@@ -1,33 +1,33 @@
 @extends('layouts.home')
 
-@section('title', $berita->judul)
-
 @section('content')
 
-<div class="container mx-auto py-12 px-4">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
-        
+<div class="container px-4 py-12 mx-auto">
+    <div class="max-w-4xl p-8 mx-auto bg-white shadow-lg rounded-2xl">
+
         <!-- Tombol Kembali -->
-        <a href="{{ route('Home') }}" class="text-sm text-blue-500 hover:text-blue-700 mb-6 inline-block">
-            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Halaman Utama
+        <a href="{{ route('home') }}" class="inline-block mb-6 text-sm text-blue-500 hover:text-blue-700">
+            <i class="mr-2 fas fa-arrow-left"></i> Kembali ke Dashboard
         </a>
-        
+
         <!-- Judul -->
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{{ $berita->judul }}</h1>
-        
+        <h1 class="mb-2 text-3xl font-bold text-gray-900 md:text-4xl">{{ $berita->judul }}</h1>
+
         <!-- Tanggal -->
-        <p class="text-sm text-gray-500 mb-6">
-            {{ \Carbon\Carbon::parse($berita->created_at)->translatedFormat('l, d M Y') }}
+        <p class="mb-6 text-sm text-gray-500">
+            {{ \Carbon\Carbon::parse($berita->tanggal ?? $berita->created_at)->translatedFormat('l, d M Y') }}
         </p>
 
-        <!-- Gambar -->
-        <div class="overflow-hidden rounded-lg mb-8">
-            <img src="{{ $berita->gambar }}" alt="{{ $berita->judul }}" class="w-full h-[400px] object-cover">
+        <!-- Gambar dari lampiran -->
+        @if ($berita->lampiran)
+        <div class="mb-8 overflow-hidden rounded-lg">
+            <img src="{{ asset('storage/' . $berita->lampiran) }}" alt="{{ $berita->judul }}" class="w-full h-[400px] object-cover">
         </div>
+        @endif
 
         <!-- Isi Berita -->
-        <div class="text-gray-700 leading-relaxed text-lg">
-            {!! nl2br(e($berita->isi)) !!}
+        <div class="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
+            {!! $berita->isi !!}
         </div>
 
     </div>

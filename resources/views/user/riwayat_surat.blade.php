@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 <div class="relative w-full h-64">
-    
+
     <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Background" class="object-cover w-full h-full" />
 
     <a href="{{ url()->previous() }}"
@@ -18,23 +18,23 @@
 </div>
 <div class="container px-4 mx-auto -mt-8">
     <div class="flex justify-center mb-6">
-        <div class="relative w-1/2 shadow-xl rounded-full bg-white shadow-gray-400/40">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
+        <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
+            <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
             <input type="text" placeholder="Cari"
-                   class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent" />
+                class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
         </div>
     </div>
     <div class="flex justify-center mb-6">
 
-        
-        <div class="bg-blue-100 p-1 rounded-full flex gap-1">
+
+        <div class="flex gap-1 p-1 bg-blue-100 rounded-full">
             <button onclick="window.location.href='{{ route('form.permohonan') }}'"
-                    class="text-black font-semibold py-2 px-6 rounded-full transition-all hover:bg-gray-100">
+                class="px-6 py-2 font-semibold text-black transition-all rounded-full hover:bg-gray-100">
                 AJUKAN SURAT PERMOHONAN
             </button>
             <button onclick="window.location.href='{{ route('riwayat.surat') }}'"
-                    class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
+                class="bg-[#083358] text-white font-semibold py-2 px-6 rounded-full shadow transition-all">
 
                 RIWAYAT SURAT
             </button>

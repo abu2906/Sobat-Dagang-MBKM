@@ -13,7 +13,8 @@ class CreateDataAlatUkurTable extends Migration
     {
         Schema::create('data_alat_ukur', function (Blueprint $table) {
             $table->id('id_data_alat');
-            $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('id_user'); // Duplikat
+            $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
             $table->unsignedBigInteger('id_uttp');
             $table->foreign('id_uttp')->references('id_uttp')->on('uttp')->onDelete('cascade');
             $table->date('tanggal_valid');

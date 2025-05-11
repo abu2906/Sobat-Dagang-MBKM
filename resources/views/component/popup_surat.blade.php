@@ -8,3 +8,17 @@
     <div id="dokumenContainer" class="w-full border rounded overflow-hidden max-h-[600px]"></div>
   </div>
 </div>
+
+<script>
+  function toggleModal(show, imageUrl = '', ) {
+    const modal = document.getElementById('modal');
+    const img = document.getElementById('image');
+    if (show) {
+      modal.classList.remove('hidden');
+      if (imageUrl) img.src = imageUrl;
+    } else {
+      modal.classList.add('hidden');
+      img.src = '';
+    }
+  }
+</script>

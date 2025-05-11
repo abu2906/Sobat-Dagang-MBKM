@@ -46,7 +46,7 @@
                         <a href="#"><strong>PERDAGANGAN</strong></a>
                         <ul class="submenu">
                             <li>
-                                <a href="{{ route('form.permohonan') }}">
+                                <a href="{{ route('bidangPerdagangan.formPermohonan') }}">
                                     <strong>Permohonan Perizinan/Non Perizinan</strong>
                                 </a>
                                 {{-- @guest
