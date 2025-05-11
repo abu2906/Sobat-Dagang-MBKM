@@ -34,9 +34,17 @@ class PersuratanController extends Controller
 
     public function showAdministrasiMetrologi()
     {
-        $permohonan = suratMetrologi::where('user_id', Auth::id())->latest()->get();
+        if(Auth::check())
+        {
+            $permohonan = suratMetrologi::where('user_id', Auth::id())->latest()->get();
 
-        return view('user.bidangMetrologi.administrasi', compact('permohonan'));
+            return view('user.bidangMetrologi.administrasi', compact('permohonan'));
+        } 
+        else
+        {
+            return redirect()->route('login');
+        }
+        
     }
 
     public function showDokumenMetrologi($id)

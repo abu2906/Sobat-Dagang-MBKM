@@ -10,7 +10,6 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.7/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.7/dist/sweetalert2.min.js"></script>
-
 </head>
 
 <body class="min-h-screen flex flex-col bg-gray-100">
@@ -38,6 +37,7 @@
     </div>
 
     {{-- Konten utama --}}
+    
     <main class="flex-grow relative mx-5 md:mx-20 p-6 rounded-lg min-h-[calc(100vh-250px)]">
         @yield('content')
     </main>

@@ -1,4 +1,5 @@
 @extends('layouts.metrologi.pengguna')
+@php use Illuminate\Support\Facades\Auth; @endphp
 
 @section('tab')
     <div class="absolute left-1/2 transform -translate-x-1/2 top-[40px] z-10">
