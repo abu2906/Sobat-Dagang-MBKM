@@ -20,21 +20,25 @@ use Illuminate\Support\Facades\Auth;
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
 
 <body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
 
     @if (Auth::check() && Auth::user()->role === 'admin_perdagangan')
-    @include('component.navbar.admin_perdagangan')
+    @include('component.navbar.adminPerdagangan')
     @elseif (Auth::check() && Auth::user()->role === 'admin_industri')
     @include('component.navbar.admin_industri')
     @elseif (Auth::check() && Auth::user()->role === 'admin_metrologi')
     @include('component.navbar.admin_metrologi')
     @endif
 
+<<<<<<< HEAD
     @include('component.navbar.adminPerdagangan')
     {{-- @include('component.navbar.kabidPerdagangan') --}}
+=======
+    {{-- @include('component.navbar.adminPerdagangan') --}}
+    @include('component.navbar.adminPerdagangan')
+>>>>>>> origin/Robert-Database
     <div class="relative z-0 flex-1 p-0 overflow-y-auto">
         @yield('content')
     </div>

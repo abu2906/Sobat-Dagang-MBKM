@@ -19,11 +19,8 @@ use App\Http\Controllers\PelaporanPenyaluranController;
 use App\Http\Controllers\SobatHargaController;
 use App\Http\Controllers\KabidPerdaganganController;
 use App\Http\Controllers\ForumDiskusiController;
-// Halaman utama (home) yang mengarah ke view pages.home
-Route::get('/', [homeController::class, 'index'])->name('home');
-Route::get('/about', [AboutController::class, 'showAboutPage'])->name('about');
-// Route untuk menampilkan berita berdasarkan ID
-Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
+use App\Http\Middleware\UserAuthMiddleware;
+use App\Http\Middleware\RoleCheckMiddleware;
 
 // Controller untuk authentication
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
@@ -49,44 +46,62 @@ Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submit
 Route::get('/halal', function () {
     return view('user.halal');
 })->name('halal');
+// user Login
+Route::middleware(['check.role:user,user'])->group(function () {
+    Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
+    Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
+    Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
+    Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
+    Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
+    Route::get('/form-permohonan-distributor', [PelaporanController::class, 'formDistributor'])->name('bidangPerdagangan.formDistributor');
+    Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submitDistributor'])->name('bidangPerdagangan.submitDistributor');
+    Route::get('/halal', function () {
+        return view('user.halal');
+    })->name('halal');
+    Route::get('/bidang-perdagangan/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
+    Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
+    Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
+    Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan');
+});
+Route::get('/testchart', function () {
+    return view('testchart');
+});
+
+// guest
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
 Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
-
-//user perdagangan
-Route::get('/bidang-perdagangan/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
-Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
-Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
-Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan');
+Route::get('/', [homeController::class, 'index'])->name('home');
+Route::get('/about', [AboutController::class, 'showAboutPage'])->name('about');
+Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 
 
-// admin perdagangan
-Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
-Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
-Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
-Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
-Route::get('/update-harga', [DashboardPerdaganganController::class, 'formUpdateHarga']);
-Route::post('/update-harga', [DashboardPerdaganganController::class, 'update'])->name('updateHarga.update');
-Route::get('/get-barang-by-kategori/{id}', [DashboardPerdaganganController::class, 'getByKategori']);
-Route::get('/hapus-barang', [DashboardPerdaganganController::class, 'deleteBarang'])->name('dashboard-perdagangan.hapus-barang');
-Route::delete('/dashboard-perdagangan/barang/{id}', [DashboardPerdaganganController::class, 'destroy'])->name('barang.destroy');
-Route::get('/lihat-laporan-distribusi-pupuk', [DashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');
-Route::get('/kelola-surat', [DashboardPerdaganganController::class, 'kelolaSurat'])->name('perdagangan.kelolaSurat');
-Route::get('/detail-surat/{id_permohonan}', [DashboardPerdaganganController::class, 'detailSurat'])
-    ->where('id_permohonan', '[0-9a-fA-F\-]+')
-    ->name('perdagangan.detailSurat');
-
-//Surat Ditolak
-Route::put('/permohonan/{id}/tolak', [DashboardPerdaganganController::class, 'tolak'])->name('permohonan.tolak');
-Route::put('/surat/{id}/setujui', [DashboardPerdaganganController::class, 'setujui'])->name('surat.setujui');
-Route::put('/permohonan/{id}/keterangan', [DashboardPerdaganganController::class, 'simpanketerangan'])->name('permohonan.keterangan');
-Route::put('/permohonan/{id}/rekomendasi', [DashboardPerdaganganController::class, 'simpanRekomendasi'])->name('permohonan.rekomendasi');
-
-// view Document
-Route::get('/detail-surat/{id}/view-{type}', [DashboardPerdaganganController::class, 'viewDokumen'])
-    ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
-    ->name('dokumen.view');
-
-Route::get('/dokumen/{type}/{id}', [DashboardPerdaganganController::class, 'downloadDokumen'])->name('dokumen.lihat');
+// Admin Perdagangan
+Route::middleware(['check.role:disdag,admin_perdagangan'])->group(function () {
+    Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
+    // Pelaporan
+    Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
+    Route::get('/lihat-laporan-distribusi-pupuk', [DashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');
+    // sobat Harga
+    Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
+    Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
+    Route::get('/update-harga', [DashboardPerdaganganController::class, 'formUpdateHarga'])->name('updateHarga.store');
+    Route::post('/update-harga', [DashboardPerdaganganController::class, 'update'])->name('updateHarga.update');
+    Route::get('/get-barang-by-kategori/{id}', [DashboardPerdaganganController::class, 'getByKategori']);
+    Route::get('/hapus-barang', [DashboardPerdaganganController::class, 'deleteBarang'])->name('dashboard-perdagangan.hapus-barang');
+    Route::delete('/dashboard-perdagangan/barang/{id}', [DashboardPerdaganganController::class, 'destroy'])->name('barang.destroy');
+    // Persuratan
+    Route::get('/kelola-surat', [DashboardPerdaganganController::class, 'kelolaSurat'])->name('perdagangan.kelolaSurat');
+    Route::get('/detail-surat/{id_permohonan}', [DashboardPerdaganganController::class, 'detailSurat'])
+        ->where('id_permohonan', '[0-9a-fA-F\-]+')
+        ->name('perdagangan.detailSurat');
+    Route::put('/permohonan/{id}/tolak', [DashboardPerdaganganController::class, 'tolak'])->name('permohonan.tolak');
+    Route::put('/permohonan/{id}/keterangan', [DashboardPerdaganganController::class, 'simpanketerangan'])->name('permohonan.keterangan');
+    Route::put('/permohonan/{id}/rekomendasi', [DashboardPerdaganganController::class, 'simpanRekomendasi'])->name('permohonan.rekomendasi');
+    Route::get('/detail-surat/{id}/view-{type}', [DashboardPerdaganganController::class, 'viewDokumen'])
+        ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
+        ->name('dokumen.view');
+});
 
 // admin master
 Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
@@ -96,7 +111,6 @@ Route::get('/admin/kelola-pengguna', [DashboardController::class, 'kelolaAdmin']
 Route::post('/admin/kelola-pengguna', [DashboardController::class, 'tambahpengguna'])->name('tambah.pengguna');
 // Route::get('/admin/distributor', [PelaporanController::class, 'indexDistributor'])->name('admin.distributor.index');
 // Route::post('/admin/distributor/{id}/verifikasi', [PelaporanController::class, 'verifikasiDistributor'])->name('admin.distributor.verifikasi');
-
 // Menampilkan halaman admin master  untuk kelola berita
 Route::get('/admin/kelola-berita', [BeritaController::class, 'show'])->name('kelola.berita');
 Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
@@ -104,11 +118,13 @@ Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('ber
 Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
 Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
 
-// //kabid
-Route::get('/kabid-perdagangan/dashboard', [KabidPerdaganganController::class, 'dashboardKabid'])->name('kabid.perdagangan');
-Route::get('/kabid-perdagangan/distribusi-pupuk', [KabidPerdaganganController::class, 'distribusiPupuk'])->name('distribusi.pupuk');
-Route::get('/kabid-perdagangan/analisis-pasar', [KabidPerdaganganController::class, 'analisisPasar'])->name('analisis.pasar');
-
+//kabid Perdagangan
+Route::middleware(['check.role:disdag,kabid_perdagangan'])->group(function () {
+    Route::get('/kabid-perdagangan/dashboard', [KabidPerdaganganController::class, 'dashboardKabid'])->name('kabid.perdagangan');
+    Route::get('/kabid-perdagangan/distribusi-pupuk', [KabidPerdaganganController::class, 'distribusiPupuk'])->name('distribusi.pupuk');
+    Route::get('/kabid-perdagangan/analisis-pasar', [KabidPerdaganganController::class, 'analisisPasar'])->name('analisis.pasar');
+    Route::put('/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('surat.setujui');
+});
 Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
 Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name('sertifikasi-ikm');

@@ -2,19 +2,90 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\IndexHarga;
-use App\Models\Barang;
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Surat;
+use App\Models\HargaBarang;
+use App\Models\Notifikasi;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Exception;
+use Illuminate\Support\Str;
+use App\Models\PermohonanSurat;
+use App\Models\Barang;
+use App\Models\DocumentUser;
+use App\Models\IndexKategori;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use App\Models\DistribusiPupuk;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Validation\ValidationException;
 
 class KabidPerdaganganController extends Controller
 {
 
-    
-    public function dashboardKabid()
+
+    private function getSuratPerdaganganData()
     {
-        return view('admin.kabid.perdagangan.perdagangan');
+        $jenis = [
+            'surat_rekomendasi_perdagangan',
+            'surat_keterangan_perdagangan',
+            'dan_lainnya_perdagangan',
+        ];
+
+        return [
+            'totalSuratPerdagangan' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
+            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        ];
+    }
+    public function dashboardKabid(Request $request)
+    {
+        $tahun = $request->input('tahun', date('Y'));
+        $rekapSurat = $this->getSuratPerdaganganData();
+        $suratMasuk = PermohonanSurat::with('user')->orderBy('created_at', 'desc')->get();
+
+        $statusCounts = [
+            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
+            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
+            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
+        ];
+
+        $dataBulanan = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
+        }
+
+        // Jika permintaan AJAX, kirim data JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'statusCounts' => $statusCounts,
+                'dataBulanan' => $dataBulanan
+            ]);
+        }
+
+        return view('admin.kabid.perdagangan.perdagangan', [
+            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+            'suratMasuk' => $suratMasuk,
+            'statusCounts' => $statusCounts,
+            'dataBulanan' => $dataBulanan,
+        ]);
+    }
+
+    public function setujui($id)
+    {
+        $permohonan = PermohonanSurat::findOrFail($id);
+
+        // Ubah status menjadi 'diterima'
+        $permohonan->status = 'diterima';
+        $permohonan->save();
+
+        return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
     }
 
     public function distribusiPupuk()
@@ -80,10 +151,10 @@ class KabidPerdaganganController extends Controller
                     'color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF))  // Warna acak untuk pie chart
                 ];
             })
-            ->sortByDesc('harga')  // Mengurutkan berdasarkan harga tertinggi
-            ->take(10)  // Mengambil 10 barang dengan harga tertinggi
-            ->values()
-            ->all();
+                ->sortByDesc('harga')  // Mengurutkan berdasarkan harga tertinggi
+                ->take(10)  // Mengambil 10 barang dengan harga tertinggi
+                ->values()
+                ->all();
 
             // Perbandingan harga hari ini dan kemarin
             $today = Carbon::parse($endDate);
@@ -141,5 +212,4 @@ class KabidPerdaganganController extends Controller
             'barChartData' => $barChartData,  // Data untuk Bar Chart (perbandingan harga)
         ]);
     }
-
 }

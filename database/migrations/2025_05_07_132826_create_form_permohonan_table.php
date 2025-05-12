@@ -13,7 +13,7 @@ class CreateFormPermohonanTable extends Migration
     {
         Schema::create('form_permohonan', function (Blueprint $table) {
             $table->uuid('id_permohonan')->primary();
-            $table->unsignedBigInteger('id_user')->nullable();
+            $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
 
             // Atribut lainnya

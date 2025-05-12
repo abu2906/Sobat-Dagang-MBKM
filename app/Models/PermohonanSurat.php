@@ -26,4 +26,9 @@ class PermohonanSurat extends Model
     {
         return $this->hasOne(DocumentUser::class, 'id_permohonan', 'id_permohonan');
     }
+    // PermohonanSurat.php
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

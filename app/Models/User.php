@@ -40,6 +40,8 @@ class User extends Authenticatable
         'kabupaten',
         'kecamatan',
         'kelurahan',
+        'kelurahan',
+        'role'
     ];
 
     // Kolom yang harus disembunyikan saat serialisasi
@@ -47,4 +49,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

@@ -16,6 +16,7 @@ class Disdag extends Authenticatable
         'telp',
         'role'
     ];
+    protected $guarded = []; // atau ['password', 'nip', dst...]
 
     protected $hidden = [
         'password',

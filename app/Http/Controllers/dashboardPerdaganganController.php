@@ -22,6 +22,8 @@ use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 
+
+
 class DashboardPerdaganganController extends Controller
 {
     public function index()
@@ -46,6 +48,19 @@ class DashboardPerdaganganController extends Controller
     $data = array_merge($dataSurat, ['daftarHarga' => $daftarHarga]);
 
     return view('admin.bidangPerdagangan.dashboardPerdagangan', $data);
+        $rekapSurat = $this->getSuratPerdaganganData();
+        $dataSurat = PermohonanSurat::with('user')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.bidangPerdagangan.dashboardPerdagangan', [
+            'dataSurat' => $dataSurat,
+            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+        ]);
     }
     private function getSuratPerdaganganData()
     {
@@ -66,7 +81,8 @@ class DashboardPerdaganganController extends Controller
     public function kelolaSurat()
     {
         $rekapSurat = $this->getSuratPerdaganganData();
-        $dataSurat = PermohonanSurat::whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+        $dataSurat = PermohonanSurat::with('user')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -82,12 +98,15 @@ class DashboardPerdaganganController extends Controller
     {
         $data = PermohonanSurat::where('id_permohonan', $id)->first();
         $dokumen = DocumentUser::where('id_permohonan', $id)->first();
+        $user = DB::table('user')->where('id_user', $data->id_user)->first();
 
         return view('admin.bidangPerdagangan.detailPermohonan', [
             'data' => $data,
             'dokumen' => $dokumen,
+            'user' => $user,
         ]);
     }
+
 
     public function viewDokumen($id, $type)
     {
@@ -170,17 +189,17 @@ class DashboardPerdaganganController extends Controller
             'lokasi' => 'required|string',
         ]);
 
-    IndexHarga::create([
-        'id_index_kategori' => $request->id_index_kategori,
-        'id_barang' => $request->id_barang,
-        'harga' => $request->harga,
-        'tanggal' => $request->tanggal,
-        'lokasi' => $request->lokasi,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
+        IndexHarga::create([
+            'id_index_kategori' => $request->id_index_kategori,
+            'id_barang' => $request->id_barang,
+            'harga' => $request->harga,
+            'tanggal' => $request->tanggal,
+            'lokasi' => $request->lokasi,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-    return back()->with('success', 'Harga barang berhasil diperbarui.');
+        return back()->with('success', 'Harga barang berhasil diperbarui.');
     }
 
     public function getByKategori($id)
@@ -437,10 +456,13 @@ class DashboardPerdaganganController extends Controller
             // Buat id_permohonan unik
             $idPermohonan = Str::uuid()->toString();
 
+            // Ambil id_user dari session
+            $idUser = session('id_user');
+
             // Simpan ke tabel form_permohonan
             DB::table('form_permohonan')->insert([
                 'id_permohonan' => $idPermohonan,  // Masukkan UUID yang baru dibuat
-                // 'id_user' => auth()->id() ?? null, // atau null jika belum login
+                'id_user' => $idUser,  // Ambil id_user dari session
                 'kecamatan' => $request->kecamatan,
                 'kelurahan' => $request->kelurahan,
                 'tgl_pengajuan' => now()->toDateString(),
@@ -471,8 +493,6 @@ class DashboardPerdaganganController extends Controller
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
     }
-
-
 
     public function dashboardKabid(Request $request)
     {
@@ -521,6 +541,4 @@ class DashboardPerdaganganController extends Controller
 
         return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
     }
-
-
 }
