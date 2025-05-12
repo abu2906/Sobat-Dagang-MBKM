@@ -174,32 +174,33 @@
     
     
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-2xl shadow-md p-6">
-            <h2 class="text-lg font-semibold text-black mb-4">Daftar Harga Barang</h2>
-            <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left">
-                    <thead class="bg-blue-300 text-black">
-                        <tr>
-                            <th class="py-2 px-4">Nama Barang</th>
-                            <th class="py-2 px-4">Harga Satuan</th>
-                            <th class="py-2 px-4">Satuan</th>
-                            <th class="py-2 px-4">Update Terakhir</th>
+        <div class="overflow-x-auto rounded-xl shadow max-h-[500px] overflow-y-auto scrollbar-hide">
+            <table class="min-w-full text-sm text-left border-separate border-spacing-0">
+                <thead class="bg-blue-300 text-black sticky top-0 z-10">
+                    <tr>
+                        <th class="py-2 px-4 rounded-tl-xl">Nama Barang</th>
+                        <th class="py-2 px-4">Kategori Barang</th>
+                        <th class="py-2 px-4">Harga Satuan (kg)</th>
+                        <th class="py-2 px-4 rounded-tr-xl">Update Terakhir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($daftarHarga as $index => $harga)
+                        <tr class="border-b odd:bg-white even:bg-gray-100">
+                            <td class="py-2 px-4">{{ $harga->nama_barang }}</td>
+                            <td class="py-2 px-4">{{ $harga->kategori_barang }}</td>
+                            <td class="py-2 px-4">Rp{{ number_format($harga->harga_satuan, 0, ',', '.') }}</td>
+                            <td class="py-2 px-4">{{ \Carbon\Carbon::parse($harga->updated_at)->format('d M Y') }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {{-- @foreach ($daftarHarga as $item)
-                            <tr class="border-b">
-                                <td class="py-2 px-4">{{ $item->nama_barang }}</td>
-                                <td class="py-2 px-4">Rp{{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
-                                <td class="py-2 px-4">{{ $item->satuan }}</td>
-                                <td class="py-2 px-4">{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y') }}</td>
-                            </tr>
-                        @endforeach --}}
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                    @if ($daftarHarga->isEmpty())
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-gray-500">Tidak ada data harga barang</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
         </div>
-
         <div class="bg-white rounded-2xl shadow-md p-6">
             <div class="mb-4">
                 <div>

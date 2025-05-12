@@ -19,7 +19,7 @@
                 @foreach ($semuaKategori->sortBy('id_index_kategori') as $kategoriItem)
                     <button
                         onclick="window.location.href='{{ route('sobatHarga.kategori', ['kategori' => strtolower($kategoriItem->nama_kategori)]) }}'"
-                        class="px-5 py-2 h-12 text-lg font-bold text-black transition-all rounded-full {{ strtolower($kategoriItem->nama_kategori) === strtolower($judul) ? 'bg-[#083358] text-white shadow' : 'hover:bg-gray-100' }} whitespace-nowrap">
+                        class="px-5 py-2 h-12 text-lg font-bold transition-all rounded-full {{ strtolower($kategoriItem->nama_kategori) === strtolower($judul) ? 'bg-[#083358] text-white shadow' : 'hover:bg-gray-100' }} whitespace-nowrap">
                         {{ ucwords($kategoriItem->nama_kategori) }}
                     </button>
                 @endforeach

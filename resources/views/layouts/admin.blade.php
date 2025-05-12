@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -32,8 +33,8 @@ use Illuminate\Support\Facades\Auth;
     @include('component.navbar.admin_metrologi')
     @endif
 
-    {{-- @include('component.navbar.adminPerdagangan') --}}
-    @include('component.navbar.kabidPerdagangan')
+    @include('component.navbar.adminPerdagangan')
+    {{-- @include('component.navbar.kabidPerdagangan') --}}
     <div class="relative z-0 flex-1 p-0 overflow-y-auto">
         @yield('content')
     </div>

@@ -28,7 +28,7 @@
                 $menuItems = [
                 ['href' => route('dashboard.perdagangan'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => route('dashboard-perdagangan.form-tambah-barang'), 'icon' => 'add_barang.png', 'label' => 'Tambahkan Barang'],
-                ['href' => route('updateHarga.store'), 'icon' => 'tag.png', 'label' => 'Update Harga Barang'],
+                ['href' => route('updateHarga.update'), 'icon' => 'tag.png', 'label' => 'Update Harga Barang'],
                 ['href' => route('dashboard-perdagangan.hapus-barang'), 'icon' => 'delete.png', 'label' => 'Hapus Data Barang'],
                 ['href' => route('lihat.laporan.distribusi'), 'icon' => 'report-filled.png', 'label' => 'Lihat Laporan'],
                 ];

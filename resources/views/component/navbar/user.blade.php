@@ -82,7 +82,7 @@
                 </ul>
             </li>
             <li><a href=""><strong>PELAPORAN</strong></a></li>
-            <li><a href=""><strong>FAQ</strong></a></li>
+            <li><a href="" id="faqLink2"><strong>FAQ</strong></a></li>
         </ul>
     </div>
     <div class="flex items-center space-x-4">
