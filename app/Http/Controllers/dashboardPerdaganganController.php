@@ -21,15 +21,18 @@ use App\Models\IndexHarga;
 use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
-
-
+use Illuminate\Support\Facades\Auth;
 
 class DashboardPerdaganganController extends Controller
 {
     public function index()
-    {
-        // Ambil data surat perdagangan
-    $dataSurat = $this->getSuratPerdaganganData();
+{
+    // Ambil data surat perdagangan
+    $rekapSurat = $this->getSuratPerdaganganData();
+    $dataSurat = PermohonanSurat::with('user')
+        ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+        ->orderBy('created_at', 'desc')
+        ->get();
 
     // Ambil data harga barang
     $daftarHarga = DB::table('index_harga')
@@ -44,24 +47,17 @@ class DashboardPerdaganganController extends Controller
         ->orderBy('index_harga.updated_at', 'desc')
         ->get();
 
-    // Gabungkan kedua data ke dalam array
-    $data = array_merge($dataSurat, ['daftarHarga' => $daftarHarga]);
+    // Kirim semua data ke view
+    return view('admin.bidangPerdagangan.dashboardPerdagangan', [
+        'dataSurat' => $dataSurat,
+        'daftarHarga' => $daftarHarga,
+        'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+        'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+        'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+        'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+    ]);
+}
 
-    return view('admin.bidangPerdagangan.dashboardPerdagangan', $data);
-        $rekapSurat = $this->getSuratPerdaganganData();
-        $dataSurat = PermohonanSurat::with('user')
-            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('admin.bidangPerdagangan.dashboardPerdagangan', [
-            'dataSurat' => $dataSurat,
-            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
-            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
-            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-        ]);
-    }
     private function getSuratPerdaganganData()
     {
         $jenis = [
@@ -106,7 +102,6 @@ class DashboardPerdaganganController extends Controller
             'user' => $user,
         ]);
     }
-
 
     public function viewDokumen($id, $type)
     {

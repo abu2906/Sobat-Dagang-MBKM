@@ -47,7 +47,7 @@ Route::get('/halal', function () {
     return view('user.halal');
 })->name('halal');
 // user Login
-Route::middleware(['check.role:user,user'])->group(function () {
+Route::middleware(['role.check:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
@@ -77,7 +77,7 @@ Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama'
 
 
 // Admin Perdagangan
-Route::middleware(['check.role:disdag,admin_perdagangan'])->group(function () {
+Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
     // Pelaporan
     Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);

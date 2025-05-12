@@ -7,9 +7,14 @@ return [
     ],
 
     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
         'user' => [
             'driver' => 'session',
-            'provider' => 'users', // Menyesuaikan dengan provider yang sudah didefinisikan di bawah
+            'provider' => 'users',
         ],
 
         'disdag' => [
@@ -21,12 +26,12 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class, // Model untuk user
+            'model' => App\Models\User::class,
         ],
 
         'disdags' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Disdag::class, // Model untuk Disdag
+            'model' => App\Models\Disdag::class,
         ],
     ],
 
