@@ -13,17 +13,20 @@
 </head>
 
 <body>
+    @php
+    use Illuminate\Support\Facades\Auth;
+    @endphp
 
-    {{-- @if (!Auth::check())
+    @if (!Auth::guard('user')->check())
     @include('component.navbar.guest')
-    @elseif (Auth::check() && Auth::user()->role === 'admin')
+    @elseif (Auth::guard('user')->check() && Auth::guard('user')->user()->role === 'admin')
     @include('component.navbar.admin')
-    @elseif (Auth::check() && Auth::user()->role === 'user')
+    @elseif (Auth::guard('user')->check() && Auth::guard('user')->user()->role === 'user')
     @include('component.navbar.user')
-    @elseif (Auth::check() && Auth::user()->role === 'guest')
+    @elseif (Auth::guard('user')->check() && Auth::guard('user')->user()->role === 'guest')
     @include('component.navbar.guest')
-    @endif --}}
-    @include('component.navbar.guest')
+    @endif
+
     <main>
         @yield('content')
     </main>

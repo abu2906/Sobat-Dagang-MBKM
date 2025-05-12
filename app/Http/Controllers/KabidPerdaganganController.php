@@ -44,9 +44,8 @@ class KabidPerdaganganController extends Controller
     public function dashboardKabid(Request $request)
     {
         $tahun = $request->input('tahun', date('Y'));
-
         $rekapSurat = $this->getSuratPerdaganganData();
-        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
+        $suratMasuk = PermohonanSurat::with('user')->orderBy('created_at', 'desc')->get();
 
         $statusCounts = [
             'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
@@ -74,7 +73,7 @@ class KabidPerdaganganController extends Controller
             'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
             'suratMasuk' => $suratMasuk,
             'statusCounts' => $statusCounts,
-            'dataBulanan' => $dataBulanan
+            'dataBulanan' => $dataBulanan,
         ]);
     }
 

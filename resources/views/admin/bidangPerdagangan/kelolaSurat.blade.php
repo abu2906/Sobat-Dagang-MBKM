@@ -66,7 +66,7 @@
                 @foreach ($dataSurat as $index => $item)
                 <tr class="text-center border-b">
                     <td class="px-4 py-2">{{ $index + 1 }}</td>
-                    <td class="px-4 py-2">Null</td>
+                    <td class="px-4 py-2">{{ $item->user->nama ?? 'Tidak Diketahui' }}</td>
                     @php
                     $jenisSuratMap = [
                     'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',

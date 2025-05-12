@@ -28,9 +28,19 @@ class DashboardPerdaganganController extends Controller
 {
     public function index()
     {
-        $dataSurat = $this->getSuratPerdaganganData();
+        $rekapSurat = $this->getSuratPerdaganganData();
+        $dataSurat = PermohonanSurat::with('user')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return view('admin.bidangPerdagangan.dashboardPerdagangan', $dataSurat);
+        return view('admin.bidangPerdagangan.dashboardPerdagangan', [
+            'dataSurat' => $dataSurat,
+            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+        ]);
     }
     // Fungsi untuk menghitung jumlah surat berdasarkan status
     private function getSuratPerdaganganData()
@@ -52,7 +62,8 @@ class DashboardPerdaganganController extends Controller
     public function kelolaSurat()
     {
         $rekapSurat = $this->getSuratPerdaganganData();
-        $dataSurat = PermohonanSurat::whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+        $dataSurat = PermohonanSurat::with('user')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -68,12 +79,15 @@ class DashboardPerdaganganController extends Controller
     {
         $data = PermohonanSurat::where('id_permohonan', $id)->first();
         $dokumen = DocumentUser::where('id_permohonan', $id)->first();
+        $user = DB::table('user')->where('id_user', $data->id_user)->first();
 
         return view('admin.bidangPerdagangan.detailPermohonan', [
             'data' => $data,
             'dokumen' => $dokumen,
+            'user' => $user,
         ]);
     }
+
 
     public function viewDokumen($id, $type)
     {
@@ -420,10 +434,13 @@ class DashboardPerdaganganController extends Controller
             // Buat id_permohonan unik
             $idPermohonan = Str::uuid()->toString();
 
+            // Ambil id_user dari session
+            $idUser = session('id_user');
+
             // Simpan ke tabel form_permohonan
             DB::table('form_permohonan')->insert([
                 'id_permohonan' => $idPermohonan,  // Masukkan UUID yang baru dibuat
-                // 'id_user' => auth()->id() ?? null, // atau null jika belum login
+                'id_user' => $idUser,  // Ambil id_user dari session
                 'kecamatan' => $request->kecamatan,
                 'kelurahan' => $request->kelurahan,
                 'tgl_pengajuan' => now()->toDateString(),
