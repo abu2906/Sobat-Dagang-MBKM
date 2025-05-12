@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\IndexHarga;
 use Illuminate\Http\Request;
 use App\Models\Surat;
 use App\Models\HargaBarang;
@@ -140,9 +141,39 @@ class DashboardPerdaganganController extends Controller
 
     public function formUpdateHarga()
     {
-        return view('admin.bidangPerdagangan.updateHarga');
+        $kategoris = IndexKategori::orderBy('nama_kategori')->get();
+        $barangs = Barang::orderBy('nama_barang')->get();
+
+        return view('admin.bidangPerdagangan.updateHarga', compact('kategoris', 'barangs'));
+    }
+    public function update(Request $request)
+    {
+        $request->validate([
+            'id_index_kategori' => 'required|exists:index_kategori,id_index_kategori',
+            'id_barang' => 'required|exists:barang,id_barang',
+            'harga' => 'required|numeric',
+            'tanggal' => 'required|date',
+            'lokasi' => 'required|string',
+        ]);
+
+        IndexHarga::create([
+            'id_index_kategori' => $request->id_index_kategori,
+            'id_barang' => $request->id_barang,
+            'harga' => $request->harga,
+            'tanggal' => $request->tanggal,
+            'lokasi' => $request->lokasi,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('success', 'Harga barang berhasil diperbarui.');
     }
 
+    public function getByKategori($id)
+    {
+        $barangs = Barang::where('id_index_kategori', $id)->get(['id_barang', 'nama_barang']);
+        return response()->json($barangs);
+    }
     public function deleteBarang()
     {
         $barangs = Barang::with('kategori')->get(); // eager load kategori
@@ -423,55 +454,6 @@ class DashboardPerdaganganController extends Controller
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
     }
-
-    public function dashboardKabid(Request $request)
-    {
-        $tahun = $request->input('tahun', date('Y'));
-
-        $rekapSurat = $this->getSuratPerdaganganData();
-        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
-
-        $statusCounts = [
-            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
-            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
-            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
-        ];
-
-        $dataBulanan = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
-        }
-
-        // Jika permintaan AJAX, kirim data JSON
-        if ($request->ajax()) {
-            return response()->json([
-                'statusCounts' => $statusCounts,
-                'dataBulanan' => $dataBulanan
-            ]);
-        }
-
-        return view('admin.kabid.perdagangan.perdagangan', [
-            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
-            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
-            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-            'suratMasuk' => $suratMasuk,
-            'statusCounts' => $statusCounts,
-            'dataBulanan' => $dataBulanan
-        ]);
-    }
-
-    public function setujui($id)
-    {
-        $permohonan = PermohonanSurat::findOrFail($id);
-
-        // Ubah status menjadi 'diterima'
-        $permohonan->status = 'diterima';
-        $permohonan->save();
-
-        return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
-    }
-
 
     public function analisisPasar(Request $request)
     {
