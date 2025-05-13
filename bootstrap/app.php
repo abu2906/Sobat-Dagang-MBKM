@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Daftarkan alias untuk RoleCheckMiddleware
         $middleware->alias([
             'check.role' => RoleCheckMiddleware::class,
+            app()->router->aliasMiddleware('role.check', RoleCheckMiddleware::class),
         ]);
     })
     ->withExceptions(function (\Illuminate\Foundation\Configuration\Exceptions $exceptions) {

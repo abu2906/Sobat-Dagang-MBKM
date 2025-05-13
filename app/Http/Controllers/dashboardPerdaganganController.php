@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\IndexHarga;
 use Illuminate\Http\Request;
 use App\Models\Surat;
 use App\Models\HargaBarang;
@@ -18,31 +17,47 @@ use App\Models\DocumentUser;
 use App\Models\IndexKategori;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\IndexHarga;  
 use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
-
-
+use Illuminate\Support\Facades\Auth;
 
 class DashboardPerdaganganController extends Controller
 {
     public function index()
-    {
-        $rekapSurat = $this->getSuratPerdaganganData();
-        $dataSurat = PermohonanSurat::with('user')
-            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+{
+    // Ambil data surat perdagangan
+    $rekapSurat = $this->getSuratPerdaganganData();
+    $dataSurat = PermohonanSurat::with('user')
+        ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        return view('admin.bidangPerdagangan.dashboardPerdagangan', [
-            'dataSurat' => $dataSurat,
-            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
-            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
-            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-        ]);
-    }
-    // Fungsi untuk menghitung jumlah surat berdasarkan status
+    // Ambil data harga barang
+    $daftarHarga = DB::table('index_harga')
+        ->join('barang', 'index_harga.id_barang', '=', 'barang.id_barang')
+        ->join('index_kategori', 'index_harga.id_index_kategori', '=', 'index_kategori.id_index_kategori')
+        ->select(
+            'barang.nama_barang',
+            'index_kategori.nama_kategori as kategori_barang',
+            'index_harga.harga as harga_satuan',
+            'index_harga.updated_at'
+        )
+        ->orderBy('index_harga.updated_at', 'desc')
+        ->get();
+
+    // Kirim semua data ke view
+    return view('admin.bidangPerdagangan.dashboardPerdagangan', [
+        'dataSurat' => $dataSurat,
+        'daftarHarga' => $daftarHarga,
+        'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+        'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+        'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+        'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+    ]);
+}
+
     private function getSuratPerdaganganData()
     {
         $jenis = [
@@ -87,7 +102,6 @@ class DashboardPerdaganganController extends Controller
             'user' => $user,
         ]);
     }
-
 
     public function viewDokumen($id, $type)
     {
@@ -294,6 +308,9 @@ class DashboardPerdaganganController extends Controller
     public function simpanRekomendasi(Request $request, $id)
     {
 
+        
+        set_time_limit(300); // waktu dalam detik
+
         // Validasi input
         $request->validate([
             'nomor_surat'       => 'required|string',
@@ -472,94 +489,51 @@ class DashboardPerdaganganController extends Controller
         }
     }
 
-    public function analisisPasar(Request $request)
+    public function dashboardKabid(Request $request)
     {
-        // Dummy data (sementara, karena belum ada database)
-        $tanggalHariIni = Carbon::today()->format('Y-m-d');
-        $tanggalKemarin = Carbon::yesterday()->format('Y-m-d');
+        $tahun = $request->input('tahun', date('Y'));
 
-        $dataHarga = collect([
-            (object)[
-                'tanggal' => $tanggalKemarin,
-                'beras' => 12000,
-                'cabai' => 18000,
-                'minyak' => 15000,
-                'telur' => 22000,
-                'tempe' => 10000,
-                'daun_bawang' => 5000,
-            ],
-            (object)[
-                'tanggal' => $tanggalHariIni,
-                'beras' => 13000,
-                'cabai' => 19000,
-                'minyak' => 17000,
-                'telur' => 23000,
-                'tempe' => 11000,
-                'daun_bawang' => 5500,
-            ]
+        $rekapSurat = $this->getSuratPerdaganganData();
+        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
+
+        $statusCounts = [
+            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
+            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
+            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
+        ];
+
+        $dataBulanan = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
+        }
+
+        // Jika permintaan AJAX, kirim data JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'statusCounts' => $statusCounts,
+                'dataBulanan' => $dataBulanan
+            ]);
+        }
+
+        return view('admin.kabid.perdagangan.perdagangan', [
+            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+            'suratMasuk' => $suratMasuk,
+            'statusCounts' => $statusCounts,
+            'dataBulanan' => $dataBulanan
         ]);
-
-        // Trend Chart
-        $trendChartData = [
-            'labels' => ['Beras', 'Cabai', 'Minyak', 'Telur', 'Tempe', 'Daun Bawang'],
-            'datasets' => [[
-                'label' => 'Harga Hari Ini',
-                'data' => [13000, 19000, 17000, 23000, 11000, 5500],
-                'backgroundColor' => [
-                    '#4e73df',
-                    '#1cc88a',
-                    '#36b9cc',
-                    '#f6c23e',
-                    '#e74a3b',
-                    '#858796'
-                ]
-            ]]
-        ];
-
-        // Perbandingan Chart
-        $perbandinganChartData = [
-            'labels' => ['Beras', 'Cabai', 'Minyak', 'Telur', 'Tempe', 'Daun Bawang'],
-            'datasets' => [
-                [
-                    'label' => 'Kemarin',
-                    'data' => [12000, 18000, 15000, 22000, 10000, 5000],
-                    'backgroundColor' => '#6c757d'
-                ],
-                [
-                    'label' => 'Hari Ini',
-                    'data' => [13000, 19000, 17000, 23000, 11000, 5500],
-                    'backgroundColor' => '#007bff'
-                ]
-            ]
-        ];
-
-        // Top Naik & Turun
-        $selisih = [
-            'beras' => 1000,
-            'cabai' => 1000,
-            'minyak' => 2000,
-            'telur' => 1000,
-            'tempe' => 1000,
-            'daun_bawang' => 500,
-        ];
-
-        $topNaik = collect($selisih)->map(function ($val, $key) {
-            return ['komoditas' => ucfirst($key), 'selisih' => $val];
-        })->sortByDesc('selisih')->take(5)->values();
-
-        $topTurun = collect([]); // Tidak ada data turun dalam dummy ini
-
-        return view('admin.kabid.perdagangan.analisisPasar', compact(
-            'dataHarga',
-            'trendChartData',
-            'perbandinganChartData',
-            'topNaik',
-            'topTurun'
-        ));
     }
 
-    public function distribusiPupuk()
+    public function setujui($id)
     {
-        return view('admin.kabid.perdagangan.distribusiPupuk');
+        $permohonan = PermohonanSurat::findOrFail($id);
+
+        // Ubah status menjadi 'diterima'
+        $permohonan->status = 'diterima';
+        $permohonan->save();
+
+        return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
     }
 }

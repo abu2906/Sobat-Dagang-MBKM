@@ -8,7 +8,7 @@
 
     <img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full" />
 
-    <a href="{{ url()->previous() }}"
+    <a href="{{ route('user.dashboard') }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">arrow_back</span>
     </a>
@@ -115,11 +115,6 @@
     <div>
         <div id="balasanContent">
             <!-- Konten balasan akan diisi oleh JavaScript -->
-        </div>
-        <div class="mt-6">
-            <button onclick="closeBalasanModal()" class="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400">
-                Tutup
-            </button>
         </div>
     </div>
 </div>

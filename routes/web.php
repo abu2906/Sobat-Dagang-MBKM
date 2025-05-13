@@ -18,10 +18,9 @@ use App\Http\Controllers\DashboardPerdaganganController;
 use App\Http\Controllers\PelaporanPenyaluranController;
 use App\Http\Controllers\SobatHargaController;
 use App\Http\Controllers\KabidPerdaganganController;
+use App\Http\Controllers\ForumDiskusiController;
 use App\Http\Middleware\UserAuthMiddleware;
 use App\Http\Middleware\RoleCheckMiddleware;
-
-
 
 // Controller untuk authentication
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
@@ -31,9 +30,24 @@ Route::post('/register', [AuthController::class, 'submitRegister'])->name('regis
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::post('/forum', [ForumDiskusiController::class, 'store']);
+
+
+// Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
+Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
+Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
+Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
+Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
+Route::get('/form-permohonan-distributor', [PelaporanController::class, 'formDistributor'])->name('bidangPerdagangan.formDistributor');
+Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submitDistributor'])->name('bidangPerdagangan.submitDistributor');
+Route::get('/halal', function () {
+    return view('user.halal');
+})->name('halal');
 // user Login
-Route::middleware(['check.role:user,user'])->group(function () {
+Route::middleware(['role.check:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
@@ -63,7 +77,7 @@ Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama'
 
 
 // Admin Perdagangan
-Route::middleware(['check.role:disdag,admin_perdagangan'])->group(function () {
+Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
     // Pelaporan
     Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);

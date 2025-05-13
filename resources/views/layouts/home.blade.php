@@ -1,6 +1,10 @@
+@php
+    use Illuminate\Support\Facades\Auth;
+    $user = Auth::guard('user')->user();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,18 +17,10 @@
 </head>
 
 <body>
-    @php
-    use Illuminate\Support\Facades\Auth;
-    @endphp
-
-    @if (!Auth::guard('user')->check())
-    @include('component.navbar.guest')
-    @elseif (Auth::guard('user')->check() && Auth::guard('user')->user()->role === 'admin')
-    @include('component.navbar.admin')
-    @elseif (Auth::guard('user')->check() && Auth::guard('user')->user()->role === 'user')
-    @include('component.navbar.user')
-    @elseif (Auth::guard('user')->check() && Auth::guard('user')->user()->role === 'guest')
-    @include('component.navbar.guest')
+    @if ($user)
+        @include('component.navbar.user')
+    @else
+        @include('component.navbar.guest')
     @endif
 
     <main>
@@ -34,5 +30,4 @@
     @include('component.footer')
     <script src="{{ asset('/assets/js/app.js') }}"></script>
 </body>
-
 </html>
