@@ -7,6 +7,7 @@ use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardMetrologiController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DirectoryBookController;
@@ -106,15 +107,22 @@ Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name
 // Route::get('/directory-book-metrologi', [DirectoryBookMetrologiController::class, 'index'])->name('directory-book-metrologi');
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
 
+
+// <--- Metrologi --->
 Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
 Route::post('/store-surat', [PersuratanController::class, 'storeSuratMetrologi'])->name('proses-surat-metrologi');
 Route::get('/lihat-dokumen/{id}', [PersuratanController::class, 'showDokumenMetrologi'])->name('lihat-dokumen');
 Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
+Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
+Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
 
-Route::get('/admin/dashboard-metrologi', [DashboardController::class, 'showMetrologi'])->name('dashboard-admin-metrologi');
-Route::get('/admin/alat-ukur-metrologi', [DashboardController::class, 'showMetrologi'])->name('alat-ukur-metrologi');
-Route::get('/admin/managemen-uttp-metrologi', [DashboardController::class, 'showMetrologi'])->name('managemen-uttp-metrologi');
-Route::get('/admin/persuratan-metrologi', [DashboardController::class, 'showMetrologi'])->name('persuratan-metrologi');
+
+Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
+Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
+Route::post('/uttp/store-alat', [DirectoryBookController::class, 'storeAlatUkur'])->name('store-uttp');
+Route::post('/terima/{id}', [PersuratanController::class, 'terimaSuratMetrologi'])->name('terima');
+Route::post('/tolak/{id}', [PersuratanController::class, 'tolakSuratMetrologi'])->name('tolak');
+Route::get('/admin/persuratan-metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('persuratan-metrologi');
 
 //Route for test
 Route::get('/test/{viewPath}', function ($viewPath) {

@@ -8,21 +8,22 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('surat_masuk_metrologi', function (Blueprint $table) {
-            $table->id();
+        Schema::create('surat_metrologi', function (Blueprint $table) {
+            $table->id('id_surat');
             $table->unsignedBigInteger('user_id');
-            $table->string('titik_koordinat')->nullable();
+            $table->string('alamat_alat')->nullable();
             $table->string('dokumen')->nullable();
+            $table->enum('jenis_surat',['tera', 'tera_ulang'])->default('tera');
             $table->enum('status', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
+            $table->string('dokumen_balasan')->nullable();
             $table->timestamps();
 
-            // Foreign key
             $table->foreign('user_id')->references('id_user')->on('user')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('permohonan_metrologi');
+        Schema::dropIfExists('surat_metrologi');
     }
 };

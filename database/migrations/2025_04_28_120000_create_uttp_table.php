@@ -13,29 +13,22 @@ class CreateUttpTable extends Migration
     {
         Schema::create('uttp', function (Blueprint $table) {
             $table->id('id_uttp'); // Primary key
-            $table->unsignedBigInteger('id_user'); // Duplikat
+            $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
-            $table->unsignedBigInteger('id_alat_tera');
-            $table->foreign('id_alat_tera')->references('id_alat_tera')->on('alat_tera')->onDelete('cascade');
-            $table->unsignedBigInteger('id_jenis_alat');
-            $table->foreign('id_jenis_alat')->references('id_jenis_alat')->on('jenis_alat')->onDelete('cascade');
-            $table->unsignedBigInteger('id_cap');
-            $table->foreign('id_cap')->references('id_cap')->on('cap_tanda_tera')->onDelete('cascade');
-
-            $table->date('tanggal')->nullable();
+            
+            $table->date('tanggal_penginputan')->nullable();
             $table->string('no_registrasi')->nullable();
-            $table->string('nama_pemilik')->nullable();
             $table->string('nama_usaha')->nullable();
+            $table->string('jenis_alat')->nullable();
             $table->string('nama_alat')->nullable();
             $table->string('merk_type')->nullable();
             $table->string('nomor_seri')->nullable();
+            $table->integer('jumlah_alat')->nullable();
             $table->string('alat_penguji')->nullable();
-            $table->text('catatan')->nullable();
+            $table->string('ctt')->nullable();
             $table->string('spt_keperluan')->nullable();
-            $table->string('t_u')->nullable();
             $table->date('tanggal_selesai')->nullable();
             $table->string('terapan')->nullable();
-            $table->string('tanda_tangan')->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });

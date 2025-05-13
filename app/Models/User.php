@@ -42,6 +42,12 @@ class User extends Authenticatable
         'kelurahan',
     ];
 
+    public function dataAlatUkurs()
+    {
+        return $this->hasMany(DataAlatUkur::class, 'id_user', 'id_user');
+    }
+
+
     // Kolom yang harus disembunyikan saat serialisasi
     protected $hidden = [
         'password',

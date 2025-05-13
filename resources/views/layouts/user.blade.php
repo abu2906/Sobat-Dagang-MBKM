@@ -43,6 +43,7 @@
     @include('component.footer')
 
     <script src="{{ asset('/assets/js/app.js') }}"></script>
+    <script src="{{ asset('/assets/js/uttp_detail.js') }}"></script>
 </body>
 
 </html>

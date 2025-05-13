@@ -16,16 +16,29 @@ class PersuratanController extends Controller
     public function storeSuratMetrologi(Request $request)
     {
         $request->validate([
-            'titik_koordinat' => 'required|string',
+            'alamat_alat' => 'required|string',
             'dokumen' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'jenis_surat' => 'required|string',
         ]);
 
         $filePath = $request->file('dokumen')->store('dokumen_metrologi', 'public');
+        $lastSurat = suratMetrologi::orderBy('id_surat', 'desc')->first();
+
+        if (!$lastSurat) {
+            $newIdSurat = 1;
+        } else {
+            $lastIdNumber = (int) substr($lastSurat->id_surat, 1);
+            $newIdNumber = $lastIdNumber + 1;
+            $newIdSurat = $newIdNumber;
+        }
 
         suratMetrologi::create([
+            'id_surat' => $newIdSurat,
             'user_id' => Auth::id(),
-            'titik_koordinat' => $request->titik_koordinat,
+            'alamat_alat' => $request->alamat_alat,
+            'jenis_surat' => $request->jenis_surat,
             'dokumen' => $filePath,
+            'dokumen_balasan' => '',
             'status' => 'Menunggu',
         ]);
 
@@ -56,5 +69,38 @@ class PersuratanController extends Controller
         }
 
         return Storage::disk('public')->download($permohonan->dokumen);
+    }
+
+    public function terimaSuratMetrologi($id)
+    {
+        $surat = suratMetrologi::with('user')->findOrFail($id);
+        $surat->status = 'Disetujui';
+        $surat->save();
+
+        return redirect()->back()->with('success', 'Surat berhasil disetujui.');
+    }
+    
+    // Tolak surat
+    public function tolakSuratMetrologi($id)
+    {
+        $surat = suratMetrologi::with('user')->findOrFail($id);
+        $surat->status = 'ditolak';
+        $surat->save();
+
+        return redirect()->back()->with('success', 'Surat berhasil ditolak.');
+    }
+
+    // Buat Surat (form atau redirect ke editor)
+    public function buatSuratMetrologi($id)
+    {
+        $surat = suratMetrologi::findOrFail($id);
+        return view('admin.bidangMetrologi.buat_surat_balasan', compact('surat'));
+    }
+
+    // Kirim Keterangan (form keterangan untuk surat yang ditolak)
+    public function kirimKeteranganMetrologi($id)
+    {
+        $surat = suratMetrologi::findOrFail($id);
+        return view('admin.surat.keterangan', compact('surat'));
     }
 }

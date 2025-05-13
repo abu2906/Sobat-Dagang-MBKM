@@ -174,8 +174,16 @@
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Titik Koordinat</label>
-					<input type="text" name="titik_koordinat" placeholder="Masukkan Titik Koordinat Lokasi Alat" class="border px-4 py-2 w-full rounded-lg">
+					<label class="block font-semibold mb-1">Alamat Alat</label>
+					<input type="text" name="alamat_alat" placeholder="Masukkan Alamat Alat Anda" class="border px-4 py-2 w-full rounded-lg">
+				</div>
+
+				<div class="mb-4">
+					<label class="block font-semibold mb-1">Jenis Surat</label>
+					<select name="jenis_surat" class="border px-4 py-2 w-full rounded-lg">
+						<option value="tera">Tera</option>
+						<option value="tera_ulang">Tera Ulang</option>
+					</select>
 				</div>
 
 				<div class="mb-4">

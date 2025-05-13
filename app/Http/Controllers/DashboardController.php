@@ -18,12 +18,6 @@ class DashboardController extends Controller
     {
         return view('component.profile');
     }
-
-    public function showMetrologi() 
-    {
-        return view('admin.bidangMetrologi.dashboard');
-    }
-
     public function kelolaAdmin()
     {
         // Mendapatkan semua data pengguna
