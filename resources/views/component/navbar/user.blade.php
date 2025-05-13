@@ -1,8 +1,6 @@
 @auth
 <nav class="flex items-center justify-between p-4 text-white bg-primary">
-    <div class="flex items-center space-x-2">
-        <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="h-12">
-    </div>
+
 
     <div class="flex items-center space-x-4">
         <!-- Icon Notifikasi -->
@@ -35,6 +33,11 @@
 </nav>
 @else
 <nav class="flex items-center justify-between p-4 text-white bg-primary">
+        <div class="navbar-left">
+        <a href="/">
+            <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="logo">
+        </a>
+    </div>
     <div class="navbar-center">
         <ul id="nav-menu" class="nav-menu">
             <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
