@@ -86,7 +86,7 @@
 				<div class="flex flex-col items-center justify-center gap-2 bg-white text-black px-5 py-2 rounded-lg shadow border border-gray-200 w-full">
 					<p class="text-lg font-semibold">Surat Belum Terverifikasi</p>
 					<p class="text-3xl font-semibold">{{ $totalSuratMenunggu }}</p>
-					<a href="" class="bg-[#0c3252] flex p-1 gap-2 items-center justify-center text-white text-sm px-py rounded-lg shadow border border-gray-200 w-1/2	">
+					<a href="{{ route('persuratan-metrologi') }}" class="bg-[#0c3252] flex p-1 gap-2 items-center justify-center text-white text-sm px-py rounded-lg shadow border border-gray-200 w-1/2	">
 						Tinjau Sekarang
 					</a>
 					
@@ -112,25 +112,39 @@
 
 <script>
     // Line Chart
+    const dataTera = {!! $dataTera !!};
+    const dataTeraUlang = {!! $dataTeraUlang !!};
+
     new Chart(document.getElementById('lineChart'), {
         type: 'line',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
-            datasets: [{
-                label: 'Permohonan',
-                data: [10, 25, 18, 8, 14, 26],
-                borderColor: 'blue',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)'
-            }]
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+            datasets: [
+                {
+                    label: 'Permohonan Tera',
+                    data: dataTera,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.4
+                },
+                {
+                    label: 'Permohonan Tera Ulang',
+                    data: dataTeraUlang,
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4
+                }
+            ]
         },
-		options: {
-			responsive: true,
-			plugins: {
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
 				legend: {
 					display: false
 				}
-			}
-		}
+			},
+        },
     });
 
     // Donut Chart

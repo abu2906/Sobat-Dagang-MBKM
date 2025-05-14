@@ -13,8 +13,38 @@ class DashboardMetrologiController extends Controller
     public function index()
     {
         $dataSurat = $this->getJumlahSurat();
+        $chartData = $this->chartData();
 
-        return view('admin.bidangMetrologi.dashboard', $dataSurat);
+        return view('admin.bidangMetrologi.dashboard', $dataSurat, $chartData);
+    }
+
+    public function chartData()
+    {
+        // Ambil data bulanan untuk jenis 'tera'
+        $tera = suratMetrologi::selectRaw('MONTH(created_at) as bulan, COUNT(*) as total')
+            ->where('jenis_surat', 'tera')
+            ->groupBy('bulan')
+            ->pluck('total', 'bulan');
+
+        // Ambil data bulanan untuk jenis 'tera_ulang'
+        $teraUlang = suratMetrologi::selectRaw('MONTH(created_at) as bulan, COUNT(*) as total')
+            ->where('jenis_surat', 'tera_ulang')
+            ->groupBy('bulan')
+            ->pluck('total', 'bulan');
+
+        // Konversi ke array dengan default 0 untuk tiap bulan (1–12)
+        $dataTera = [];
+        $dataTeraUlang = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $dataTera[] = $tera[$i] ?? 0;
+            $dataTeraUlang[] = $teraUlang[$i] ?? 0;
+        }
+
+        return [
+            'dataTera' => json_encode($dataTera),
+            'dataTeraUlang' => json_encode($dataTeraUlang),
+        ];
     }
 
     private function getJumlahSurat()

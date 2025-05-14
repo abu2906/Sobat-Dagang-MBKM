@@ -21,7 +21,8 @@ class PersuratanController extends Controller
             'jenis_surat' => 'required|string',
         ]);
 
-        $filePath = $request->file('dokumen')->store('dokumen_metrologi', 'public');
+        $filename = 'dokumen_' . Auth::id() . '_' . time() . '.' . $request->file('dokumen')->getClientOriginalExtension();
+        $filePath = $request->file('dokumen')->storeAs('dokumen_metrologi', $filename, 'public');
 
         suratMetrologi::create([
             'user_id' => Auth::id(),
