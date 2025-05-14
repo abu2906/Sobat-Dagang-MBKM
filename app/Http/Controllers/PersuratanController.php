@@ -12,4 +12,9 @@ class PersuratanController extends Controller
     {
         return view('user.bidangMetrologi.administrasi');
     }
+
+    public function showFormSurat()
+    {
+        return view('user.bidangIndustri.form-surat');
+    }
 }

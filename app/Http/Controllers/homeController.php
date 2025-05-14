@@ -95,4 +95,9 @@ class homeController
     {
         return view('pages.aboutUs');
     }
+
+    public function showHalal()
+    {
+        return view('user.bidangIndustri.halal');
+    }
 }

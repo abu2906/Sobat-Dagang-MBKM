@@ -1,4 +1,4 @@
-<div class="flex h-screen fixed z-[100]">
+<div class="flex h-screen fixed z-0">
     <div :class="open ? 'w-64' : 'w-20'"
     class="bg-[#0c3252] text-white flex flex-col justify-between rounded-r-xl transition-all duration-300 relative shadow-md z-10">
     <button @click="open = !open"
@@ -24,12 +24,13 @@
             <ul class="space-y-2 text-sm">
                 @php
                 $menuItems = [
-                    ['href' => '#', 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                    ['href' => '#', 'icon' => 'folder.png', 'label' => 'Data IKM'],
-                    ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
-                    ['href' => '#', 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                    ['href' => route('admin.industri.dashboard'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                    ['href' => route('admin.industri.dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],
+                    ['href' => route('admin.industri.halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
+                    ['href' => route('admin.industri.surat'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
+
 
                 @foreach ($menuItems as $item)
                 <li>

@@ -42,9 +42,16 @@ Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name
 // Admin Industri
 
     Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
-        Route::get('dashboard', [AdminIndustriController::class, 'dashboard'])->name('dashboard');
-        Route::get('dataIKM', [AdminIndustriController::class, 'data'])->name('dataIKM');
+        Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
+        Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
+        Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
+        Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
+        Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
     });
+
+//User Industri
+Route::get('/form-surat-permohonan', [PersuratanController::class, 'showFormSurat'])->name('form.surat');  
+Route::get('/sertifikasi-halal', [homeController::class, 'showHalal'])->name('halal');  
 
 
 
@@ -54,10 +61,6 @@ Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->nam
 
 // Menampilkan halaman edit berita
 Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
-
-Route::get('/halal', function () {
-    return view('user.halal');
-})->name('halal');
 
 //user perdagangan 
 Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran']);
