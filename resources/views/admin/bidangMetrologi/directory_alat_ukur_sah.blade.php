@@ -60,7 +60,25 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium">Jenis Alat</label>
-                            <input type="text" name="jenis_alat" class="w-full border rounded px-3 py-2">
+                            <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2">
+								<option value="UP-MK">UP-MK</option>
+								<option value="VOL-TK">VOLUME - TK</option>
+								<option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
+								<option value="VOL-TUM">VOLUME - TUM</option>
+								<option value="VOL-PUBBM">VOLUME - PUBBM</option>
+								<option value="VOL-MA">VOLUME - MA</option>
+								<option value="VOL-DLL">VOLUME - Lainnya</option>
+								<option value="MAS-DL">MASSA - DL</option>
+								<option value="MAS-TP">MASSA - TP</option>
+								<option value="MAS-TM">MASSA - TM</option>
+								<option value="MAS-TS">MASSA - TS</option>
+								<option value="MAS-NE">MASSA - NE</option>
+								<option value="MAS-ATB">MASSA - ATB</option>
+								<option value="MAS-ATH">MASSA - ATH</option>
+								<option value="MAS-TE">MASSA - TE</option>
+								<option value="MAS-TJE">MASSA - TJE</option>
+								<option value="MAS-DLL">MASSA - Lainnya</option>
+							</select>
                         </div>
                         <div>
                             <label class="block text-sm font-medium">Nama Alat</label>
@@ -80,7 +98,11 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium">Alat Penguji</label>
-                            <input type="text" name="alat_penguji" class="w-full border rounded px-3 py-2">
+                            <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2">
+								<option value="BUS">BUS</option>
+								<option value="AT">Anak Timbangan</option>
+								<option value="ATB">ATB</option>
+							</select>
                         </div>
                         <div>
                             <label class="block text-sm font-medium">Ctt</label>

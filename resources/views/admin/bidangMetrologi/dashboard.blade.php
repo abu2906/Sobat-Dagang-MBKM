@@ -105,15 +105,23 @@
 			</div>
         </div>
 		<div class="bg-white rounded-2xl shadow-md p-6">
-			<div><p>kotak 3</p></div>
+            <canvas id="barChart" width="600" height="300"></canvas>
 		</div>
     </div>
 </div>
 
 <script>
-    // Line Chart
     const dataTera = {!! $dataTera !!};
     const dataTeraUlang = {!! $dataTeraUlang !!};
+    const labels = {!! $labels !!};
+    const dataTahunLaluUP = {!! $dataTahunLaluUP !!};
+    const dataTahunIniUP = {!! $dataTahunIniUP !!};
+    const dataTahunLaluVOL = {!! $dataTahunLaluVOL !!};
+    const dataTahunIniVOL = {!! $dataTahunIniVOL !!};
+    const dataTahunLaluMAS = {!! $dataTahunLaluMAS !!};
+    const dataTahunIniMAS = {!! $dataTahunIniMAS !!};
+    const tahunLalu = {{ $tahunLalu }};
+    const tahunSekarang = {{ $tahunSekarang }};
 
     new Chart(document.getElementById('lineChart'), {
         type: 'line',
@@ -198,24 +206,70 @@
 		}
 	});
 
-    // Bar Chart
+    
+
     new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'],
+            labels: labels,
             datasets: [
                 {
-                    label: '2024',
-                    data: [30, 40, 35, 25, 30],
-                    backgroundColor: 'orange'
+                    label: 'UP - ' + tahunLalu,
+                    data: dataTahunLaluUP,
+                    backgroundColor: 'rgba(255, 165, 0, 0.7)' // orange
                 },
                 {
-                    label: '2025',
-                    data: [25, 30, 28, 20, 26],
-                    backgroundColor: 'cornflowerblue'
+                    label: 'UP - ' + tahunSekarang,
+                    data: dataTahunIniUP,
+                    backgroundColor: 'rgba(255, 165, 0, 0.3)'
+                },
+                {
+                    label: 'VOL - ' + tahunLalu,
+                    data: dataTahunLaluVOL,
+                    backgroundColor: 'rgba(100, 149, 237, 0.7)' // cornflowerblue
+                },
+                {
+                    label: 'VOL - ' + tahunSekarang,
+                    data: dataTahunIniVOL,
+                    backgroundColor: 'rgba(100, 149, 237, 0.3)'
+                },
+                {
+                    label: 'MAS - ' + tahunLalu,
+                    data: dataTahunLaluMAS,
+                    backgroundColor: 'rgba(60, 179, 113, 0.7)' // mediumseagreen
+                },
+                {
+                    label: 'MAS - ' + tahunSekarang,
+                    data: dataTahunIniMAS,
+                    backgroundColor: 'rgba(60, 179, 113, 0.3)'
                 }
             ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Jumlah Alat Berdasarkan Jenis per Bulan (UP / VOL / MAS)'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                x: {
+                    stacked: false
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
 </script>
+<script src="{{ asset('/assets/js/chartBarMetrologi.js') }}"></script>
 @endsection
