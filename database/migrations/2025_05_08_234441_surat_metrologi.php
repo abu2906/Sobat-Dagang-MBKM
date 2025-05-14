@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('surat_metrologi', function (Blueprint $table) {
-            $table->id('id_surat');
+            $table->increments('id_surat');
             $table->unsignedBigInteger('user_id');
             $table->string('alamat_alat')->nullable();
             $table->string('dokumen')->nullable();

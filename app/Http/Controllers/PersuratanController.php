@@ -22,18 +22,8 @@ class PersuratanController extends Controller
         ]);
 
         $filePath = $request->file('dokumen')->store('dokumen_metrologi', 'public');
-        $lastSurat = suratMetrologi::orderBy('id_surat', 'desc')->first();
-
-        if (!$lastSurat) {
-            $newIdSurat = 1;
-        } else {
-            $lastIdNumber = (int) substr($lastSurat->id_surat, 1);
-            $newIdNumber = $lastIdNumber + 1;
-            $newIdSurat = $newIdNumber;
-        }
 
         suratMetrologi::create([
-            'id_surat' => $newIdSurat,
             'user_id' => Auth::id(),
             'alamat_alat' => $request->alamat_alat,
             'jenis_surat' => $request->jenis_surat,

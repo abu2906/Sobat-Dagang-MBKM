@@ -11,9 +11,10 @@ class suratMetrologi extends Model
 
     protected $table = 'surat_metrologi';
     protected $primaryKey = 'id_surat';
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
-        'id_surat',
         'user_id',
         'alamat_alat',
         'jenis_surat',
