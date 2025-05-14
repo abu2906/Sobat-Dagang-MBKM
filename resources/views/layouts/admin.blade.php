@@ -24,7 +24,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<<<<<<< HEAD
 <body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
 
     @if ($user)
@@ -58,14 +57,6 @@
         @endswitch
     @else
         @include('component.navbar.guest')
-=======
-    @if (Auth::check() && Auth::user()->role === 'admin_perdagangan')
-        @include('component.navbar.admin_perdagangan')
-    @elseif (Auth::check() && Auth::user()->role === 'admin_industri')
-        @include('component.navbar.adminIndustri')
-    @elseif (Auth::check() && Auth::user()->role === 'admin_metrologi')
-        @include('component.navbar.admin_metrologi')
->>>>>>> iniaaaini
     @endif
 
     <div class="relative z-0 flex-1 p-0 overflow-y-auto">
