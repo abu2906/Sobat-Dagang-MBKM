@@ -1,6 +1,6 @@
-@extends('layouts.user')
+@extends('layouts.home')
 
-@section('tab')
+@section('title', 'Dashboard')
 
 @section('content')
 <section class="px-4 py-12 bg-white">

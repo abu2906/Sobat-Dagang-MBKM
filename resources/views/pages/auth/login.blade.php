@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="relative w-[300px] mx-auto text-right text-sm">
-                    <a href="{{ route('forgot.password') }}" class="text-link font-bold hover:underline">Lupa kata sandi?</a>
+                    <a href="{{ route('forgot.password') }}" class="font-bold text-link hover:underline">Lupa kata sandi?</a>
                 </div>
 
                 <div class="relative w-[150px] mx-auto">

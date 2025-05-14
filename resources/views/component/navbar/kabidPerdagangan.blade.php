@@ -54,7 +54,7 @@
             </div>
 
             <div class="flex flex-col space-y-2">
-                <form method="POST" action="#">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
                         class="flex items-center px-3 py-1 text-black bg-white rounded-full hover:bg-gray-200">
@@ -63,5 +63,6 @@
                     </button>
                 </form>
             </div>
+
         </div>
     </div>

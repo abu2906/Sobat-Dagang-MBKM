@@ -28,7 +28,7 @@
                 $menuItems = [
                 ['href' => route('dashboard.perdagangan'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => route('dashboard-perdagangan.form-tambah-barang'), 'icon' => 'add_barang.png', 'label' => 'Tambahkan Barang'],
-                ['href' => route('updateHarga.store'), 'icon' => 'tag.png', 'label' => 'Update Harga Barang'],
+                ['href' => route('updateHarga.update'), 'icon' => 'tag.png', 'label' => 'Update Harga Barang'],
                 ['href' => route('dashboard-perdagangan.hapus-barang'), 'icon' => 'delete.png', 'label' => 'Hapus Data Barang'],
                 ['href' => route('lihat.laporan.distribusi'), 'icon' => 'report-filled.png', 'label' => 'Lihat Laporan'],
                 ];
@@ -50,13 +50,13 @@
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
                     {{-- <p class="text-sm font-semibold">{{ Auth::user()->name }}</p> --}}
-                    <p class="text-sm font-semibold">Andi Magfirah Maqbul</p>
+                    <p class="text-sm font-semibold">Bidang Perdagangan</p>
                     <p class="text-xs">Admin</p>
                 </div>
             </div>
 
             <div class="flex flex-col space-y-2">
-                <form method="POST" action="#">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
                         class="flex items-center px-3 py-1 text-black bg-white rounded-full hover:bg-gray-200">

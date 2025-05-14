@@ -1,4 +1,4 @@
-@extends('layouts.home')
+@extends('layouts.admin')
 
 @section('title', 'Kelola Surat Permohonan')
 
@@ -66,7 +66,7 @@
                 @foreach ($dataSurat as $index => $item)
                 <tr class="text-center border-b">
                     <td class="px-4 py-2">{{ $index + 1 }}</td>
-                    <td class="px-4 py-2">Null</td>
+                    <td class="px-4 py-2">{{ $item->user->nama ?? 'Tidak Diketahui' }}</td>
                     @php
                     $jenisSuratMap = [
                     'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
@@ -79,7 +79,7 @@
                     </td>
                     <td class="px-4 py-2">{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
                     <td class="px-4 py-3 text-center">
-                        @if ($item->status == 'disetujui')
+                        @if ($item->status == 'diterima')
                         <span class="font-medium text-green-600">Disetujui</span>
                         @elseif ($item->status == 'ditolak')
                         <span class="font-medium text-red-600">Ditolak</span>

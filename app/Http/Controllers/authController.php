@@ -38,9 +38,9 @@ class authController extends Controller
         $disdag = Disdag::where('nip', $identifier)->first();
 
         if ($disdag && Hash::check($request->password, $disdag->password)) {
-            Auth::login($disdag);
+            Auth::guard('disdag')->login($disdag);
+            session(['id_disdag' => $disdag->id_disdag]); // Simpan ID ke session
 
-            //tidak terhubung pi ketampilan baru users
             switch ($disdag->role) {
                 case 'master_admin':
                     return redirect()->intended(route('user.dashboard'));
@@ -51,7 +51,7 @@ class authController extends Controller
                 case 'admin_metrologi':
                     return redirect()->intended('/admin/metrologi');
                 case 'kabid_perdagangan':
-                    return redirect()->intended('/kabid/perdagangan');
+                    return redirect()->intended(route('kabid.perdagangan'));
                 case 'kabid_industri':
                     return redirect()->intended('/kabid/industri');
                 case 'kabid_metrologi':
@@ -63,16 +63,20 @@ class authController extends Controller
             }
         }
 
+
+        // 2. Jika tidak ditemukan di disdag, coba login sebagai user
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
+            Auth::guard('user')->login($user);
+            session(['id_user' => $user->id_user]); // Simpan id_user ke session
+
             return redirect()->intended(route('user.dashboard'));
         }
 
-        // Jika login gagal, kirimkan pesan error ke session
         return redirect()->route('login')->withErrors(['login_error' => 'Username atau password salah']);
     }
+
 
 
     public function submitRegister(Request $request)
@@ -126,7 +130,7 @@ class authController extends Controller
         }
     }
 
-        public function logout(Request $request)
+    public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
@@ -134,18 +138,18 @@ class authController extends Controller
 
         return redirect()->route('login');
     }
-    
-        public function showforgotPassword()
+
+    public function showforgotPassword()
     {
         return view('pages.auth.forgotpass');
     }
 
-        public function showchangePassword()
+    public function showchangePassword()
     {
         return view('pages.auth.changepass');
     }
 
-            public function showverification()
+    public function showverification()
     {
         return view('pages.auth.verification');
     }

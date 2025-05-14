@@ -40,6 +40,8 @@ class User extends Authenticatable
         'kabupaten',
         'kecamatan',
         'kelurahan',
+        'kelurahan',
+        'role'
     ];
 
     public function dataAlatUkurs()
@@ -53,4 +55,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

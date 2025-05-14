@@ -2,15 +2,15 @@
 @section('title', 'Harga ' . $judul . ' - Perhari')
 @section('content')
 
-    <div class="relative w-full h-64">
+<div class="relative w-full h-64">
 
-    <img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full" />
+<img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full" />
 
-    <a href="{{ route('home') }}"
-        class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
-        <span class="text-2xl material-symbols-outlined">arrow_back</span>
-    </a>
-    </div>
+<a href="{{ route('home') }}"
+    class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
+    <span class="text-2xl material-symbols-outlined">arrow_back</span>
+</a>
+</div>
 <div class="container mx-auto px-4 py-6">
 
     <div class="flex justify-center mb-6">
@@ -19,7 +19,7 @@
                 @foreach ($semuaKategori->sortBy('id_index_kategori') as $kategoriItem)
                     <button
                         onclick="window.location.href='{{ route('sobatHarga.kategori', ['kategori' => strtolower($kategoriItem->nama_kategori)]) }}'"
-                        class="px-5 py-2 h-12 text-lg font-bold text-black transition-all rounded-full {{ strtolower($kategoriItem->nama_kategori) === strtolower($judul) ? 'bg-[#083358] text-white shadow' : 'hover:bg-gray-100' }} whitespace-nowrap">
+                        class="px-5 py-2 h-12 text-lg font-bold transition-all rounded-full {{ strtolower($kategoriItem->nama_kategori) === strtolower($judul) ? 'bg-[#083358] text-white shadow' : 'hover:bg-gray-100' }} whitespace-nowrap">
                         {{ ucwords($kategoriItem->nama_kategori) }}
                     </button>
                 @endforeach
