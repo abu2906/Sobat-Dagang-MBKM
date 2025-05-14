@@ -26,7 +26,7 @@
 
   <!-- Banner -->
   <div class="relative">
-    <img src="{{ asset('image/banner.png') }}" alt="Banner" class="object-cover w-full h-48">
+    <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
     <div class="absolute top-4 left-4">
       <button onclick="history.back()" class="text-2xl font-bold text-white">←</button>
     </div>

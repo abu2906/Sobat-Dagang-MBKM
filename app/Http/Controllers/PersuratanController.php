@@ -94,4 +94,9 @@ class PersuratanController extends Controller
         $surat = suratMetrologi::findOrFail($id);
         return view('admin.surat.keterangan', compact('surat'));
     }
+
+    public function showFormSurat()
+    {
+        return view('user.bidangIndustri.form-surat');
+    }
 }

@@ -36,9 +36,8 @@
                     <li class="dropdown-submenu">
                         <a href="#"><strong>INDUSTRI</strong></a>
                         <ul class="submenu">
-                            <li><a href="#"><strong>Directory Book</strong></a></li>
-                            <li><a href="#"><strong>Data IKM</strong></a></li>
-                            <li><a href="#"><strong>Sertifikasi IKM</strong></a></li>
+                            <li><a href="{{ route('form.surat') }}"><strong>Surat Permohonan IKM Binaan</strong></a></li>
+                            <li><a href="{{ route('halal') }}"><strong>Sertifikasi IKM</strong></a></li>
                         </ul>
                     </li>
                     <li class="dropdown-submenu">
