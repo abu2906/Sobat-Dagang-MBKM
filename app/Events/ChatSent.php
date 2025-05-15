@@ -2,24 +2,25 @@
 
 namespace App\Events;
 
+use App\Models\ForumDiskusi;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\ForumDiskusi;
 
 class ChatSent implements ShouldBroadcast
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $chat;
+    public $user;
 
     public function __construct(ForumDiskusi $chat)
     {
         $this->chat = $chat;
+        $this->user = $chat->user->name; // Pastikan ada relasi user pada ForumDiskusi
     }
 
     public function broadcastOn()
@@ -30,9 +31,9 @@ class ChatSent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'id' => $this->chat->id,
-            'user' => $this->chat->user->name ?? $this->chat->guest_name ?? 'Guest',
             'chat' => $this->chat->chat,
-            'time' => $this->chat->created_at->format('H:i')
+            'user' => $this->user,
+            'time' => $this->chat->waktu->format('H:i')
         ];
-    }}
+    }
+}

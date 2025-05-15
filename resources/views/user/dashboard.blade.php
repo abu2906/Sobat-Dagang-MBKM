@@ -3,6 +3,9 @@
 @section('title', 'Dashboard')
 
 @section('content')
+<head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
 <section class="px-4 py-12 bg-white">
     <div class="grid items-center gap-8 mx-auto max-w-7xl md:grid-cols-2">
         <!-- Teks Sambutan -->
@@ -93,7 +96,12 @@
     </div>
 
 </div>
+<!-- dashboard.blade.php -->
+<button id="open-chat" class="fixed bottom-5 right-5 bg-[#083458] rounded-full p-3 shadow-lg hover:scale-110 transition">
+    <img src="{{ asset('assets/img/icon/pengaduan.png') }}" alt="Chat" class="w-8 h-8">
+</button>
 
+@include('component.chat', ['chats' => \App\Models\ForumDiskusi::with('user')->orderBy('waktu')->get()])
 @endsection
 
 @section('footer')

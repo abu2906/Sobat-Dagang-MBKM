@@ -32,8 +32,12 @@ Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->n
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::post('/forum', [ForumDiskusiController::class, 'store']);
-
+//pengaduan
+// Route::middleware(['auth'])->group(function () {
+//     Route::post('/forum', [ForumDiskusiController::class, 'store'])->name('forum.store');
+// });
+Route::post('/forum/store', [ForumDiskusiController::class, 'store'])->name('forum.store');
+Route::get('/forum', [ForumDiskusiController::class, 'index'])->name('forum.index');
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');

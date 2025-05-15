@@ -114,12 +114,6 @@
 <div id="modal-balasan" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
     <div>
         <div id="balasanContent">
-            <!-- Konten balasan akan diisi oleh JavaScript -->
-        </div>
-        <div class="mt-6">
-            <button onclick="closeBalasanModal()" class="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400">
-                Tutup
-            </button>
         </div>
     </div>
 </div>

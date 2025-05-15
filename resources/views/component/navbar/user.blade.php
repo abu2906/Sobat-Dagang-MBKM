@@ -74,7 +74,7 @@
                 </ul>
             </li>
             <li><a href=""><strong>PELAPORAN</strong></a></li>
-            <li><a href="" id="faqLink2"><strong>FAQ</strong></a></li>
+            <li><a href="" id=""><strong>FAQ</strong></a></li>
         </ul>
     </div>
 
@@ -101,3 +101,4 @@
     </div>
 </nav>
 @endauth
+</nav>
