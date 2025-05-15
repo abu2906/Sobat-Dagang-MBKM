@@ -2,12 +2,19 @@
 @section('title', 'Detail Data Pemohon')
 
 @section('content')
+<div class=" bg-white">
 <div class="bg-white">
     <div class="relative w-full">
         <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}" alt="Port Background" class="object-cover w-full h-64 md:h-full">
         <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
             <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full -ml-16">
         </div>
+        <a href="{{ route('perdagangan.kelolaSurat') }}"
+            class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+            <span class="text-2xl material-symbols-outlined">
+                arrow_back
+            </span>
+        </a>
     </div>
     <div class="mt-6 mb-8">
         <h2 class="text-center text-3xl font-bold text-[#083358]">
@@ -182,7 +189,6 @@
                 </ul>
             </div>
             @endif
-
             <!-- Modal Surat Rekomendasi -->
             <div id="modalRekomendasi" class="fixed inset-0 z-50 flex items-center justify-center hidden w-full px-4 bg-black bg-opacity-50">
                 <form action="{{ route('permohonan.rekomendasi', $data->id_permohonan) }}" method="POST">
@@ -193,67 +199,68 @@
                             @csrf
                             @method('PUT')
                             <div>
-                                <label>Nomor Surat</label>
-                                <input name="nomor_surat" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Tanggal Surat</label>
-                                <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Nama Pengirim</label>
-                                <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>NIK</label>
-                                <input name="nik" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Warga Negara</label>
-                                <select name="warga_negara" class="w-full px-3 py-2 border rounded">
-                                    <option value="">Pilih</option>
-                                    <option>WNI</option>
-                                    <option>WNA</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Pekerjaan</label>
-                                <input name="pekerjaan" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Alamat Rumah</label>
-                                <input name="alamat_rumah" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Nama Usaha</label>
-                                <input name="nama_usaha" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Bentuk Usaha</label>
-                                <input name="bentuk_usaha" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Jenis Perusahaan</label>
-                                <select name="jenis_perusahaan" class="w-full px-3 py-2 border rounded">
-                                    <option value="">Pilih</option>
-                                    <option>Perusahaan Perseorangan</option>
-                                    <option>Persekutuan Firma</option>
-                                    <option>CV</option>
-                                    <option>PT</option>
-                                    <option>Koperasi</option>
-                                    <option>BUMN</option>
-                                    <option>BUMD</option>
-                                    <option>Asing</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Luas Ruangan</label>
-                                <input name="luas_ruangan" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label class="block mb-1 text-sm font-semibold">Alamat Usaha</label>
-                                <input name="alamat_usaha" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
+                            <label>Nomor Surat</label>
+                            <input name="nomor_surat" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Tanggal Surat</label>
+                            <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Nama Pengirim</label>
+                            <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>NIK</label>
+                            <input name="nik" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Warga Negara</label>
+                            <select name="warga_negara" class="w-full px-3 py-2 border rounded">
+                                <option value="">Pilih</option>
+                                <option>WNI</option>
+                                <option>WNA</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Pekerjaan</label>
+                            <input name="pekerjaan" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Alamat Rumah</label>
+                            <input name="alamat_rumah" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+
+                        <div>
+                            <label>Nama Usaha</label>
+                            <input name="nama_usaha" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Bentuk Usaha</label>
+                            <input name="bentuk_usaha" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Jenis Perusahaan</label>
+                            <select name="jenis_perusahaan" class="w-full px-3 py-2 border rounded">
+                                <option value="">Pilih</option>
+                                <option>Perusahaan Perseorangan</option>
+                                <option>Persekutuan Firma</option>
+                                <option>CV</option>
+                                <option>PT</option>
+                                <option>Koperasi</option>
+                                <option>BUMN</option>
+                                <option>BUMD</option>
+                                <option>Asing</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Luas Ruangan</label>
+                            <input name="luas_ruangan" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-sm font-semibold">Alamat Usaha</label>
+                            <input name="alamat_usaha" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
                         </div>
                         <div class="flex justify-center gap-3 mt-4">
                             <button class="px-4 py-2 text-white bg-gray-700 rounded">Draft</button>
@@ -363,7 +370,7 @@
                     </div>
                 </form>
             </div>
-
+</div>
             <script>
                 $(document).ready(function() {
                     $("#summernote_edit").summernote({
@@ -414,5 +421,4 @@
                     }
                 }
             </script>
-
-            @endsection
+@endsection

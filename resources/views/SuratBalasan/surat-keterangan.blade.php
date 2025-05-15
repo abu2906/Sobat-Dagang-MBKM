@@ -122,7 +122,7 @@
 
     <div class="kop">
         <div class="logo">
-            <img src="{{ asset('assets/img/logoparepare.png') }}" alt="Logo">
+            <img src="{{ public_path('assets/img/logoparepare.png') }}" alt="Logo">
         </div>
         <div class="text">
             <h1>Pemerintah Kota Parepare</h1>
@@ -178,14 +178,14 @@
     </p>
     <div class="ttd">
         <p>Dikeluarkan di : Pareparae</p>
-        <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d - F - Y') }}</p>
+        <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d F Y') }}</p>
         <div></div>
         <p>KEPADA DINAS PERDAGANGAN</p>
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">
-            <img src="{{ asset('assets/ttd/contohstempel.png') }}" alt="">
-            <img src="{{ asset('assets/ttd/qr.png') }}" alt="">
+            <img src="{{ public_path('assets/ttd/contohstempel.png') }}" alt="Contoh Stempel">
+            <img src="{{ public_path('assets/ttd/qr.png') }}" alt="QR Code">
         </div>
         <div></div>
         <p class="nama_kadis">HJ A WISNAH T SE MSI</p>

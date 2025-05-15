@@ -42,88 +42,74 @@
             </ul>
         </div>
         @endif
-        <table class="w-full text-sm text-left text-gray-700">
-            <thead class="bg-[#083358] text-white">
-                <tr>
-                    <th class="px-4 py-2 text-center rounded-l">No</th>
-                    <th class="px-4 py-2 text-center">Nama Pemohon</th>
-                    <th class="px-4 py-2 text-center">Tanggal Dikirim</th>
-                    <th class="px-4 py-2 text-center">Status</th>
-                    <th class="px-4 py-2 text-center">Jenis Surat</th>
-                    <th class="px-4 py-2 text-center">Dokumen Surat</th>
-                    <th class="px-4 py-2 text-center rounded-r">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white">
-                @foreach($suratMasuk as $index => $surat)
-                @if($surat->file_balasan) {{-- Tampilkan hanya jika file_surat tersedia --}}
-                <tr class="border-b">
-                    <td class="px-4 py-2 text-center rounded-l">{{ $index + 1 }}</td>
-
-                    {{-- Nama Pemohon --}}
-                    <td class="px-4 py-2 text-center">
-                        {{ $surat->user->nama ?? 'Tidak Diketahui' }}
-                    </td>
-
-                    {{-- Tanggal Dikirim --}}
-                    <td class="px-4 py-2 text-center">{{ $surat->tgl_pengajuan }}</td>
-
-                    {{-- Status --}}
-                    <td class="px-4 py-2 text-center">
-                        @if($surat->status == 'menunggu')
-                        <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-300 rounded-full">Menunggu</span>
-                        @elseif($surat->status == 'diterima')
-                        <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-300 rounded-full">Diterima</span>
-                        @elseif($surat->status == 'ditolak')
-                        <span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-300 rounded-full">Ditolak</span>
-                        @endif
-                    </td>
-
-                    {{-- Jenis Surat --}}
-                    @php
-                    $jenisSuratMap = [
-                    'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
-                    'surat_keterangan_perdagangan' => 'Surat Keterangan',
-                    'dan_lainnya_perdagangan' => 'Surat Lainnya',
-                    ];
-                    @endphp
-                    <td class="px-4 py-2 text-center">{{ $jenisSuratMap[$surat->jenis_surat] ?? 'Tidak tersedia' }}</td>
-
-                    {{-- File Balasan --}}
-                    <td class="px-4 py-2 text-center">
-                        <a href="{{ asset('storage/' . $surat->file_balasan) }}" target="_blank" class="text-blue-600 underline">Lihat Balasan</a>
-                    </td>
-
-                    {{-- Aksi --}}
-                    <td class="px-4 py-2 text-center">
-                        @if ($surat->status !== 'menunggu')
-                        <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
-                        @else
-                        <form action="{{ route('surat.setujui', $surat->id_permohonan) }}" method="POST" class="inline">
-                            @csrf
-                            @method('PUT')
-                            <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>
-                        </form>
-                        @endif
-                    </td>
-                </tr>
-                @endif
-                @endforeach
-            </tbody>
-
-
-
-        </table>
-    </div>
-
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <!-- Pie Chart -->
-        <div class="flex flex-col p-4 bg-white shadow rounded-xl">
-            <h2 class="mb-2 text-lg font-semibold">Jumlah Permohonan per Status</h2>
-            <div class="w-full h-64">
-                <canvas id="statusPie" class="w-full h-full"></canvas>
-            </div>
+        <div class="relative overflow-y-auto scrollbar-hide max-h-[600px]">
+            <table class="w-full text-sm text-left text-gray-700">
+                <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
+                    <tr>
+                        <th class="px-4 py-2 text-center rounded-l">No</th>
+                        <th class="px-4 py-2 text-center">Nama Pemohon</th>
+                        <th class="px-4 py-2 text-center">Tanggal Dikirim</th>
+                        <th class="px-4 py-2 text-center">Status</th>
+                        <th class="px-4 py-2 text-center">Jenis Surat</th>
+                        <th class="px-4 py-2 text-center">Dokumen Surat</th>
+                        <th class="px-4 py-2 text-center rounded-r">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    @foreach($suratMasuk as $index => $surat)
+                    @if($surat->file_balasan)
+                    <tr class="border-b">
+                        <td class="px-4 py-2 text-center rounded-l">{{ $index + 1 }}</td>
+                        <td class="px-4 py-2 text-center">{{ $surat->user->nama ?? 'Tidak Diketahui' }}</td>
+                        <td class="px-4 py-2 text-center">{{ $surat->tgl_pengajuan }}</td>
+                        <td class="px-4 py-2 text-center">
+                            @if($surat->status == 'menunggu')
+                            <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-300 rounded-full">Menunggu</span>
+                            @elseif($surat->status == 'diterima')
+                            <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-300 rounded-full">Diterima</span>
+                            @elseif($surat->status == 'ditolak')
+                            <span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-300 rounded-full">Ditolak</span>
+                            @endif
+                        </td>
+                        @php
+                        $jenisSuratMap = [
+                            'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                            'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                            'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                        ];
+                        @endphp
+                        <td class="px-4 py-2 text-center">{{ $jenisSuratMap[$surat->jenis_surat] ?? 'Tidak tersedia' }}</td>
+                        <td class="px-4 py-2 text-center">
+                            <a href="{{ asset('storage/' . $surat->file_balasan) }}" target="_blank" class="text-blue-600 underline">Lihat Balasan</a>
+                        </td>
+                        <td class="px-4 py-2 text-center">
+                            @if ($surat->status !== 'menunggu')
+                            <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
+                            @else
+                            <form action="{{ route('surat.setujui', $surat->id_permohonan) }}" method="POST" class="inline">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>
+                            </form>
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <!-- Pie Chart -->
+            <div class="flex flex-col p-4 bg-white shadow rounded-xl">
+                <h2 class="mb-2 text-lg font-semibold">Jumlah Permohonan per Status</h2>
+                <div class="w-full h-64">
+                    <canvas id="statusPie" class="w-full h-full"></canvas>
+                </div>
+            </div>
 
         <!-- Line Chart -->
         <div class="flex flex-col p-4 bg-white shadow rounded-xl">
