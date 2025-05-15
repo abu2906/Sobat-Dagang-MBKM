@@ -1,10 +1,11 @@
 @php
-    use Illuminate\Support\Facades\Auth;
-    $user = Auth::guard('user')->user();
+use Illuminate\Support\Facades\Auth;
+$user = Auth::guard('user')->user();
 @endphp
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,9 +19,9 @@
 
 <body>
     @if ($user)
-        @include('component.navbar.user')
+    @include('component.navbar.user')
     @else
-        @include('component.navbar.guest')
+    @include('component.navbar.guest')
     @endif
 
     <main>
@@ -29,5 +30,8 @@
 
     @include('component.footer')
     <script src="{{ asset('/assets/js/app.js') }}"></script>
+    <script type="module" src="app.js"></script>;
+
 </body>
+
 </html>

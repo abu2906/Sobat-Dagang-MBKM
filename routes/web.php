@@ -31,6 +31,7 @@ Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->n
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+//pengaduan
 Route::post('/forum/store', [ForumDiskusiController::class, 'store'])->name('forum.store')->middleware('auth');
 
 // Controller untuk user

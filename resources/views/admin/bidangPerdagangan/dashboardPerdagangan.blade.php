@@ -188,32 +188,32 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="overflow-x-auto rounded-xl shadow max-h-[500px] overflow-y-auto scrollbar-hide">
             <table class="min-w-full text-sm text-left border-separate border-spacing-0">
-                <thead class="bg-blue-300 text-black sticky top-0 z-10">
+                <thead class="sticky top-0 z-10 text-black bg-blue-300">
                     <tr>
-                        <th class="py-2 px-4 rounded-tl-xl">Nama Barang</th>
-                        <th class="py-2 px-4">Kategori Barang</th>
-                        <th class="py-2 px-4">Harga Satuan (kg)</th>
-                        <th class="py-2 px-4 rounded-tr-xl">Update Terakhir</th>
+                        <th class="px-4 py-2 rounded-tl-xl">Nama Barang</th>
+                        <th class="px-4 py-2">Kategori Barang</th>
+                        <th class="px-4 py-2">Harga Satuan (kg)</th>
+                        <th class="px-4 py-2 rounded-tr-xl">Update Terakhir</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($daftarHarga as $index => $harga)
-                        <tr class="border-b odd:bg-white even:bg-gray-100">
-                            <td class="py-2 px-4">{{ $harga->nama_barang }}</td>
-                            <td class="py-2 px-4">{{ $harga->kategori_barang }}</td>
-                            <td class="py-2 px-4">Rp{{ number_format($harga->harga_satuan, 0, ',', '.') }}</td>
-                            <td class="py-2 px-4">{{ \Carbon\Carbon::parse($harga->updated_at)->format('d M Y') }}</td>
-                        </tr>
+                    <tr class="border-b odd:bg-white even:bg-gray-100">
+                        <td class="px-4 py-2">{{ $harga->nama_barang }}</td>
+                        <td class="px-4 py-2">{{ $harga->kategori_barang }}</td>
+                        <td class="px-4 py-2">Rp{{ number_format($harga->harga_satuan, 0, ',', '.') }}</td>
+                        <td class="px-4 py-2">{{ \Carbon\Carbon::parse($harga->updated_at)->format('d M Y') }}</td>
+                    </tr>
                     @endforeach
                     @if ($daftarHarga->isEmpty())
-                        <tr>
-                            <td colspan="4" class="text-center py-4 text-gray-500">Tidak ada data harga barang</td>
-                        </tr>
+                    <tr>
+                        <td colspan="4" class="py-4 text-center text-gray-500">Tidak ada data harga barang</td>
+                    </tr>
                     @endif
                 </tbody>
             </table>
         </div>
-        <div class="bg-white rounded-2xl shadow-md p-6">
+        <div class="p-6 bg-white shadow-md rounded-2xl">
             <div class="mb-4">
                 <div>
                     <h2 class="mb-4 text-lg font-semibold text-black">Notifikasi Penting</h2>
