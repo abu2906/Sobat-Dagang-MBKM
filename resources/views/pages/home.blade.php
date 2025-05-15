@@ -84,7 +84,6 @@
     </div>
 </div>
 
-<!-- Custom Styling -->
 <style>
     /* Hilangkan scrollbar */
     .scrollbar-hide::-webkit-scrollbar {
