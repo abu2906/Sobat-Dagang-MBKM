@@ -36,9 +36,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Route::middleware(['auth'])->group(function () {
 //     Route::post('/forum', [ForumDiskusiController::class, 'store'])->name('forum.store');
 // });
-Route::post('/forum/store', [ForumDiskusiController::class, 'store'])->name('forum.store');
-Route::get('/forum', [ForumDiskusiController::class, 'index'])->name('forum.index');
 
+Route::post('/forum/store', [ForumDiskusiController::class, 'store'])->name('forum.store')->middleware('auth');
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
 Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');

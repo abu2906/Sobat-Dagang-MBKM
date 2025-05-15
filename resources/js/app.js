@@ -1,4 +1,5 @@
 import Echo from 'laravel-echo';
+import '../../public/assets/js/chat';
 
 document.addEventListener('DOMContentLoaded', () => {
     //hanya memanggil menu dropdown kelurahan jika kecamatan dipilih

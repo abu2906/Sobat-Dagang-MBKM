@@ -2,13 +2,12 @@
 
 namespace App\Events;
 
-use App\Models\ForumDiskusi;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\InteractsWithSockets;
 
 class ChatSent implements ShouldBroadcast
 {
@@ -16,24 +15,30 @@ class ChatSent implements ShouldBroadcast
 
     public $chat;
     public $user;
+    public $user_id;
+    public $time;
 
-    public function __construct(ForumDiskusi $chat)
+    /**
+     * Create a new event instance.
+     */
+    public function __construct($chat, $user, $user_id, $time)
     {
         $this->chat = $chat;
-        $this->user = $chat->user->name; // Pastikan ada relasi user pada ForumDiskusi
+        $this->user = $user;
+        $this->user_id = $user_id;
+        $this->time = $time;
     }
 
+    /**
+     * Get the channels the event should broadcast on.
+     */
     public function broadcastOn()
     {
         return new Channel('forum-diskusi');
     }
 
-    public function broadcastWith()
+    public function broadcastAs()
     {
-        return [
-            'chat' => $this->chat->chat,
-            'user' => $this->user,
-            'time' => $this->chat->waktu->format('H:i')
-        ];
+        return 'ChatSent';
     }
 }
