@@ -116,7 +116,6 @@ Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDi
 Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
 Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
 
-
 Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
 Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
 Route::post('/uttp/store-alat', [DirectoryBookController::class, 'storeAlatUkur'])->name('store-uttp');

@@ -105,7 +105,7 @@
 			</div>
         </div>
 		<div class="bg-white rounded-2xl shadow-md p-6">
-			<div><p>kotak 3</p></div>
+			<div><p></p></div>
 		</div>
     </div>
 </div>
