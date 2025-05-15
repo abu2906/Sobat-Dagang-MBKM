@@ -278,12 +278,15 @@ class DashboardPerdaganganController extends Controller
 
         // Generate PDF
         try {
-            // Buat PDF dari view blade
-            $pdf = Pdf::loadView('SuratBalasan.surat-penolakan', [
-                'nama_pengirim' => $request->nama_pengirim,
-                'alasan' => $request->alasan,
-                'tanggal' => $request->tanggal
-            ]);
+            // Buat PDF dari view blade// Tambahkan ini sebelum generate PDF
+ini_set('max_execution_time', 300); // 300 detik = 5 menit
+
+$pdf = Pdf::loadView('SuratBalasan.surat-penolakan', [
+    'nama_pengirim' => $request->nama_pengirim,
+    'alasan' => $request->alasan,
+    'tanggal' => $request->tanggal
+]);;
+
 
             // Nama file unik
             $filename = 'penolakan-' . Str::uuid() . '.pdf';
@@ -300,8 +303,7 @@ class DashboardPerdaganganController extends Controller
             return response()->file(storage_path("app/public/surat/{$filename}"));
         } catch (\Exception $e) {
             // Log error jika terjadi masalah
-            Log::error('PDF creation error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat surat. Silakan coba lagi.');
+            dd($e->getMessage());
         }
     }
 

@@ -9,7 +9,7 @@ class Disdag extends Authenticatable
     protected $table = 'disdag';
     protected $primaryKey = 'id_disdag';
 
-    protected $fillable = [
+    protected $fillable = [ 
         'nip',
         'email',
         'password',

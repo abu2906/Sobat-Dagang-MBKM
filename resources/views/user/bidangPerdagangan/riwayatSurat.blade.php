@@ -114,7 +114,6 @@
 <div id="modal-balasan" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
     <div>
         <div id="balasanContent">
-            <!-- Konten balasan akan diisi oleh JavaScript -->
         </div>
     </div>
 </div>

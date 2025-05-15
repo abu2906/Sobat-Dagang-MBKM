@@ -1,3 +1,5 @@
+@php use Illuminate\Support\Facades\Auth; @endphp
+
 <div x-show="showProfile" x-transition @click.outside="showProfile = false"
     class="fixed top-[70px] right-0 w-[350px] h-[500px] bg-white shadow-2xl z-50 rounded-l-2xl overflow-hidden flex flex-col">
 
@@ -48,7 +50,7 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"
-                class="border border-black rounded-full px-4 py-1 font-medium hover:bg-gray-100 transition">
+                class="text-black border border-black rounded-full px-4 py-1 font-medium hover:bg-gray-100 transition">
                 Keluar →
             </button>
         </form>

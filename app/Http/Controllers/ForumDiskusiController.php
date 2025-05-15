@@ -2,33 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ForumDiskusi;
 use Illuminate\Http\Request;
+use App\Models\ForumDiskusi;
 use App\Events\ChatSent;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ForumDiskusiController extends Controller
 {
     public function store(Request $request)
-{
-    $request->validate([
-        'chat' => 'required'
-    ]);
+    {
+        $request->validate([
+            'chat' => 'required|string|max:1000',
+        ]);
 
-    $chat = ForumDiskusi::create([
-        // 'id_user' => auth()->check() ? auth()->id() : null,
-        // 'guest_name' => !$request->user() ? $request->guest_name : null,
-        // 'chat' => $request->chat
-        'id_user' => null,
-        'guest_name' => $request->input('guest_name') ?? 'Guest User',
-        'guest_email' => $request->input('guest_email') ?? 'guest@example.com',
-        'chat' => $request->chat
-    ]);
+        $user = Auth::user();
 
-    broadcast(new ChatSent($chat->load('user')))->toOthers();
+        // Simpan chat
+        $chat = ForumDiskusi::create([
+            'chat' => $request->chat,
+            'id_user' => $user->id_user,
+            'waktu' => now(),
+        ]);
 
-    return response()->json(['success' => true]);
-}
+        // Data untuk broadcast
+        $time = Carbon::parse($chat->waktu)->timezone('Asia/Makassar')->format('H:i');
+        broadcast(new ChatSent($chat->chat, $user->nama, $user->id_user, $time))->toOthers();
 
-
-  
+        // Response json
+        return response()->json([
+            'status' => 'success',
+            'chat' => [
+                'chat' => $chat->chat,
+                'user' => $user->nama,
+                'user_id' => $user->id_user,
+                'waktu' => $chat->waktu,
+            ]
+        ]);
+    }
 }
