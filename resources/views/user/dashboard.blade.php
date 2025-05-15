@@ -3,6 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
+
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -52,7 +53,7 @@
         <div class="absolute left-0 w-full hidden group-hover:block bg-[#CAE2F6] shadow-lg rounded overflow-hidden">
             <a href="{{ route('administrasi-metrologi') }}" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9] rounded-t">Administrasi Persuratan</a>
             <a href="{{ route('directory-metrologi') }}" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9] rounded-b">Alat Milik Saya</a>
-        </div>            
+        </div>
     </div>
 </div>
 
@@ -102,59 +103,63 @@
 </button>
 @include('component.chat', ['chats' => \App\Models\ForumDiskusi::with('user')->orderBy('waktu')->get()])
 <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-<script>document.addEventListener('DOMContentLoaded', function () {
-    function scrollBottom() {   
-        const chatBox = document.getElementById('chat-box');
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    document.getElementById('open-chat').addEventListener('click', function () {
-        document.getElementById('chat-modal').classList.remove('hidden');
-        scrollBottom();
-    });
-
-    document.getElementById('close-chat').addEventListener('click', function () {
-        document.getElementById('chat-modal').classList.add('hidden');
-    });
-
-    document.getElementById('send-btn').addEventListener('click', function () {
-        const chatInput = document.getElementById('chat-input');
-        if (chatInput.value.trim() !== '') {
-            fetch('{{ route('forum.store') }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ chat: chatInput.value })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                chatInput.value = '';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    });
-
-    Echo.channel('forum-diskusi')
-        .listen('ChatSent', (e) => {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function scrollBottom() {
             const chatBox = document.getElementById('chat-box');
-            const div = document.createElement('div');
-            div.className = 'flex justify-start';
-            div.innerHTML = `
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        document.getElementById('open-chat').addEventListener('click', function() {
+            document.getElementById('chat-modal').classList.remove('hidden');
+            scrollBottom();
+        });
+
+        document.getElementById('close-chat').addEventListener('click', function() {
+            document.getElementById('chat-modal').classList.add('hidden');
+        });
+
+        document.getElementById('send-btn').addEventListener('click', function() {
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput.value.trim() !== '') {
+                fetch('{{ route('
+                        forum.store ') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                chat: chatInput.value
+                            })
+                        })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        chatInput.value = '';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+
+        Echo.channel('forum-diskusi')
+            .listen('ChatSent', (e) => {
+                const chatBox = document.getElementById('chat-box');
+                const div = document.createElement('div');
+                div.className = 'flex justify-start';
+                div.innerHTML = `
                 <div class="max-w-[75%] p-3 bg-white text-gray-900 rounded-3xl rounded-bl-md border">
-                    <div class="text-xs font-semibold mb-1">${e.user}</div>
+                    <div class="mb-1 text-xs font-semibold">${e.user}</div>
                     <div class="text-sm break-words">${e.chat}</div>
                     <div class="text-[10px] text-gray-300 text-right mt-1">${e.time}</div>
                 </div>
             `;
-            chatBox.appendChild(div);
-            scrollBottom();
-        });
-});
+                chatBox.appendChild(div);
+                scrollBottom();
+            });
+    });
 </script>
 @endsection
 
