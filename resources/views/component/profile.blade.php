@@ -1,7 +1,8 @@
-@php use Illuminate\Support\Facades\Auth; @endphp
-
-<div x-show="showProfile" x-transition @click.outside="showProfile = false"
-    class="fixed top-[70px] right-0 w-[350px] h-[500px] bg-white shadow-2xl z-50 rounded-l-2xl overflow-hidden flex flex-col">
+<div x-data="{ showProfileMenu: true }"
+     x-show="showProfile"
+     x-transition
+     @click.outside="showProfile = false"
+     class="fixed top-[70px] right-0 w-[350px] h-[700px] bg-white shadow-2xl z-50 rounded-l-2xl overflow-hidden flex flex-col">
 
     <!-- Header -->
     <div class="bg-blue-100 flex justify-end rounded-tl-2xl">

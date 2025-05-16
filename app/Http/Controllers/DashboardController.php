@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+use App\Models\User;
+
 
 class DashboardController extends Controller
 {
@@ -18,7 +22,45 @@ class DashboardController extends Controller
     {
         return view('component.profile');
     }
-    public function kelolaAdmin()
+
+    // Proses update data profil
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'kabupaten' => 'required|string',
+            'kecamatan' => 'nullable|string',
+            'kelurahan' => 'nullable|string',
+            'alamat_lengkap' => 'nullable|string',
+            'email' => 'required|email',
+            'telp' => 'nullable|string|max:20',
+            'nib' => 'nullable|string|max:30',
+            'nik' => 'nullable|string|max:16',
+            'jenis_kelamin' => 'nullable|string|in:Laki-laki,Perempuan',
+        ]);
+
+        $user = Auth::user();
+        $user->fill([
+            'nama' => $request->input('nama'),
+            'kabupaten' => $request->input('kabupaten'),
+            'kecamatan' => $request->input('kecamatan'),
+            'kelurahan' => $request->input('kelurahan'),
+            'alamat_lengkap' => $request->input('alamat_lengkap'),
+            'email' => $request->input('email'),
+            'telp' => $request->input('telp'),
+            'nib' => $request->input('nib'),
+            'nik' => $request->input('nik'),
+            'jenis_kelamin' => $request->input('jenis_kelamin'),
+        ]);
+        
+        if ($user->save()) {
+            return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui.');
+        } else {
+            return redirect()->route('profile')->with('error', 'Gagal memperbarui profil.');
+        }
+    }        
+
+    public function showMetrologi() 
     {
         // Mendapatkan semua data pengguna
         $users = User::all();
