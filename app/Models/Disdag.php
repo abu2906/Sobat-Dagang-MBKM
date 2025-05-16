@@ -24,4 +24,9 @@ class Disdag extends Authenticatable
     ];
 
     public $timestamps = true;
+
+    public function forumDiskusi()
+    {
+        return $this->hasMany(ForumDiskusi::class, 'id_disdag', 'id_disdag');
+    }
 }

@@ -32,7 +32,27 @@ Route::get('/change-password', [AuthController::class, 'showChangePassword'])->n
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 //pengaduan
-Route::post('/forum/store', [ForumDiskusiController::class, 'store'])->name('forum.store')->middleware('auth');
+Route::middleware('auth:user')->group(function () {
+    Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.send');
+    Route::get('/forum-chat/messages', [ForumDiskusiController::class, 'getMessages'])->name('forum.messages');
+});
+// Route::get('/auth-check', function() {
+//     return response()->json([
+//         'auth_default' => Auth::check(),
+//         'auth_user' => Auth::guard('user')->check(),
+//         'auth_disdag' => Auth::guard('disdag')->check(),
+//         'user_data' => Auth::guard('user')->user(),
+//     ]);
+// });
+
+
+// Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat.index');
+// Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.chat.send');
+// Route::middleware(['auth:web', 'auth:disdag'])->group(function () {
+//     Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat.index');
+//     Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.chat.send');
+// });
+
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');

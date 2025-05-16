@@ -54,4 +54,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
+     public function forumDiskusi()
+    {
+        return $this->hasMany(ForumDiskusi::class, 'id_user', 'id_user');
+    }
 }

@@ -1,7 +1,6 @@
 @auth
 <nav class="flex items-center justify-between p-4 text-white bg-primary">
 
-
     <div class="flex items-center space-x-4">
         <!-- Icon Notifikasi -->
         <svg xmlns="http://www.w3.org/2000/svg" class="text-white cursor-pointer h-7 w-7 hover:text-gray-600"
@@ -34,7 +33,7 @@
 @else
 <nav class="flex items-center justify-between p-4 text-white bg-primary">
         <div class="navbar-left">
-        <a href="/">
+        <a href="{{ route('user.dashboard') }}">
             <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="logo">
         </a>
     </div>

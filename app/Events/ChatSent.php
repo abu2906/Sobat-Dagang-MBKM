@@ -2,18 +2,15 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 use App\Models\ForumDiskusi;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class ChatSent implements ShouldBroadcast
 {
-    use Dispatchable, SerializesModels;
+    use InteractsWithSockets, SerializesModels;
 
     public $chat;
 
@@ -24,15 +21,16 @@ class ChatSent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new Channel('forum-diskusi');
+        return new Channel('forum-chat');
     }
 
     public function broadcastWith()
     {
         return [
             'id' => $this->chat->id,
-            'user' => $this->chat->user->name ?? $this->chat->guest_name ?? 'Guest',
-            'chat' => $this->chat->chat,
-            'time' => $this->chat->created_at->format('H:i')
+            'user' => $this->chat->user->name ?? $this->chat->guest_name,
+            'chat' => nl2br(e($this->chat->chat)),
+            'time' => $this->chat->created_at->timezone('Asia/Makassar')->format('H:i')
         ];
-    }}
+    }
+}

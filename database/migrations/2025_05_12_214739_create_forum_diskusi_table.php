@@ -13,14 +13,19 @@ class CreateForumDiskusiTable extends Migration
      */
     public function up()
     {
-        Schema::create('forum_diskusi', function (Blueprint $table) {
-            $table->id('id_diskusi');  // Auto increment primary key
-            $table->unsignedBigInteger('id_user')->nullable(); // Jika user login, NULL jika guest
-            $table->string('guest_name', 100)->nullable();
-            $table->string('guest_email', 150)->nullable();
-            $table->text('chat'); // Konten chat
-            $table->timestamps(); // created_at dan updated_at secara otomatis
-        });
+    Schema::create('forum_diskusi', function (Blueprint $table) {
+        $table->id('id_pengaduan');
+        $table->unsignedBigInteger('id_user');
+        $table->unsignedBigInteger('id_disdag')->nullable();
+        $table->text('chat');
+        $table->timestamp('waktu');
+        $table->string('status');
+
+        $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
+        // foreign key id_disdag sesuai dengan tabel disdag (pastikan benar)
+        $table->foreign('id_disdag')->references('id_disdag')->on('disdag')->onDelete('cascade');
+    });
+
     }
 
     /**
