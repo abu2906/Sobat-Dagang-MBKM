@@ -279,13 +279,13 @@ class DashboardPerdaganganController extends Controller
         // Generate PDF
         try {
             // Buat PDF dari view blade// Tambahkan ini sebelum generate PDF
-ini_set('max_execution_time', 300); // 300 detik = 5 menit
+            ini_set('max_execution_time', 300); // 300 detik = 5 menit
 
-$pdf = Pdf::loadView('SuratBalasan.surat-penolakan', [
-    'nama_pengirim' => $request->nama_pengirim,
-    'alasan' => $request->alasan,
-    'tanggal' => $request->tanggal
-]);;
+            $pdf = Pdf::loadView('SuratBalasan.surat-penolakan', [
+                'nama_pengirim' => $request->nama_pengirim,
+                'alasan' => $request->alasan,
+                'tanggal' => $request->tanggal
+            ]);;
 
 
             // Nama file unik
@@ -326,6 +326,7 @@ $pdf = Pdf::loadView('SuratBalasan.surat-penolakan', [
             'bentuk_usaha'      => 'required|string',
             'jenis_perusahaan'  => 'required|string',
             'luas_ruangan'      => 'required|string',
+            'isi'      => 'required|string',
             'alamat_usaha'      => 'required|string',
         ]);
 
@@ -348,6 +349,7 @@ $pdf = Pdf::loadView('SuratBalasan.surat-penolakan', [
                 'jenis_perusahaan' => $request->jenis_perusahaan,
                 'luas_ruangan' => $request->luas_ruangan,
                 'alamat_usaha' => $request->alamat_usaha,
+                'isi' => $request->isi,
                 'status' => $permohonan->status, // Kirim status ke view
             ]);
 

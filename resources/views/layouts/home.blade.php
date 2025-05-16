@@ -30,6 +30,8 @@ $user = Auth::guard('user')->user();
 
     @include('component.footer')
     <script src="{{ asset('/assets/js/app.js') }}"></script>
+    <script type="module" src="app.js"></script>;
+
 </body>
 
 </html>

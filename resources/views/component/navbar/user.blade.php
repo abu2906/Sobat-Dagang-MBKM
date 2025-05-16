@@ -33,7 +33,7 @@
 </nav>
 @else
 <nav class="flex items-center justify-between p-4 text-white bg-primary">
-        <div class="navbar-left">
+    <div class="navbar-left">
         <a href="/">
             <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="logo">
         </a>
@@ -73,7 +73,7 @@
                     <li><a href="#"><strong>PERSURATAN</strong></a></li>
                 </ul>
             </li>
-            <li><a href=""><strong>PELAPORAN</strong></a></li>
+            <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
             <li><a href="" id=""><strong>FAQ</strong></a></li>
         </ul>
     </div>

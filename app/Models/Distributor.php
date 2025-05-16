@@ -20,5 +20,9 @@ class Distributor extends Model
         'nib',
         'status',
     ];
+    public function user()
+{
+    return $this->belongsTo(User::class, 'id_user');
+}
 }
 

@@ -95,8 +95,8 @@
         <h3 class="mb-2 text-xl font-bold">IZIN USAHA TOKO</h3>
         <p class="text-base text-black">Fitur untuk pelaku usaha melaporkan kegiatan usahanya secara rutin</p>
     </div>
-
-</div>
+    </div>
+    
 
 <button id="open-chat" class="fixed bottom-5 right-5 bg-[#083458] rounded-full p-3 shadow-lg hover:scale-110 transition">
     <img src="{{ asset('assets/img/icon/pengaduan.png') }}" alt="Chat" class="w-8 h-8">
@@ -122,8 +122,7 @@
         document.getElementById('send-btn').addEventListener('click', function() {
             const chatInput = document.getElementById('chat-input');
             if (chatInput.value.trim() !== '') {
-                fetch('{{ route('
-                        forum.store ') }}', {
+                fetch('{{ route('forum.store') }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -143,6 +142,7 @@
                     });
             }
         });
+
 
         Echo.channel('forum-diskusi')
             .listen('ChatSent', (e) => {
