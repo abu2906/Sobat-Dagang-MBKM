@@ -183,18 +183,9 @@
         </tr>
     </table>
     <p>
-        Berdasarkan Hasil pemeriksaan Permohonan dan Persyaratan
-        <span class="bold-underline">SERTIFIKAT STANDAR (SS)</span>
+        {!! $isi !!}
     </p>
 
-    <p>
-        Dinyatakan <span class="bold-underline">MEMENUHI PERSYARATAN.</span>
-    </p>
-
-    <p>
-        Maka Bersama ini kami memberikan Rekomendasi
-        <span class="italic-underline">Sertifikat Standart (SS)</span>
-    </p>
     <div class="ttd">
         <p>Dikeluarkan di : Pareparae</p>
         <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d F Y') }}</p>

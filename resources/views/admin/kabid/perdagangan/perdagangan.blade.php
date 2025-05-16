@@ -73,9 +73,9 @@
                         </td>
                         @php
                         $jenisSuratMap = [
-                            'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
-                            'surat_keterangan_perdagangan' => 'Surat Keterangan',
-                            'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                        'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                        'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                        'dan_lainnya_perdagangan' => 'Surat Lainnya',
                         ];
                         @endphp
                         <td class="px-4 py-2 text-center">{{ $jenisSuratMap[$surat->jenis_surat] ?? 'Tidak tersedia' }}</td>
@@ -100,16 +100,16 @@
             </table>
         </div>
 
-        </div>
+    </div>
 
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <!-- Pie Chart -->
-            <div class="flex flex-col p-4 bg-white shadow rounded-xl">
-                <h2 class="mb-2 text-lg font-semibold">Jumlah Permohonan per Status</h2>
-                <div class="w-full h-64">
-                    <canvas id="statusPie" class="w-full h-full"></canvas>
-                </div>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <!-- Pie Chart -->
+        <div class="flex flex-col p-4 bg-white shadow rounded-xl">
+            <h2 class="mb-2 text-lg font-semibold">Jumlah Permohonan per Status</h2>
+            <div class="w-full h-64">
+                <canvas id="statusPie" class="w-full h-full"></canvas>
             </div>
+        </div>
 
         <!-- Line Chart -->
         <div class="flex flex-col p-4 bg-white shadow rounded-xl">

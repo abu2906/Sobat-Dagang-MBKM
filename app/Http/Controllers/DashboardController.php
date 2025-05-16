@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -17,12 +18,6 @@ class DashboardController extends Controller
     {
         return view('component.profile');
     }
-
-    public function showMetrologi() 
-    {
-        return view('admin.bidangMetrologi.dashboard');
-    }
-
     public function kelolaAdmin()
     {
         // Mendapatkan semua data pengguna

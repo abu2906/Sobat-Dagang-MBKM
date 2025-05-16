@@ -124,7 +124,7 @@
         <h2 class="mb-4 text-lg font-semibold text-black">Daftar Surat Masuk</h2>
 
         <div class="flex justify-between gap-6">
-            <div class="flex-1 border border-gray-200 rounded-xl overflow-hidden">
+            <div class="flex-1 overflow-hidden border border-gray-200 rounded-xl">
                 <div class="overflow-y-auto max-h-[500px] scrollbar-hide">
                     <table class="min-w-full text-sm text-left">
                         <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
@@ -184,8 +184,8 @@
 
         </div>
     </div>
- 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div class="overflow-x-auto rounded-xl shadow max-h-[500px] overflow-y-auto scrollbar-hide">
             <table class="min-w-full text-sm text-left border-separate border-spacing-0">
                 <thead class="sticky top-0 z-10 text-black bg-blue-300">

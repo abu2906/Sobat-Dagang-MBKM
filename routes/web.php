@@ -54,18 +54,6 @@ Route::middleware('auth:user')->group(function () {
 // });
 
 
-// Controller untuk user
-Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
-Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
-Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
-Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
-Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
-Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
-Route::get('/form-permohonan-distributor', [PelaporanController::class, 'formDistributor'])->name('bidangPerdagangan.formDistributor');
-Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submitDistributor'])->name('bidangPerdagangan.submitDistributor');
-Route::get('/halal', function () {
-    return view('user.halal');
-})->name('halal');
 // user Login
 Route::middleware(['role.check:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
@@ -79,7 +67,7 @@ Route::middleware(['role.check:user'])->group(function () {
     Route::get('/halal', function () {
         return view('user.halal');
     })->name('halal');
-    Route::get('/bidang-perdagangan/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
+    Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan'])->name('cekpengajuan');
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
     Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
     Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan');
@@ -125,6 +113,9 @@ Route::middleware(['auth:disdag'])->group(function () {
 
 // admin master
 Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
+Route::post('/distributor/{id_distributor}/terima', [PelaporanController::class, 'setujui'])->name('distributor.setujui');
+Route::post('/distributor/{id_distributor}/tolak', [PelaporanController::class, 'tolak'])->name('distributor.tolak');
+
 Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
 Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
 Route::get('/admin/kelola-pengguna', [DashboardController::class, 'kelolaAdmin'])->name('kelola.admin');

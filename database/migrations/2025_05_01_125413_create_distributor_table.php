@@ -10,8 +10,8 @@ return new class extends Migration {
         Schema::create('distributor', function (Blueprint $table) {
             $table->id('id_distributor'); // Primary Key
             $table->unsignedBigInteger('id_user'); // Foreign Key
-            $table->string('nib')->unique();
-            $table->enum('status', ['aktif', 'tidak_aktif'])->default('aktif');
+            $table->string('nib');
+            $table->enum('status', ['menunggu', 'ditolak', 'diterima'])->default('menunggu');
             $table->timestamps();
 
             // Foreign key constraint

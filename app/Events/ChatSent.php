@@ -13,18 +13,30 @@ class ChatSent implements ShouldBroadcast
     use InteractsWithSockets, SerializesModels;
 
     public $chat;
+    public $user;
+    public $user_id;
+    public $time;
 
-    public function __construct(ForumDiskusi $chat)
+    /**
+     * Create a new event instance.
+     */
+    public function __construct($chat, $user, $user_id, $time)
     {
         $this->chat = $chat;
+        $this->user = $user;
+        $this->user_id = $user_id;
+        $this->time = $time;
     }
 
+    /**
+     * Get the channels the event should broadcast on.
+     */
     public function broadcastOn()
     {
         return new Channel('forum-chat');
     }
 
-    public function broadcastWith()
+    public function broadcastAs()
     {
         return [
             'id' => $this->chat->id,

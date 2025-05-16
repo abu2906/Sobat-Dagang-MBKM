@@ -4,7 +4,6 @@
 
 @section('content')
 
-
 <section class="px-4 py-12 bg-white">
     
     <div class="grid items-center gap-8 mx-auto max-w-7xl md:grid-cols-2">

@@ -16,7 +16,7 @@
         ANDA BELUM TERDAFTAR SEBAGAI DISTRIBUTOR.<br> 
         LAKUKAN PENDAFTARAN UNTUK MENGAKSES PELAPORAN PENYALURAN PUPUK BERSUBSIDI
     </h2>
-    <a href=""
+    <a href="{{ route('bidangPerdagangan.formDistributor') }}"
        class="inline-block bg-[#083358] text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-blue-100 hover:text-black transition-all duration-300">
         Daftar Sekarang
     </a>

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
 </head>
 
 <body class="flex flex-col min-h-screen bg-gray-100">
@@ -18,7 +19,7 @@
         @hasSection('bg-user-metrologi')
             <!-- Gambar Background -->
             <div class="h-[150px] w-full bg-cover bg-[center_87%] relative"
-                style="background-image: url('@yield("background")');">
+                style="background-image: url('@yield('background')');">
 
                 <!-- Tombol Kembali -->
                 <a href="{{ url()->previous() }}"
@@ -42,6 +43,7 @@
     @include('component.footer')
 
     <script src="{{ asset('/assets/js/app.js') }}"></script>
+    <script src="{{ asset('/assets/js/uttp_detail.js') }}"></script>
 </body>
 
 </html>

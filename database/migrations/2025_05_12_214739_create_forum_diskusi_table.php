@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateForumDiskusiTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
     Schema::create('forum_diskusi', function (Blueprint $table) {
@@ -28,13 +23,8 @@ class CreateForumDiskusiTable extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('forum_diskusi');
+        Schema::dropIfExists('pengaduan');
     }
 }

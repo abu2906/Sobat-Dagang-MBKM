@@ -13,9 +13,8 @@
 <body class="flex h-screen font-sans bg-primary">
     <div class="flex flex-col w-full h-full sm:flex-row">
 
-        <!-- Kiri-->
-        <div class="w-full sm:w-2/3 bg-white p-8 flex flex-col justify-center items-center 
-        rounded-[40px] sm:rounded-br-[40px] sm:rounded-tr-[40px] sm:rounded-tl-none sm:rounded-bl-none shadow-xl">
+                <!-- Kiri-->
+                <div class="w-full sm:w-2/3 bg-white p-8 flex flex-col justify-center items-center rounded-[40px] sm:rounded-br-[40px] sm:rounded-tr-[40px] sm:rounded-tl-none sm:rounded-bl-none shadow-xl">
 
             <h3 class="mb-6 text-2xl font-bold text-center">Daftar ke Akun Anda</h3>
 
@@ -180,29 +179,28 @@
                     </button>
                 </div>
 
-            </form>
-        </div>
-        <!-- Kanan -->
-        <div class="flex flex-col items-center justify-center w-full p-8 text-white sm:w-1/2 bg-primary">
-            <div class="flex justify-center w-full mt-6 mb-6">
-                <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo" class="w-28">
-            </div>
+                    </form>
+                </div>
+
+                <!-- Kanan -->
+                <div class="flex flex-col items-center justify-center w-full p-8 text-white sm:w-1/2 bg-primary">
+                    <div class="flex justify-center w-full mt-6 mb-6">
+                        <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo" class="w-28">
+                    </div>
 
 
-            <div class="flex flex-col items-center justify-center h-full">
-                <h2 class="mb-2 text-2xl font-bold text-center">Selamat Datang Kembali!</h2>
-                <p class="mb-4 text-center">Masukkan informasi akun Anda untuk melanjutkan!</p>
-                <a href="{{ route('login') }}"
-                    class="block text-center w-[150px] text-white font-semibold py-2 -mt-33 rounded-full shadow transition duration-200"
-                    style="background-color: rgba(33, 148, 243, 1);"
-                    onmouseover="this.style.backgroundColor='rgba(81, 161, 227, 1)';"
-                    onmouseout="this.style.backgroundColor='rgba(33, 148, 243, 1)';">
-                    Masuk
-                </a>
-            </div>
-        </div>
-    </div>
-
-</body>
+                    <div class="flex flex-col items-center justify-center h-full">
+                        <h2 class="mb-2 text-2xl font-bold text-center">Selamat Datang Kembali!</h2>
+                        <p class="mb-4 text-center">Masukkan informasi akun Anda untuk melanjutkan!</p>
+                        <a href="{{ route('login') }}"
+                            class="block text-center w-[150px] text-white font-semibold py-2 -mt-33 rounded-full shadow transition duration-200"
+                            style="background-color: rgba(33, 148, 243, 1);"
+                            onmouseover="this.style.backgroundColor='rgba(81, 161, 227, 1)';"
+                            onmouseout="this.style.backgroundColor='rgba(33, 148, 243, 1)';">
+                            Masuk
+                        </a>
+                    </div>
+                </div>
+        </body>
 
 </html>
