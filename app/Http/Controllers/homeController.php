@@ -21,8 +21,6 @@ class HomeController extends Controller
         $berita = Berita::where('judul', $judulDecoded)->firstOrFail();
         return view('pages.halamanBerita', compact('berita'));
     }
-<<<<<<< HEAD
-=======
 
     public function showAboutPage()
     {
@@ -33,5 +31,4 @@ class HomeController extends Controller
     {
         return view('user.bidangIndustri.halal');
     }
->>>>>>> iniaaaini
 }
