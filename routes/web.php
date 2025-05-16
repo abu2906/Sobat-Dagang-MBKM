@@ -101,9 +101,6 @@ Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name
 Route::get('/form-surat-permohonan', [PersuratanController::class, 'showFormSurat'])->name('form.surat');  
 Route::get('/sertifikasi-halal', [homeController::class, 'showHalal'])->name('halal');  
 
-
-
-
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
 

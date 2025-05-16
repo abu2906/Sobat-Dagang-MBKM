@@ -69,27 +69,17 @@
 						</span>
 					</td>
 					<td class="px-5 text-center py-3 border-b space-y-1">
-						@if ($surat->status_admin === 'Disetujui')
-							<!-- TOMBOL BUAT SURAT -->
-							<a href="#"
-							class="bg-blue-900 hover:bg-blue-800 text-white text-sm px-4 py-1 rounded inline-block">
-								Buat Surat
-							</a>
-						@elseif ($surat->status_admin === 'Ditolak')
-							<!-- TOMBOL KIRIM KETERANGAN -->
-							<a href="#"
-							class="bg-gray-400 hover:bg-gray-500 text-white text-sm px-4 py-1 rounded inline-block">
-								Kirim Keterangan
-							</a>
+						@if ($surat->status_kabid === 'Menunggu')
+							
 						@else
 							<!-- TOMBOL TERIMA -->
-							<form action="{{ route('terima',['id' => $surat->id_surat, 'role' => 'admin'] ) }}" method="POST" class="inline-block">
+							<form action="{{ route('terimaKabid',['id' => $surat->id_surat, 'role' => 'admin'] ) }}" method="POST" class="inline-block">
 								@csrf
 								<button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
 							</form>
 
 							<!-- TOMBOL TOLAK -->
-							<form action="{{ route('tolak', ['id' => $surat->id_surat, 'role' => 'admin']) }}" method="POST" class="inline-block">
+							<form action="{{ route('tolakKabid', ['id' => $surat->id_surat, 'role' => 'admin']) }}" method="POST" class="inline-block">
 								@csrf
 								<button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
 							</form>
@@ -99,8 +89,6 @@
 								👁️
 							</button>
 						@endif
-
-						
 					</td>
 				</tr>
 				@empty

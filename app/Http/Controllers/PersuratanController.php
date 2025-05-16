@@ -69,6 +69,9 @@ class PersuratanController extends Controller
         }
         else {
             $surat->status_kabid = 'Disetujui';
+            if($surat->status_kabid = 'Disetujui'){
+                $surat->status = 'Disetujui';
+            };
         }
         $surat->save();
 
@@ -83,8 +86,10 @@ class PersuratanController extends Controller
         }
         else {
             $surat->status_kabid = 'Ditolak';
+            if($surat->status_kabid = 'Ditolak'){
+                $surat->status = 'Ditolak';
+            };
         }
-        
         $surat->save();
 
         return redirect()->back()->with('success', 'Surat berhasil ditolak.');
