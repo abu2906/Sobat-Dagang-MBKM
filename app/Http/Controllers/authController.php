@@ -33,16 +33,6 @@ class authController extends Controller
         ]);
 
         $identifier = $request->username;
-<<<<<<< HEAD
-
-        // 1. Coba login disdag via NIP
-        $disdag = Disdag::where('nip', $identifier)->first();
-
-        if ($disdag && Hash::check($request->password, $disdag->password)) {
-            Auth::guard('disdag')->login($disdag);
-            session(['id_disdag' => $disdag->id_disdag]); // Simpan ID ke session
-
-=======
     
         // 1. Coba login menggunakan NIP dan ambil data dari tabel disdag
         $disdag = Disdag::where('nip', $identifier)->first();
@@ -52,7 +42,6 @@ class authController extends Controller
             Auth::login($disdag);
     
             // Redirect berdasarkan role dari tabel disdag
->>>>>>> iniaaaini
             switch ($disdag->role) {
                 case 'master_admin':
                     return redirect()->intended(route('user.dashboard'));
@@ -74,30 +63,11 @@ class authController extends Controller
                     return redirect('/dashboard');
             }
         }
-<<<<<<< HEAD
-
-
-        // 2. Jika tidak ditemukan di disdag, coba login sebagai user
-=======
     
         // 2. Coba login menggunakan NIK atau NIB dan ambil data dari tabel user
->>>>>>> iniaaaini
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
-<<<<<<< HEAD
-            Auth::guard('user')->login($user);
-            session(['id_user' => $user->id_user]); // Simpan id_user ke session
-
-            return redirect()->intended(route('user.dashboard'));
-        }
-
-        return redirect()->route('login')->withErrors(['login_error' => 'Username atau password salah']);
-    }
-
-
-
-=======
             // Login berhasil menggunakan NIK/NIB
             Auth::login($user);
     
@@ -110,7 +80,6 @@ class authController extends Controller
     }
        
     
->>>>>>> iniaaaini
     public function submitRegister(Request $request)
     {
         Log::info('Data registrasi yang diterima:', $request->all());
