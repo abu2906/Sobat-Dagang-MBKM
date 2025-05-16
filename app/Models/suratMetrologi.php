@@ -21,6 +21,8 @@ class suratMetrologi extends Model
         'dokumen',
         'dokumen_balasan',
         'status',
+        'status_admin',
+        'status_kabid',
     ];
 
     public function user()

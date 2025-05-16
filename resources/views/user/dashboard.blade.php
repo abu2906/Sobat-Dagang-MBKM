@@ -62,7 +62,7 @@
             </svg>
         </div>
 
-        <h3 class="mb-2 text-xl font-bold">IZIN USAHA TOKO</h3>
+        <h3 class="mb-2 text-xl font-bold">Perdagangan</h3>
         <p class="text-base text-black">Fitur untuk pelaku usaha melaporkan kegiatan usahanya secara rutin</p>
     </div>
 
@@ -75,8 +75,8 @@
             </svg>
         </div>
 
-        <h3 class="mb-2 text-xl font-bold">LAPORAN</h3>
-        <p class="text-base text-black">Fitur untuk pelaku usaha melaporkan kegiatan usahanya secara rutin</p>
+        <h3 class="mb-2 text-xl font-bold">Industri</h3>
+        <p class="text-base text-black">Fitur untuk pelaku usaha melaporkan kebutuhan dan aktivitas industri</p>
     </div>
 
 
@@ -88,8 +88,8 @@
             </svg>
         </div>
 
-        <h3 class="mb-2 text-xl font-bold">IZIN USAHA TOKO</h3>
-        <p class="text-base text-black">Fitur untuk pelaku usaha melaporkan kegiatan usahanya secara rutin</p>
+        <h3 class="mb-2 text-xl font-bold">Metrologi</h3>
+        <p class="text-base text-black">Fitur untuk pelaku usaha melaporkan alat timbangan</p>
     </div>
 
 </div>

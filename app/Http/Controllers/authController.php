@@ -33,24 +33,23 @@ class authController extends Controller
         ]);
 
         $identifier = $request->username;
-    
-        // 1. Coba login menggunakan NIP dan ambil data dari tabel disdag
+
+        // 1. Coba login disdag via NIP
         $disdag = Disdag::where('nip', $identifier)->first();
-    
+
         if ($disdag && Hash::check($request->password, $disdag->password)) {
-            // Login berhasil menggunakan NIP
-            Auth::login($disdag);
-    
-            // Redirect berdasarkan role dari tabel disdag
+            Auth::guard('disdag')->login($disdag);
+            session(['id_disdag' => $disdag->id_disdag]); // Simpan ID ke session
+
             switch ($disdag->role) {
                 case 'master_admin':
                     return redirect()->intended(route('user.dashboard'));
                 case 'admin_perdagangan':
                     return redirect()->intended(route('dashboard.perdagangan'));
                 case 'admin_industri':
-                    return redirect()->intended(route('admin.industri.dashboard'));
+                    return redirect()->intended('/admin/industri');
                 case 'admin_metrologi':
-                    return redirect()->intended('/admin/metrologi');
+                    return redirect()->intended('/admin/dashboard-metrologi');
                 case 'kabid_perdagangan':
                     return redirect()->intended(route('kabid.perdagangan'));
                 case 'kabid_industri':
@@ -63,23 +62,23 @@ class authController extends Controller
                     return redirect('/dashboard');
             }
         }
-    
-        // 2. Coba login menggunakan NIK atau NIB dan ambil data dari tabel user
+
+
+        // 2. Jika tidak ditemukan di disdag, coba login sebagai user
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
-            // Login berhasil menggunakan NIK/NIB
-            Auth::login($user);
-    
-            // Karena tabel user tidak memiliki kolom role, arahkan ke dashboard default
+            Auth::guard('user')->login($user);
+            session(['id_user' => $user->id_user]); // Simpan id_user ke session
+
             return redirect()->intended(route('user.dashboard'));
         }
-    
-        // Jika login gagal
-        return redirect()->route('login')->with('error', 'Username atau password salah');
+
+        return redirect()->route('login')->withErrors(['login_error' => 'Username atau password salah']);
     }
-       
-    
+
+
+
     public function submitRegister(Request $request)
     {
         Log::info('Data registrasi yang diterima:', $request->all());

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -14,33 +15,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Path ke file wilayah.json yang berada di folder public/assets/data
-        $filePath = public_path('assets/data/wilayah.json');
-        
-        // Membaca file JSON
-        if (File::exists($filePath)) {
-            $wilayah = json_decode(File::get($filePath), true);
-        } else {
-            $wilayah = [];
-        }
-
-        // Cek apakah 'kabupaten' ada, jika tidak, beri fallback kosong
-        if (!isset($wilayah['kabupaten'])) {
-            $wilayah['kabupaten'] = [];
-        }
-
-        return view('user.dashboard', compact('wilayah'));
+        return view('user.dashboard');
     }
 
-    // Menampilkan halaman profil
-    public function showProfile()
+    public function profile()
     {
-        $user = Auth::user();
-
-        // Ambil data wilayah dari file JSON
-        $wilayah = json_decode(file_get_contents(public_path('wilayah.json')), true);
-
-        return view('component.profile', compact('user', 'wilayah'));
+        return view('component.profile');
     }
 
     // Proses update data profil

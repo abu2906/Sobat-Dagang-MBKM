@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use App\Models\suratMetrologi;
+use App\Models\Uttp;
+use App\Models\DataAlatUkur;
 
 
 class DashboardMetrologiController extends Controller
@@ -14,8 +17,70 @@ class DashboardMetrologiController extends Controller
     {
         $dataSurat = $this->getJumlahSurat();
         $chartData = $this->chartData();
+        $chartBar = $this->chartBarJenisAlat();
+        $data = array_merge($dataSurat, $chartData, $chartBar);
 
-        return view('admin.bidangMetrologi.dashboard', $dataSurat, $chartData);
+        return view('admin.bidangMetrologi.dashboard', $data);
+    }
+    
+    public function showKabid() {
+        $dataSurat = $this->getJumlahSurat();
+        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('SUM(jumlah_alat) as total'))->groupBy('jenis_alat')->get();
+        $jumlahValid = DB::table('uttp')
+            ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
+            ->where('data_alat_ukur.status', 'Valid')
+            ->sum('uttp.jumlah_alat');
+        $uttps = DataAlatUkur::with('uttp')->get();
+        return view('admin.kabid.metrologi.dashboard', array_merge(
+            $dataSurat, 
+            ['jumlahPerJenis' => $jumlahPerJenis],
+            ['jumlahValid' => $jumlahValid],
+            ['uttps' => $uttps],
+        ));
+    }
+
+    public function chartBarJenisAlat()
+    {
+        $tahunSekarang = Carbon::now()->year;
+        $tahunLalu = $tahunSekarang - 1;
+        $labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+        // Fungsi bantu untuk ambil data per tahun dan prefix jenis_alat
+        $ambilData = function ($tahun, $prefix) {
+            $bulanan = Uttp::selectRaw('MONTH(tanggal_selesai) as bulan, COUNT(*) as total')
+                ->whereYear('tanggal_selesai', $tahun)
+                ->where('jenis_alat', 'like', $prefix . '%')
+                ->groupBy('bulan')
+                ->pluck('total', 'bulan')
+                ->toArray();
+
+            $result = [];
+            for ($i = 1; $i <= 12; $i++) {
+                $result[] = $bulanan[$i] ?? 0;
+            }
+
+            return $result;
+        };
+
+        // Ambil data untuk satu jenis alat (misalnya UP)
+        $dataTahunLaluUP = $ambilData($tahunLalu, 'UP-');
+        $dataTahunIniUP = $ambilData($tahunSekarang, 'UP-');
+        $dataTahunLaluVOL = $ambilData($tahunLalu, 'VOL-');
+        $dataTahunIniVOL = $ambilData($tahunSekarang, 'VOL-');
+        $dataTahunLaluMAS = $ambilData($tahunLalu, 'MAS-');
+        $dataTahunIniMAS = $ambilData($tahunSekarang, 'MAS-');
+
+        return  [
+            'labels' => json_encode($labels),
+            'dataTahunLaluUP' => json_encode($dataTahunLaluUP),
+            'dataTahunIniUP' => json_encode($dataTahunIniUP),
+            'dataTahunLaluVOL' => json_encode($dataTahunLaluVOL),
+            'dataTahunIniVOL' => json_encode($dataTahunIniVOL),
+            'dataTahunLaluMAS' => json_encode($dataTahunLaluMAS),
+            'dataTahunIniMAS' => json_encode($dataTahunIniMAS),
+            'tahunLalu' => $tahunLalu,
+            'tahunSekarang' => $tahunSekarang,
+        ];
     }
 
     public function chartData()
@@ -67,9 +132,17 @@ class DashboardMetrologiController extends Controller
         }
 
         $suratTerbaru = suratMetrologi::with('user')->orderBy('created_at', 'desc')->take(6)->get();
+        $bulanIni = Carbon::now()->month;
+        $tahunIni = Carbon::now()->year;
+
+        $totalSuratMasukBulanIni = DB::table('surat_metrologi')
+            ->whereMonth('created_at', $bulanIni)
+            ->whereYear('created_at', $tahunIni)
+            ->count();
 
         return [
             'totalSuratMasuk' => $totalSuratMasuk,
+            'totalSuratMasukBulanIni' => $totalSuratMasukBulanIni,
             'totalSuratDiterima' => $totalSuratDiterima,
             'totalSuratDitolak' => $totalSuratDitolak,
             'totalSuratMenunggu' => $totalSuratMenunggu,

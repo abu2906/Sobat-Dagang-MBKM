@@ -22,7 +22,7 @@
                     </svg>
                 </span>
             </div>
-            <a href="{{ route('alat.user', Auth::user()->id_user) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">
+            <a href="{{ route('alat.user', Auth::guard('user')->id()) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">
                 Alat Ukur Saya
             </a>
     </div>
