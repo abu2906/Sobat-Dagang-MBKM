@@ -173,7 +173,3 @@ Route::get('/test/{viewPath}', function ($viewPath) {
 Route::get('/surat-rekomendasi', function () {
     return view('SuratBalasan.surat-rekomendasi');
 });
-// })->name('form.permohonan');
-// Route::get('/riwayat-surat', function () {
-//     return view('user.riwayat_surat');
-// })->name('riwayat.surat');
