@@ -32,7 +32,7 @@
 				<img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
 				<div>
 					<p class="text-base font-medium text-white">Surat Terkirim</p>
-					<p class="text-2xl font-bold text-white">0</p>
+					<p class="text-2xl font-bold text-white">{{ $totalSuratTerkirim }}</p>
 				</div>
 			</a>
 		</div>
@@ -57,50 +57,57 @@
 				<tr class="hover:bg-blue-50 transition">
 					<td class="px-5 text-center py-3 border-b">{{ $index + 1 }}</td>
 					<td class="px-5 text-center py-3 border-b">{{ $surat->id_surat }}</td>
-					<td class="px-5 text-center py-3 border-b">
-						{{ $surat->user->nama ?? '-' }}
-					</td>
+					<td class="px-5 text-center py-3 border-b">{{ $surat->user->nama ?? '-' }}</td>
 					<td class="px-5 text-center py-3 border-b">
 						<span class="text-xs font-medium px-2 py-1 rounded-full 
-							{{ $surat->status == 'Menunggu' ? 'text-yellow-700 bg-yellow-100' : '' }}
-							{{ $surat->status == 'Disetujui' ? 'text-green-700 bg-green-100' : '' }}
-							{{ $surat->status == 'Ditolak' ? 'text-red-700 bg-red-100' : '' }}">
-							{{ $surat->status }}
+							{{ $surat->status_surat_masuk == 'Menunggu' ? 'text-yellow-700 bg-yellow-100' : '' }}
+							{{ $surat->status_surat_masuk == 'Disetujui' ? 'text-green-700 bg-green-100' : '' }}
+							{{ $surat->status_surat_masuk == 'Ditolak' ? 'text-red-700 bg-red-100' : '' }}">
+							{{ $surat->status_surat_masuk }}
 						</span>
 					</td>
-					<td class="px-5 text-center py-3 border-b space-y-1">
-						@if ($surat->status_admin === 'Disetujui')
-							<!-- TOMBOL BUAT SURAT -->
-							<a href="#"
-							class="bg-blue-900 hover:bg-blue-800 text-white text-sm px-4 py-1 rounded inline-block">
-								Buat Surat
-							</a>
-						@elseif ($surat->status_admin === 'Ditolak')
-							<!-- TOMBOL KIRIM KETERANGAN -->
-							<a href="#"
-							class="bg-gray-400 hover:bg-gray-500 text-white text-sm px-4 py-1 rounded inline-block">
-								Kirim Keterangan
-							</a>
-						@else
-							<!-- TOMBOL TERIMA -->
-							<form action="{{ route('terima',['id' => $surat->id_surat, 'role' => 'admin'] ) }}" method="POST" class="inline-block">
-								@csrf
-								<button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
-							</form>
-
-							<!-- TOMBOL TOLAK -->
-							<form action="{{ route('tolak', ['id' => $surat->id_surat, 'role' => 'admin']) }}" method="POST" class="inline-block">
-								@csrf
-								<button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
-							</form>
-							<!-- TOMBOL PREVIEW -->
-							<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status }}')"
-								class="text-black text-lg ml-1 hover:text-blue-700">
-								👁️
-							</button>
-						@endif
-
-						
+					<td class="px-5 text-center py-3 border-b">
+						<div class="flex justify-center gap-2 flex-wrap">
+							@if ($surat->status_admin === 'Disetujui')
+								@if($surat->suratBalasan && $surat->suratBalasan->path_dokumen)
+									<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->suratBalasan->path_dokumen) }}', '{{ $surat->status_surat_masuk }}')"
+										class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+										<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+												d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
+										</svg>
+									</button>
+								@else
+									<a href="{{ route('create-surat-balasan', str_replace(['/'], '_', $surat->id_surat)) }}"
+										class="bg-blue-900 hover:bg-blue-800 text-white text-sm px-4 py-1 rounded">
+										Buat Surat
+									</a>
+								@endif
+								
+							@elseif ($surat->status_admin === 'Ditolak')
+								<a href="{{ route('create-keterangan', str_replace(['/'], '_', $surat->id_surat)) }}"
+									class="bg-gray-500 hover:bg-gray-600 text-white text-sm px-4 py-1 rounded">
+									Kirim Keterangan
+								</a>
+							@else
+								<form action="{{ route('surat.terima', str_replace(['/'], '_', $surat->id_surat)) }}" method="POST">
+									@csrf
+									@method('PUT')
+									<button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
+								</form>
+								<form action="{{ route('surat.tolak', str_replace(['/'], '_', $surat->id_surat)) }}" method="POST">
+									@csrf
+									@method('PUT')
+									<button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
+								</form>
+								<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_surat_masuk }}')"
+									class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
+									</svg>
+								</button>
+							@endif
+						</div>
 					</td>
 				</tr>
 				@empty

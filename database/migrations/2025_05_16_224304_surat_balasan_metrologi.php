@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('surat_keluar_metrologi', function (Blueprint $table) {
+            $table->string('id_surat_balasan')->primary();
+            $table->string('id_surat');
+            $table->string('sifat');
+            $table->string('perihal');
+            $table->string('lampiran');
+            $table->string('tanggal');
+            $table->string('path_dokumen')->nullable();
+            $table->enum('status_surat_keluar', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
+            $table->enum('status_kepalaBidang', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
+            $table->timestamps();
+
+            $table->foreign('id_surat')->references('id_surat')->on('surat_metrologi')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('surat_keluar_metrologi');
+    }
+};

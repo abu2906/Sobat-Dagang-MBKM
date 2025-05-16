@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use App\Models\suratMetrologi;
 use App\Models\Uttp;
 use App\Models\DataAlatUkur;
+use App\Models\suratBalasan;
 
 
 class DashboardMetrologiController extends Controller
@@ -115,17 +116,17 @@ class DashboardMetrologiController extends Controller
     private function getJumlahSurat()
     {
         $totalSuratMasuk = DB::table('surat_metrologi')->count();
-        $totalSuratDiterima = DB::table('surat_metrologi')->where('status', 'Disetujui')->count();
+        $totalSuratDiterima = DB::table('surat_metrologi')->where('status_surat_masuk', 'Disetujui')->count();
         if($totalSuratDiterima < 1)
         {
             $totalSuratDiterima == 0;
         }
-        $totalSuratMenunggu = DB::table('surat_metrologi')->where('status', 'Menunggu')->count();
+        $totalSuratMenunggu = DB::table('surat_metrologi')->where('status_surat_masuk', 'Menunggu')->count();
         if($totalSuratMenunggu < 1)
         {
             $totalSuratMenunggu == 0;
         }
-        $totalSuratDitolak = DB::table('surat_metrologi')->where('status', 'Ditolak')->count();
+        $totalSuratDitolak = DB::table('surat_metrologi')->where('status_surat_masuk', 'Ditolak')->count();
         if($totalSuratDitolak < 1)
         {
             $totalSuratDitolak == 0;
@@ -134,6 +135,12 @@ class DashboardMetrologiController extends Controller
         $suratTerbaru = suratMetrologi::with('user')->orderBy('created_at', 'desc')->take(6)->get();
         $bulanIni = Carbon::now()->month;
         $tahunIni = Carbon::now()->year;
+
+        $suratTerkirim = suratBalasan::where('status_surat_keluar','Disetujui')->count();
+        if($suratTerkirim < 1)
+        {
+            $suratTerkirim == 0;
+        }
 
         $totalSuratMasukBulanIni = DB::table('surat_metrologi')
             ->whereMonth('created_at', $bulanIni)
@@ -146,7 +153,8 @@ class DashboardMetrologiController extends Controller
             'totalSuratDiterima' => $totalSuratDiterima,
             'totalSuratDitolak' => $totalSuratDitolak,
             'totalSuratMenunggu' => $totalSuratMenunggu,
-            'suratTerbaru' => $suratTerbaru
+            'suratTerbaru' => $suratTerbaru,
+            'totalSuratTerkirim' => $suratTerkirim
         ];
     }
 
@@ -157,7 +165,7 @@ class DashboardMetrologiController extends Controller
 
     public function showAdministrasi()
     {
-        $suratList = SuratMetrologi::with('user')->get();
+        $suratList = SuratMetrologi::with('user', 'suratBalasan')->get();
         $dataJumlahSurat = $this->getJumlahSurat();
 
         return view('admin.bidangMetrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
