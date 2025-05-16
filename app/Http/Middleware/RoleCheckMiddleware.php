@@ -29,15 +29,12 @@ class RoleCheckMiddleware
         $user = Auth::guard($guard)->user();
 
         if ($guard === 'disdag') {
-            // Jika guard adalah disdag, periksa role
             if (!in_array($user->role, $roles)) {
                 return redirect()->route('login')->withErrors([
                     'auth' => 'Anda tidak memiliki akses ke halaman ini.',
                 ]);
             }
         } elseif ($guard === 'user') {
-            // Jika guard adalah user, cukup pastikan user ada (karena tidak ada role)
-            // Tidak perlu pengecekan role
             if (!$user) {
                 return redirect()->route('login')->withErrors([
                     'auth' => 'Pengguna tidak ditemukan.',

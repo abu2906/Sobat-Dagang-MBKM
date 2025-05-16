@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\suratMetrologi;
 use App\Models\Uttp;
+use App\Models\DataAlatUkur;
 
 
 class DashboardMetrologiController extends Controller
@@ -20,6 +21,22 @@ class DashboardMetrologiController extends Controller
         $data = array_merge($dataSurat, $chartData, $chartBar);
 
         return view('admin.bidangMetrologi.dashboard', $data);
+    }
+    
+    public function showKabid() {
+        $dataSurat = $this->getJumlahSurat();
+        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('SUM(jumlah_alat) as total'))->groupBy('jenis_alat')->get();
+        $jumlahValid = DB::table('uttp')
+            ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
+            ->where('data_alat_ukur.status', 'Valid')
+            ->sum('uttp.jumlah_alat');
+        $uttps = DataAlatUkur::with('uttp')->get();
+        return view('admin.kabid.metrologi.dashboard', array_merge(
+            $dataSurat, 
+            ['jumlahPerJenis' => $jumlahPerJenis],
+            ['jumlahValid' => $jumlahValid],
+            ['uttps' => $uttps],
+        ));
     }
 
     public function chartBarJenisAlat()
@@ -115,9 +132,17 @@ class DashboardMetrologiController extends Controller
         }
 
         $suratTerbaru = suratMetrologi::with('user')->orderBy('created_at', 'desc')->take(6)->get();
+        $bulanIni = Carbon::now()->month;
+        $tahunIni = Carbon::now()->year;
+
+        $totalSuratMasukBulanIni = DB::table('surat_metrologi')
+            ->whereMonth('created_at', $bulanIni)
+            ->whereYear('created_at', $tahunIni)
+            ->count();
 
         return [
             'totalSuratMasuk' => $totalSuratMasuk,
+            'totalSuratMasukBulanIni' => $totalSuratMasukBulanIni,
             'totalSuratDiterima' => $totalSuratDiterima,
             'totalSuratDitolak' => $totalSuratDitolak,
             'totalSuratMenunggu' => $totalSuratMenunggu,

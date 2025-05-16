@@ -14,15 +14,9 @@ class DirectoryBookController extends Controller
 {
     public function showDirectoryUserMetrologi()
     {
-        if(Auth::check())
-        {
-            $alatUkur = DataAlatUkur::with('uttp')->get();
-            return view('user.bidangMetrologi.directory', compact('alatUkur'));
-        }
-        else
-        {
-            return redirect()->route('login');
-        }
+        $alatUkur = DataAlatUkur::with('uttp')->get();
+        return view('user.bidangMetrologi.directory', compact('alatUkur'));
+        
     }       
 
     public function showDirectoryAdminMetrologi()

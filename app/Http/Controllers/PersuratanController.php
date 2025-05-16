@@ -21,16 +21,18 @@ class PersuratanController extends Controller
             'jenis_surat' => 'required|string',
         ]);
 
-        $filename = 'dokumen_' . Auth::id() . '_' . time() . '.' . $request->file('dokumen')->getClientOriginalExtension();
+        $filename = 'dokumen_' . Auth::guard('user')->id() . '_' . time() . '.' . $request->file('dokumen')->getClientOriginalExtension();
         $filePath = $request->file('dokumen')->storeAs('dokumen_metrologi', $filename, 'public');
 
         suratMetrologi::create([
-            'user_id' => Auth::id(),
+            'user_id' => Auth::guard('user')->id(),
             'alamat_alat' => $request->alamat_alat,
             'jenis_surat' => $request->jenis_surat,
             'dokumen' => $filePath,
             'dokumen_balasan' => '',
             'status' => 'Menunggu',
+            'statusAdmin' => 'Menunggu',
+            'statusKabid' => 'Menunggu',
         ]);
 
         return redirect()->back()->with('success', 'Permohonan berhasil diajukan.');
@@ -38,44 +40,51 @@ class PersuratanController extends Controller
 
     public function showAdministrasiMetrologi()
     {
-        if(Auth::check())
-        {
-            $permohonan = suratMetrologi::where('user_id', Auth::id())->latest()->get();
+        if (Auth::guard('user')->check()) {
+            $permohonan = suratMetrologi::where('user_id', Auth::guard('user')->id())->latest()->get();
 
             return view('user.bidangMetrologi.administrasi', compact('permohonan'));
-        } 
-        else
-        {
-            return redirect()->route('login');
         }
-        
+
+        return redirect()->route('login');
     }
 
     public function showDokumenMetrologi($id)
     {
         $permohonan = suratMetrologi::findOrFail($id);
 
-        if ($permohonan->user_id !== Auth::id()) {
+        if ($permohonan->user_id !== Auth::guard('user')->id()) {
             abort(403);
         }
 
         return Storage::disk('public')->download($permohonan->dokumen);
     }
 
-    public function terimaSuratMetrologi($id)
+    public function terimaSuratMetrologi($id,$role)
     {
         $surat = suratMetrologi::with('user')->findOrFail($id);
-        $surat->status = 'Disetujui';
+        if($role = 'admin')
+        {
+            $surat->status_Admin = 'Disetujui';
+        }
+        else {
+            $surat->status_kabid = 'Disetujui';
+        }
         $surat->save();
 
         return redirect()->back()->with('success', 'Surat berhasil disetujui.');
     }
-    
-    // Tolak surat
-    public function tolakSuratMetrologi($id)
+    public function tolakSuratMetrologi($id, $role)
     {
         $surat = suratMetrologi::with('user')->findOrFail($id);
-        $surat->status = 'ditolak';
+        if($role = 'admin')
+        {
+            $surat->status_Admin = 'Ditolak';
+        }
+        else {
+            $surat->status_kabid = 'Ditolak';
+        }
+        
         $surat->save();
 
         return redirect()->back()->with('success', 'Surat berhasil ditolak.');

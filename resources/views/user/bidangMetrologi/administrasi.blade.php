@@ -1,5 +1,8 @@
 @extends('layouts.metrologi.pengguna')
 @php use Illuminate\Support\Facades\Auth; @endphp
+@php
+    $user = Auth::guard('user')->user();
+@endphp
 
 @section('tab')
     <div class="absolute left-1/2 transform -translate-x-1/2 top-[40px] z-10">
@@ -152,19 +155,19 @@
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
 							<label class="block font-medium mb-1">Nama Lengkap</label>
-							<input type="text" name="nama_lengkap" class="border px-4 py-2 w-full rounded-lg" value="{{ Auth::user()->nama ?? '-' }}" readonly>
+							<input type="text" name="nama_lengkap" class="border px-4 py-2 w-full rounded-lg" value="{{ $user->nama ?? '-' }}" readonly>
 						</div>
 						<div>
 							<label class="block font-medium mb-1">NIK</label>
-							<input type="text" name="nik" class="border px-4 py-2 w-full rounded-lg" value="{{ Auth::user()->nik ?? '-' }}" readonly>
+							<input type="text" name="nik" class="border px-4 py-2 w-full rounded-lg" value="{{ $user->nik ?? '-' }}" readonly>
 						</div>
 						<div>
 							<label class="block font-medium mb-1">Email</label>
-							<input type="email" name="email" class="border px-4 py-2 w-full rounded-lg" value="{{ Auth::user()->email ?? '-' }}" readonly>
+							<input type="email" name="email" class="border px-4 py-2 w-full rounded-lg" value="{{ $user->email ?? '-' }}" readonly>
 						</div>
 						<div>
 							<label class="block font-medium mb-1">Alamat</label>
-							<textarea name="alamat" class="border px-4 py-2 w-full rounded-lg" readonly>{{ Auth::user()->alamat_lengkap ?? '-' }}</textarea>
+							<textarea name="alamat" class="border px-4 py-2 w-full rounded-lg" readonly>{{ $user->alamat_lengkap ?? '-' }}</textarea>
 						</div>
 					</div>
 				</div>

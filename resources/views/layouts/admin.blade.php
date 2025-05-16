@@ -63,6 +63,6 @@
         @yield('content')
     </div>
     <script src="{{ asset('/assets/js/app.js') }}"></script>
-
+    <script src="{{ asset('/assets/js/showDokumen.js') }}"></script>
 </body>
 </html>

@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Auth;
     </div>
 
     </div>
+    <script src="{{ asset('/assets/js/showDokumen.js') }}"></script>
 </body>
 
 </html>

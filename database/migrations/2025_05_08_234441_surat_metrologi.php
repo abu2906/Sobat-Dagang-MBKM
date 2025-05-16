@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('dokumen')->nullable();
             $table->enum('jenis_surat',['tera', 'tera_ulang'])->default('tera');
             $table->enum('status', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
+            $table->enum('status_admin', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
+            $table->enum('status_kabid', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
             $table->string('dokumen_balasan')->nullable();
             $table->timestamps();
 
