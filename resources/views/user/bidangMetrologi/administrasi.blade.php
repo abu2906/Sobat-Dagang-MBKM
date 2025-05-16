@@ -58,6 +58,7 @@
                         <thead class="bg-[#1e3a8a] text-white">
                             <tr>
                                 <th class="text-center px-5 py-3 border-b">No</th>
+                                <th class="text-center px-5 py-3 border-b">Nomor Surat</th>
                                 <th class="text-center px-5 py-3 border-b">Tanggal Dikirim</th>
                                 <th class="text-center px-5 py-3 border-b">Status</th>
                                 <th class="text-center px-5 py-3 border-b">Aksi</th>
@@ -82,19 +83,20 @@
 								@foreach ($permohonan as $index => $item)
 									<tr class="hover:bg-blue-50 transition">
 										<td class="text-center px-5 py-3 border-b">{{ $index + 1 }}</td>
+										<td class="text-center px-5 py-3 border-b">{{ $item->id_surat }}</td>
 										<td class="text-center px-5 py-3 border-b">
 											{{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}
 										</td>
 										<td class="text-center px-5 py-3 border-b">
 											<span class="text-xs font-medium px-3 py-1 rounded-full
-												{{ $item->status == 'Menunggu' ? 'bg-yellow-100 text-yellow-700' :
-													($item->status == 'Disetujui' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700') }}">
-												{{ $item->status }}
+												{{ $item->status_surat_masuk == 'Menunggu' ? 'bg-yellow-100 text-yellow-700' :
+													($item->status_surat_masuk == 'Disetujui' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700') }}">
+												{{ $item->status_surat_masuk }}
 											</span>
 										</td>
 										<td class="text-center px-5 py-3 border-b">
 											<button
-												onclick="toggleModal(true, '{{ asset('storage/' . $item->dokumen) }}', '{{ $item->status }}')"
+												onclick="toggleModal(true, '{{ asset('storage/' . $item->dokumen) }}', '{{ $item->status_surat_masuk }}')"
 												class="px-4 py-1 text-sm text-[#1e3a8a] border border-[#1e3a8a] rounded-full hover:bg-[#1e3a8a] hover:text-white">
 												Lihat Surat
 											</button>
@@ -179,6 +181,10 @@
 				<div class="mb-4">
 					<label class="block font-semibold mb-1">Alamat Alat</label>
 					<input type="text" name="alamat_alat" placeholder="Masukkan Alamat Alat Anda" class="border px-4 py-2 w-full rounded-lg">
+				</div>
+				<div class="mb-4">
+					<label class="block font-semibold mb-1">Nomor Surat</label>
+					<input type="text" name="nomor_surat" placeholder="Masukkan Nomor Surat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 
 				<div class="mb-4">

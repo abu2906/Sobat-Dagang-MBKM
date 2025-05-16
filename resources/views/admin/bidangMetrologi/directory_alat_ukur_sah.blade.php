@@ -133,7 +133,6 @@
                 </form>
             </div>
     </div>
-
     
     <!-- Tabel Alat Ukur Sah -->
     <div class="overflow-x-auto rounded-lg shadow-sm mt-6">

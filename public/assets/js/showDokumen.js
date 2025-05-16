@@ -13,9 +13,9 @@ function toggleModal(show, fileUrl = null, status = 'menunggu') {
         }
 
         var stats = {
-          'menunggu' : 'Permohonan Anda Masih Dalam Proses',
-          'disetujui' : 'Permohonan Anda Disetujui',
-          'ditolak' : 'Permohonan Anda Ditolak'
+          'menunggu' : 'Permohonan Masih Dalam Proses',
+          'disetujui' : 'Permohonan Disetujui',
+          'ditolak' : 'Permohonan Ditolak'
         }
         
         statusEl.textContent = stats[status.toLowerCase()] || '';

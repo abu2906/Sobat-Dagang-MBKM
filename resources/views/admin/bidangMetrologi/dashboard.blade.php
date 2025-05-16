@@ -73,7 +73,7 @@
                             <tr class="border-b">
                                 <td class="text-center py-2 px-4">{{ $surat->id_surat}}</td>
                                 <td class="text-center py-2 px-4">{{ $surat->user->nama }}</td>
-                                <td class="text-center py-2 px-4">{{ $surat->status }}</td>
+                                <td class="text-center py-2 px-4">{{ $surat->status_surat_masuk }}</td>
                             </tr>
                         @endforeach
                     </tbody>
