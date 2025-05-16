@@ -2,36 +2,46 @@
 @section('title', 'Dashboard Kabid Bidang Perdagangan')
 @section('content')
 
-<div class="p-6 bg-white min-h-screen">
-    <h1 class="text-2xl font-bold text-black mb-4">Dashboard Bidang Perdagangan</h1>
+<div class="min-h-screen p-6 bg-white">
+    <h1 class="mb-4 text-2xl font-bold text-black">Dashboard Bidang Perdagangan</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <a href="#" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
+    <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Masuk</p>
-                <p class="text-2xl font-bold text-blue-600">n</p>
+                <p class="text-2xl font-bold text-blue-600">{{ $totalSuratPerdagangan }}</p>
             </div>
         </a>
 
-        <a href="#" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Terverifikasi</p>
-                <p class="text-2xl font-bold text-yellow-500">n</p>
+                <p class="text-2xl font-bold text-yellow-500">{{ $totalSuratTerverifikasi }}</p>
             </div>
         </a>
 
-        <a href="#" class="bg-white rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/surat_ditolak.png') }}" alt="Ditolak" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Ditolak</p>
-                <p class="text-2xl font-bold text-green-600">n</p>
+                <p class="text-2xl font-bold text-green-600">{{ $totalSuratDitolak }}</p>
             </div>
         </a>
     </div>
 
-    <div class="bg-white shadow rounded-xl p-4 mb-6">
+    <div class="p-4 mb-6 bg-white shadow rounded-xl">
+        @if ($errors->any())
+        <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg">
+            <strong>Terjadi kesalahan:</strong>
+            <ul class="mt-1 ml-4 list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         <table class="w-full text-sm text-left text-gray-700">
             <thead class="bg-[#083358] text-white">
                 <tr>
@@ -45,162 +55,161 @@
                 </tr>
             </thead>
             <tbody class="bg-white">
-            <tr class="border-b">
-                <td class="px-4 py-2 text-center">1</td>
-                <td class="px-4 py-2 text-center">Budi Santoso</td>
-                <td class="px-4 py-2 text-center">2025-05-01</td>
-                <td class="px-4 py-2 text-center">
-                    <span class="px-2 py-1 bg-yellow-300 text-yellow-800 text-xs font-semibold rounded-full">Menunggu</span>
-                </td>
-                <td class="px-4 py-2 text-center">Surat Izin Usaha</td>
-                <td class="px-4 py-2 text-center">
-                    <a href="#" class="text-blue-600 underline">Lihat Dokumen</a>
-                </td>
-                <td class="px-4 py-2 text-center space-x-2">
-                    <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Setujui</button>
-                    <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Tolak</button>
-                </td>
-            </tr>
-            <tr class="border-b">
-                <td class="px-4 py-2 text-center">2</td>
-                <td class="px-4 py-2 text-center">Siti Aminah</td>
-                <td class="px-4 py-2 text-center">2025-04-28</td>
-                <td class="px-4 py-2 text-center">
-                    <span class="px-2 py-1 bg-green-300 text-green-800 text-xs font-semibold rounded-full">Disetujui</span>
-                </td>
-                <td class="px-4 py-2 text-center">Surat Rekomendasi</td>
-                <td class="px-4 py-2 text-center">
-                    <a href="#" class="text-blue-600 underline">Lihat Dokumen</a>
-                </td>
-                <td class="px-4 py-2 text-center space-x-2">
-                    <button class="bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed" disabled>✓</button>
-                </td>
-            </tr>
-        </tbody>
+                @foreach($suratMasuk as $index => $surat)
+                @if($surat->file_balasan) {{-- Tampilkan hanya jika file_surat tersedia --}}
+                <tr class="border-b">
+                    <td class="px-4 py-2 text-center rounded-l">{{ $index + 1 }}</td>
 
-        {{-- <tbody class="bg-white">
-            @foreach($suratMasuk as $index => $surat)
-            <tr class="border-b">
-                <td class="px-4 py-2 text-center rounded-l">{{ $index + 1 }}</td>
-                <td class="px-4 py-2 text-center">{{ $surat->nama_pemohon }}</td>
-                <td class="px-4 py-2 text-center">{{ $surat->tanggal_dikirim }}</td>
-                <td class="px-4 py-2 text-center">
-                    @if($surat->status == 'Menunggu')
-                        <span class="px-2 py-1 bg-yellow-300 text-yellow-800 text-xs font-semibold rounded-full">Menunggu</span>
-                    @elseif($surat->status == 'Disetujui')
-                        <span class="px-2 py-1 bg-green-300 text-green-800 text-xs font-semibold rounded-full">Disetujui</span>
-                    @else
-                        <span class="px-2 py-1 bg-red-300 text-red-800 text-xs font-semibold rounded-full">Ditolak</span>
-                    @endif
-                </td>
-                <td class="px-4 py-2 text-center">{{ $surat->jenis_surat }}</td>
-                <td class="px-4 py-2 text-center">
-                    <a href="{{ asset('storage/dokumen/' . $surat->dokumen) }}" target="_blank" class="text-blue-600 underline">Lihat Dokumen</a>
-                </td>
-                <td class="px-4 py-2 text-center rounded-r">
-                    @if($surat->status == 'Disetujui' || $surat->status == 'Ditolak')
-                        <button class="bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed" disabled>✓</button>
-                    @else
-                        <form action="{{ route('surat.setujui', $surat->id) }}" method="POST" class="inline">
+                    {{-- Nama Pemohon --}}
+                    <td class="px-4 py-2 text-center">
+                        {{ $surat->user->nama ?? 'Tidak Diketahui' }}
+                    </td>
+
+                    {{-- Tanggal Dikirim --}}
+                    <td class="px-4 py-2 text-center">{{ $surat->tgl_pengajuan }}</td>
+
+                    {{-- Status --}}
+                    <td class="px-4 py-2 text-center">
+                        @if($surat->status == 'menunggu')
+                        <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-300 rounded-full">Menunggu</span>
+                        @elseif($surat->status == 'diterima')
+                        <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-300 rounded-full">Diterima</span>
+                        @elseif($surat->status == 'ditolak')
+                        <span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-300 rounded-full">Ditolak</span>
+                        @endif
+                    </td>
+
+                    {{-- Jenis Surat --}}
+                    @php
+                    $jenisSuratMap = [
+                    'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                    'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                    'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                    ];
+                    @endphp
+                    <td class="px-4 py-2 text-center">{{ $jenisSuratMap[$surat->jenis_surat] ?? 'Tidak tersedia' }}</td>
+
+                    {{-- File Balasan --}}
+                    <td class="px-4 py-2 text-center">
+                        <a href="{{ asset('storage/' . $surat->file_balasan) }}" target="_blank" class="text-blue-600 underline">Lihat Balasan</a>
+                    </td>
+
+                    {{-- Aksi --}}
+                    <td class="px-4 py-2 text-center">
+                        @if ($surat->status !== 'menunggu')
+                        <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
+                        @else
+                        <form action="{{ route('surat.setujui', $surat->id_permohonan) }}" method="POST" class="inline">
                             @csrf
-                            <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Setujui</button>
+                            @method('PUT')
+                            <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>
                         </form>
-                        <form action="{{ route('surat.tolak', $surat->id) }}" method="POST" class="inline">
-                            @csrf
-                            <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Tolak</button>
-                        </form>
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-        </tbody> --}}
+                        @endif
+                    </td>
+                </tr>
+                @endif
+                @endforeach
+            </tbody>
+
+
 
         </table>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Pie Chart -->
-    <div class="bg-white shadow rounded-xl p-4 flex flex-col">
-        <h2 class="text-lg font-semibold mb-2">Jumlah Permohonan per Status</h2>
-        <div class="w-full h-64">
-            <canvas id="statusPie" class="w-full h-full"></canvas>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <!-- Pie Chart -->
+        <div class="flex flex-col p-4 bg-white shadow rounded-xl">
+            <h2 class="mb-2 text-lg font-semibold">Jumlah Permohonan per Status</h2>
+            <div class="w-full h-64">
+                <canvas id="statusPie" class="w-full h-full"></canvas>
+            </div>
         </div>
-    </div>
 
-    <!-- Line Chart -->
-    <div class="bg-white shadow rounded-xl p-4 flex flex-col">
-        <div class="flex items-center justify-between mb-2">
-            <h2 class="text-lg font-semibold">Grafik Perkembangan Surat Masuk</h2>
-            <select id="tahunSelector" class="border rounded px-2 py-1 text-sm">
-                <option value="2025" selected>2025</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-            </select>
-        </div>
-        <div class="w-full h-64">
-            <canvas id="suratChart" class="w-full h-full"></canvas>
+        <!-- Line Chart -->
+        <div class="flex flex-col p-4 bg-white shadow rounded-xl">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-lg font-semibold">Grafik Perkembangan Surat Masuk</h2>
+                <select id="filterTahun" class="px-2 py-1 border rounded">
+                    @for ($year = now()->year; $year >= 2020; $year--)
+                    <option value="{{ $year }}">{{ $year }}</option>
+                    @endfor
+                </select>
+            </div>
+            <div class="w-full h-64">
+                <canvas id="suratChart" class="w-full h-full"></canvas>
+            </div>
         </div>
     </div>
-</div>
 
 </div>
 
 <script>
-    // Data per tahun untuk grafik line
-    const dataPerTahun = {
-        2025: [2, 3, 5, 3, 4, 6, 4, 3, 2, 5, 4, 6],
-        2024: [1, 2, 2, 4, 3, 4, 5, 3, 4, 2, 1, 3],
-        2023: [0, 1, 1, 2, 1, 2, 3, 2, 2, 1, 0, 1]
-    };
+    const statusPieCtx = document.getElementById('statusPie').getContext('2d');
+    const suratChartCtx = document.getElementById('suratChart').getContext('2d');
 
-    // Pie Chart
-    const ctxPie = document.getElementById('statusPie').getContext('2d');
-    const statusPie = new Chart(ctxPie, {
-        type: 'doughnut',
-        data: {
-            labels: ['Disetujui', 'Ditolak', 'Menunggu'],
-            datasets: [{
-                data: [3, 2, 1], // <- Ini bisa diganti jadi dinamis dari controller
-                backgroundColor: ['#10b981', '#ef4444', '#facc15'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
+    let statusPie, suratChart;
 
-    // Line Chart
-    const ctxLine = document.getElementById('suratChart').getContext('2d');
-    const suratChart = new Chart(ctxLine, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-                label: 'Surat Masuk',
-                data: dataPerTahun[2025],
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                borderColor: '#3b82f6',
-                borderWidth: 2,
-                tension: 0.4,
-                fill: true,
-                pointRadius: 4,
-                pointHoverRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
+    function renderCharts(statusCounts, dataBulanan) {
+        if (statusPie) statusPie.destroy();
+        if (suratChart) suratChart.destroy();
 
-    // Dropdown untuk memilih tahun
-    document.getElementById('tahunSelector').addEventListener('change', function () {
-        const tahun = this.value;
-        suratChart.data.datasets[0].data = dataPerTahun[tahun];
-        suratChart.update();
+        statusPie = new Chart(statusPieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Disetujui', 'Ditolak', 'Menunggu'],
+                datasets: [{
+                    data: [statusCounts.diterima, statusCounts.ditolak, statusCounts.menunggu],
+                    backgroundColor: ['#10b981', '#ef4444', '#facc15'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        suratChart = new Chart(suratChartCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Surat Masuk',
+                    data: dataBulanan,
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: '#3b82f6',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // Render awal dari Blade
+    renderCharts(@json($statusCounts), @json($dataBulanan));
+
+    // Handler ketika tahun diubah
+    document.getElementById('filterTahun').addEventListener('change', function() {
+        const selectedYear = this.value;
+
+        fetch(`{{ route('kabid.perdagangan') }}?tahun=${selectedYear}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                renderCharts(data.statusCounts, data.dataBulanan);
+            })
+            .catch(error => console.error('Error:', error));
     });
 </script>
- 
+
 @endsection

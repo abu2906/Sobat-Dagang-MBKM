@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-=======
+import Echo from 'laravel-echo';
+
 document.addEventListener('DOMContentLoaded', () => {
     //hanya memanggil menu dropdown kelurahan jika kecamatan dipilih
     const kelurahanList = {
@@ -67,6 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
             this.classList.add('hidden');
         }
     });
+    
+    window.Pusher = require('pusher-js');
+
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: import.meta.env.VITE_PUSHER_APP_KEY,
+        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+        forceTLS: true
+    });
 
 });
->>>>>>> Andif

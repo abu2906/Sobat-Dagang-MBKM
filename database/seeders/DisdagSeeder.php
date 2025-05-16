@@ -49,7 +49,7 @@ class DisdagSeeder extends Seeder
             [
                 'nip' => '197810081999101008',
                 'email' => 'kepala_dinas@disdag.local',
-                'role' => 'kepala dinas',
+                'role' => 'kepala_dinas',
             ],
         ];
 

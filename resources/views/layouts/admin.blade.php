@@ -1,9 +1,9 @@
 @php
-use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Auth;
+    $user = Auth::guard('disdag')->user();
 @endphp
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -14,31 +14,64 @@ use Illuminate\Support\Facades\Auth;
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
+<<<<<<< HEAD
 <body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
 
+    @if ($user)
+        @switch($user->role)
+            @case('master_admin')
+                @include('component.navbar.master_admin')
+                @break
+            @case('admin_perdagangan')
+                @include('component.navbar.adminPerdagangan')
+                @break
+            @case('admin_industri')
+                @include('component.navbar.adminPerindustrian')
+                @break
+            @case('admin_metrologi')
+                @include('component.navbar.admin_metrologi')
+                @break
+            @case('kabid_perdagangan')
+                @include('component.navbar.kabidPerdagangan')
+                @break
+            @case('kabid_industri')
+                @include('component.navbar.kabidIndustri')
+                @break
+            @case('kabid_metrologi')
+                @include('component.navbar.kabidMetrologi')
+                @break
+            @case('kepala_dinas')
+                @include('component.navbar.kepalaDinas')
+                @break
+            @default
+                @include('component.navbar.guest')
+        @endswitch
+    @else
+        @include('component.navbar.guest')
+=======
     @if (Auth::check() && Auth::user()->role === 'admin_perdagangan')
-    @include('component.navbar.admin_perdagangan')
+        @include('component.navbar.admin_perdagangan')
     @elseif (Auth::check() && Auth::user()->role === 'admin_industri')
-    @include('component.navbar.admin_industri')
+        @include('component.navbar.adminIndustri')
     @elseif (Auth::check() && Auth::user()->role === 'admin_metrologi')
-    @include('component.navbar.admin_metrologi')
+        @include('component.navbar.admin_metrologi')
+>>>>>>> iniaaaini
     @endif
 
-    {{-- @include('component.navbar.adminPerdagangan') --}}
-    @include('component.navbar.kabidPerdagangan')
     <div class="relative z-0 flex-1 p-0 overflow-y-auto">
         @yield('content')
     </div>
+    <script src="{{ asset('/assets/js/app.js') }}"></script>
 
-    </div>
 </body>
-
 </html>

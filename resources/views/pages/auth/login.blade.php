@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 
 <body class="flex h-screen font-sans bg-primary">
@@ -62,7 +61,7 @@
                 </div>
 
                 <div class="relative w-[300px] mx-auto text-right text-sm">
-                    <a href="{{ route('forgot.password') }}" class="text-link font-bold hover:underline">Lupa kata sandi?</a>
+                    <a href="{{ route('forgot.password') }}" class="font-bold text-link hover:underline">Lupa kata sandi?</a>
                 </div>
 
                 <div class="relative w-[150px] mx-auto">
@@ -83,7 +82,6 @@
             </form>
         </div>
     </div>
-
 </body>
 
 </html>

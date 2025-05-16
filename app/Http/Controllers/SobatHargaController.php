@@ -30,11 +30,11 @@ class SobatHargaController extends Controller
 
             foreach ($lokasiList as $lokasi) {
                 $histori = IndexHarga::where('id_barang', $barang->id_barang)
-                            ->where('lokasi', $lokasi)
-                            ->orderBy('tanggal', 'desc')
-                            ->take(6)
-                            ->get()
-                            ->sortBy('tanggal');
+                    ->where('lokasi', $lokasi)
+                    ->orderBy('tanggal', 'desc')
+                    ->take(6)
+                    ->get()
+                    ->sortBy('tanggal');
 
                 // Mengambil data tanggal dan harga
                 $labels = $histori->pluck('tanggal')->map(fn($tgl) => \Carbon\Carbon::parse($tgl)->translatedFormat('l'));

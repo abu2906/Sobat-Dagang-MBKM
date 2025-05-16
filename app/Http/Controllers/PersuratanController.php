@@ -21,19 +21,10 @@ class PersuratanController extends Controller
             'jenis_surat' => 'required|string',
         ]);
 
-        $filePath = $request->file('dokumen')->store('dokumen_metrologi', 'public');
-        $lastSurat = suratMetrologi::orderBy('id_surat', 'desc')->first();
-
-        if (!$lastSurat) {
-            $newIdSurat = 1;
-        } else {
-            $lastIdNumber = (int) substr($lastSurat->id_surat, 1);
-            $newIdNumber = $lastIdNumber + 1;
-            $newIdSurat = $newIdNumber;
-        }
+        $filename = 'dokumen_' . Auth::id() . '_' . time() . '.' . $request->file('dokumen')->getClientOriginalExtension();
+        $filePath = $request->file('dokumen')->storeAs('dokumen_metrologi', $filename, 'public');
 
         suratMetrologi::create([
-            'id_surat' => $newIdSurat,
             'user_id' => Auth::id(),
             'alamat_alat' => $request->alamat_alat,
             'jenis_surat' => $request->jenis_surat,
@@ -101,5 +92,10 @@ class PersuratanController extends Controller
     {
         $surat = suratMetrologi::findOrFail($id);
         return view('admin.surat.keterangan', compact('surat'));
+    }
+
+    public function showFormSurat()
+    {
+        return view('user.bidangIndustri.form-surat');
     }
 }

@@ -8,18 +8,18 @@
 
     <img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full" />
 
-    <a href="{{ url()->previous() }}"
+    <a href="{{ route('user.dashboard') }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">arrow_back</span>
     </a>
 </div>
 <div class="container px-4 mx-auto -mt-8">
     <div class="flex justify-center mb-6">
-        <form action="{{ route('bidangPerdagangan.riwayatSurat') }}" method="GET" class="relative w-1/2 shadow-xl rounded-full bg-white shadow-gray-400/40">
-    <span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">search</span>
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari"
-        class="w-full p-3 pl-10 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent" />
-</form>
+        <form action="{{ route('bidangPerdagangan.riwayatSurat') }}" method="GET" class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
+            <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari"
+                class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </form>
 
     </div>
     <div class="flex justify-center mb-6">
@@ -63,7 +63,7 @@
                         @endif
                     </td>
                     <td class="px-4 py-3 text-center">
-                        @if ($item->status == 'disetujui')
+                        @if ($item->status == 'diterima')
                         <span class="font-medium text-green-600">Disetujui</span>
                         @elseif ($item->status == 'ditolak')
                         <span class="font-medium text-red-600">Ditolak</span>
@@ -72,8 +72,7 @@
                         @endif
                     </td>
                     <td class="px-4 py-3 text-center">
-                        <button onclick="openBalasanModal('{{ $item->balasan ? asset('storage/' . $item->balasan) : '' }}')"
-                            class="px-4 py-2 bg-[#8CC5F3] text-black font-bold rounded-full hover:bg-[#7bb6e0] transition-all">
+                        <button onclick="openBalasanModal('{{ asset('storage/' . $item->file_balasan) }}', '{{ $item->status }}')" class="px-4 py-2 bg-[#8CC5F3] text-black font-bold rounded-full hover:bg-[#7bb6e0] transition-all">
                             Lihat
                         </button>
                     </td>
@@ -113,7 +112,7 @@
 
 <!-- Modal Balasan -->
 <div id="modal-balasan" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-    <div class="w-11/12 max-w-md p-6 text-center bg-white shadow-xl rounded-2xl">
+    <div>
         <div id="balasanContent">
             <!-- Konten balasan akan diisi oleh JavaScript -->
         </div>
@@ -128,11 +127,12 @@
 @endsection
 
 <script>
-    function openBalasanModal(fileUrl) {
+    function openBalasanModal(fileUrl, status) {
         const modal = document.getElementById("modal-balasan");
         const content = document.getElementById("balasanContent");
 
-        if (fileUrl) {
+        // Periksa apakah status adalah 'ditolak' atau 'diterima'
+        if ((status === 'ditolak' || status === 'diterima') && fileUrl) {
             content.innerHTML = `
                 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div class="relative w-full max-w-sm p-6 text-center bg-white shadow-xl rounded-xl">
@@ -150,12 +150,12 @@
 
                         <div class="flex justify-center space-x-4">
                             <a href="${fileUrl}" target="_blank"
-                               class="bg-[#083358] hover:bg-[#8CC5F3] text-white font-medium py-2 px-6 rounded-full">
-                               Lihat
+                            class="bg-[#083358] hover:bg-[#8CC5F3] text-white font-medium py-2 px-6 rounded-full">
+                            Lihat
                             </a>
                             <a href="${fileUrl}" download
-                               class="bg-[#083358] hover:bg-[#8CC5F3] text-white font-medium py-2 px-6 rounded-full">
-                               Unduh
+                            class="bg-[#083358] hover:bg-[#8CC5F3] text-white font-medium py-2 px-6 rounded-full">
+                            Unduh
                             </a>
                         </div>
                     </div>
@@ -163,10 +163,13 @@
             `;
         } else {
             content.innerHTML = `
-                <div class="text-center">
-                <span class="text-red-600 material-symbols-outlined" style="font-size: 6rem;">cancel</span>
-                <h2 class="mb-4 text-lg font-semibold text-red-600">Belum ada balasan untuk surat ini.</h2>
-            </div>
+                <div class="relative w-full max-w-sm p-6 text-center bg-white shadow-xl rounded-xl">
+                    <button class="absolute text-gray-500 top-4 right-2 hover:text-gray-700" onclick="closeBalasanModal()">
+                            &times;
+                    </button>
+                    <span class="text-red-600 material-symbols-outlined" style="font-size: 6rem;">cancel</span>
+                    <h2 class="mb-4 text-lg font-semibold text-red-600">Belum ada balasan untuk surat ini.</h2>
+                </div>
             `;
         }
 
