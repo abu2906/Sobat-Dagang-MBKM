@@ -123,6 +123,7 @@ Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.e
 // Admin Perdagangan
 Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
+    
     // Pelaporan
     Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
     Route::get('/lihat-laporan-distribusi-pupuk', [DashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');

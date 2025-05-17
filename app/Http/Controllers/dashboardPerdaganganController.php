@@ -25,38 +25,101 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardPerdaganganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-    // Ambil data surat perdagangan
-    $rekapSurat = $this->getSuratPerdaganganData();
-    $dataSurat = PermohonanSurat::with('user')
-        ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
-        ->orderBy('created_at', 'desc')
-        ->get();
+        // Ambil data surat perdagangan
+        $rekapSurat = $this->getSuratPerdaganganData();
+        $dataSurat = PermohonanSurat::with('user')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    // Ambil data harga barang
-    $daftarHarga = DB::table('index_harga')
-        ->join('barang', 'index_harga.id_barang', '=', 'barang.id_barang')
-        ->join('index_kategori', 'index_harga.id_index_kategori', '=', 'index_kategori.id_index_kategori')
-        ->select(
-            'barang.nama_barang',
-            'index_kategori.nama_kategori as kategori_barang',
-            'index_harga.harga as harga_satuan',
-            'index_harga.updated_at'
-        )
-        ->orderBy('index_harga.updated_at', 'desc')
-        ->get();
+        // Ambil data harga barang
+        $daftarHarga = DB::table('index_harga')
+            ->join('barang', 'index_harga.id_barang', '=', 'barang.id_barang')
+            ->join('index_kategori', 'index_harga.id_index_kategori', '=', 'index_kategori.id_index_kategori')
+            ->select(
+                'barang.nama_barang',
+                'index_kategori.nama_kategori as kategori_barang',
+                'index_harga.harga as harga_satuan',
+                'index_harga.updated_at'
+            )
+            ->orderBy('index_harga.updated_at', 'desc')
+            ->get();
 
-    // Kirim semua data ke view
-    return view('admin.bidangPerdagangan.dashboardPerdagangan', [
-        'dataSurat' => $dataSurat,
-        'daftarHarga' => $daftarHarga,
-        'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
-        'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
-        'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-        'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-    ]);
-}
+        // Lokasi default dan dropdown
+        $daftar_lokasi = DB::table('index_harga')->select('lokasi')->distinct()->pluck('lokasi');
+        $lokasi = $request->input('lokasi', 'Pasar Sumpang');
+
+        // Ambil data harga untuk Pasar Sumpang
+        $dataSumpang = DB::table('index_harga')
+            ->where('lokasi', 'Pasar Sumpang')
+            ->orderBy('tanggal')
+            ->get(['tanggal', 'harga']);
+
+        // Ambil data harga untuk Pasar Lakessi
+        $dataLakessi = DB::table('index_harga')
+            ->where('lokasi', 'Pasar Lakessi')
+            ->orderBy('tanggal')
+            ->get(['tanggal', 'harga']);
+
+        // Gabungkan semua tanggal unik dari kedua pasar
+        $tanggalSumpang = $dataSumpang->pluck('tanggal')->toArray();
+        $tanggalLakessi = $dataLakessi->pluck('tanggal')->toArray();
+        $allTanggal = array_unique(array_merge($tanggalSumpang, $tanggalLakessi));
+        sort($allTanggal);
+
+        // Label untuk grafik (format tanggal string)
+        $labels = array_map(function($tgl) {
+            return date('Y-m-d', strtotime($tgl));
+        }, $allTanggal);
+
+        // Buat array harga sesuai label, isi null kalau tidak ada data di tanggal tsb
+        $hargaSumpang = [];
+        foreach ($allTanggal as $tgl) {
+            $item = $dataSumpang->firstWhere('tanggal', $tgl);
+            $hargaSumpang[] = $item ? (int) $item->harga : null;
+        }
+
+        $hargaLakessi = [];
+        foreach ($allTanggal as $tgl) {
+            $item = $dataLakessi->firstWhere('tanggal', $tgl);
+            $hargaLakessi[] = $item ? (int) $item->harga : null;
+        }
+
+        // Hitung data ringkasan dari gabungan harga kedua pasar (exclude null)
+        $hargaGabungan = array_filter(array_merge($hargaSumpang, $hargaLakessi));
+
+        $terendah = count($hargaGabungan) ? number_format(min($hargaGabungan), 0, ',', '.') : '0';
+        $rata_rata = count($hargaGabungan) ? number_format(array_sum($hargaGabungan) / count($hargaGabungan), 0, ',', '.') : '0';
+        $tertinggi = count($hargaGabungan) ? number_format(max($hargaGabungan), 0, ',', '.') : '0';
+        $volatilitas = count($hargaGabungan) ? round(((max($hargaGabungan) - min($hargaGabungan)) / (($rata_rata ?: 1))) * 100, 1) . '%' : '0%';
+
+        // Data distribusi pupuk
+        $pupuk = DB::table('distribusi_pupuk')->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')->first();
+
+        // Kirim semua data ke view
+        return view('admin.bidangPerdagangan.dashboardPerdagangan', [
+            'dataSurat' => $dataSurat,
+            'daftarHarga' => $daftarHarga,
+            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+
+            // Data grafik
+            'labels' => $labels,
+            'hargaSumpang' => $hargaSumpang,
+            'hargaLakessi' => $hargaLakessi,
+            'terendah' => $terendah,
+            'rata_rata' => $rata_rata,
+            'tertinggi' => $tertinggi,
+            'volatilitas' => $volatilitas,
+            'pupuk' => $pupuk,
+            'daftar_lokasi' => $daftar_lokasi,
+            'lokasi' => $lokasi,
+        ]);
+    }
 
     private function getSuratPerdaganganData()
     {
@@ -549,4 +612,32 @@ class DashboardPerdaganganController extends Controller
 
         return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
     }
+
+    public function analisisHarga()
+    {
+    // Ambil data tren harga indeks (misal barang kategori pupuk)
+    $data = DB::table('index_harga')
+        ->where('lokasi', 'Pasar Sumpang')
+        ->orderBy('tanggal')
+        ->get();
+
+    $labels = $data->pluck('tanggal')->toArray();
+    $harga = $data->pluck('harga')->toArray();
+
+    // Statistik
+    $terendah = number_format(min($harga), 0, ',', '.');
+    $rata_rata = number_format(array_sum($harga)/count($harga), 0, ',', '.');
+    $tertinggi = number_format(max($harga), 0, ',', '.');
+    $volatilitas = round(((max($harga) - min($harga)) / ($rata_rata ?: 1)) * 100, 1) . '%';
+
+    // Data distribusi pupuk (untuk pie chart)
+    $pupuk = DB::table('distribusi_pupuk')->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')->first();
+
+    return view('admin.kabid.perdagangan.analisisHarga', compact(
+        'labels', 'harga',
+        'terendah', 'rata_rata', 'tertinggi', 'volatilitas',
+        'pupuk'
+    ));
+
+}
 }

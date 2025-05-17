@@ -58,7 +58,6 @@ class KabidPerdaganganController extends Controller
             $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
         }
 
-        // Jika permintaan AJAX, kirim data JSON
         if ($request->ajax()) {
             return response()->json([
                 'statusCounts' => $statusCounts,
