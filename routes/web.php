@@ -46,14 +46,6 @@ Route::middleware('auth:user')->group(function () {
 // });
 
 
-// Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat.index');
-// Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.chat.send');
-// Route::middleware(['auth:web', 'auth:disdag'])->group(function () {
-//     Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat.index');
-//     Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.chat.send');
-// });
-
-
 // user Login
 Route::middleware(['role.check:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
@@ -112,22 +104,24 @@ Route::middleware(['auth:disdag'])->group(function () {
 });
 
 // admin master
-Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
-Route::post('/distributor/{id_distributor}/terima', [PelaporanController::class, 'setujui'])->name('distributor.setujui');
-Route::post('/distributor/{id_distributor}/tolak', [PelaporanController::class, 'tolak'])->name('distributor.tolak');
-
-Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
-Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
-Route::get('/admin/kelola-pengguna', [DashboardController::class, 'kelolaAdmin'])->name('kelola.admin');
-Route::post('/admin/kelola-pengguna', [DashboardController::class, 'tambahpengguna'])->name('tambah.pengguna');
-// Route::get('/admin/distributor', [PelaporanController::class, 'indexDistributor'])->name('admin.distributor.index');
-// Route::post('/admin/distributor/{id}/verifikasi', [PelaporanController::class, 'verifikasiDistributor'])->name('admin.distributor.verifikasi');
-// Menampilkan halaman admin master  untuk kelola berita
-Route::get('/admin/kelola-berita', [BeritaController::class, 'show'])->name('kelola.berita');
-Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
-Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
-Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
+Route::middleware(['check.role:disdag,master_admin'])->group(function () {
+    #dashboard nddpi isinya untuk tes2 ji
+    Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
+    #distribusi
+    Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
+    Route::post('/distributor/{id_distributor}/terima', [PelaporanController::class, 'setujui'])->name('distributor.setujui');
+    Route::post('/distributor/{id_distributor}/tolak', [PelaporanController::class, 'tolak'])->name('distributor.tolak');
+    Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
+    Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
+    #kelola berita
+    Route::get('/admin/kelola-pengguna', [DashboardController::class, 'kelolaAdmin'])->name('kelola.admin');
+    Route::post('/admin/kelola-pengguna', [DashboardController::class, 'tambahpengguna'])->name('tambah.pengguna');
+    Route::get('/admin/kelola-berita', [BeritaController::class, 'show'])->name('kelola.berita');
+    Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
+    Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
+    Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
+});
 
 //kabid Perdagangan
 Route::middleware(['check.role:disdag,kabid_perdagangan'])->group(function () {

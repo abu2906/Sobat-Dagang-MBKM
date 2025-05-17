@@ -81,4 +81,10 @@ class DashboardController extends Controller
 
         return redirect()->route('kelola.pengguna')->with('success', 'Pengguna berhasil dihapus');
     }
+
+    public function dashboardMaster()
+    {
+     return view('admin.adminSuper.dashboardMaster');
+    }
+
 }

@@ -29,7 +29,7 @@
     @if ($user)
         @switch($user->role)
             @case('master_admin')
-                @include('component.navbar.master_admin')
+                @include('component.navbar.adminMaster')
                 @break
             @case('admin_perdagangan')
                 @include('component.navbar.adminPerdagangan')
