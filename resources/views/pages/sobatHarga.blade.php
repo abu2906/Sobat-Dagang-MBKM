@@ -41,17 +41,17 @@
                     <div class="grid grid-cols-3 gap-2 text-sm text-center text-gray-700">
                         <div>
                             <div class="font-semibold">Hari Ini</div>
-                            <div class="text-base font-bold text-black">Rp{{ number_format($data['hari_ini'], 0, ',', '.') }}</div>
+                            <div class="text-base font-bold text-black">Rp. {{ number_format($data['hari_ini'], 0, ',', '.') }}</div>
                         </div>
                         <div>
                             <div class="font-semibold">Kemarin</div>
-                            <div class="text-base font-bold text-black">Rp{{ number_format($data['kemarin'], 0, ',', '.') }}</div>
+                            <div class="text-base font-bold text-black">Rp. {{ number_format($data['kemarin'], 0, ',', '.') }}</div>
                         </div>
                         <div>
                             <div class="font-semibold">Selisih</div>
-                            <div class="text-base font-bold text-black">
-                                {{ $data['selisih'] > 0 ? '+' : '' }}{{ number_format($data['selisih'], 2) }}%
-                            </div>
+                            <div class="text-base font-bold text-black">                          
+                                {{ $data['hari_ini'] - $data['kemarin'] >= 0 ? '+' : '-' }}
+                                Rp. {{ number_format(abs($data['hari_ini'] - $data['kemarin']), 0, ',', '.') }}</div>
                         </div>
                     </div>
 
