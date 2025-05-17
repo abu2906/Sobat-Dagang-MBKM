@@ -59,18 +59,32 @@ Route::middleware(['role.check:user'])->group(function () {
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
     Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
+
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
     Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
     Route::get('/form-permohonan-distributor', [PelaporanController::class, 'formDistributor'])->name('bidangPerdagangan.formDistributor');
     Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submitDistributor'])->name('bidangPerdagangan.submitDistributor');
+    
     Route::get('/halal', function () {
         return view('user.halal');
     })->name('halal');
+    
     Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan'])->name('cekpengajuan');
+    
+    //Perdagangan
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
     Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
     Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan');
+    
+    // Metrologi
+    Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
+    Route::post('/store-surat', [PersuratanController::class, 'storeSuratMetrologi'])->name('proses-surat-metrologi');
+    Route::get('/lihat-dokumen/{id}', [PersuratanController::class, 'showDokumenMetrologi'])->name('lihat-dokumen');
+    Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
+    Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
+    Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
 });
+
 Route::get('/testchart', function () {
     return view('testchart');
 });
@@ -105,10 +119,6 @@ Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->nam
 // Menampilkan halaman edit berita
 Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
 
-//user perdagangan 
-Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran']);
-Route::get('/pelaporan', [PelaporanController::class, 'Pelaporan']);
-Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
 
 // Admin Perdagangan
 Route::middleware(['auth:disdag'])->group(function () {
@@ -138,7 +148,8 @@ Route::middleware(['auth:disdag'])->group(function () {
 });
 
 // admin master
-Route::middleware(['check.role:disdag,master_admin'])->group(function () {
+// Route::middleware(['check.role:disdag,master_admin'])->group(function () {
+Route::middleware(['auth:disdag'])->group(function () {
     #dashboard nddpi isinya untuk tes2 ji
     Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
     #distribusi
@@ -172,15 +183,11 @@ Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
 
 
-// <--- Metrologi --->
-Route::middleware(['role.check:user'])->group(function () {
-    Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
-    Route::post('/store-surat', [PersuratanController::class, 'storeSuratMetrologi'])->name('proses-surat-metrologi');
-    Route::get('/lihat-dokumen/{id}', [PersuratanController::class, 'showDokumenMetrologi'])->name('lihat-dokumen');
-    Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
-    Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
-    Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
-});
+
+// Route::middleware(['role.check:user'])->group(function () {
+
+
+// });
 
 Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');

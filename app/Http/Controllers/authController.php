@@ -43,13 +43,13 @@ class authController extends Controller
 
             switch ($disdag->role) {
                 case 'master_admin':
-                    return redirect()->intended(route('dashboard.master'));
+                    return redirect()->intended(route('user.dashboard'));
                 case 'admin_perdagangan':
                     return redirect()->intended(route('dashboard.perdagangan'));
                 case 'admin_industri':
                     return redirect()->intended('/admin/industri');
                 case 'admin_metrologi':
-                    return redirect()->intended('/admin/dashboard-metrologi');
+                    return redirect()->intended('/admin/metrologi');
                 case 'kabid_perdagangan':
                     return redirect()->intended(route('kabid.perdagangan'));
                 case 'kabid_industri':
