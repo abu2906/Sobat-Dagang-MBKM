@@ -68,7 +68,6 @@ class DashboardController extends Controller
     //         return redirect()->route('profile')->with('error', 'Gagal memperbarui profil.');
     //     }
     // }  
-
     
     // Menambah pengguna baru
     public function tambahPengguna(Request $request)

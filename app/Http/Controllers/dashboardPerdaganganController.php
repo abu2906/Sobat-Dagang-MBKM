@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Auth;
 class DashboardPerdaganganController extends Controller
 {
     public function index()
-{
+    {
     // Ambil data surat perdagangan
     $rekapSurat = $this->getSuratPerdaganganData();
     $dataSurat = PermohonanSurat::with('user')
@@ -222,15 +222,22 @@ class DashboardPerdaganganController extends Controller
 
     public function formPermohonan()
     {
+        if (!auth()->guard('user')->check()) {
+            return redirect()->route('login')->with('error', 'Harap login terlebih dahulu');
+        }
         return view('user.bidangPerdagangan.formPermohonan');
     }
 
     public function riwayatSurat()
     {
-        // $query = PermohonanSurat::where('user_id', auth()->id()); 
-        $query = PermohonanSurat::query();
-        if (request('search')) {
-            $search = strtolower(trim(request('search'))); // lowercase & trim input
+        if (!auth()->guard('user')->check()) {
+            return redirect()->route('login')->with('error', 'Harap login terlebih dahulu');
+        }
+        $userId = Auth::guard('user')->id();
+        $query = PermohonanSurat::where('id_user', $userId);
+
+        if ($searchTerm = request('search')) {
+            $search = strtolower(trim($searchTerm));
 
             $mapping = [
                 'surat rekomendasi' => 'surat_rekomendasi_perdagangan',
@@ -253,11 +260,13 @@ class DashboardPerdaganganController extends Controller
                     $q->where('jenis_surat', $matchedJenis);
                 } else {
                     $q->whereRaw('LOWER(status) LIKE ?', ["%$search%"])
-                        ->orWhereRaw('DATE_FORMAT(tanggal_pengajuan, "%d-%m-%Y") LIKE ?', ["%$search%"]);
+                    ->orWhereRaw('DATE_FORMAT(tgl_pengajuan, "%d-%m-%Y") LIKE ?', ["%$search%"]);
                 }
             });
         }
+
         $riwayatSurat = $query->latest()->get();
+
         return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
     }
 

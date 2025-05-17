@@ -148,8 +148,7 @@ Route::middleware(['auth:disdag'])->group(function () {
 });
 
 // admin master
-// Route::middleware(['check.role:disdag,master_admin'])->group(function () {
-Route::middleware(['auth:disdag'])->group(function () {
+Route::middleware(['check.role:disdag,master_admin'])->group(function () {
     #dashboard nddpi isinya untuk tes2 ji
     Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
     #distribusi
