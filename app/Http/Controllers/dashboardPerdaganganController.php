@@ -24,7 +24,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardPerdaganganController extends Controller
-{
+    {
     public function index(Request $request)
     {
         // Ambil data surat perdagangan
@@ -323,9 +323,10 @@ class DashboardPerdaganganController extends Controller
             $mapping = [
                 'surat rekomendasi' => 'surat_rekomendasi_perdagangan',
                 'rekomendasi' => 'surat_rekomendasi_perdagangan',
+                'rek' => 'surat_rekomendasi_perdagangan',
                 'surat keterangan' => 'surat_keterangan_perdagangan',
                 'keterangan' => 'surat_keterangan_perdagangan',
-                'lainnya' => 'dan_lainnya_perdagangan',
+                'ket' => 'surat_keterangan_perdagangan',
             ];
 
             $matchedJenis = null;
@@ -657,5 +658,5 @@ class DashboardPerdaganganController extends Controller
         'pupuk'
     ));
 
-}
+    }
 }

@@ -28,6 +28,10 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
 Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
+Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
+Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
+Route::get('/', [homeController::class, 'index'])->name('home');
+Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 
 // Controller untuk authentication
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
@@ -38,40 +42,25 @@ Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->n
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//pengaduan
-Route::middleware('auth:user')->group(function () {
-    Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.send');
-    Route::get('/forum-chat/messages', [ForumDiskusiController::class, 'getMessages'])->name('forum.messages');
-});
-// Route::get('/auth-check', function() {
-//     return response()->json([
-//         'auth_default' => Auth::check(),
-//         'auth_user' => Auth::guard('user')->check(),
-//         'auth_disdag' => Auth::guard('disdag')->check(),
-//         'user_data' => Auth::guard('user')->user(),
-//     ]);
-// });
-
-
 // user Login
 Route::middleware(['role.check:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
     Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
-
+   
+    //pengaduan
+    Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.send');
+    Route::get('/forum-chat/messages', [ForumDiskusiController::class, 'getMessages'])->name('forum.messages');
+   
+    //pelaporan
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
     Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
     Route::get('/form-permohonan-distributor', [PelaporanController::class, 'formDistributor'])->name('bidangPerdagangan.formDistributor');
     Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submitDistributor'])->name('bidangPerdagangan.submitDistributor');
-    
-    Route::get('/halal', function () {
-        return view('user.halal');
-    })->name('halal');
-    
     Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan'])->name('cekpengajuan');
-    
-    //Perdagangan
+
+    //perdagangan
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
     Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
     Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan');
@@ -83,18 +72,12 @@ Route::middleware(['role.check:user'])->group(function () {
     Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
     Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
     Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
+        
+    Route::get('/halal', function () {
+        return view('user.halal');
+    })->name('halal');
 });
 
-Route::get('/testchart', function () {
-    return view('testchart');
-});
-
-// guest
-Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
-Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
-Route::get('/', [homeController::class, 'index'])->name('home');
-Route::get('/about', [AboutController::class, 'showAboutPage'])->name('about');
-Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 
 Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
 Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
@@ -116,14 +99,9 @@ Route::get('/sertifikasi-halal', [homeController::class, 'showHalal'])->name('ha
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
 
-// Menampilkan halaman edit berita
-Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
-
-
 // Admin Perdagangan
 Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
-    
     // Pelaporan
     Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
     Route::get('/lihat-laporan-distribusi-pupuk', [DashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');
@@ -149,7 +127,7 @@ Route::middleware(['auth:disdag'])->group(function () {
 });
 
 // admin master
-Route::middleware(['check.role:disdag,master_admin'])->group(function () {
+Route::middleware(['auth:disdag'])->group(function () {
     #dashboard nddpi isinya untuk tes2 ji
     Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
     #distribusi
@@ -169,7 +147,7 @@ Route::middleware(['check.role:disdag,master_admin'])->group(function () {
 });
 
 //kabid Perdagangan
-Route::middleware(['check.role:disdag, kabid_perdagangan'])->group(function () {
+Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/kabid-perdagangan/dashboard', [KabidPerdaganganController::class, 'dashboardKabid'])->name('kabid.perdagangan');
     Route::get('/kabid-perdagangan/distribusi-pupuk', [KabidPerdaganganController::class, 'distribusiPupuk'])->name('distribusi.pupuk');
     Route::get('/kabid-perdagangan/analisis-pasar', [KabidPerdaganganController::class, 'analisisPasar'])->name('analisis.pasar');
@@ -182,13 +160,7 @@ Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name
 // Route::get('/directory-book-metrologi', [DirectoryBookMetrologiController::class, 'index'])->name('directory-book-metrologi');
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
 
-
-
-// Route::middleware(['role.check:user'])->group(function () {
-
-
-// });
-
+//admin metrologi
 Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
     Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
@@ -208,7 +180,8 @@ Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/admin/persuratan-metrologi', [DashboardController::class, 'showMetrologi'])->name('persuratan-metrologi');
 });
 
-Route::middleware(['check.role:disdag,kabid_metrologi'])->group(function () {
+//kabid metrologi
+Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/kabid/metrologi', [DashboardMetrologiController::class, 'showKabid'])->name('dashboard-kabid-metrologi');
     Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('administrasi-kabid-metrologi');
     Route::get('/kabid/uttp/metrologi', [DashboardMetrologiController::class, 'showUttp'])->name('informasi-uttp');

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Distributor;
+use App\Http\Controllers\Exception;
+
 // Berisikan seluruh fungsi yang digunakan dalam hal pelaporan baik admin maupun distributor
 class PelaporanController extends Controller
 {
@@ -25,12 +27,12 @@ class PelaporanController extends Controller
             return redirect()->route('pelaporan-penyaluran');
         }
 
-        if ($distributor->status === 'menunggu') {
+        if ($distributor->status === 'Menunggu') {
             // Jika status masih menunggu verifikasi
             return redirect()->route('cekpengajuan');
         }
 
-        if ($distributor->status === 'diterima') {
+        if ($distributor->status === 'Disetujui') {
             // Jika status sudah diterima, tampilkan halaman pelaporan
             return view('user.bidangPerdagangan.pelaporan');
         }
