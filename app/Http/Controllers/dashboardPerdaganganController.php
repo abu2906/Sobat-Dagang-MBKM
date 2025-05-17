@@ -278,12 +278,15 @@ class DashboardPerdaganganController extends Controller
 
         // Generate PDF
         try {
-            // Buat PDF dari view blade
+            // Buat PDF dari view blade// Tambahkan ini sebelum generate PDF
+            ini_set('max_execution_time', 300); // 300 detik = 5 menit
+
             $pdf = Pdf::loadView('SuratBalasan.surat-penolakan', [
                 'nama_pengirim' => $request->nama_pengirim,
                 'alasan' => $request->alasan,
                 'tanggal' => $request->tanggal
-            ]);
+            ]);;
+
 
             // Nama file unik
             $filename = 'penolakan-' . Str::uuid() . '.pdf';
@@ -300,8 +303,7 @@ class DashboardPerdaganganController extends Controller
             return response()->file(storage_path("app/public/surat/{$filename}"));
         } catch (\Exception $e) {
             // Log error jika terjadi masalah
-            Log::error('PDF creation error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat surat. Silakan coba lagi.');
+            dd($e->getMessage());
         }
     }
 
@@ -324,6 +326,7 @@ class DashboardPerdaganganController extends Controller
             'bentuk_usaha'      => 'required|string',
             'jenis_perusahaan'  => 'required|string',
             'luas_ruangan'      => 'required|string',
+            'isi'      => 'required|string',
             'alamat_usaha'      => 'required|string',
         ]);
 
@@ -346,6 +349,7 @@ class DashboardPerdaganganController extends Controller
                 'jenis_perusahaan' => $request->jenis_perusahaan,
                 'luas_ruangan' => $request->luas_ruangan,
                 'alamat_usaha' => $request->alamat_usaha,
+                'isi' => $request->isi,
                 'status' => $permohonan->status, // Kirim status ke view
             ]);
 

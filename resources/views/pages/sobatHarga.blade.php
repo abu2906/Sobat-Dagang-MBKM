@@ -11,10 +11,10 @@
     <span class="text-2xl material-symbols-outlined">arrow_back</span>
 </a>
 </div>
-<div class="container mx-auto px-4 py-6">
+<div class="container px-4 py-6 mx-auto">
 
     <div class="flex justify-center mb-6">
-        <div class="overflow-x-auto scrollbar-hide shadow-md rounded-full">
+        <div class="overflow-x-auto rounded-full shadow-md scrollbar-hide">
             <div class="inline-flex gap-2 p-2 bg-blue-100 rounded-full flex-nowrap">
                 @foreach ($semuaKategori->sortBy('id_index_kategori') as $kategoriItem)
                 <button
@@ -30,33 +30,33 @@
     <h1 class="text-2xl font-bold text-[#083358] mb-6">Harga {{ ucfirst($judul) }} per Hari Ini</h1>
 
     @foreach ($daftarHarga as $jenis => $pasars)
-        <h2 class="text-lg font-semibold text-center mb-4">{{ $jenis }}/Kg</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+        <h2 class="mb-4 text-lg font-semibold text-center">{{ $jenis }}/Kg</h2>
+        <div class="grid grid-cols-1 gap-6 mb-10 sm:grid-cols-2">
             @foreach ($pasars as $pasar => $data)
-                <div class="border rounded-xl shadow-lg p-4 bg-white relative">
+                <div class="relative p-4 bg-white border shadow-lg rounded-xl">
                     <div class="bg-[#083358] text-white text-center py-2 rounded-t-xl mb-4 text-lg font-semibold">
                         {{ $pasar }}
                     </div>
 
-                    <div class="grid grid-cols-3 gap-2 text-center text-sm text-gray-700">
+                    <div class="grid grid-cols-3 gap-2 text-sm text-center text-gray-700">
                         <div>
                             <div class="font-semibold">Hari Ini</div>
-                            <div class="text-black text-base font-bold">Rp{{ number_format($data['hari_ini'], 0, ',', '.') }}</div>
+                            <div class="text-base font-bold text-black">Rp. {{ number_format($data['hari_ini'], 0, ',', '.') }}</div>
                         </div>
                         <div>
                             <div class="font-semibold">Kemarin</div>
-                            <div class="text-black text-base font-bold">Rp{{ number_format($data['kemarin'], 0, ',', '.') }}</div>
+                            <div class="text-base font-bold text-black">Rp. {{ number_format($data['kemarin'], 0, ',', '.') }}</div>
                         </div>
                         <div>
                             <div class="font-semibold">Selisih</div>
-                            <div class="text-black text-base font-bold">
-                                {{ $data['selisih'] > 0 ? '+' : '' }}{{ number_format($data['selisih'], 2) }}%
-                            </div>
+                            <div class="text-base font-bold text-black">                          
+                                {{ $data['hari_ini'] - $data['kemarin'] >= 0 ? '+' : '-' }}
+                                Rp. {{ number_format(abs($data['hari_ini'] - $data['kemarin']), 0, ',', '.') }}</div>
                         </div>
                     </div>
 
-                    <div class="text-center mt-2">
-                        <div class="flex justify-center items-center gap-2 bg-gray-100 text-sm rounded-md px-3 py-2 mt-2 inline-flex shadow-sm">
+                    <div class="mt-2 text-center">
+                        <div class="flex inline-flex items-center justify-center gap-2 px-3 py-2 mt-2 text-sm bg-gray-100 rounded-md shadow-sm">
                             <span class="material-symbols-outlined text-2xl
                                 @if ($data['selisih'] > 0)
                                     text-green-600
@@ -87,7 +87,7 @@
 
                     <div class="mt-4">
                         <canvas id="chart-{{ $jenis }}-{{ $loop->index }}" height="150"></canvas>
-                        <p class="text-center text-black mt-1 font-bold text-sm">Data Harga Penjualan Perhari</p>
+                        <p class="mt-1 text-sm font-bold text-center text-black">Data Harga Penjualan Perhari</p>
                     </div>
                 </div>
             @endforeach

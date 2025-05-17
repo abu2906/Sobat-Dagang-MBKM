@@ -2,12 +2,19 @@
 @section('title', 'Detail Data Pemohon')
 
 @section('content')
+<div class="bg-white ">
 <div class="bg-white">
     <div class="relative w-full">
         <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}" alt="Port Background" class="object-cover w-full h-64 md:h-full">
         <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
             <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full -ml-16">
         </div>
+        <a href="{{ route('perdagangan.kelolaSurat') }}"
+            class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+            <span class="text-2xl material-symbols-outlined">
+                arrow_back
+            </span>
+        </a>
     </div>
     <div class="mt-6 mb-8">
         <h2 class="text-center text-3xl font-bold text-[#083358]">
@@ -182,78 +189,82 @@
                 </ul>
             </div>
             @endif
-
             <!-- Modal Surat Rekomendasi -->
             <div id="modalRekomendasi" class="fixed inset-0 z-50 flex items-center justify-center hidden w-full px-4 bg-black bg-opacity-50">
                 <form action="{{ route('permohonan.rekomendasi', $data->id_permohonan) }}" method="POST">
                     <div class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
-                        <button class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalRekomendasi')">&times;</button>
+                        <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalRekomendasi')">&times;</button>
                         <h2 class="mb-4 text-lg font-bold text-center">FORM SURAT REKOMENDASI</h2>
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             @csrf
                             @method('PUT')
                             <div>
-                                <label>Nomor Surat</label>
-                                <input name="nomor_surat" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Tanggal Surat</label>
-                                <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Nama Pengirim</label>
-                                <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>NIK</label>
-                                <input name="nik" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Warga Negara</label>
-                                <select name="warga_negara" class="w-full px-3 py-2 border rounded">
-                                    <option value="">Pilih</option>
-                                    <option>WNI</option>
-                                    <option>WNA</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Pekerjaan</label>
-                                <input name="pekerjaan" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Alamat Rumah</label>
-                                <input name="alamat_rumah" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Nama Usaha</label>
-                                <input name="nama_usaha" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Bentuk Usaha</label>
-                                <input name="bentuk_usaha" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Jenis Perusahaan</label>
-                                <select name="jenis_perusahaan" class="w-full px-3 py-2 border rounded">
-                                    <option value="">Pilih</option>
-                                    <option>Perusahaan Perseorangan</option>
-                                    <option>Persekutuan Firma</option>
-                                    <option>CV</option>
-                                    <option>PT</option>
-                                    <option>Koperasi</option>
-                                    <option>BUMN</option>
-                                    <option>BUMD</option>
-                                    <option>Asing</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Luas Ruangan</label>
-                                <input name="luas_ruangan" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label class="block mb-1 text-sm font-semibold">Alamat Usaha</label>
-                                <input name="alamat_usaha" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
+                            <label>Nomor Surat</label>
+                            <input name="nomor_surat" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Tanggal Surat</label>
+                            <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Nama Pengirim</label>
+                            <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}" >
+                        </div>
+                        <div>
+                            <label>NIK</label>
+                            <input name="nik" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nik ?? 'Null') }}">
+                        </div>
+                        <div>
+                            <label>Warga Negara</label>
+                            <select name="warga_negara" class="w-full px-3 py-2 border rounded">
+                                <option value="">Pilih</option>
+                                <option>WNI</option>
+                                <option>WNA</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Pekerjaan</label>
+                            <input name="pekerjaan" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Alamat Rumah</label>
+                            <input name="alamat_rumah" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+
+                        <div>
+                            <label>Nama Usaha</label>
+                            <input name="nama_usaha" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Bentuk Usaha</label>
+                            <input name="bentuk_usaha" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label>Jenis Perusahaan</label>
+                            <select name="jenis_perusahaan" class="w-full px-3 py-2 border rounded">
+                                <option value="">Pilih</option>
+                                <option>Perusahaan Perseorangan</option>
+                                <option>Persekutuan Firma</option>
+                                <option>CV</option>
+                                <option>PT</option>
+                                <option>Koperasi</option>
+                                <option>BUMN</option>
+                                <option>BUMD</option>
+                                <option>Asing</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Luas Ruangan</label>
+                            <input name="luas_ruangan" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-sm font-semibold">Alamat Usaha</label>
+                            <input name="alamat_usaha" type="text" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block mb-1 text-sm font-semibold">Keterangan Surat</label>
+                            <textarea name="isi" id="summernote_rekomendasi" class="w-full px-3 py-2 border rounded " rows="3" required required></textarea>
+                        </div>
                         </div>
                         <div class="flex justify-center gap-3 mt-4">
                             <button class="px-4 py-2 text-white bg-gray-700 rounded">Draft</button>
@@ -267,7 +278,7 @@
             <div id="modalKeterangan" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50">
                 <form action="{{ route('permohonan.keterangan', $data->id_permohonan) }}" method="POST">
                     <div class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
-                        <button class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalKeterangan')">&times;</button>
+                        <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalKeterangan')">&times;</button>
                         <h2 class="mb-4 text-lg font-bold text-center">FORM SURAT KETERANGAN</h2>
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             @csrf
@@ -277,7 +288,7 @@
                                 <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
-                                <label class="block mb-1 text-sm font-semibold">Nama Pengirim</label>
+                                <label class="block mb-1 text-sm font-semibold">Nama Pengirim Surat</label>
                                 <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
@@ -286,7 +297,7 @@
                             </div>
                             <div>
                                 <label class="block mb-1 text-sm font-semibold">Nama Penerima</label>
-                                <input name="nama_penerima" type="text" class="w-full px-3 py-2 border rounded">
+                                <input name="nama_penerima" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}">
                             </div>
                             <div>
                                 <label class="block mb-1 text-sm font-semibold">Tempat Lahir</label>
@@ -300,13 +311,13 @@
                                 <label class="block mb-1 text-sm font-semibold">Jenis Kelamin</label>
                                 <select name="jenis_kelamin" class="w-full px-3 py-2 border rounded">
                                     <option value="">Pilih</option>
-                                    <option>Laki-laki</option>
-                                    <option>Perempuan</option>
+                                    <option value="Laki-laki" {{ old('jenis_kelamin', $user->jenis_kelamin ?? '') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="Perempuan" {{ old('jenis_kelamin', $user->jenis_kelamin ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block mb-1 text-sm font-semibold">Alamat Lengkap</label>
-                                <input name="alamat_lengkap" type="text" class="w-full px-3 py-2 border rounded">
+                                <input name="alamat_lengkap" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->alamat_lengkap ?? 'Null') }}">
                             </div>
                             <div>
                                 <label class="block mb-1 text-sm font-semibold">Agama</label>
@@ -344,7 +355,7 @@
                     <div class="grid grid-cols-2 gap-x-6 gap-y-4">
                         <div class="col-span-2">
                             <label class="block mb-1 text-sm font-semibold">Nama Pengirim</label>
-                            <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded">
+                            <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}">
                         </div>
                         <div class="col-span-2">
                             <label class="block mb-1 text-sm font-semibold">Alasan Penolakan</label>
@@ -363,10 +374,25 @@
                     </div>
                 </form>
             </div>
-
+        </div>
+    </div>
+</div>
             <script>
                 $(document).ready(function() {
                     $("#summernote_edit").summernote({
+                        tabsize: 2,
+                        height: 150,
+                        toolbar: [
+                            ["style", ["bold", "italic", "underline", "clear"]],
+                            ["fontsize", ["fontsize"]],
+                            ["color", ["color"]],
+                            ["para", ["ul", "ol", "paragraph"]],
+                        ],
+                    });
+                });
+
+                $(document).ready(function() {
+                    $("#summernote_rekomendasi").summernote({
                         tabsize: 2,
                         height: 150,
                         toolbar: [
@@ -414,5 +440,4 @@
                     }
                 }
             </script>
-
-            @endsection
+@endsection

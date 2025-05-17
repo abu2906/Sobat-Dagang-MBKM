@@ -1,7 +1,6 @@
 @auth
 <nav class="flex items-center justify-between p-4 text-white bg-primary">
 
-
     <div class="flex items-center space-x-4">
         <!-- Icon Notifikasi -->
         <svg xmlns="http://www.w3.org/2000/svg" class="text-white cursor-pointer h-7 w-7 hover:text-gray-600"
@@ -34,7 +33,7 @@
 @else
 <nav class="flex items-center justify-between p-4 text-white bg-primary">
         <div class="navbar-left">
-        <a href="/">
+        <a href="{{ route('user.dashboard') }}">
             <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="logo">
         </a>
     </div>
@@ -73,8 +72,8 @@
                     <li><a href="#"><strong>PERSURATAN</strong></a></li>
                 </ul>
             </li>
-            <li><a href=""><strong>PELAPORAN</strong></a></li>
-            <li><a href="" id="faqLink2"><strong>FAQ</strong></a></li>
+            <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
+            <li><a href="" id=""><strong>FAQ</strong></a></li>
         </ul>
     </div>
 
@@ -101,3 +100,4 @@
     </div>
 </nav>
 @endauth
+</nav>

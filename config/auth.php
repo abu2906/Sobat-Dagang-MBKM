@@ -12,14 +12,13 @@ return [
             'provider' => 'users',
         ],
 
-        'user' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
         'disdag' => [
             'driver' => 'session',
             'provider' => 'disdags',
+        ],
+        'user' => [ 
+            'driver' => 'session',
+            'provider' => 'user',
         ],
     ],
 
@@ -28,7 +27,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
+        'user' => [
+                'driver' => 'eloquent',
+                'model' => App\Models\User::class,
+            ],
         'disdags' => [
             'driver' => 'eloquent',
             'model' => App\Models\Disdag::class,

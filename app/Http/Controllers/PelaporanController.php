@@ -15,8 +15,30 @@ class PelaporanController extends Controller
 
     public function index()
     {
-        return view('user.bidangPerdagangan.pelaporan');
+        $userId = session('id_user');
+
+        // Cek apakah user sudah ada di tabel distributor
+        $distributor = Distributor::where('id_user', $userId)->first();
+
+        if (!$distributor) {
+            // Jika belum mengisi form distributor
+            return redirect()->route('pelaporan-penyaluran');
+        }
+
+        if ($distributor->status === 'menunggu') {
+            // Jika status masih menunggu verifikasi
+            return redirect()->route('cekpengajuan');
+        }
+
+        if ($distributor->status === 'diterima') {
+            // Jika status sudah diterima, tampilkan halaman pelaporan
+            return view('user.bidangPerdagangan.pelaporan');
+        }
+
+        // Jika status lainnya (opsional, misal: Ditolak), kamu bisa atur juga
+        return redirect()->route('pelaporan-penyaluran')->with('error', 'Status pengajuan tidak valid.');
     }
+
 
     public function verifikasiPengajuan()
     {
@@ -29,31 +51,42 @@ class PelaporanController extends Controller
 
     public function submitDistributor(Request $request)
     {
-        $request->validate([
-            'dokumen_nib' => 'required|file|mimes:pdf|max:51200',
-        ]);
+        try {
+            // Validasi input
+            $request->validate([
+                'dokumen_nib' => 'required|file|mimes:pdf|max:51200',
+            ]);
 
-        // $userId = auth()->id(); 
-        $userId = null; // Ambil ID pengguna yang sedang login
-        $file = $request->file('dokumen_nib');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $path = $file->storeAs('nib_dokumen', $fileName, 'public');
+            // Ambil ID pengguna dari session
+            $userId = session('id_user');
 
-        // Masukkan data ke tabel distributor
-        Distributor::create([
-            'id_user' => $userId,
-            'nib' => $path,
-            'status' => 'Menunggu',
-        ]);
+            if (!$userId) {
+                return redirect()->back()->with('error', 'User tidak ditemukan dalam sesi.');
+            }
 
-        return redirect()->back()->with('success', 'Permohonan berhasil diajukan dan sedang menunggu verifikasi.');
+            // Upload file
+            $file = $request->file('dokumen_nib');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('nib_dokumen', $fileName, 'public');
+
+            // Perbarui data jika id_user sudah ada, atau buat baru jika belum
+            Distributor::updateOrCreate(
+                ['id_user' => $userId], // Kondisi
+                ['nib' => $path, 'status' => 'Menunggu'] // Data yang akan diupdate/ditambahkan
+            );
+
+            return redirect()->back()->with('success', 'Data berhasil disimpan!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
+
     public function reviewPengajuanDistributor()
-    {
-        $distributor = Distributor::with('user')->latest()->get(); // pastikan relasi 'user' ada
+{
+    $distributor = Distributor::with('user')->latest()->get(); // mengambil semua data termasuk user
+    return view('admin.adminSuper.reviewPengajuanDistributor', compact('distributor'));
+}
 
-        return view('admin.adminSuper.reviewPengajuanDistributor', compact('distributor'));
-    }
 
     public function indexDistributor()
     {
@@ -83,4 +116,22 @@ class PelaporanController extends Controller
     {
         return view('admin.adminSuper.tambahBarangDistribusi');
     }
+    public function setujui($id_distributor)
+    {
+        $distributor = Distributor::findOrFail($id_distributor);
+        $distributor->status = 'diterima';
+        $distributor->save();
+
+        return redirect()->back()->with('success', 'Distributor disetujui.');
+    }
+
+    public function tolak($id_distributor)
+    {
+        $distributor = Distributor::findOrFail($id_distributor);
+        $distributor->status = 'ditolak';
+        $distributor->save();
+
+        return redirect()->back()->with('success', 'Distributor ditolak.');
+    }
+
 }

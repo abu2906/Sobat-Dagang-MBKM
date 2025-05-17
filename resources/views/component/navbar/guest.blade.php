@@ -19,17 +19,6 @@
                                 <a href="{{ route('bidangPerdagangan.formPermohonan') }}">
                                     <strong>Permohonan Perizinan/Non Perizinan</strong>
                                 </a>
-                                {{-- @guest
-                                    <a href="{{ route('login') }}">
-                                <strong>Permohonan Perizinan/Non Perizinan</strong>
-                                </a>
-                                @else
-                                @if (Auth::user()->role === 'user')
-                                <a href="{{ route('form.permohonan') }}">
-                                    <strong>Permohonan Perizinan/Non Perizinan</strong>
-                                </a>
-                                @endif
-                                @endguest --}}
                             </li>
                         </ul>
                     </li>
@@ -59,25 +48,4 @@
     <div class=" navbar-right">
         <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
     </div>
-    @include('component.chat', ['chats' => \App\Models\ForumDiskusi::with('user')->orderBy('created_at')->get()])
-    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script>
-        Echo.channel('forum-diskusi')
-            .listen('ChatSent', (e) => {
-                const chatBox = document.getElementById('chat-box');
-                const div = document.createElement('div');
-                div.className = 'flex justify-start';
-                div.innerHTML = `
-                    <div class="max-w-xs rounded-lg p-3 bg-white text-gray-900">
-                        <div class="text-sm font-semibold">${e.user}</div>
-                        <div>${e.chat}</div>
-                        <div class="text-xs text-gray-300 text-right mt-1">${e.time}</div>
-                    </div>
-                `;
-                chatBox.appendChild(div);
-                scrollBottom();
-            });
-    </script>
-
 </nav>

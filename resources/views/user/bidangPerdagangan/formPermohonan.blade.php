@@ -58,7 +58,6 @@
                 <select id="jenis_surat" name="jenis_surat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="surat_rekomendasi_perdagangan">Surat Rekomendasi</option>
                     <option value="surat_keterangan_perdagangan">Surat Keterangan</option>
-                    <option value="dan_lainnya_perdagangan">Dan Lainnya</option>
                 </select>
             </div>
             <div class="mb-4">

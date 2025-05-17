@@ -9,7 +9,7 @@ class Disdag extends Authenticatable
     protected $table = 'disdag';
     protected $primaryKey = 'id_disdag';
 
-    protected $fillable = [
+    protected $fillable = [ 
         'nip',
         'email',
         'password',
@@ -24,4 +24,9 @@ class Disdag extends Authenticatable
     ];
 
     public $timestamps = true;
+
+    public function forumDiskusi()
+    {
+        return $this->hasMany(ForumDiskusi::class, 'id_disdag', 'id_disdag');
+    }
 }
