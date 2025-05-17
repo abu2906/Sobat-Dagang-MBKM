@@ -34,7 +34,7 @@ class DashboardPerdaganganController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Ambil data harga barang
+        // Ambil daftar harga barang terbaru (tanpa filter waktu)
         $daftarHarga = DB::table('index_harga')
             ->join('barang', 'index_harga.id_barang', '=', 'barang.id_barang')
             ->join('index_kategori', 'index_harga.id_index_kategori', '=', 'index_kategori.id_index_kategori')
@@ -47,19 +47,24 @@ class DashboardPerdaganganController extends Controller
             ->orderBy('index_harga.updated_at', 'desc')
             ->get();
 
-        // Lokasi default dan dropdown
+        // Ambil daftar lokasi unik untuk dropdown
         $daftar_lokasi = DB::table('index_harga')->select('lokasi')->distinct()->pluck('lokasi');
         $lokasi = $request->input('lokasi', 'Pasar Sumpang');
 
-        // Ambil data harga untuk Pasar Sumpang
+        // Definisikan range tanggal sebulan terakhir
+        $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
+        $endDate = Carbon::now()->format('Y-m-d');
+
+        // Ambil data harga per pasar sebulan terakhir
         $dataSumpang = DB::table('index_harga')
             ->where('lokasi', 'Pasar Sumpang')
+            ->whereBetween('tanggal', [$startDate, $endDate])
             ->orderBy('tanggal')
             ->get(['tanggal', 'harga']);
 
-        // Ambil data harga untuk Pasar Lakessi
         $dataLakessi = DB::table('index_harga')
             ->where('lokasi', 'Pasar Lakessi')
+            ->whereBetween('tanggal', [$startDate, $endDate])
             ->orderBy('tanggal')
             ->get(['tanggal', 'harga']);
 
@@ -69,12 +74,12 @@ class DashboardPerdaganganController extends Controller
         $allTanggal = array_unique(array_merge($tanggalSumpang, $tanggalLakessi));
         sort($allTanggal);
 
-        // Label untuk grafik (format tanggal string)
-        $labels = array_map(function($tgl) {
-            return date('Y-m-d', strtotime($tgl));
+        // Label untuk grafik (format tanggal user-friendly)
+        $labels = array_map(function ($tgl) {
+        return Carbon::parse($tgl)->translatedFormat('d M');
         }, $allTanggal);
 
-        // Buat array harga sesuai label, isi null kalau tidak ada data di tanggal tsb
+        // Buat array harga sesuai label, isi null jika tidak ada data di tanggal tersebut
         $hargaSumpang = [];
         foreach ($allTanggal as $tgl) {
             $item = $dataSumpang->firstWhere('tanggal', $tgl);
@@ -90,13 +95,26 @@ class DashboardPerdaganganController extends Controller
         // Hitung data ringkasan dari gabungan harga kedua pasar (exclude null)
         $hargaGabungan = array_filter(array_merge($hargaSumpang, $hargaLakessi));
 
-        $terendah = count($hargaGabungan) ? number_format(min($hargaGabungan), 0, ',', '.') : '0';
-        $rata_rata = count($hargaGabungan) ? number_format(array_sum($hargaGabungan) / count($hargaGabungan), 0, ',', '.') : '0';
-        $tertinggi = count($hargaGabungan) ? number_format(max($hargaGabungan), 0, ',', '.') : '0';
-        $volatilitas = count($hargaGabungan) ? round(((max($hargaGabungan) - min($hargaGabungan)) / (($rata_rata ?: 1))) * 100, 1) . '%' : '0%';
+        if (count($hargaGabungan) > 0) {
+            $minHarga = min($hargaGabungan);
+            $maxHarga = max($hargaGabungan);
+            $avgHarga = array_sum($hargaGabungan) / count($hargaGabungan);
+
+            $terendah = number_format($minHarga, 0, ',', '.');
+            $tertinggi = number_format($maxHarga, 0, ',', '.');
+            $rata_rata = number_format($avgHarga, 0, ',', '.');
+            $volatilitas = round((($maxHarga - $minHarga) / ($avgHarga ?: 1)) * 100, 1) . '%';
+        } else {
+            $terendah = '0';
+            $rata_rata = '0';
+            $tertinggi = '0';
+            $volatilitas = '0%';
+        }
 
         // Data distribusi pupuk
-        $pupuk = DB::table('distribusi_pupuk')->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')->first();
+        $pupuk = DB::table('distribusi_pupuk')
+            ->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')
+            ->first();
 
         // Kirim semua data ke view
         return view('admin.bidangPerdagangan.dashboardPerdagangan', [

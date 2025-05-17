@@ -76,7 +76,7 @@
             <div class="mb-2 text-center font-semibold text-gray-800">
                 Informasi Tambahan
             </div>
-            <canvas id="pupukChart" class="mx-auto w-48 h-48"></canvas>
+            <canvas id="pupukChart" class="mx-auto w-50 h-50"></canvas>
             <div class="flex justify-center gap-4 mt-2 text-sm">
                 <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-900 rounded-full"></span> Urea</span>
                 <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-400 rounded-full"></span> NPK</span>
