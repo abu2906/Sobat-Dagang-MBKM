@@ -115,6 +115,10 @@
         .judul p {
             margin-top: -10px;
         }
+
+        .penutup p {
+            text-align: justify;
+        }
     </style>
 </head>
 
@@ -176,6 +180,11 @@
     <p>
         {!! $isi !!}
     </p>
+    <div class="penutup">
+        <p>
+            Demikian Surat Rekomendasi ini dibuat untuk menjadi salah satu persyaratan izin usaha dan bukan merupakan surat perizinan.
+        </p>
+    </div>
     <div class="ttd">
         <p>Dikeluarkan di : Pareparae</p>
         <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d F Y') }}</p>

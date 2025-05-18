@@ -112,9 +112,9 @@ class DashboardPerdaganganController extends Controller
         }
 
         // Data distribusi pupuk
-        $pupuk = DB::table('distribusi_pupuk')
-            ->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')
-            ->first();
+        // $pupuk = DB::table('distribusi_pupuk')
+        //     ->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')
+        //     ->first();
 
         // Kirim semua data ke view
         return view('admin.bidangPerdagangan.dashboardPerdagangan', [
@@ -133,7 +133,7 @@ class DashboardPerdaganganController extends Controller
             'rata_rata' => $rata_rata,
             'tertinggi' => $tertinggi,
             'volatilitas' => $volatilitas,
-            'pupuk' => $pupuk,
+            // 'pupuk' => $pupuk,
             'daftar_lokasi' => $daftar_lokasi,
             'lokasi' => $lokasi,
         ]);
@@ -633,7 +633,7 @@ class DashboardPerdaganganController extends Controller
     }
 
     public function analisisHarga()
-    {
+    {   
     // Ambil data tren harga indeks (misal barang kategori pupuk)
     $data = DB::table('index_harga')
         ->where('lokasi', 'Pasar Sumpang')
@@ -650,7 +650,7 @@ class DashboardPerdaganganController extends Controller
     $volatilitas = round(((max($harga) - min($harga)) / ($rata_rata ?: 1)) * 100, 1) . '%';
 
     // Data distribusi pupuk (untuk pie chart)
-    $pupuk = DB::table('distribusi_pupuk')->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')->first();
+    // $pupuk = DB::table('distribusi_pupuk')->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')->first();
 
     return view('admin.kabid.perdagangan.analisisHarga', compact(
         'labels', 'harga',

@@ -5,7 +5,7 @@
 <div class="min-h-screen p-6 bg-gray-100">
     <!-- Statistik Surat -->
     <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-4">
-        <a href="#" class="flex items-center p-5 space-x-4 bg-white shadow-md rounded-2xl hover:shadow-lg transition">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Masuk</p>
@@ -13,7 +13,7 @@
             </div>
         </a>
 
-        <a href="#" class="flex items-center p-5 space-x-4 bg-white shadow-md rounded-2xl hover:shadow-lg transition">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Terverifikasi</p>
@@ -21,7 +21,7 @@
             </div>
         </a>
 
-        <a href="#" class="flex items-center p-5 space-x-4 bg-white shadow-md rounded-2xl hover:shadow-lg transition">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/surat_ditolak.png') }}" alt="Ditolak" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Ditolak</p>
@@ -29,7 +29,7 @@
             </div>
         </a>
 
-        <a href="#" class="flex items-center p-5 space-x-4 bg-white shadow-md rounded-2xl hover:shadow-lg transition">
+        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-black">Draft Surat Balasan</p>
@@ -39,9 +39,9 @@
     </div>
 
     <!-- Grafik dan Informasi Tambahan -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+    <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
         <!-- Statistik Indeks Harga -->
-        <div class="bg-white rounded-2xl shadow-lg p-4">
+        <div class="p-4 bg-white shadow-lg rounded-2xl">
             <div class="flex items-center gap-2 mb-2 font-semibold text-gray-800">
                 <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M3 3v18h18" />
@@ -51,7 +51,7 @@
             </div>
             <canvas id="hargaChart" class="w-full h-48"></canvas>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4 text-sm text-center">
+            <div class="grid grid-cols-2 gap-2 mt-4 text-sm text-center md:grid-cols-4">
                 <div>
                     <p class="text-gray-500">Terendah</p>
                     <p id="terendah" class="font-semibold">-</p>
@@ -72,8 +72,8 @@
         </div>
 
         <!-- Pie Chart Informasi Pupuk -->
-        <div class="bg-white rounded-2xl shadow-lg p-4">
-            <div class="mb-2 text-center font-semibold text-gray-800">
+        <div class="p-4 bg-white shadow-lg rounded-2xl">
+            <div class="mb-2 font-semibold text-center text-gray-800">
                 Informasi Tambahan
             </div>
             <canvas id="pupukChart" class="mx-auto w-50 h-50"></canvas>
@@ -131,7 +131,7 @@
                 </div>
             </div>
 
-            <div class="p-6 bg-white rounded-2xl shadow-md flex flex-col items-center gap-4">
+            <div class="flex flex-col items-center gap-4 p-6 bg-white shadow-md rounded-2xl">
                 <a href="{{ route('perdagangan.kelolaSurat') }}" 
                    class="flex items-center justify-center gap-2 px-5 py-2 text-sm font-semibold text-black bg-white border border-gray-200 rounded-lg shadow transition hover:bg-gray-100 min-w-[150px]">
                     <img src="{{ asset('assets/img/icon/eye.png') }}" alt="Kelola Icon" class="w-4 h-4">
@@ -149,7 +149,7 @@
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div class="overflow-x-auto rounded-xl shadow max-h-[500px] overflow-y-auto scrollbar-hide">
             <table class="min-w-full text-sm text-left border-separate border-spacing-0">
-                <thead class="sticky top-0 z-10 bg-blue-300 text-black">
+                <thead class="sticky top-0 z-10 text-black bg-blue-300">
                     <tr>
                         <th class="px-4 py-2 rounded-tl-xl">Nama Barang</th>
                         <th class="px-4 py-2">Kategori Barang</th>
@@ -160,7 +160,7 @@
                 <tbody>
                     @forelse ($daftarHarga as $harga)
                         <tr class="border-b odd:bg-white even:bg-gray-100">
-                            <td class="px-4 py-2">{{ $harga->nama_barang }}</td>
+                            <td class="px-4 py-2 ">{{ $harga->nama_barang }}</td>
                             <td class="px-4 py-2">{{ $harga->kategori_barang }}</td>
                             <td class="px-4 py-2">Rp{{ number_format($harga->harga_satuan, 0, ',', '.') }}</td>
                             <td class="px-4 py-2">{{ \Carbon\Carbon::parse($harga->updated_at)->format('d M Y') }}</td>
@@ -176,7 +176,7 @@
 
         <div class="p-6 bg-white shadow-md rounded-2xl">
             <h2 class="mb-4 text-lg font-semibold text-black">Notifikasi Penting</h2>
-            <ul class="pl-5 pr-2 space-y-2 overflow-y-auto max-h-64 text-sm text-gray-700 list-disc">
+            <ul class="pl-5 pr-2 space-y-2 overflow-y-auto text-sm text-gray-700 list-disc max-h-64">
                 {{-- 
                 @foreach ($notifikasi as $item)
                     <li>{{ $item->pesan }}</li>
@@ -225,20 +225,21 @@
     document.getElementById("tertinggi").innerText = "Rp {{ $tertinggi }}";
     document.getElementById("volatilitas").innerText = "{{ $volatilitas }}";
 
-    // Grafik pie pupuk
     const ctxPupuk = document.getElementById('pupukChart').getContext('2d');
     new Chart(ctxPupuk, {
         type: 'pie',
         data: {
             labels: ['Urea', 'NPK', 'NPK-Fk'],
             datasets: [{
-                data: [{{ $pupuk->urea }}, {{ $pupuk->npk }}, {{ $pupuk->npk_fk }}],
+                data: [30, 45, 25], // Data statis
                 backgroundColor: ['#1e3a8a', '#60a5fa', '#bfdbfe'],
                 hoverOffset: 10
             }]
         },
         options: {
-            plugins: { legend: { display: false } }
+            plugins: { 
+                legend: { display: false } 
+            }
         }
     });
 </script>

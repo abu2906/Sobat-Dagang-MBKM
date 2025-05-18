@@ -145,11 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 wrapper.className = `flex items-end justify-end`;
 
                 wrapper.innerHTML = `
-                    <div class="w-8 h-8 ml-2 rounded-full bg-gray-400 text-white flex items-center justify-center text-sm font-bold select-none">
+                    <div class="flex items-center justify-center w-8 h-8 ml-2 text-sm font-bold text-white bg-gray-400 rounded-full select-none">
                         ${initial}
                     </div>
                     <div class="max-w-[70%] p-3 text-sm leading-snug shadow bg-[#083458] text-white rounded-3xl rounded-br-md">
-                        <div class="text-xs font-semibold mb-1">${senderName}</div>
+                        <div class="mb-1 text-xs font-semibold">${senderName}</div>
                         <div>${data.chat.chat.replace(/\n/g, '<br>')}</div>
                         <div class="text-[10px] text-gray-400 text-right mt-1">
                             ${waktuFormatted}
@@ -165,8 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) {
             console.error('Error:', err);
-            alert('Terjadi kesalahan saat mengirim pesan');
+            alert(err.message); // ini akan tampilkan pesan dari Laravel
         }
+
     });
 });
 </script>
