@@ -5,19 +5,21 @@ namespace App\Console;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Console\Commands\ImportWilayah;
 use Illuminate\Console\Scheduling\Schedule;
-use App\Console\Commands\CopyYesterdayPrice;
+use App\Console\Commands\PerbaruiIndexHarga;
 
 class Kernel extends ConsoleKernel
 {
     protected $commands = [
         ImportWilayah::class,
-        CopyYesterdayPrice::class,
+        PerbaruiIndexHarga::class,
     ];
 
     protected function schedule(Schedule $schedule)
     {
-        // Menjadwalkan command untuk jalan setiap pagi jam 00:00
-        $schedule->command('copy:yesterday-price')->dailyAt('00:00');
+         $schedule->command('index-harga:perbarui')
+        ->dailyAt('05:00') // jam 5 pagi server time
+        ->timezone('Asia/Makassar'); // WITA (GMT+8)
+        // $schedule->command('index-harga:perbarui')->everyMinute();
     }
 
     protected function commands()

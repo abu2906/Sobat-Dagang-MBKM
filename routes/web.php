@@ -125,6 +125,9 @@ Route::middleware(['auth:disdag'])->group(function () {
         ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
         ->name('dokumen.view');
 });
+Route::get('/cek-session', function () {
+    return session()->all();
+});
 
 // admin master
 Route::middleware(['auth:disdag'])->group(function () {

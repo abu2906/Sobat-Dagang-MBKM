@@ -136,24 +136,6 @@ class KabidPerdaganganController extends Controller
                 }
             }
 
-            // Data untuk Pie Chart (Top 10 harga tertinggi berdasarkan harga terbaru)
-            $top10HargaTertinggi = $barangs->map(function ($barang) use ($lokasi) {
-                $harga = IndexHarga::where('id_barang', $barang->id_barang)
-                    ->where('lokasi', $lokasi)
-                    ->latest('tanggal')  // Mengambil harga terbaru
-                    ->value('harga');
-
-                return [
-                    'label' => $barang->nama_barang,
-                    'harga' => $harga ?? 0,  // Jika tidak ada harga, set ke 0
-                    'color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF))  // Warna acak untuk pie chart
-                ];
-            })
-                ->sortByDesc('harga')  // Mengurutkan berdasarkan harga tertinggi
-                ->take(10)  // Mengambil 10 barang dengan harga tertinggi
-                ->values()
-                ->all();
-
             // Perbandingan harga hari ini dan kemarin
             $today = Carbon::parse($endDate);
             $yesterday = $today->copy()->subDay();
@@ -191,23 +173,51 @@ class KabidPerdaganganController extends Controller
             });
 
             // Menyaring dan mengurutkan perubahan harga untuk mendapatkan top harga naik dan turun
-            $topHargaNaik = $perubahan->where('isNaik', true)->sortByDesc('price_change')->take(5)->values()->all();
-            $topHargaTurun = $perubahan->where('isNaik', false)->sortByDesc('price_change')->take(5)->values()->all();
+            $topHargaNaik = $perubahan->where('isNaik', true)
+                ->sortByDesc('price_change')
+                ->take(5)
+                ->map(function ($item) {
+                    $item['color'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // kasih warna random
+                    return $item;
+                })
+                ->values()
+                ->all();
+
+            $topHargaTurun = $perubahan->where('isNaik', false)
+                ->sortByDesc('price_change')
+                ->take(5)
+                ->map(function ($item) {
+                    $item['color'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // kasih warna random
+                    return $item;
+                })
+                ->values()
+                ->all();
+
+           // Gabungan dari top harga naik dan turun
+            $hargaTren = array_merge($topHargaNaik, $topHargaTurun);
+
+            // Isi Pie Chart
+            $top10HargaTertinggi = collect($hargaTren)
+                ->sortByDesc('price_change')  // Urutkan berdasarkan perubahan harga tertinggi
+                ->take(10)
+                ->values()
+                ->all();
         }
 
         // Mengembalikan tampilan dengan data yang telah diproses
         return view('admin.kabid.perdagangan.analisisPasar', [
-            'lokasiOptions' => ['Pasar Sumpang', 'Pasar Lakessi'],  // Opsi lokasi pasar
-            'selectedLokasi' => $lokasi,  // Lokasi yang dipilih
-            'startDate' => $startDate,  // Tanggal mulai
-            'endDate' => $endDate,  // Tanggal akhir
-            'tanggalList' => $tanggalList,  // Daftar tanggal untuk tabel
-            'barangs' => $barangs,  // Daftar barang
-            'dataHarga' => $dataHarga,  // Data harga per barang per tanggal
-            'top10HargaTertinggi' => $top10HargaTertinggi,  // Top 10 harga tertinggi untuk Pie Chart
-            'topHargaNaik' => $topHargaNaik,  // Top harga naik
-            'topHargaTurun' => $topHargaTurun,  // Top harga turun
-            'barChartData' => $barChartData,  // Data untuk Bar Chart (perbandingan harga)
+            'lokasiOptions' => ['Pasar Sumpang', 'Pasar Lakessi'],
+            'selectedLokasi' => $lokasi, 
+            'startDate' => $startDate, 
+            'endDate' => $endDate,
+            'tanggalList' => $tanggalList,
+            'barangs' => $barangs,
+            'dataHarga' => $dataHarga,
+            'topHargaNaik' => $topHargaNaik,
+            'top10HargaTertinggi' => $top10HargaTertinggi,
+            'hargaTren' => $hargaTren,
+            'topHargaTurun' => $topHargaTurun,
+            'barChartData' => $barChartData,  
         ]);
     }
 }

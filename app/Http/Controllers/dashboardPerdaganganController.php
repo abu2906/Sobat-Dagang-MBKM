@@ -23,8 +23,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 
-class DashboardPerdaganganController extends Controller
-    {
+class DashboardPerdaganganController extends Controller{
     public function index(Request $request)
     {
         // Ambil data surat perdagangan
@@ -582,81 +581,5 @@ class DashboardPerdaganganController extends Controller
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
-    }
-
-    public function dashboardKabid(Request $request)
-    {
-        $tahun = $request->input('tahun', date('Y'));
-
-        $rekapSurat = $this->getSuratPerdaganganData();
-        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
-
-        $statusCounts = [
-            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
-            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
-            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
-        ];
-
-        $dataBulanan = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
-        }
-
-        // Jika permintaan AJAX, kirim data JSON
-        if ($request->ajax()) {
-            return response()->json([
-                'statusCounts' => $statusCounts,
-                'dataBulanan' => $dataBulanan
-            ]);
-        }
-
-        return view('admin.kabid.perdagangan.perdagangan', [
-            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
-            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
-            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-            'suratMasuk' => $suratMasuk,
-            'statusCounts' => $statusCounts,
-            'dataBulanan' => $dataBulanan
-        ]);
-    }
-
-    public function setujui($id)
-    {
-        $permohonan = PermohonanSurat::findOrFail($id);
-
-        // Ubah status menjadi 'diterima'
-        $permohonan->status = 'diterima';
-        $permohonan->save();
-
-        return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
-    }
-
-    public function analisisHarga()
-    {
-    // Ambil data tren harga indeks (misal barang kategori pupuk)
-    $data = DB::table('index_harga')
-        ->where('lokasi', 'Pasar Sumpang')
-        ->orderBy('tanggal')
-        ->get();
-
-    $labels = $data->pluck('tanggal')->toArray();
-    $harga = $data->pluck('harga')->toArray();
-
-    // Statistik
-    $terendah = number_format(min($harga), 0, ',', '.');
-    $rata_rata = number_format(array_sum($harga)/count($harga), 0, ',', '.');
-    $tertinggi = number_format(max($harga), 0, ',', '.');
-    $volatilitas = round(((max($harga) - min($harga)) / ($rata_rata ?: 1)) * 100, 1) . '%';
-
-    // Data distribusi pupuk (untuk pie chart)
-    $pupuk = DB::table('distribusi_pupuk')->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')->first();
-
-    return view('admin.kabid.perdagangan.analisisHarga', compact(
-        'labels', 'harga',
-        'terendah', 'rata_rata', 'tertinggi', 'volatilitas',
-        'pupuk'
-    ));
-
     }
 }

@@ -36,14 +36,13 @@ class authController extends Controller
 
         // 1. Coba login disdag via NIP
         $disdag = Disdag::where('nip', $identifier)->first();
-
         if ($disdag && Hash::check($request->password, $disdag->password)) {
             Auth::guard('disdag')->login($disdag);
             session(['id_disdag' => $disdag->id_disdag]); // Simpan ID ke session
-
+            
             switch ($disdag->role) {
                 case 'master_admin':
-                    return redirect()->intended(route('dashboard.master'));
+                    return redirect()->intended('/dashboard-master');
                 case 'admin_perdagangan':
                     return redirect()->intended(route('dashboard.perdagangan'));
                 case 'admin_industri':
@@ -77,8 +76,6 @@ class authController extends Controller
         return redirect()->route('login')->withErrors(['login_error' => 'Username atau password salah']);
     }
 
-
-
     public function submitRegister(Request $request)
     {
         Log::info('Data registrasi yang diterima:', $request->all());
@@ -97,9 +94,7 @@ class authController extends Controller
                 'nik' => 'required|string|unique:user',
                 'nib' => 'nullable|string',
             ]);
-
-            
-            
+ 
             Log::info('Validasi berhasil, data valid:', $validated);
 
             $user = new User;
