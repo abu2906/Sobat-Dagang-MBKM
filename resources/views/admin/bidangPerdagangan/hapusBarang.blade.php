@@ -4,7 +4,7 @@
 @section('content')
 @php use Illuminate\Support\Str; @endphp
 <div class="w-full h-32">
-    <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full">
+    <img src="{{ asset('assets/img/background/perdagangan.jpg') }}" alt="Background" class="object-cover w-full h-full">
 </div>
 
 <div class="bg-white py-4 px-6 md:px-10 min-h-[calc(100vh-8rem)]">

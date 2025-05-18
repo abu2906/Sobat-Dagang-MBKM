@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Port Background" class="object-cover w-full h-full">
+    <img src="{{ asset('assets\img\background\perdagangan.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute bottom-0 transform -translate-x-1/2 translate-y-1/2 left-1/2">
         <p class="px-6 py-3 font-bold text-[#083358] bg-white shadow-md text-md font-istok rounded-3xl shadow-black/40">
             PELAPORAN PENYALURAN PUPUK BERSUBSIDI

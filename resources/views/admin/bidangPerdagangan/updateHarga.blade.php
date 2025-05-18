@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="w-full h-32">
-    <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}"
+    <img src="{{ asset('assets/img/background/perdagangan.jpg') }}"
         alt="Background"
         class="object-cover w-full h-full">
 </div>

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}" alt="Background Perdagangan"
+    <img src="{{ asset('assets/img/background/perdagangan.jpg') }}" alt="Background Perdagangan"
         class="object-cover w-full h-full">
 
     <a href="{{ url()->previous() }}"
