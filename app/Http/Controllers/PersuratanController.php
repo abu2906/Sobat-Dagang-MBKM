@@ -147,4 +147,23 @@ class PersuratanController extends Controller
 
         return redirect()->back()->with('success', 'Surat berhasil ditolak.');
     }
+
+    public function terimaKabid($id, Request $request)
+    {
+        $surat = SuratBalasan::findOrFail($id);
+        $surat->status_kepalaBidang = 'Disetujui'; // atau 'Diterima'
+        $surat->save();
+
+        return back()->with('success', 'Surat berhasil disetujui.');
+    }
+
+    public function tolakKabid($id, Request $request)
+    {
+        $surat = SuratBalasan::findOrFail($id);
+        $surat->status_kepalaBidang = 'Ditolak';
+        $surat->save();
+
+        return back()->with('success', 'Surat berhasil ditolak.');
+    }
+
 }

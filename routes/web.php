@@ -183,6 +183,10 @@ Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
     Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
     Route::post('/uttp/store-alat', [DirectoryBookController::class, 'storeAlatUkur'])->name('store-uttp');
+    Route::delete('/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('delete-uttp');
+    Route::delete('/admin/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('uttp.destroy');
+    Route::patch('/admin/uttp/update/{id}', [DirectoryBookController::class, 'update'])->name('update-uttp');
+
     Route::get('/admin/persuratan-metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('persuratan-metrologi');
     Route::put('/surat/terima/{id}', [PersuratanController::class, 'terimaSurat'])->name('surat.terima');
     Route::put('/surat/tolak/{id}', [PersuratanController::class, 'tolakSurat'])->name('surat.tolak');
@@ -192,11 +196,13 @@ Route::middleware(['auth:disdag'])->group(function () {
 
 });
 
-Route::middleware(['check.role:disdag,kabid_metrologi'])->group(function () {
+// Route::middleware(['check.role:disdag,kabid_metrologi'])->group(function () {
     Route::get('/kabid/metrologi', [DashboardMetrologiController::class, 'showKabid'])->name('dashboard-kabid-metrologi');
-    Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('administrasi-kabid-metrologi');
+    Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasiKabid'])->name('administrasi-kabid-metrologi');
     Route::get('/kabid/uttp/metrologi', [DashboardMetrologiController::class, 'showUttp'])->name('informasi-uttp');
-});
+    Route::post('/surat/terima/{id}', [PersuratanController::class, 'terimaKabid'])->name('terimaKabid');
+    Route::post('/surat/tolak/{id}', [PersuratanController::class, 'tolakKabid'])->name('tolakKabid');
+// });
 
 // Route for test
 Route::get('/test/{viewPath}', function ($viewPath) {

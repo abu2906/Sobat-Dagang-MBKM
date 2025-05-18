@@ -87,12 +87,50 @@ class DirectoryBookController extends Controller
         return response()->json($uttp);
     }
 
+    public function destroy($id)
+    {
+        $uttp = Uttp::findOrFail($id);
+
+        // Hapus data alat ukur terkait jika ada
+        DataAlatUkur::where('id_uttp', $id)->delete();
+
+        // Hapus data UTTP
+        $uttp->delete();
+
+        return redirect()->back()->with('success', 'Data UTTP berhasil dihapus');
+    }
+
+
     public function update(Request $request, $id)
     {
-        $uttp = Uttp::with('user')->findOrFail($id);
-        $uttp->update($request->all());
+        $uttp = UTTP::findOrFail($id);
 
-        return redirect()->back()->with('success', 'Data berhasil diperbarui');
+        $uttp->update([
+            'tanggal_penginputan' => $request->tanggal_penginputan,
+            'id_user' => $request->id_user,
+            'no_registrasi' => $request->no_registrasi,
+            'nama_usaha' => $request->nama_usaha,
+            'jenis_alat' => $request->jenis_alat,
+            'nama_alat' => $request->nama_alat,
+            'merk_type' => $request->merk_type,
+            'nomor_seri' => $request->nomor_seri,
+            'jumlah_alat' => $request->jumlah_alat,
+            'alat_penguji' => $request->alat_penguji,
+            'ctt' => $request->ctt,
+            'spt_keperluan' => $request->spt_keperluan,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'terapan' => $request->terapan,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        return redirect()->back()->with('success', 'Data alat ukur berhasil diperbarui.');
     }
+    // public function update(Request $request, $id)
+    // {
+    //     $uttp = Uttp::with('user')->findOrFail($id);
+    //     $uttp->update($request->all());
+
+    //     return redirect()->back()->with('success', 'Data berhasil diperbarui');
+    // }
 
 }

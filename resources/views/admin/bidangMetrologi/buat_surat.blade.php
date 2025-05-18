@@ -26,10 +26,6 @@
                         <input type="text" name="sifat_surat" class="border px-4 py-2 w-full rounded-lg" required>
                     </div>
                     <div class="form-group row">
-                        <label for="lampiran" class="block font-medium mb-1">Lampiran (opsional)</label>
-                        <input type="file" name="lampiran" accept=".pdf,.jpg,.jpeg,.png" class="border px-4 py-2 w-full rounded-lg">
-                    </div>
-                    <div class="form-group row">
                         <label for="perihal" class="block font-medium mb-1">Perihal</label>
                         <input type="text" name="perihal" class="border px-4 py-2 w-full rounded-lg" required>
                     </div>
@@ -45,9 +41,9 @@
                         <label for="nama_yang_dituju" class="block font-medium mb-1">Nama Penerima</label>
                         <input type="text" name="nama_yang_dituju" class="border px-4 py-2 w-full rounded-lg" required>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row md:col-span-2">
                         <label for="isi" class="block font-medium mb-1">Isi Surat</label>
-                        <textarea name="isi" class="form-control" rows="20" required></textarea>
+                        <textarea name="isi" class="form-control border px-4 py-2 w-full rounded-lg" rows="20" required></textarea>
                     </div>
                 </div>
             </div>
@@ -59,8 +55,6 @@
     </div>
         
 </div>
-
-
 
 
 @endsection
