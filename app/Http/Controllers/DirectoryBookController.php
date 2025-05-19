@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
 class DirectoryBookController extends Controller
 {
     public function showDirectoryUserMetrologi()
-    {
+    {   
         $alatUkur = DataAlatUkur::with('uttp')->get();
         return view('user.bidangMetrologi.directory', compact('alatUkur'));
         
