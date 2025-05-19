@@ -75,11 +75,6 @@
                     <option value="ujung">Ujung</option>
                 </select>
             </div>
-<<<<<<< HEAD
-            <div>
-                <label for="titik_koordinat">Titik Koordinat</label>
-                <input id="titik_koordinat" type="text" name="titik_koordinat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Titik Koordinat Usaha (ex. -4.028889, 119.633521)">
-=======
             <div x-data="{ showInfo: false }">
                 <label for="titik_koordinat" class="block mb-1">
                     Titik Koordinat <span class="text-red-500">*</span>
@@ -109,7 +104,6 @@
                         </div>
                     </div>
                 </div>
->>>>>>> origin/Robert-Database
             </div>
 
             <div class="mb-4">

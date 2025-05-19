@@ -37,8 +37,6 @@ class ForumDiskusiController extends Controller
             'status' => 'terkirim'
         ]);
 
-        dd($chat);
-
 // load relasi supaya nama user/disdag bisa diakses di frontend
 $chat->load('user', 'disdag');
 

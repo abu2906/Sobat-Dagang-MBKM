@@ -48,10 +48,14 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
     Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
-   
+
+    //profil
+    Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
+
     //pengaduan
-    Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.send');
-    Route::get('/forum-chat/messages', [ForumDiskusiController::class, 'getMessages'])->name('forum.messages');
+    Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send']);
+    Route::get('/forum-chat/messages', [ForumDiskusiController::class, 'getMessages']);
    
     //pelaporan
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
@@ -72,16 +76,11 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
     Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
     Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
-        
-    Route::get('/halal', function () {
-        return view('user.halal');
-    })->name('halal');
+    
+    //industri
+    Route::get('/form-surat-permohonan', [PersuratanController::class, 'showFormSurat'])->name('form.surat');  
+    Route::get('/sertifikasi-halal', [homeController::class, 'showHalal'])->name('halal');  
 });
-
-
-Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
-Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
-Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
 // Admin Industri
 // Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
@@ -91,13 +90,6 @@ Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name
 //     Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
 //     Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
 // });
-
-//User Industri
-Route::get('/form-surat-permohonan', [PersuratanController::class, 'showFormSurat'])->name('form.surat');  
-Route::get('/sertifikasi-halal', [homeController::class, 'showHalal'])->name('halal');  
-
-Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
-Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
 
 // Admin Perdagangan
 Route::middleware(['check.role:admin_perdagangan'])->group(function () {
@@ -125,6 +117,7 @@ Route::middleware(['check.role:admin_perdagangan'])->group(function () {
         ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
         ->name('dokumen.view');
 });
+
 Route::get('/cek-session', function () {
     return session()->all();
 });
@@ -147,7 +140,8 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');    
+
 });
 
 //kabid Perdagangan

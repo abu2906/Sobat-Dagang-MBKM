@@ -111,63 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatModal.classList.add('hidden');
     });
 
-    // Submit chat
-    chatForm?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const message = chatInput.value.trim();
-        if (!message) return; // jangan submit pesan kosong
-
-        try {
-            const response = await fetch('/forum-chat/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: JSON.stringify({ chat: message }),
-            });
-
-            if (!response.ok) throw new Error('Response not OK');
-
-            const data = await response.json();
-
-            if (data.success) {
-                // Buat elemen pesan baru
-                const isMe = true; // ini pesan kita sendiri
-                const senderName = data.chat.user?.nama ?? data.chat.disdag?.nama ?? 'Admin Dinas Perdagangan';
-                const initial = senderName.charAt(0).toUpperCase();
-                const waktu = new Date(data.chat.waktu);
-                const options = { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Makassar' };
-                const waktuFormatted = new Intl.DateTimeFormat('id-ID', options).format(waktu);
-
-                const wrapper = document.createElement('div');
-                wrapper.className = `flex items-end justify-end`;
-
-                wrapper.innerHTML = `
-                    <div class="flex items-center justify-center w-8 h-8 ml-2 text-sm font-bold text-white bg-gray-400 rounded-full select-none">
-                        ${initial}
-                    </div>
-                    <div class="max-w-[70%] p-3 text-sm leading-snug shadow bg-[#083458] text-white rounded-3xl rounded-br-md">
-                        <div class="mb-1 text-xs font-semibold">${senderName}</div>
-                        <div>${data.chat.chat.replace(/\n/g, '<br>')}</div>
-                        <div class="text-[10px] text-gray-400 text-right mt-1">
-                            ${waktuFormatted}
-                        </div>
-                    </div>
-                `;
-
-                chatMessages.appendChild(wrapper);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                chatInput.value = '';
-            } else {
-                alert('Gagal mengirim pesan');
-            }
-        } catch (err) {
-            console.error('Error:', err);
-            alert(err.message); // ini akan tampilkan pesan dari Laravel
-        }
-
     });
 });
 </script>
