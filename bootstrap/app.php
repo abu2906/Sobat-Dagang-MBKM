@@ -5,6 +5,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Foundation\Middleware\VerifyCsrfToken;
 use App\Http\Middleware\RoleCheckMiddleware;
+use App\Http\Middleware\UserAuthMiddleware;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Daftarkan alias untuk RoleCheckMiddleware
         $middleware->alias([
             'check.role' => RoleCheckMiddleware::class,
-            app()->router->aliasMiddleware('role.check', RoleCheckMiddleware::class),
+            'auth.role' => UserAuthMiddleware::class,
         ]);
     })
     ->withExceptions(function (\Illuminate\Foundation\Configuration\Exceptions $exceptions) {

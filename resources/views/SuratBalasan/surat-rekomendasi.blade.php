@@ -12,7 +12,6 @@
             color: #333;
         }
 
-
         .bold-underline {
             font-weight: bold;
             text-decoration: underline;
@@ -115,11 +114,13 @@
         .judul p {
             margin-top: -10px;
         }
+        .penutup p {
+            text-align: justify;
+        }
     </style>
 </head>
 
 <body>
-
     <div class="kop">
         <div class="logo">
             <img src="{{ public_path('assets/img/logoparepare.png') }}" alt="Logo">
@@ -185,6 +186,11 @@
     <p>
         {!! $isi !!}
     </p>
+    <div class="penutup">
+        <p>
+            Demikian Surat Rekomendasi ini dibuat untuk menjadi salah satu persyaratan izin usaha dan bukan merupakan surat perizinan.
+        </p>
+    </div>
 
     <div class="ttd">
         <p>Dikeluarkan di : Pareparae</p>

@@ -43,7 +43,7 @@ Route::get('/change-password', [AuthController::class, 'showChangePassword'])->n
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // user Login
-Route::middleware(['role.check:user'])->group(function () {
+Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
@@ -100,7 +100,7 @@ Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama'
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
 
 // Admin Perdagangan
-Route::middleware(['auth:disdag'])->group(function () {
+Route::middleware(['check.role:admin_perdagangan'])->group(function () {
     Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
     // Pelaporan
     Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
@@ -130,7 +130,7 @@ Route::get('/cek-session', function () {
 });
 
 // admin master
-Route::middleware(['auth:disdag'])->group(function () {
+Route::middleware(['check.role:master_admin'])->group(function () {
     #dashboard nddpi isinya untuk tes2 ji
     Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
     #distribusi
@@ -150,7 +150,7 @@ Route::middleware(['auth:disdag'])->group(function () {
 });
 
 //kabid Perdagangan
-Route::middleware(['auth:disdag'])->group(function () {
+Route::middleware(['check.role:kabid_perdagangan'])->group(function () {
     Route::get('/kabid-perdagangan/dashboard', [KabidPerdaganganController::class, 'dashboardKabid'])->name('kabid.perdagangan');
     Route::get('/kabid-perdagangan/distribusi-pupuk', [KabidPerdaganganController::class, 'distribusiPupuk'])->name('distribusi.pupuk');
     Route::get('/kabid-perdagangan/analisis-pasar', [KabidPerdaganganController::class, 'analisisPasar'])->name('analisis.pasar');
@@ -164,7 +164,7 @@ Route::get('/sertifikasi-ikm', [SertifikasiIKMController::class, 'index'])->name
 Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persuratan');
 
 //admin metrologi
-Route::middleware(['auth:disdag'])->group(function () {
+Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
     Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
     Route::post('/uttp/store-alat', [DirectoryBookController::class, 'storeAlatUkur'])->name('store-uttp');
@@ -184,7 +184,7 @@ Route::middleware(['auth:disdag'])->group(function () {
 });
 
 //kabid metrologi
-Route::middleware(['auth:disdag'])->group(function () {
+Route::middleware(['check.role:kabid_metrologi'])->group(function () {
     Route::get('/kabid/metrologi', [DashboardMetrologiController::class, 'showKabid'])->name('dashboard-kabid-metrologi');
     Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('administrasi-kabid-metrologi');
     Route::get('/kabid/uttp/metrologi', [DashboardMetrologiController::class, 'showUttp'])->name('informasi-uttp');

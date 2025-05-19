@@ -111,9 +111,9 @@ class DashboardPerdaganganController extends Controller{
         }
 
         // Data distribusi pupuk
-        $pupuk = DB::table('distribusi_pupuk')
-            ->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')
-            ->first();
+        // $pupuk = DB::table('distribusi_pupuk')
+        //     ->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')
+        //     ->first();
 
         // Kirim semua data ke view
         return view('admin.bidangPerdagangan.dashboardPerdagangan', [
@@ -132,7 +132,7 @@ class DashboardPerdaganganController extends Controller{
             'rata_rata' => $rata_rata,
             'tertinggi' => $tertinggi,
             'volatilitas' => $volatilitas,
-            'pupuk' => $pupuk,
+            // 'pupuk' => $pupuk,
             'daftar_lokasi' => $daftar_lokasi,
             'lokasi' => $lokasi,
         ]);
@@ -582,4 +582,5 @@ class DashboardPerdaganganController extends Controller{
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
     }
+
 }
