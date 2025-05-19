@@ -25,7 +25,6 @@
                              9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 </svg>
             </button>
-
             @include('component.profile')
         </div>
     </div>
@@ -98,4 +97,3 @@
     </div>
 </nav>
 @endauth
-</nav>

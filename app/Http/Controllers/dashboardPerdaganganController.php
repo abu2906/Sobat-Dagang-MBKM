@@ -517,21 +517,52 @@ class DashboardPerdaganganController extends Controller{
         }
     }
 
+    
+
     public function ajukanPermohonan(Request $request)
     {
+        // Custom pesan error dalam Bahasa Indonesia
+        $messages = [
+            'jenis_surat.required' => 'Jenis surat wajib diisi.',
+            'jenis_surat.in' => 'Jenis surat tidak valid.',
+            'kecamatan.required' => 'Kecamatan wajib diisi.',
+            'kelurahan.required' => 'Kelurahan wajib diisi.',
+            'titik_koordinat.required' => 'Titik koordinat wajib diisi.',
+            'foto_usaha.required' => 'Foto usaha wajib diunggah.',
+            'foto_usaha.image' => 'Foto usaha harus berupa gambar.',
+            'foto_usaha.mimes' => 'Foto usaha harus berformat jpeg, png, atau jpg.',
+            'foto_usaha.max' => 'Ukuran foto usaha tidak boleh lebih dari 512 kilobyte.',
+            'foto_ktp.required' => 'Foto KTP wajib diunggah.',
+            'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
+            'foto_ktp.mimes' => 'Foto KTP harus berformat jpeg, png, atau jpg.',
+            'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 512 KILOBYTE.',
+            'dokumen_nib.required' => 'Dokumen NIB wajib diunggah.',
+            'dokumen_nib.mimes' => 'Dokumen NIB harus berformat PDF.',
+            'dokumen_nib.max' => 'Ukuran dokumen NIB tidak boleh lebih dari 512 KILOBYTE.',
+            'npwp.required' => 'Dokumen NPWP wajib diunggah.',
+            'npwp.mimes' => 'NPWP harus berformat PDF atau gambar.',
+            'npwp.max' => 'Ukuran dokumen NPWP tidak boleh lebih dari 512 KILOBYTE.',
+            'akta_perusahaan.required' => 'Akta perusahaan wajib diunggah.',
+            'akta_perusahaan.mimes' => 'Akta perusahaan harus berformat PDF.',
+            'akta_perusahaan.max' => 'Ukuran akta perusahaan tidak boleh lebih dari 512 KILOBYTE.',
+            'surat.required' => 'File surat wajib diunggah.',
+            'surat.mimes' => 'File surat harus berformat PDF, DOC, atau DOCX.',
+            'surat.max' => 'Ukuran file surat tidak boleh lebih dari 512 KILOBYTE.',
+        ];
+
         // Validasi input
         $validated = $request->validate([
             'jenis_surat' => 'required|in:surat_rekomendasi_perdagangan,surat_keterangan_perdagangan,dan_lainnya_perdagangan',
             'kecamatan' => 'required|string',
             'kelurahan' => 'required|string',
             'titik_koordinat' => 'required|string',
-            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'dokumen_nib' => 'required|mimes:pdf|max:10240',
-            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:10240',
-            'akta_perusahaan' => 'required|mimes:pdf|max:10240',
-            'surat' => 'required|file|mimes:pdf,doc,docx|max:10240',
-        ]);
+            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:512',
+            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:512',
+            'dokumen_nib' => 'required|mimes:pdf|max:512',
+            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:512',
+            'akta_perusahaan' => 'required|mimes:pdf|max:512',
+            'surat' => 'required|file|mimes:pdf,doc,docx|max:512',
+        ], $messages);
 
         try {
             // Simpan file satu per satu
@@ -550,8 +581,8 @@ class DashboardPerdaganganController extends Controller{
 
             // Simpan ke tabel form_permohonan
             DB::table('form_permohonan')->insert([
-                'id_permohonan' => $idPermohonan,  // Masukkan UUID yang baru dibuat
-                'id_user' => $idUser,  // Ambil id_user dari session
+                'id_permohonan' => $idPermohonan,
+                'id_user' => $idUser,
                 'kecamatan' => $request->kecamatan,
                 'kelurahan' => $request->kelurahan,
                 'tgl_pengajuan' => now()->toDateString(),
@@ -565,7 +596,7 @@ class DashboardPerdaganganController extends Controller{
 
             // Simpan ke tabel document_user
             DB::table('document_user')->insert([
-                'id_permohonan' => $idPermohonan,  // Masukkan id_permohonan yang sama ke document_user
+                'id_permohonan' => $idPermohonan,
                 'npwp' => $npwpPath,
                 'akta_perusahaan' => $aktaPerusahaanPath,
                 'foto_ktp' => $fotoKTPPath,
@@ -579,7 +610,7 @@ class DashboardPerdaganganController extends Controller{
                 ->with('success', 'Pengajuan surat berhasil diajukan.');
         } catch (Exception $e) {
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
