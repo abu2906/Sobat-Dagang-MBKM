@@ -73,7 +73,7 @@
             </div>
             <div>
                 <label for="titik_koordinat">Titik Koordinat</label>
-                <input id="titik_koordinat" type="text" name="titik_koordinat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Titik Koordinat Usaha Anda">
+                <input id="titik_koordinat" type="text" name="titik_koordinat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Titik Koordinat Usaha (ex. -4.028889, 119.633521)">
             </div>
             <div class="mb-4">
                 <label for="kelurahan">Kelurahan</label>
