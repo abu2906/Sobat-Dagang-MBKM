@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Distributor;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 // Berisikan seluruh fungsi yang digunakan dalam hal pelaporan baik admin maupun distributor
 class PelaporanController extends Controller
 {
@@ -35,15 +37,36 @@ class PelaporanController extends Controller
             return view('user.bidangPerdagangan.pelaporan');
         }
 
+        if ($distributor->status === 'ditolak') {
+            // Jika status masih menunggu verifikasi
+            return redirect()->route('cekpengajuan');
+        }
+
         // Jika status lainnya (opsional, misal: Ditolak), kamu bisa atur juga
         return redirect()->route('pelaporan-penyaluran')->with('error', 'Status pengajuan tidak valid.');
     }
 
-
     public function verifikasiPengajuan()
     {
-        return view('user.bidangPerdagangan.verifikasiPengajuan');
+        // Ambil id_user dari session
+        $id_user = Session::get('id_user');
+
+        // Ambil data status dari tabel distributor
+        $distributor = DB::table('distributor')
+                        ->where('id_user', $id_user)
+                        ->orderByDesc('created_at') // kalau ada lebih dari 1 data
+                        ->first();
+
+        // Jika tidak ditemukan
+        if (!$distributor) {
+            return redirect()->back()->with('error', 'Data distributor tidak ditemukan.');
+        }
+
+        // Kirim status ke blade
+        $status = strtolower($distributor->status); // jadi 'menunggu', 'diterima', atau 'ditolak'
+        return view('user.bidangPerdagangan.verifikasiPengajuan', compact('status'));
     }
+
     public function formDistributor()
     {
         return view('user.bidangPerdagangan.daftarDistributor');
@@ -133,5 +156,10 @@ class PelaporanController extends Controller
 
         return redirect()->back()->with('success', 'Distributor ditolak.');
     }
+    public function hapus($id_distributor)
+    {
+        DB::table('distributor')->where('id_distributor', $id_distributor)->delete();
 
+        return redirect()->back()->with('success', 'Distributor berhasil dihapus.');
+    }
 }

@@ -136,6 +136,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/distributor/{id_distributor}/tolak', [PelaporanController::class, 'tolak'])->name('distributor.tolak');
     Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
     Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
+    Route::delete('/distributor/{id_distributor}/hapus', [PelaporanController::class, 'hapus'])->name('distributor.hapus');
     #kelola berita
     Route::get('/admin/kelola-pengguna', [DashboardController::class, 'kelolaAdmin'])->name('kelola.admin');
     Route::post('/admin/kelola-pengguna', [DashboardController::class, 'tambahpengguna'])->name('tambah.pengguna');
