@@ -57,7 +57,7 @@ Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submit
 Route::get('/halal', function () {
     return view('user.halal');
 })->name('halal');
-// user Login
+
 Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
@@ -92,7 +92,6 @@ Route::middleware(['auth.role:user'])->group(function () {
         return view('user.halal');
     })->name('halal');
 });
-
 
 // guest
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
