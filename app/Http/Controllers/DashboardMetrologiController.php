@@ -19,7 +19,9 @@ class DashboardMetrologiController extends Controller
         $dataSurat = $this->getJumlahSurat();
         $chartData = $this->chartData();
         $chartBar = $this->chartBarJenisAlat();
-        $data = array_merge($dataSurat, $chartData, $chartBar);
+        $donutChart = $this->getDonutChartData();
+        $data = array_merge($dataSurat, $chartData, $chartBar, $donutChart);
+
 
         return view('admin.bidangMetrologi.dashboard', $data);
     }
@@ -32,11 +34,13 @@ class DashboardMetrologiController extends Controller
             ->where('data_alat_ukur.status', 'Valid')
             ->sum('uttp.jumlah_alat');
         $uttps = DataAlatUkur::with('uttp')->get();
+        $donutData = $this->getDonutChartData();
         return view('admin.kabid.metrologi.dashboard', array_merge(
             $dataSurat, 
             ['jumlahPerJenis' => $jumlahPerJenis],
             ['jumlahValid' => $jumlahValid],
             ['uttps' => $uttps],
+            $donutData
         ));
     }
 
@@ -113,6 +117,23 @@ class DashboardMetrologiController extends Controller
         ];
     }
 
+    public function getDonutChartData()
+    {
+        $jenisList = ['BUS', 'AT', 'ATB'];
+        $data = [];
+
+        foreach ($jenisList as $jenis) {
+        $jumlah = Uttp::where('alat_penguji', $jenis)->sum('jumlah_alat');
+        $data[$jenis] = $jumlah;
+    }
+
+        return [
+            'donutLabels' => json_encode(array_keys($data)),
+            'donutData' => json_encode(array_values($data))
+        ];
+    }
+
+
     private function getJumlahSurat()
     {
         $totalSuratMasuk = DB::table('surat_metrologi')->count();
@@ -169,6 +190,14 @@ class DashboardMetrologiController extends Controller
         $dataJumlahSurat = $this->getJumlahSurat();
 
         return view('admin.bidangMetrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
+    }
+
+    public function showAdministrasiKabid()
+    {
+        $suratList = SuratMetrologi::with('user', 'suratBalasan')->get();
+        $dataJumlahSurat = $this->getJumlahSurat();
+
+        return view('admin.kabid.metrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
     }
     
 }

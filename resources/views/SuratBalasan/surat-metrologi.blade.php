@@ -122,7 +122,7 @@
 
     <div class="kop">
         <div class="logo">
-            <img src="{{ asset('assets/img/logoparepare.png') }}" alt="Logo">
+            <img src="{{ public_path('assets/img/logoparepare.png') }}" alt="Logo">
         </div>
         <div class="text">
             <h1>Pemerintah Kota Parepare</h1>
@@ -177,8 +177,8 @@
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">
-            <img src="{{ asset('assets/ttd/contohstempel.png') }}" alt="">
-            <img src="{{ asset('assets/ttd/qr.png') }}" alt="">
+            <img src="{{ public_path('assets/ttd/contohstempel.png') }}" alt="">
+            <img src="{{ public_path('assets/ttd/qr.png') }}" alt="">
         </div>
         <div></div>
         <p class="nama_kadis">HJ A WISNAH T SE MSI</p>

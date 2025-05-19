@@ -168,6 +168,10 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
     Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
     Route::post('/uttp/store-alat', [DirectoryBookController::class, 'storeAlatUkur'])->name('store-uttp');
+    Route::delete('/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('delete-uttp');
+    Route::delete('/admin/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('uttp.destroy');
+    Route::patch('/admin/uttp/update/{id}', [DirectoryBookController::class, 'update'])->name('update-uttp');
+
     Route::get('/admin/persuratan-metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('persuratan-metrologi');
     Route::put('/surat/terima/{id}', [PersuratanController::class, 'terimaSurat'])->name('surat.terima');
     Route::put('/surat/tolak/{id}', [PersuratanController::class, 'tolakSurat'])->name('surat.tolak');
@@ -186,21 +190,23 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
 //kabid metrologi
 Route::middleware(['check.role:kabid_metrologi'])->group(function () {
     Route::get('/kabid/metrologi', [DashboardMetrologiController::class, 'showKabid'])->name('dashboard-kabid-metrologi');
-    Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('administrasi-kabid-metrologi');
+    Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasiKabid'])->name('administrasi-kabid-metrologi');
     Route::get('/kabid/uttp/metrologi', [DashboardMetrologiController::class, 'showUttp'])->name('informasi-uttp');
+    Route::post('/surat/terima/{id}', [PersuratanController::class, 'terimaKabid'])->name('terimaKabid');
+    Route::post('/surat/tolak/{id}', [PersuratanController::class, 'tolakKabid'])->name('tolakKabid');
 });
 
 // Route for test
-Route::get('/test/{viewPath}', function ($viewPath) {
-    $bladePath = str_replace('-', '_', str_replace('/', '.', $viewPath));
+// Route::get('/test/{viewPath}', function ($viewPath) {
+//     $bladePath = str_replace('-', '_', str_replace('/', '.', $viewPath));
 
-    if (View::exists($bladePath)) {
-        return view($bladePath);
-    }
+//     if (View::exists($bladePath)) {
+//         return view($bladePath);
+//     }
 
-    return abort(404, "View '$bladePath' tidak ditemukan.");
-})->where('viewPath', '.*');
+//     return abort(404, "View '$bladePath' tidak ditemukan.");
+// })->where('viewPath', '.*');
 
-Route::get('/surat-rekomendasi', function () {
-    return view('SuratBalasan.surat-rekomendasi');
-});
+// Route::get('/surat-rekomendasi', function () {
+//     return view('SuratBalasan.surat-rekomendasi');
+// });

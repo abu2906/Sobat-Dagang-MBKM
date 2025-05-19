@@ -39,8 +39,9 @@
                     <button onclick="tutupModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
                 </div>
 
-                <form action="{{ route('store-uttp') }}" method="POST">
-                    @csrf
+                <form id="form-alat" method="POST">
+                @csrf
+                <input type="hidden" name="_method" id="formMethod" value="POST">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium">Tanggal</label>
@@ -100,7 +101,7 @@
                             <label class="block text-sm font-medium">Alat Penguji</label>
                             <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2">
 								<option value="BUS">BUS</option>
-								<option value="AT">Anak Timbangan</option>
+								<option value="AT">AT</option>
 								<option value="ATB">ATB</option>
 							</select>
                         </div>
@@ -166,14 +167,25 @@
                         </span>
                     </td>
                     <td class="px-5 text-center py-3 border-b">
-                        <!-- Tombol aksi -->
-                        <button onclick="bukaModalEdit({{ $data->uttp->id_user }})" class="p-2 rounded hover:bg-blue-100 transition duration-200">
-                            <span class="material-symbols-outlined">edit</span>
-                        </button>
-                        <button class="p-2 rounded hover:bg-red-100 transition duration-200">
-                            <span class="material-symbols-outlined">delete</span>
-                        </button>
+                    <!-- Tombol Edit -->
+                    <button
+                        onclick="openEditModal({{ $data->uttp }}, '{{ route('update-uttp', $data->uttp->id_uttp) }}')"
+                        class="p-2 rounded hover:bg-blue-100 transition duration-200"
+                        title="Edit">
+                        <span class="material-symbols-outlined">edit</span>
+                    </button>
+
+
+                        <!-- Tombol hapus -->
+                        <form action="{{ route('delete-uttp', $data->uttp->id_uttp) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="p-2 rounded hover:bg-red-100 transition duration-200" title="Hapus">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </form>
                     </td>
+
                 </tr>
                 @endforeach
             </tbody>
@@ -184,11 +196,47 @@
 <script>
     function openModal(){
         document.getElementById('modalTambahAlat').classList.remove('hidden');
+
+        // Reset Form
+        const form = document.getElementById('form-alat');
+        form.reset();
+        form.action = "{{ route('store-uttp') }}";
+        document.getElementById('formMethod').value = "POST";
+
+        // Ganti Judul
+        document.getElementById('modalTitle').innerText = 'Tambah Alat Ukur Sah';
     }
 
     function tutupModal() {
         document.getElementById('modalTambahAlat').classList.add('hidden');
     }
+
+    function openEditModal(data, updateRoute) {
+    document.getElementById('modalTambahAlat').classList.remove('hidden');
+    const form = document.getElementById('form-alat');
+
+    // Ganti action dan method
+    form.action = updateRoute;
+    document.getElementById('formMethod').value = "PATCH";
+
+    // Assign field manual
+    form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
+    form.elements['id_user'].value = data.id_user || '';
+    form.elements['no_registrasi'].value = data.no_registrasi || '';
+    form.elements['nama_usaha'].value = data.nama_usaha || '';
+    form.elements['jenis_alat'].value = data.jenis_alat || '';
+    form.elements['nama_alat'].value = data.nama_alat || '';
+    form.elements['merk_type'].value = data.merk_type || '';
+    form.elements['nomor_seri'].value = data.nomor_seri || '';
+    form.elements['jumlah_alat'].value = data.jumlah_alat || '';
+    form.elements['alat_penguji'].value = data.alat_penguji || '';
+    form.elements['ctt'].value = data.ctt || '';
+    form.elements['spt_keperluan'].value = data.spt_keperluan || '';
+    form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
+    form.elements['terapan'].value = data.terapan || '';
+    form.elements['keterangan'].value = data.keterangan || '';
+    }
 </script>
+
 
 @endsection

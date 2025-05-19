@@ -156,35 +156,36 @@
     });
 
     // Donut Chart
-    new Chart(document.getElementById('donutChart').getContext('2d'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Balai Ukur Satuan', 'Alat Tera', 'Alat Tera Bantu'],
-            datasets: [{
-                data: [30, 50, 20],
-                backgroundColor: ['#a3a3a3', '#1e3a8a', '#06b6d4'],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'left',
-                    labels: {
-                        color: '#111827',
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        padding: 15
-                    }
-                },
+new Chart(document.getElementById('donutChart').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+        labels: {!! $donutLabels !!},
+        datasets: [{
+            data: {!! $donutData !!},
+            backgroundColor: ['#a3a3a3', '#1e3a8a', '#06b6d4'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'left',
+                labels: {
+                    color: '#111827',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    padding: 15
+                }
             },
-        }
-    });
+        },
+    }
+});
+
 
     // Pie Chart
     new Chart(document.getElementById('statusChart').getContext('2d'), {
