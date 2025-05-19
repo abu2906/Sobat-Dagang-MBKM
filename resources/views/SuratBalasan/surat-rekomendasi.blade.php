@@ -180,7 +180,7 @@
         </tr>
         <tr>
             <td style="padding: 4px;">Luas Ruangan</td>
-            <td style="padding: 4px;">: {{$luas_ruangan}}</td>
+            <td style="padding: 4px;">: {{$luas_ruangan}} m<sup>2</sup></td>
         </tr>
     </table>
     <p>
