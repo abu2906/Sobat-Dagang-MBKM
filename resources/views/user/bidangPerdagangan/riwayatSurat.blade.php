@@ -18,7 +18,6 @@
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari"
                 class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </form>
-
     </div>
     <div class="flex justify-center mb-6">
 

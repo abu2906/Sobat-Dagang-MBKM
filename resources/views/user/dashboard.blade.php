@@ -25,14 +25,14 @@
     @php
         $menus = [
             'PERDAGANGAN' => [
-                ['label' => 'Permohonan perizinan/ non perizinan', 'route' => route('bidangPerdagangan.formPermohonan')],
+                ['label' => 'Permohonan perizinan/non perizinan', 'route' => route('bidangPerdagangan.formPermohonan')],
             ],
             'INDUSTRI' => [
-                ['label' => 'Surat Permohonan', 'route' => '#'],
+                ['label' => 'Permohonan IKM Binaan', 'route' => '#'],
                 ['label' => 'Data Sertifikat Halal', 'route' => '#'],
             ],
             'METROLOGI' => [
-                ['label' => 'Administrasi Persuratan', 'route' => route('administrasi-metrologi')],
+                ['label' => 'Permohonan Tera/Teraulang', 'route' => route('administrasi-metrologi')],
                 ['label' => 'Alat Milik Saya', 'route' => route('directory-metrologi')],
             ],
         ];
