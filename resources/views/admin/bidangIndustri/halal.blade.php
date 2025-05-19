@@ -1,26 +1,40 @@
 @extends('layouts.adminIndustri')
-@section('title', 'Data IKM')
+@section('title', 'Sertifikasi Halal')
 
 @section('content')
 
-  <section class="relative">
-    <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
+<!-- Bungkus seluruh konten dengan Alpine.js -->
+<section x-data="{ openModal: false }" class="relative">
 
-    <div class="absolute top-32 left-1/2 transform -translate-x-1/2 w-11/12 md:w-3/4">
-      <div class="flex items-center justify-between space-x-4">
-        <input
-          type="text"
-          placeholder="Cari"
-          class="flex-1 px-6 py-2 bg-white rounded-full shadow-md focus:outline-none">
+<!-- Banner -->
+<img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
 
-        <button class="bg-[#083458] text-white font-semibold py-2 px-4 rounded-2xl shadow-md hover:shadow-lg transition duration-200">
-          Tambah Data
-        </button>
-      </div>
-    </div>
-  </section>
+<!-- Search & Tombol -->
+<div class="flex items-center gap-4 px-6 py-6 max-w-7xl mx-auto z-10 relative">
+  <!-- Input dengan icon -->
+  <div class="relative flex-1">
+    <input
+      type="text"
+      placeholder="Cari"
+      class="w-full rounded-xl bg-blue-200/80 py-3 pl-12 pr-4 text-gray-600 placeholder-gray-600 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+      <i class="fas fa-search"></i>
+    </span>
+  </div>
 
-  <section class="flex-1 px-6 pb-10 mt-16 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+  <!-- Tombol Tambah Data -->
+  <button
+    @click="openModal = true"
+    type="button"
+    class="bg-[#002B4E] text-white font-semibold rounded-xl px-6 py-3 shadow-md hover:brightness-110 transition"
+  >
+    TAMBAH DATA
+  </button>
+</div>
+
+  <!-- Tabel -->
+  <section class="flex-1 px-6 pb-10 mt-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent z-10 relative">
     <div class="overflow-hidden rounded-b-xl">
       <table class="w-full text-sm table-auto">
         <thead class="bg-[#0d3b66] text-white">
@@ -67,4 +81,92 @@
       </table>
     </div>
   </section>
+
+  <!-- Overlay -->
+  <div
+    x-show="openModal"
+    x-transition.opacity
+    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
+    style="display: none;"
+  ></div>
+
+  <!-- Modal -->
+  <div
+    x-show="openModal"
+    x-transition
+    class="fixed inset-0 flex items-start justify-center z-50 p-4"
+    style="display: none;"
+  >
+    <div
+      @click.away="openModal = false"
+      @keydown.escape.window="openModal = false"
+      tabindex="0"
+      class="relative w-full max-w-3xl bg-white rounded-lg shadow-lg p-8 mt-24 overflow-auto max-h-[80vh]"
+    >
+      <button
+        @click="openModal = false"
+        type="button"
+        aria-label="Close modal"
+        class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none"
+      >
+        &times;
+      </button>
+
+      <h2 class="mb-6 text-center text-lg font-bold md:text-xl select-none">TAMBAH DATA SERTIFIKASI HALAL</h2>
+
+      <form action="#" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-8">
+        @csrf
+
+        <div>
+          <label for="nama_usaha" class="block mb-2 font-semibold">Nama Usaha</label>
+          <input id="nama_usaha" name="nama_usaha" type="text" required
+            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#083458]">
+        </div>
+
+        <div>
+          <label for="no_sertifikasi_halal" class="block mb-2 font-semibold">Nomor Sertifikasi Halal</label>
+          <input id="no_sertifikasi_halal" name="no_sertifikasi_halal" type="text"
+            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#083458]">
+        </div>
+
+        <div>
+          <label for="tanggal_sah" class="block mb-2 font-semibold">Tanggal Sah</label>
+          <input id="tanggal_sah" name="tanggal_sah" type="date" required
+            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#083458]">
+        </div>
+
+        <div>
+          <label for="status" class="block mb-2 font-semibold">Status</label>
+          <select id="status" name="status" required
+            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#083458]">
+            <option value="" disabled selected>Pilih Status</option>
+            <option value="Perlu Pembaruan">Perlu Pembaruan</option>
+            <option value="Berlaku">Berlaku</option>
+          </select>
+        </div>
+
+
+        <div>
+          <label for="tanggal_exp" class="block mb-2 font-semibold">Tanggal Exp</label>
+          <input id="tanggal_exp" name="tanggal_exp" type="date" required
+            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#083458]">
+        </div>
+
+        <div>
+          <label for="sertifikat" class="block mb-2 font-semibold">Sertifikat (PDF)</label>
+          <input id="sertifikat" name="sertifikat" type="file" accept="application/pdf" required
+            class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#083458]">
+        </div>
+
+        <div class="col-span-full flex justify-center mt-6">
+          <button type="submit"
+            class="rounded-2xl bg-[#083458] px-8 py-3 text-white shadow-md hover:shadow-lg transition duration-200">
+            Tambah
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
 @endsection

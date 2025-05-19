@@ -7,11 +7,8 @@ use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
-<<<<<<< HEAD
 use App\Http\Controllers\DashboardMetrologiController;
-=======
 use App\Http\Controllers\AdminIndustriController;
->>>>>>> iniaaaini
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DirectoryBookController;
@@ -20,20 +17,13 @@ use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\SertifikasiIKMController;
 use App\Http\Controllers\PersuratanController;
 use App\Http\Controllers\DashboardPerdaganganController;
-<<<<<<< HEAD
 use App\Http\Controllers\PelaporanPenyaluranController;
 use App\Http\Controllers\SobatHargaController;
 use App\Http\Controllers\KabidPerdaganganController;
 use App\Http\Controllers\ForumDiskusiController;
 use App\Http\Middleware\UserAuthMiddleware;
 use App\Http\Middleware\RoleCheckMiddleware;
-=======
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-
-// Controller untuk halaman utama (homepage)
-Route::get('/', [homeController::class, 'index'])->name('Home');
-Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
->>>>>>> iniaaaini
 
 // Controller untuk authentication
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
@@ -49,7 +39,6 @@ Route::post('/forum', [ForumDiskusiController::class, 'store']);
 
 // Controller untuk user
 Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
-<<<<<<< HEAD
 Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
 Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
 Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
@@ -88,20 +77,20 @@ Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->n
 Route::get('/', [homeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'showAboutPage'])->name('about');
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
-=======
 Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
 Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
 // Admin Industri
+Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
+    Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
+    Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
+    Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
+    Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
+    Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
+    Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
 
-    Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
-        Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
-        Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
-        Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
-        Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
-        Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
-    });
+});
 
 //User Industri
 Route::get('/form-surat-permohonan', [PersuratanController::class, 'showFormSurat'])->name('form.surat');  
@@ -120,7 +109,6 @@ Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.e
 Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran']);
 Route::get('/pelaporan', [PelaporanController::class, 'Pelaporan']);
 Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan']);
->>>>>>> iniaaaini
 
 
 // Admin Perdagangan

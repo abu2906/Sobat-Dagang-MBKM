@@ -40,7 +40,7 @@
     </div>
   </header>
 
-    <section class="mt-24 px-6 flex flex-wrap justify-center gap-6">
+    <section class="mt-20 px-4 flex flex-wrap justify-center gap-4">
       @php
         $kategoriList = [
           ['nama' => 'Sandang', 'ikon' => 'sandang.png'],
@@ -52,9 +52,9 @@
       @endphp
 
       @foreach ($kategoriList as $kategori)
-        <div onclick="selectKategori(this)" class="kategori-card cursor-pointer flex flex-col items-center bg-white p-4 rounded-xl shadow-lg w-44 border-2 border-transparent transition transform hover:scale-105 text-center">
-          <img src="{{ asset('assets/img/kategori/' . $kategori['ikon']) }}" alt="{{ $kategori['nama'] }} Icon" class="w-14 h-14 object-contain">
-          <span class="font-semibold mt-2 text-[#083458] leading-tight min-h-[3rem] flex items-center justify-center text-center">
+        <div onclick="selectKategori(this)" class="kategori-card cursor-pointer flex flex-col items-center bg-white p-3 rounded-xl shadow-lg w-44 border-2 border-transparent transition transform hover:scale-105 text-center">
+          <img src="{{ asset('assets/img/kategori/' . $kategori['ikon']) }}" alt="{{ $kategori['nama'] }} Icon" class="w-10 h-10 object-contain">
+          <span class="font-semibold mt-1 text-[#083458] leading-tight min-h-[2rem] flex items-center justify-center text-center">
             {{ $kategori['nama'] }}
           </span>
           <span class="text-sm text-gray-500">200</span>

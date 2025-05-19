@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreatePenggunaanAirTabel extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('penggunaan_air', function (Blueprint $table) {
+            $table->id('id_air');
+            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+
+            $table->string('sumber_air');
+            $table->float('banyaknya_penggunaan_m3')->default(0); // dalam meter kubik
+            $table->bigInteger('biaya')->default(0); // biaya penggunaan air (Rp)
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('penggunaan_air');
+    }
+};

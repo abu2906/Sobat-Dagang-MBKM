@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-<<<<<<< HEAD
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-=======
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\User;
 
->>>>>>> iniaaaini
 
 class DashboardController extends Controller
 {
@@ -47,9 +42,6 @@ class DashboardController extends Controller
 
         return view('component.profile', compact('user', 'wilayah'));
     }
-<<<<<<< HEAD
-    public function kelolaAdmin()
-=======
 
     // Proses update data profil
     public function updateProfile(Request $request)
@@ -89,7 +81,6 @@ class DashboardController extends Controller
     }        
 
     public function showMetrologi() 
->>>>>>> iniaaaini
     {
         // Mendapatkan semua data pengguna
         $users = User::all();

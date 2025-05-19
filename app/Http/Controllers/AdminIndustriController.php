@@ -18,9 +18,13 @@ class AdminIndustriController extends Controller
     }
     
     public function showFormIKM()
-    {
-        return view('admin.bidangIndustri.formIKM');
+    {   
+        $json = file_get_contents(public_path('assets/data/wilayah.json'));
+        $wilayah = json_decode($json, true);
+
+        return view('admin.bidangIndustri.formIKM', compact('wilayah'));
     }
+
 
     public function showHalal()
     {
