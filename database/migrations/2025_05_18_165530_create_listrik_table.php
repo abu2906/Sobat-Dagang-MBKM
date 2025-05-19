@@ -13,12 +13,13 @@ class CreateListrikTabel extends Migration
     {
         Schema::create('listrik', function (Blueprint $table) {
             $table->id('id_listrik');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->string('sumber');             // PLN, genset, dll
-            $table->float('banyaknya')->default(0); // kWh
-            $table->bigInteger('nilai')->default(0); // nilai dalam Rp
-            $table->string('peruntukkan');        // misal: produksi, administrasi, dll
+            $table->string('sumber');             
+            $table->float('banyaknya')->default(0); 
+            $table->bigInteger('nilai')->default(0); 
+            $table->string('peruntukkan');        
 
             $table->timestamps();
         });

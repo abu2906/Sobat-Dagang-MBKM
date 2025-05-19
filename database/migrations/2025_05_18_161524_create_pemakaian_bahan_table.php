@@ -13,7 +13,8 @@ class CreatePemakaianBahanTabel extends Migration
     {
         Schema::create('pemakaian_bahan', function (Blueprint $table) {
             $table->id('id_pemakaian_bahan');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->string('nama_bahan');
             $table->string('jenis_bahan');

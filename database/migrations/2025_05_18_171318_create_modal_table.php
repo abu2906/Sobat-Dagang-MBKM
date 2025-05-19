@@ -13,7 +13,8 @@ class CreateModalTabel extends Migration
     {
         Schema::create('modal', function (Blueprint $table) {
             $table->id('id_modal');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->string('jenis_barang');
             $table->bigInteger('pembelian_penambahan_perbaikan')->default(0); 

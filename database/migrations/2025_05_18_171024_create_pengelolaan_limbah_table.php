@@ -13,7 +13,8 @@ class CreatePengelolaanLimbahTabel extends Migration
     {
         Schema::create('pengelolaan_limbah', function (Blueprint $table) {
             $table->id('id_limbah');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->string('jenis_limbah');      // limbah cair, padat, B3, dsb
             $table->float('jumlah')->default(0); // dalam satuan ton
@@ -28,6 +29,7 @@ class CreatePengelolaanLimbahTabel extends Migration
     /**
      * Reverse the migrations.
      */
+    
     public function down(): void
     {
         Schema::dropIfExists('pengelolaan_limbah');

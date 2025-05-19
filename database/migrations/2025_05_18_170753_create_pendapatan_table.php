@@ -13,7 +13,8 @@ class CreatePendapatanTabel extends Migration
     {
         Schema::create('pendapatan', function (Blueprint $table) {
             $table->id('id_pendapatan');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->bigInteger('nilai')->default(0);   // nominal pendapatan dalam Rp
             $table->string('sumber');                  // sumber pendapatan
