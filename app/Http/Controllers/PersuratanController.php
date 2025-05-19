@@ -139,15 +139,21 @@ class PersuratanController extends Controller
         return redirect()->back()->with('success', 'Surat berhasil diterima.');
     }
 
-    public function tolakSurat($id)
+    public function tolakSurat(Request $request, $id)
     {
-        $id_srt= str_replace(['_'], '/', $id);
-        $surat = suratMetrologi::where('id_surat', $id_srt)->firstOrFail();
+        $request->validate([
+            'keterangan' => 'required|string|max:1000',
+        ]);
+
+        $surat = SuratMetrologi::where('id_surat', $id)->firstOrFail();
         $surat->status_admin = 'Ditolak';
+        $surat->status_surat_masuk = 'Ditolak';
+        $surat->keterangan = $request->keterangan;
         $surat->save();
 
-        return redirect()->back()->with('success', 'Surat berhasil ditolak.');
+        return redirect()->back()->with('success', 'Surat berhasil ditolak dengan keterangan.');
     }
+
 
     public function terimaKabid($id, Request $request)
     {
