@@ -44,20 +44,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::post('/forum', [ForumDiskusiController::class, 'store']);
 
-
-// Controller untuk user
-Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
-Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
-Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
-Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
-Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
-Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
-Route::get('/form-permohonan-distributor', [PelaporanController::class, 'formDistributor'])->name('bidangPerdagangan.formDistributor');
-Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submitDistributor'])->name('bidangPerdagangan.submitDistributor');
-Route::get('/halal', function () {
-    return view('user.halal');
-})->name('halal');
-
 Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
