@@ -7,8 +7,8 @@ use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AdminIndustriController;
 use App\Http\Controllers\DashboardMetrologiController;
+use App\Http\Controllers\AdminIndustriController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DirectoryBookController;
@@ -42,6 +42,21 @@ Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->n
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::post('/forum', [ForumDiskusiController::class, 'store']);
+
+
+// Controller untuk user
+Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
+Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
+Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
+Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
+Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
+Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
+Route::get('/form-permohonan-distributor', [PelaporanController::class, 'formDistributor'])->name('bidangPerdagangan.formDistributor');
+Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submitDistributor'])->name('bidangPerdagangan.submitDistributor');
+Route::get('/halal', function () {
+    return view('user.halal');
+})->name('halal');
 // user Login
 Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
@@ -79,18 +94,26 @@ Route::middleware(['auth.role:user'])->group(function () {
 });
 
 
+// guest
+Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
+Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
+Route::get('/', [homeController::class, 'index'])->name('home');
+Route::get('/about', [AboutController::class, 'showAboutPage'])->name('about');
+Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
 Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
 // Admin Industri
-// Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
-//     Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
-//     Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
-//     Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
-//     Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
-//     Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
-// });
+Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
+    Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
+    Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
+    Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
+    Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
+    Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
+    Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
+
+});
 
 //User Industri
 Route::get('/form-surat-permohonan', [PersuratanController::class, 'showFormSurat'])->name('form.surat');  

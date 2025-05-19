@@ -33,13 +33,15 @@ class authController extends Controller
         ]);
 
         $identifier = $request->username;
-
-        // 1. Coba login disdag via NIP
+    
+        // 1. Coba login menggunakan NIP dan ambil data dari tabel disdag
         $disdag = Disdag::where('nip', $identifier)->first();
+    
         if ($disdag && Hash::check($request->password, $disdag->password)) {
-            Auth::guard('disdag')->login($disdag);
-            session(['id_disdag' => $disdag->id_disdag]); // Simpan ID ke session
-            
+            // Login berhasil menggunakan NIP
+            Auth::login($disdag);
+    
+            // Redirect berdasarkan role dari tabel disdag
             switch ($disdag->role) {
                 case 'master_admin':
                     return redirect()->intended('/dashboard-master');
@@ -61,21 +63,23 @@ class authController extends Controller
                     return redirect('/dashboard');
             }
         }
-
-
-        // 2. Jika tidak ditemukan di disdag, coba login sebagai user
+    
+        // 2. Coba login menggunakan NIK atau NIB dan ambil data dari tabel user
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
-            Auth::guard('user')->login($user);
-            session(['id_user' => $user->id_user]); // Simpan id_user ke session
-
+            // Login berhasil menggunakan NIK/NIB
+            Auth::login($user);
+    
+            // Karena tabel user tidak memiliki kolom role, arahkan ke dashboard default
             return redirect()->intended(route('user.dashboard'));
         }
-
-        return redirect()->route('login')->withErrors(['login_error' => 'Username atau password salah']);
+    
+        // Jika login gagal
+        return redirect()->route('login')->with('error', 'Username atau password salah');
     }
-
+       
+    
     public function submitRegister(Request $request)
     {
         Log::info('Data registrasi yang diterima:', $request->all());
