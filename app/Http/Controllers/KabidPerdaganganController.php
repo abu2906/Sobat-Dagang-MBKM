@@ -5,26 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\IndexHarga;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Surat;
-use App\Models\HargaBarang;
-use App\Models\Notifikasi;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Exception;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;  
 use App\Models\PermohonanSurat;
 use App\Models\Barang;
-use App\Models\DocumentUser;
-use App\Models\IndexKategori;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\Models\DistribusiPupuk;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Validation\ValidationException;
 
 class KabidPerdaganganController extends Controller
 {
-
     private function getSuratPerdaganganData()
     {
         $jenis = [

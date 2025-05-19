@@ -24,11 +24,7 @@ class CreateUserTable extends Migration
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->string('telp');
             $table->string('email')->unique();
-<<<<<<< HEAD
-            $table->string('role')->default('user');
-=======
             $table->string('avatar')->nullable()->default('assets/img/profil.jpeg');
->>>>>>> origin/iniaaaini
             $table->timestamps();
         });
     }
