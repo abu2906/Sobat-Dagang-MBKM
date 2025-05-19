@@ -180,15 +180,6 @@ class KabidPerdaganganController extends Controller
                 ->values()
                 ->all();
 
-           // Gabungan dari top harga naik dan turun
-            $hargaTren = array_merge($topHargaNaik, $topHargaTurun);
-
-            // Isi Pie Chart
-            $top10HargaTertinggi = collect($hargaTren)
-                ->sortByDesc('price_change')  // Urutkan berdasarkan perubahan harga tertinggi
-                ->take(10)
-                ->values()
-                ->all();
         }
 
         // Mengembalikan tampilan dengan data yang telah diproses
@@ -201,8 +192,6 @@ class KabidPerdaganganController extends Controller
             'barangs' => $barangs,
             'dataHarga' => $dataHarga,
             'topHargaNaik' => $topHargaNaik,
-            'top10HargaTertinggi' => $top10HargaTertinggi,
-            'hargaTren' => $hargaTren,
             'topHargaTurun' => $topHargaTurun,
             'barChartData' => $barChartData,  
         ]);
