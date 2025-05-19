@@ -13,7 +13,8 @@ class CreatePersediaanTabel extends Migration
     {
         Schema::create('persediaan', function (Blueprint $table) {
             $table->id('id_persediaan');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->string('jenis_persediaan'); // misal: bahan baku, barang jadi, dll
             $table->bigInteger('awal')->default(0);       // nilai awal dalam Rp

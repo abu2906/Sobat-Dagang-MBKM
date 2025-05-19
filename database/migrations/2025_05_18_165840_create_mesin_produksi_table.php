@@ -13,7 +13,8 @@ class CreateMesinProduksiTabel extends Migration
     {
         Schema::create('mesin_produksi', function (Blueprint $table) {
             $table->id('id_mesin');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->string('jenis_mesin');                      
             $table->string('nama_mesin');                 

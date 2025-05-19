@@ -13,7 +13,8 @@ class CreatePenggunaanAirTabel extends Migration
     {
         Schema::create('penggunaan_air', function (Blueprint $table) {
             $table->id('id_air');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->string('sumber_air');
             $table->float('banyaknya_penggunaan_m3')->default(0); // dalam meter kubik

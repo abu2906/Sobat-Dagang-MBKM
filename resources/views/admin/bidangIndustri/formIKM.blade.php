@@ -1138,6 +1138,17 @@
                                 }
                             });
                         </script>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                                document.querySelectorAll('input[type="text"]').forEach(input => input.value = "Contoh Data");
+                                document.querySelectorAll('input[type="number"]').forEach(input => input.value = 10);
+                                document.querySelectorAll('select').forEach(select => {
+                                    if (select.options.length > 1) select.selectedIndex = 1;
+                                });
+                            });
+                        </script>
+
                     </div>
                 </div>
             </section>

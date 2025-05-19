@@ -112,7 +112,7 @@ Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
     Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
     Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
     Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
-
+    Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
 });
 
 //User Industri

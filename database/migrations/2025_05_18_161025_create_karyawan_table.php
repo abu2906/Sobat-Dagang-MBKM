@@ -13,7 +13,9 @@ class CreateKaryawanTable extends Migration
     {
         Schema::create('karyawan', function (Blueprint $table) {
             $table->id('id_karyawan');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
+
             $table->integer('jumlah_karyawan');
             $table->integer('sd');
             $table->integer('smp');
@@ -22,6 +24,7 @@ class CreateKaryawanTable extends Migration
             $table->integer('s2');
             $table->integer('s3');
             $table->string('status'); // tetap/tidak tetap
+
             $table->timestamps();
         });
     }

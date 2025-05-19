@@ -9,7 +9,7 @@ class CreateDataIkmTable extends Migration
     {
         Schema::create('data_ikm', function (Blueprint $table) {
             $table->id('id_ikm');
-            $table->unsignedBigInteger('id_disdag'); // Jika ini relasi, FK bisa ditambahkan nanti
+            // $table->unsignedBigInteger('id_disdag'); // Jika ini relasi, FK bisa ditambahkan nanti
 
             $table->string('nama_pemilik');
             $table->string('nama_ikm');

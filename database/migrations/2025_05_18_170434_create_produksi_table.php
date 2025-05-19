@@ -13,7 +13,8 @@ class CreateProduksiTabel extends Migration
     {
         Schema::create('produksi', function (Blueprint $table) {
             $table->id('id_produksi');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->string('jenis_produksi');
             $table->string('kbli');

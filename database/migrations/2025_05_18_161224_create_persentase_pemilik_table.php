@@ -13,7 +13,9 @@ class CreatePersentasePemilikTable extends Migration
     {
         Schema::create('persentase_pemilik', function (Blueprint $table) {
             $table->id('id_pemilik');
-            $table->foreignId('id_ikm')->constrained('data_ikm')->onDelete('cascade');
+            $table->unsignedBigInteger('id_ikm');
+            $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
+            
             $table->decimal('pemerintah_pusat', 5, 2)->default(0); // persen
             $table->decimal('pemerintah_daerah', 5, 2)->default(0); // persen
             $table->decimal('swasta_nasional', 5, 2)->default(0); // persen
