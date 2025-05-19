@@ -124,7 +124,8 @@ class PersuratanController extends Controller
         $surat->status_kepalaBidang = 'Menunggu';
         $surat->save();
 
-        return redirect()->back()->with('success', 'Surat balasan berhasil dibuat dan disimpan sebagai PDF.');
+        return redirect($request->redirect_to)->with('success', 'Surat balasan berhasil dibuat dan disimpan sebagai PDF.');
+
 
     }
 

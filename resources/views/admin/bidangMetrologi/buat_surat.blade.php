@@ -49,6 +49,7 @@
             </div>
 
             <div class="text-center">
+                <input type="hidden" name="redirect_to" value="{{ url()->previous() }}">
                 <button type="submit" class="bg-blue-900 text-white px-6 py-2 rounded-lg mt-4 font-semibold block mx-auto">Buat Surat Balasan</button>
             </div>
         </form>
