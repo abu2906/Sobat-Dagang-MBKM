@@ -131,6 +131,7 @@
             <p>Kode Pos 91122 Email: perindag@pareparekota.go.id & dinas.perdagangan.pare@gmail.com</p>
         </div>
     </div>
+    
     <div class="judul">
         <h1>{{ \Carbon\Carbon::parse($tanggal_pembuatan_surat)->format('d-m-Y') }}</h1>
     </div>

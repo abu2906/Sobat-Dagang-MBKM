@@ -156,27 +156,33 @@
 									d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4 12.5-12.5z" />
 								</svg>
 							</a>
-							<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->suratBalasan->path_dokumen) }}', '{{ $surat->status_admin }}')"
-								class="text-green-600 hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Lihat Surat Balasan">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-										d="M9 12h6m-6 4h6M6 8h12M4 6h16v12H4z" />
-								</svg>
-							</button>
+							@if($surat->suratBalasan && $surat->suratBalasan->path_dokumen)
+								<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->suratBalasan->path_dokumen) }}', '{{ $surat->status_admin }}')"
+									class="text-green-600 hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Lihat Surat Balasan">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+											d="M9 12h6m-6 4h6M6 8h12M4 6h16v12H4z" />
+									</svg>
+								</button>
+							@endif
 
-							<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-								class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
-								</svg>
-							</button>
+							@if($surat->dokumen)
+								<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
+									class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
+									</svg>
+								</button>
+							@endif
 						@elseif ($surat->status_admin === 'Ditolak')
-							<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-								class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
-								</svg>
-							</button>
+							@if($surat->dokumen)
+								<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
+									class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
+									</svg>
+								</button>
+							@endif
 
 						@else
 							<form action="{{ route('surat.terima', str_replace(['/'], '_', $surat->id_surat)) }}" method="POST">
@@ -189,12 +195,14 @@
 								@method('PUT')
 								<button type="button" onclick="openTolakModal('{{ $surat->id_surat }}')" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded"> Tolak </button>
 							</form>
-							<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-								class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
-								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
-								</svg>
-							</button>
+							@if($surat->dokumen)
+								<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
+									class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
+									</svg>
+								</button>
+							@endif
 						@endif
 					</div>
 				</td>
