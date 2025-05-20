@@ -51,10 +51,12 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
     Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
    
-    //pengaduan
-    Route::post('/forum-chat/send', [ForumDiskusiController::class, 'send'])->name('forum.send');
-    Route::get('/forum-chat/messages', [ForumDiskusiController::class, 'getMessages'])->name('forum.messages');
-   
+    //pengaduan    
+    Route::get('/forum', [ForumDiskusiController::class, 'index'])->name('forum.index');
+    Route::post('/forum', [ForumDiskusiController::class, 'store'])->name('forum.store');
+    Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
+    Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
+
     //pelaporan
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
     Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
