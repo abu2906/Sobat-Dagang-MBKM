@@ -203,7 +203,6 @@ Route::middleware(['check.role:kabid_industri'])->group(function () {
 
 });
 
-
 // Route::get('/kabid-industri/dashboard', [KabidIndustriController::class, 'dashboardKabid'])->name('kabid.industri');
 // Route::get('/directory-book', [DirectoryBookController::class, 'index'])->name('directory-book');
 // Route::get('/data-ikm', [DataIKMController::class, 'index'])->name('data-ikm');
