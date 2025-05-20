@@ -49,7 +49,7 @@ class authController extends Controller
                 case 'admin_industri':
                     return redirect()->intended('/admin/industri');
                 case 'admin_metrologi':
-                    return redirect()->intended('/admin/metrologi');
+                    return redirect()->intended('/admin/dashboard-metrologi');
                 case 'kabid_perdagangan':
                     return redirect()->intended(route('kabid.perdagangan'));
                 case 'kabid_industri':
