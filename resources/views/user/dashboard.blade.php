@@ -28,7 +28,7 @@
                 ['label' => 'Permohonan perizinan/non perizinan', 'route' => route('bidangPerdagangan.formPermohonan')],
             ],
             'INDUSTRI' => [
-                ['label' => 'Permohonan IKM Binaan', 'route' => '#'],
+                ['label' => 'Permohonan IKM Binaan', 'route' => route('bidangIndustri.formPermohonan')],
                 ['label' => 'Data Sertifikat Halal', 'route' => '#'],
             ],
             'METROLOGI' => [

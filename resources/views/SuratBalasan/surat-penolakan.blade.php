@@ -120,7 +120,7 @@
         <p><strong>Dinas Perdagangan Kota Parepare</strong></p>
     </div>
     <div class="ttd">
-        <p>Dikeluarkan di : Pareparae</p>
+        <p>Dikeluarkan di : Parepare</p>
         <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y') }}</p>
         <div></div>
         <p>KEPADA DINAS PERDAGANGAN</p>

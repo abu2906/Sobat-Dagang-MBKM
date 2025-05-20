@@ -1,3 +1,4 @@
+
 import Echo from 'laravel-echo';
 import '../../public/assets/js/chat';
 

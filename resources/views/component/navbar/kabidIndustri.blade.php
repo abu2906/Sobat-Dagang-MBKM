@@ -26,10 +26,10 @@
             <ul class="space-y-2 text-sm">
                 @php
                 $menuItems = [
-                ['href' => '#', 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                ['href' => route('kabid.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => '#', 'icon' => 'folder.png', 'label' => 'Data IKM'],
-                ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
-                ['href' => route('kelolaSurat.industri'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Sertifikat Halal'],
+                ['href' => route('kabid.surat'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
 
@@ -49,7 +49,7 @@
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
                     {{-- <p class="text-sm font-semibold">{{ Auth::user()->name }}</p> --}}
-                    <p class="text-sm font-semibold">Bidang Industri</p>
+                    <p class="text-sm font-semibold">Kabid Industri</p>
                     <p class="text-xs">Admin</p>
                 </div>
             </div>
@@ -64,5 +64,6 @@
                     </button>
                 </form>
             </div>
+
         </div>
     </div>

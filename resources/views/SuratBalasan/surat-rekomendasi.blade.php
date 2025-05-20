@@ -138,7 +138,7 @@
         <p>Nomor: {{$nomor_surat}}</p>
     </div>
     <p>Yang Bertanda tangan dibawah ini. Kepala Dinas Parepare Menerangkan Bahwa :</p>
-    <table style="width: 60%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 72%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama</td>
             <td style="padding: 4px;">: {{ $nama_pengirim }}</td>
@@ -161,7 +161,7 @@
         </tr>
     </table>
     <p>Untuk Membuka Usaha:</p>
-    <table style="width: 50%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 65%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama Perusahaan</td>
             <td style="padding: 4px;">: {{$nama_usaha}}</td>
@@ -180,7 +180,7 @@
         </tr>
         <tr>
             <td style="padding: 4px;">Luas Ruangan</td>
-            <td style="padding: 4px;">: {{$luas_ruangan}}</td>
+            <td style="padding: 4px;">: {{$luas_ruangan}} m<sup>2</sup></td>
         </tr>
     </table>
     <p>
@@ -193,7 +193,7 @@
     </div>
 
     <div class="ttd">
-        <p>Dikeluarkan di : Pareparae</p>
+        <p>Dikeluarkan di : Parepare</p>
         <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d F Y') }}</p>
         <div></div>
         <p>KEPADA DINAS PERDAGANGAN</p>

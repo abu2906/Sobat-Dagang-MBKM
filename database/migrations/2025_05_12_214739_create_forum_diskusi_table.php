@@ -15,6 +15,8 @@ class CreateForumDiskusiTable extends Migration
         $table->text('chat');
         $table->timestamp('waktu');
         $table->string('status');
+        $table->string('created_at');
+        $table->string('updated_at');
 
         $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
         // foreign key id_disdag sesuai dengan tabel disdag (pastikan benar)
