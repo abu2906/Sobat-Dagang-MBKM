@@ -85,7 +85,7 @@
 										<td class="text-center px-5 py-3 border-b">{{ $index + 1 }}</td>
 										<td class="text-center px-5 py-3 border-b">{{ $item->id_surat }}</td>
 										<td class="text-center px-5 py-3 border-b">
-											{{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}
+											{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
 										</td>
 										<td class="text-center px-5 py-3 border-b">
 											<span class="text-xs font-medium px-3 py-1 rounded-full
@@ -150,7 +150,7 @@
 		<div id="formPermohonan" class="relative flex justify-center">
 			<form class="bg-white p-6 rounded-xl shadow-lg w-full max-w-3xl" method="POST" action="{{ route('proses-surat-metrologi') }}" enctype="multipart/form-data">
 				@csrf
-				<h2 class="text-center font-bold text-xl mb-4">FORM PERMOHONAN</h2>
+				<h2 class="text-center font-bold text-xl mb-4">FORM PERMOHONAN TERA/TERA ULANG</h2>
 
 				<div class="mb-4">
 					<h3 class="font-semibold mb-2">Data Pemohon:</h3>
@@ -196,7 +196,7 @@
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Upload Dokumen</label>
+					<label class="block font-semibold mb-1">Upload Surat</label>
 					<input type="file" name="dokumen" class="mt-2">
 				</div>
 

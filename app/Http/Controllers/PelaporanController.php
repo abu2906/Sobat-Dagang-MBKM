@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Distributor;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Exception;
+
 // Berisikan seluruh fungsi yang digunakan dalam hal pelaporan baik admin maupun distributor
 class PelaporanController extends Controller
 {
@@ -35,15 +39,36 @@ class PelaporanController extends Controller
             return view('user.bidangPerdagangan.pelaporan');
         }
 
+        if ($distributor->status === 'ditolak') {
+            // Jika status masih menunggu verifikasi
+            return redirect()->route('cekpengajuan');
+        }
+
         // Jika status lainnya (opsional, misal: Ditolak), kamu bisa atur juga
         return redirect()->route('pelaporan-penyaluran')->with('error', 'Status pengajuan tidak valid.');
     }
 
-
     public function verifikasiPengajuan()
     {
-        return view('user.bidangPerdagangan.verifikasiPengajuan');
+        // Ambil id_user dari session
+        $id_user = Session::get('id_user');
+
+        // Ambil data status dari tabel distributor
+        $distributor = DB::table('distributor')
+                        ->where('id_user', $id_user)
+                        ->orderByDesc('created_at') // kalau ada lebih dari 1 data
+                        ->first();
+
+        // Jika tidak ditemukan
+        if (!$distributor) {
+            return redirect()->back()->with('error', 'Data distributor tidak ditemukan.');
+        }
+
+        // Kirim status ke blade
+        $status = strtolower($distributor->status); // jadi 'menunggu', 'diterima', atau 'ditolak'
+        return view('user.bidangPerdagangan.verifikasiPengajuan', compact('status'));
     }
+
     public function formDistributor()
     {
         return view('user.bidangPerdagangan.daftarDistributor');
@@ -133,5 +158,62 @@ class PelaporanController extends Controller
 
         return redirect()->back()->with('success', 'Distributor ditolak.');
     }
+    public function hapus($id_distributor)
+    {
+        DB::table('distributor')->where('id_distributor', $id_distributor)->delete();
+
+        return redirect()->back()->with('success', 'Distributor berhasil dihapus.');
+    }
+
+    public function inputDataToko(Request $request)
+{
+    // Validasi input jika diperlukan
+        $request->validate([
+            'nama_toko' => 'required|string|max:255',
+            'kecamatan' => 'required|string|max:255',
+            'no_register' => 'required|string|max:100',
+            'rencana_kebutuhan' => 'required|string|max:255',
+        ]);
+
+        // Simpan atau proses data
+        // Contoh: simpan ke database jika sudah ada modelnya
+        // Toko::create($request->all());
+
+        // Redirect atau tampilkan pesan
+        return back()->with('success', 'Data toko berhasil ditambahkan.');
+}
+    public function showForm()    {
+        return view('user.bidangPerdagangan.inputDataToko');
+    }
+
+        public function inputDataDistribusi(Request $request)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'nama_barang'    => 'required|string',
+            'stok'           => 'required|numeric|min:0',
+            'penyaluran'     => 'required|numeric|min:0',
+            'tanggal_input'  => 'required|date',
+        ]);
+
+        // Simpan ke database
+        // DistribusiPupuk::create([
+        //     'nama_barang'   => $validated['nama_barang'],
+        //     'stok'          => $validated['stok'],
+        //     'penyaluran'    => $validated['penyaluran'],
+        //     'tanggal_input' => $validated['tanggal_input'],
+        // ]);
+
+        return redirect()->back()->with('success', 'Data distribusi berhasil ditambahkan.');
+    }
+    public function showDataDistribusi()    {
+        // Ambil semua data distribusi
+        // $data = DistribusiPupuk::orderBy('tanggal_input', 'desc')->get();
+
+        // Kirim ke view
+        // return view('user.bidangPerdagangan.inputDataDistribusi', compact('data'));
+        return view('user.bidangPerdagangan.inputDataDistribusi');
+    }
+
 
 }

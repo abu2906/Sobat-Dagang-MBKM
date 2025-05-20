@@ -7,8 +7,8 @@ use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AdminIndustriController;
 use App\Http\Controllers\DashboardMetrologiController;
+use App\Http\Controllers\AdminIndustriController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DirectoryBookController;
@@ -43,6 +43,7 @@ Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->n
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+
 // user Login
 Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardController::class, 'index'])->name('user.dashboard');
@@ -60,6 +61,10 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/form-permohonan-distributor', [PelaporanController::class, 'formDistributor'])->name('bidangPerdagangan.formDistributor');
     Route::post('/form-permohonan-distributor', [PelaporanController::class, 'submitDistributor'])->name('bidangPerdagangan.submitDistributor');
     Route::get('/verifikasi-pengajuan', [PelaporanController::class, 'verifikasiPengajuan'])->name('cekpengajuan');
+    Route::get('/input-data-toko', [PelaporanController::class, 'showForm'])->name('pelaporan.showInputForm');
+    Route::post('/input-data-toko', [PelaporanController::class, 'inputDataToko'])->name('pelaporan.inputDataToko');
+    Route::get('/input-data-distribusi', [PelaporanController::class, 'showDataDistribusi'])->name('pelaporan.showDataDistribusi');
+    Route::post('/input-data-distribusi', [PelaporanController::class, 'inputDataDistribusi'])->name('pelaporan.inputDataDistribusi');
 
     //perdagangan
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
@@ -87,7 +92,13 @@ Route::middleware(['auth.role:user'])->group(function () {
 
     
 });
-//
+
+// guest
+Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
+Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
+Route::get('/', [homeController::class, 'index'])->name('home');
+Route::get('/about', [AboutController::class, 'showAboutPage'])->name('about');
+Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
 Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
@@ -108,7 +119,19 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::get('/admin/detail-surat/{id}/view-{type}', [AdminIndustriController::class, 'viewDokumen'])
         ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
         ->name('dokumen.viewi');
-}); 
+        
+    Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
+    Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
+    Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
+    Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
+    Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
+    Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
+    Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
+});
+
+//User Industri
+Route::get('/form-surat-permohonan', [PersuratanController::class, 'showFormSurat'])->name('form.surat');  
+Route::get('/sertifikasi-halal', [homeController::class, 'showHalal'])->name('halal');  
 
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
@@ -153,6 +176,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/distributor/{id_distributor}/tolak', [PelaporanController::class, 'tolak'])->name('distributor.tolak');
     Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
     Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
+    Route::delete('/distributor/{id_distributor}/hapus', [PelaporanController::class, 'hapus'])->name('distributor.hapus');
     #kelola berita
     Route::get('/admin/kelola-pengguna', [DashboardController::class, 'kelolaAdmin'])->name('kelola.admin');
     Route::post('/admin/kelola-pengguna', [DashboardController::class, 'tambahpengguna'])->name('tambah.pengguna');
@@ -195,15 +219,16 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::delete('/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('delete-uttp');
     Route::delete('/admin/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('uttp.destroy');
     Route::patch('/admin/uttp/update/{id}', [DirectoryBookController::class, 'update'])->name('update-uttp');
-
+    Route::put('/admin/surat/{id}/tolak', [PersuratanController::class, 'tolakSurat'])->name('surat.tolak');
     Route::get('/admin/persuratan-metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('persuratan-metrologi');
     Route::put('/surat/terima/{id}', [PersuratanController::class, 'terimaSurat'])->name('surat.terima');
     Route::put('/surat/tolak/{id}', [PersuratanController::class, 'tolakSurat'])->name('surat.tolak');
     Route::get('/surat/{id}/keterangan', [PersuratanController::class, 'showkirimKeterangan'])->name('create-keterangan');
     Route::get('/surat/{id}/balasan', [PersuratanController::class, 'showcreateSuratBalasan'])->name('create-surat-balasan');
     Route::post('/admin/surat/{id}/balasan', [PersuratanController::class, 'createSuratBalasan'])->name('proces-surat-balasan');
-    Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
-    Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
+    Route::get('/admin/surat/{id}/edit-balasan', [PersuratanController::class, 'editBalasan'])->name('edit-surat-balasan');
+    Route::put('/admin/surat/{id}/update-balasan', [PersuratanController::class, 'updateBalasan'])->name('update-surat-balasan');
+
 
     Route::get('/admin/dashboard-metrologi', [DashboardController::class, 'showMetrologi'])->name('dashboard-admin-metrologi');
     Route::get('/admin/alat-ukur-metrologi', [DashboardController::class, 'showMetrologi'])->name('alat-ukur-metrologi');

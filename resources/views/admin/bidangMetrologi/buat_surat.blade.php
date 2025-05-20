@@ -21,29 +21,26 @@
                         <label for="nomor_surat" class="block font-medium mb-1">Nomor Surat</label>
                         <input type="text" name="id_surat_balasan" class="border px-4 py-2 w-full rounded-lg" required>
                     </div>
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label for="sifat_surat" class="block font-medium mb-1">Sifat Surat</label>
                         <input type="text" name="sifat_surat" class="border px-4 py-2 w-full rounded-lg" required>
                     </div>
                     <div class="form-group row">
                         <label for="perihal" class="block font-medium mb-1">Perihal</label>
                         <input type="text" name="perihal" class="border px-4 py-2 w-full rounded-lg" required>
-                    </div>
-                    <div class="form-group row">
-                        <label for="tanggal_pembuatan_surat" class="block font-medium mb-1">Tanggal Pembuatan Surat</label>
-                        <input type="date" name="tanggal_pembuatan_surat" class="border px-4 py-2 w-full rounded-lg" required>
-                    </div>
-                    <div class="form-group row">
+                    </div> --}}
+                    <input type="hidden" name="tanggal_pembuatan_surat" value="{{ now()->toDateString() }}">
+                    {{-- <div class="form-group row">
                         <label for="tanggal_surat" class="block font-medium mb-1">Tanggal Surat</label>
                         <input type="date" name="tanggal_surat" class="border px-4 py-2 w-full rounded-lg" required>
-                    </div>
+                    </div> --}}
                     <div class="form-group row">
                         <label for="nama_yang_dituju" class="block font-medium mb-1">Nama Penerima</label>
-                        <input type="text" name="nama_yang_dituju" class="border px-4 py-2 w-full rounded-lg" required>
+                        <input type="text" name="nama_yang_dituju" class="border px-4 py-2 w-full rounded-lg" value="{{ $surat->user->nama ?? '' }}" required>
                     </div>
                     <div class="form-group row md:col-span-2">
-                        <label for="isi" class="block font-medium mb-1">Isi Surat</label>
-                        <textarea name="isi" class="form-control border px-4 py-2 w-full rounded-lg" rows="20" required></textarea>
+                        <label for="isi_surat" class="block font-medium mb-1">Isi Surat</label>
+                        <textarea name="isi_surat" class="form-control border px-4 py-2 w-full rounded-lg" rows="20" required></textarea>
                     </div>
                 </div>
             </div>

@@ -5,26 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\IndexHarga;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Surat;
-use App\Models\HargaBarang;
-use App\Models\Notifikasi;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Exception;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;  
 use App\Models\PermohonanSurat;
 use App\Models\Barang;
-use App\Models\DocumentUser;
-use App\Models\IndexKategori;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\Models\DistribusiPupuk;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Validation\ValidationException;
 
 class KabidPerdaganganController extends Controller
 {
-
     private function getSuratPerdaganganData()
     {
         $jenis = [
@@ -193,15 +180,6 @@ class KabidPerdaganganController extends Controller
                 ->values()
                 ->all();
 
-           // Gabungan dari top harga naik dan turun
-            $hargaTren = array_merge($topHargaNaik, $topHargaTurun);
-
-            // Isi Pie Chart
-            $top10HargaTertinggi = collect($hargaTren)
-                ->sortByDesc('price_change')  // Urutkan berdasarkan perubahan harga tertinggi
-                ->take(10)
-                ->values()
-                ->all();
         }
 
         // Mengembalikan tampilan dengan data yang telah diproses
@@ -214,8 +192,6 @@ class KabidPerdaganganController extends Controller
             'barangs' => $barangs,
             'dataHarga' => $dataHarga,
             'topHargaNaik' => $topHargaNaik,
-            'top10HargaTertinggi' => $top10HargaTertinggi,
-            'hargaTren' => $hargaTren,
             'topHargaTurun' => $topHargaTurun,
             'barChartData' => $barChartData,  
         ]);
