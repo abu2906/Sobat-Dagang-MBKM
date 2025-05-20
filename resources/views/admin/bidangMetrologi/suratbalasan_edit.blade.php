@@ -29,7 +29,7 @@
                     <input type="hidden" name="tanggal_pembuatan_surat" value="{{ old('tanggal_pembuatan_surat', $suratBalasan->tanggal) }}">
 
                     <div class="form-group row">
-                        <label for="nama_yang_dituju" class="block font-medium mb-1">Nama Penerima</label>
+                        <label for="nama_yang_dituju" class="block font-medium mb-1">Penerima</label>
                         <input type="text" name="nama_yang_dituju" class="border px-4 py-2 w-full rounded-lg"
                                value="{{ old('nama_yang_dituju', $suratMasuk->user->nama ?? '') }}" required>
                     </div>

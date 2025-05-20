@@ -195,7 +195,7 @@ Route::middleware(['auth:disdag'])->group(function () {
     Route::post('/admin/surat/{id}/balasan', [PersuratanController::class, 'createSuratBalasan'])->name('proces-surat-balasan');
     Route::get('/admin/surat/{id}/edit-balasan', [PersuratanController::class, 'editBalasan'])->name('edit-surat-balasan');
     Route::put('/admin/surat/{id}/update-balasan', [PersuratanController::class, 'updateBalasan'])->name('update-surat-balasan');
-
+    Route::put('/admin/surat/{id}/selesai', [PersuratanController::class, 'tandaiSelesai'])->name('surat.selesai');
 
 });
 
@@ -206,6 +206,14 @@ Route::middleware(['check.role:disdag,kabid_metrologi'])->group(function () {
     Route::post('/surat/terima/{id}', [PersuratanController::class, 'terimaKabid'])->name('terimaKabid');
     Route::post('/surat/tolak/{id}', [PersuratanController::class, 'tolakKabid'])->name('tolakKabid');
 
+});
+
+// Kepala Dinas Routes
+Route::middleware(['check.role:disdag,kepala_dinas'])->group(function () {
+    Route::get('/kadis/dashboard', [DashboardMetrologiController::class, 'showKadis'])->name('dashboard-kadis');
+    Route::get('/kadis/persuratan', [DashboardMetrologiController::class, 'showPersuratanKadis'])->name('persuratan-kadis');
+    Route::post('/kadis/surat/{id}/setujui', [PersuratanController::class, 'setujuiKadis'])->name('setujuiKadis');
+    Route::post('/kadis/surat/{id}/tolak', [PersuratanController::class, 'tolakKadis'])->name('tolakKadis');
 });
 
 // Route for test

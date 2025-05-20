@@ -230,30 +230,44 @@
     }
 
     function openEditModal(data, updateRoute) {
-    document.getElementById('modalTambahAlat').classList.remove('hidden');
-    const form = document.getElementById('form-alat');
+        document.getElementById('modalTambahAlat').classList.remove('hidden');
+        const form = document.getElementById('form-alat');
 
-    // Ganti action dan method
-    form.action = updateRoute;
-    document.getElementById('formMethod').value = "PATCH";
+        // Ganti action dan method
+        form.action = updateRoute;
+        document.getElementById('formMethod').value = "PATCH";
 
-    // Assign field manual
-    form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
-    form.elements['id_user'].value = data.id_user || '';
-    form.elements['no_registrasi'].value = data.no_registrasi || '';
-    form.elements['nama_usaha'].value = data.nama_usaha || '';
-    form.elements['jenis_alat'].value = data.jenis_alat || '';
-    form.elements['nama_alat'].value = data.nama_alat || '';
-    form.elements['merk_type'].value = data.merk_type || '';
-    form.elements['nomor_seri'].value = data.nomor_seri || '';
-    form.elements['jumlah_alat'].value = data.jumlah_alat || '';
-    form.elements['alat_penguji'].value = data.alat_penguji || '';
-    form.elements['ctt'].value = data.ctt || '';
-    form.elements['spt_keperluan'].value = data.spt_keperluan || '';
-    form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
-    form.elements['terapan'].value = data.terapan || '';
-    form.elements['keterangan'].value = data.keterangan || '';
+        // Assign field manual
+        form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
+        form.elements['id_user'].value = data.id_user || '';
+        form.elements['no_registrasi'].value = data.no_registrasi || '';
+        form.elements['nama_usaha'].value = data.nama_usaha || '';
+        form.elements['jenis_alat'].value = data.jenis_alat || '';
+        form.elements['nama_alat'].value = data.nama_alat || '';
+        form.elements['merk_type'].value = data.merk_type || '';
+        form.elements['nomor_seri'].value = data.nomor_seri || '';
+        form.elements['jumlah_alat'].value = data.jumlah_alat || '';
+        form.elements['alat_penguji'].value = data.alat_penguji || '';
+        form.elements['ctt'].value = data.ctt || '';
+        form.elements['spt_keperluan'].value = data.spt_keperluan || '';
+        form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
+        form.elements['terapan'].value = data.terapan || '';
+        form.elements['keterangan'].value = data.keterangan || '';
     }
+
+    // Script untuk membuka modal otomatis dan mengisi ID User
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoOpen = urlParams.get('auto_open');
+        const userId = urlParams.get('user_id');
+
+        if (autoOpen === 'true') {
+            openModal();
+            if (userId) {
+                document.getElementById('form-alat').elements['id_user'].value = userId;
+            }
+        }
+    });
 </script>
 
 

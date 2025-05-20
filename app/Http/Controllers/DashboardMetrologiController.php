@@ -10,6 +10,7 @@ use App\Models\suratMetrologi;
 use App\Models\Uttp;
 use App\Models\DataAlatUkur;
 use App\Models\suratBalasan;
+use App\Models\Surat;
 
 
 class DashboardMetrologiController extends Controller
@@ -186,7 +187,9 @@ class DashboardMetrologiController extends Controller
 
     public function showAdministrasi()
     {
-        $suratList = SuratMetrologi::with('user', 'suratBalasan')->get();
+        $suratList = SuratMetrologi::with('user', 'suratBalasan')
+            ->orderBy('created_at', 'desc')
+            ->get();
         $dataJumlahSurat = $this->getJumlahSurat();
 
         return view('admin.bidangMetrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
@@ -194,10 +197,60 @@ class DashboardMetrologiController extends Controller
 
     public function showAdministrasiKabid()
     {
-        $suratList = SuratMetrologi::with('user', 'suratBalasan')->get();
+        $suratList = SuratMetrologi::with('user', 'suratBalasan')
+            ->orderBy('created_at', 'desc')
+            ->get();
         $dataJumlahSurat = $this->getJumlahSurat();
 
         return view('admin.kabid.metrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
     }
-    
+
+    public function showKadis()
+    {
+        $suratList = suratBalasan::with('suratMetrologi.user')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalSurat = suratBalasan::count();
+        $totalSuratDisetujui = suratBalasan::where('status_kadis', 'Disetujui')->count();
+        $totalSuratDitolak = suratBalasan::where('status_kadis', 'Ditolak')->count();
+        $totalSuratMenunggu = suratBalasan::where('status_kadis', 'Menunggu')->count();
+
+        return view('admin.kepalaDinas.dashboard', compact(
+            'suratList',
+            'totalSurat',
+            'totalSuratDisetujui',
+            'totalSuratDitolak',
+            'totalSuratMenunggu'
+        ));
+    }
+
+    public function showPersuratanKadis()
+    {
+        $suratList = suratBalasan::with('suratMetrologi.user')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Get statistics for letters visible to kepala dinas
+        $totalSurat = suratBalasan::where('status_kepalaBidang', 'Disetujui')->count();
+        $totalSuratDisetujui = suratBalasan::where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Disetujui')
+            ->count();
+        $totalSuratDitolak = suratBalasan::where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Ditolak')
+            ->count();
+        $totalSuratMenunggu = suratBalasan::where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Menunggu')
+            ->count();
+
+        return view('admin.kepalaDinas.persuratan', compact(
+            'suratList',
+            'totalSurat',
+            'totalSuratDisetujui',
+            'totalSuratDitolak',
+            'totalSuratMenunggu'
+        ));
+    }
 }

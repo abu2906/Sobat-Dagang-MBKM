@@ -17,7 +17,9 @@ class PersuratanController extends Controller
     public function showAdministrasiMetrologi()
     {
         if (Auth::guard('user')->check()) {
-            $permohonan = suratMetrologi::where('user_id', Auth::guard('user')->id())->latest()->get();
+            $permohonan = suratMetrologi::where('user_id', Auth::guard('user')->id())
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             return view('user.bidangMetrologi.administrasi', compact('permohonan'));
         }
@@ -213,7 +215,8 @@ class PersuratanController extends Controller
     public function terimaKabid($id, Request $request)
     {
         $surat = SuratBalasan::findOrFail($id);
-        $surat->status_kepalaBidang = 'Disetujui'; // atau 'Diterima'
+        $surat->status_kepalaBidang = 'Disetujui';
+        $surat->status_kadis = 'Menunggu'; // Reset status Kadis ke Menunggu agar bisa disetujui/ditolak lagi
         $surat->save();
 
         return back()->with('success', 'Surat berhasil disetujui.');
@@ -234,4 +237,46 @@ class PersuratanController extends Controller
         return back()->with('success', 'Surat berhasil ditolak.');
     }
 
+    public function setujuiKadis($id)
+    {
+        $surat = suratBalasan::findOrFail($id);
+        $surat->status_kadis = 'Disetujui';
+        $surat->save();
+
+        // Update status surat masuk ke Diterima
+        $suratMetrologi = $surat->suratMetrologi;
+        if ($suratMetrologi) {
+            $suratMetrologi->status_admin = 'Diterima';
+            $suratMetrologi->status_surat_masuk = 'Disetujui'; // Update status permohonan user
+            $suratMetrologi->save();
+        }
+
+        return redirect()->back()->with('success', 'Surat berhasil disetujui');
+    }
+
+    public function tolakKadis(Request $request, $id)
+    {
+        $surat = suratBalasan::findOrFail($id);
+        $surat->status_kadis = 'Ditolak';
+        $surat->save();
+
+        // Update status surat masuk ke Butuh Revisi
+        $suratMetrologi = $surat->suratMetrologi;
+        if ($suratMetrologi) {
+            $suratMetrologi->status_admin = 'Butuh Revisi';
+            $suratMetrologi->save();
+        }
+
+        return redirect()->back()->with('success', 'Surat berhasil ditolak');
+    }
+
+    public function tandaiSelesai($id)
+    {
+        $id_srt = str_replace('_', '/', $id);
+        $surat = suratMetrologi::where('id_surat', $id_srt)->firstOrFail();
+        $surat->status_admin = 'Selesai';
+        $surat->save();
+
+        return redirect()->back()->with('success', 'Surat berhasil ditandai sebagai selesai');
+    }
 }

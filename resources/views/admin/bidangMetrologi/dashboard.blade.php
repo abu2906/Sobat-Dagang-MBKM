@@ -41,16 +41,16 @@
         <div class="bg-white rounded-lg shadow p-6">
             <h5 class="text-lg font-semibold mb-4">Tren Permohonan per Bulan</h5>
             <div class="h-[300px]">
-                <canvas id="lineChart" class="w-full h-full"></canvas>
-            </div>
-        </div>
+					<canvas id="lineChart" class="w-full h-full"></canvas>
+				</div>
+			</div>
         <div class="bg-white rounded-lg shadow p-6">
             <h5 class="text-lg font-semibold mb-4">Frekuensi Pengujian Alat Ukur</h5>
             <div class="h-[300px]">
-                <canvas id="donutChart" class="w-full h-full"></canvas>
-            </div>
-        </div>
-    </div>
+					<canvas id="donutChart" class="w-full h-full"></canvas>
+			</div>
+		</div>
+	</div>
     
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="bg-white rounded-2xl shadow-md p-6">
@@ -80,32 +80,32 @@
         <div class="bg-white rounded-2xl shadow-md p-6">
             <div class="flex flex-col gap-4">
                 <div class="flex flex-col items-center justify-center gap-2 bg-[#0c3252] text-white px-5 py-4 rounded-lg">
-                    <p class="text-lg font-semibold">Surat Belum Terverifikasi</p>
-                    <p class="text-3xl font-semibold">{{ $totalSuratMenunggu }}</p>
+					<p class="text-lg font-semibold">Surat Belum Terverifikasi</p>
+					<p class="text-3xl font-semibold">{{ $totalSuratMenunggu }}</p>
                     <a href="{{ route('persuratan-metrologi') }}" class="bg-white text-[#0c3252] flex p-2 gap-2 items-center justify-center text-sm rounded-lg shadow w-1/2">
-                        Tinjau Sekarang
-                    </a>
-                </div>
+						Tinjau Sekarang
+					</a>
+				</div>
                 <div class="flex flex-col items-center gap-3">
                     <h1 class="text-center font-bold text-lg mb-2">Jumlah Permohonan per Status</h1>
                     <div class="h-[200px] w-full">
-                        <canvas id="statusChart"></canvas>
+					<canvas id="statusChart"></canvas>
                     </div>
                     <div class="legend text-sm">
-                        <span style="color: yellow;">&#11044;</span> Disetujui
-                        <span style="color: purple;">&#11044;</span> Ditolak
-                        <span style="color: pink;">&#11044;</span> Menunggu
-                    </div>
-                </div>
-            </div>
+						<span style="color: yellow;">&#11044;</span> Disetujui
+						<span style="color: purple;">&#11044;</span> Ditolak
+						<span style="color: pink;">&#11044;</span> Menunggu
+					</div>
+				</div>
+			</div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-md p-6">
+		<div class="bg-white rounded-2xl shadow-md p-6">
             <h5 class="text-lg font-semibold mb-4">Jumlah Alat Berdasarkan Jenis per Bulan</h5>
             <div class="h-[300px]">
                 <canvas id="barChart"></canvas>
             </div>
-        </div>
+		</div>
     </div>
 </div>
 
@@ -147,64 +147,64 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
+				legend: {
                     position: 'bottom'
                 }
-            }
+				}
         },
     });
 
     // Donut Chart
     new Chart(document.getElementById('donutChart'), {
-        type: 'doughnut',
-        data: {
-            labels: {!! $donutLabels !!},
-            datasets: [{
-                data: {!! $donutData !!},
-                backgroundColor: ['#a3a3a3', '#1e3a8a', '#06b6d4'],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
+    type: 'doughnut',
+    data: {
+        labels: {!! $donutLabels !!},
+        datasets: [{
+            data: {!! $donutData !!},
+            backgroundColor: ['#a3a3a3', '#1e3a8a', '#06b6d4'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
                     position: 'bottom',
-                    labels: {
-                        color: '#111827',
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        },
-                        padding: 15
-                    }
+                labels: {
+                    color: '#111827',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    padding: 15
+                }
                 }
             }
-        }
-    });
+    }
+});
 
     // Pie Chart for Status
     new Chart(document.getElementById('statusChart'), {
         type: 'pie',
-        data: {
-            labels: ['Disetujui', 'Ditolak', 'Menunggu'],
-            datasets: [{
-                data: [{{ $totalSuratDiterima }}, {{ $totalSuratDitolak }}, {{ $totalSuratMenunggu }}],
+		data: {
+			labels: ['Disetujui', 'Ditolak', 'Menunggu'],
+			datasets: [{
+				data: [{{ $totalSuratDiterima }}, {{ $totalSuratDitolak }}, {{ $totalSuratMenunggu }}],
                 backgroundColor: ['yellow', 'purple', 'pink'],
-            }]
-        },
-        options: {
-            responsive: true,
+			}]
+		},
+		options: {
+			responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
+			plugins: {
+				legend: {
+					display: false
+				}
+			}
+		}
+	});
 
     new Chart(document.getElementById('barChart'), {
         type: 'bar',
