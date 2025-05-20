@@ -174,7 +174,6 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::get('/admin/persuratan-metrologi', [DashboardController::class, 'showMetrologi'])->name('persuratan-metrologi');
 });
 
-
 // admin master
 Route::middleware(['check.role:master_admin'])->group(function () {
     #dashboard nddpi isinya untuk tes2 ji
