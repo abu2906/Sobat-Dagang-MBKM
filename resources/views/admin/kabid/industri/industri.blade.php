@@ -6,15 +6,15 @@
   <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
     <!-- Left Column: Dashboard Content -->
     <div>
-      <div class="flex flex-col sm:flex-row sm:space-x-6 space-y-6 sm:space-y-0">
+      <div class="flex flex-col sm:flex-row sm:space-x-6 space-y-6 sm:space-y-0 ">
         <!-- Jumlah Surat Balasan Card (Larger) -->
-        <div class="sm:w-[300px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
+        <div class="sm:w-[370px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
           <p class="font-semibold text-lg mb-1">Jumlah Surat Terverifikasi</p>
           <p class="font-extrabold text-3xl mb-1">{{ $totalSuratTerverifikasi }}</p>
           <p class="text-base">Surat Permohonan Telah Diverifikasi </p>
         </div>
         <!-- Akumulasi Perkembangan Card (Smaller) -->
-        <div class="sm:w-[350px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
+        <div class="sm:w-[370px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
           <p class="font-semibold text-lg mb-1 flex items-center gap-2">
             <i class="fas fa-file-alt"></i>
             Akumulasi Perkembangan
@@ -126,9 +126,9 @@
       
         <!-- Informasi Tambahan card -->
         <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px] flex flex-col">
-          <h3 class="font-bold text-lg mb-4">Informasi Tambahan</h3>
+          <h3 class="font-bold text-lg mb-4">Distribusi Industri</h3>
           <div class="flex flex-col items-center">
-            <canvas id="donutChart" class="mb-2 w-32 h-32"></canvas>
+            <canvas id="distribusiPie" class="mb-2 w-32 h-32"></canvas>
             <ul class="w-full h-full grid grid-cols-3 text-sm text-[#000]">
               <li class="flex items-center gap-2">
                 <span class="inline-block w-3 h-3 bg-[#5bc0f8] rounded-sm"></span> Sandang
@@ -143,18 +143,18 @@
                 <span class="inline-block w-3 h-3 bg-[#f3f3f3] rounded-sm"></span> Logam & Elektronika
               </li>
               <li class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 bg-[#f3f3f3] rounded-sm"></span> Kerajinan
+                <span class="inline-block w-3 h-3 bg-[#ffcd56] rounded-sm"></span> Kerajinan
               </li>
             </ul>
           </div>
         </article>
       </section>
-      <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px] flex flex-col">
-          <h3 class="font-bold text-lg mb-4">Informasi Tambahan</h3>
-          <div class="flex flex-col items-center">
-            <canvas id="grafikChart" class="mb-2 w-32 h-32"></canvas>
-          </div>
-        </article>
+      <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] mt-6 h-[400px] flex flex-col">
+        <h3 class="font-bold text-lg mb-4">Informasi Tambahan</h3>
+        <div class="flex flex-col items-center">
+          <canvas id="perkembanganChart" class="mb-2 w-300 h-full"></canvas>
+        </div>
+      </article>
     </div>
     
     </div>
@@ -163,33 +163,55 @@
 </div>
 
 <script>
-  const ctx = document.getElementById('donutChart').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'doughnut',
+    // Pie Chart Distribusi Industri
+  const distribusiCtx = document.getElementById('distribusiPie').getContext('2d');
+  const distribusiPie = new Chart(distribusiCtx, {
+    type: 'pie',
     data: {
       labels: ['Sandang', 'Pangan', 'Kimia & Bahan Bangunan', 'Logam & Elektronika', 'Kerajinan'],
       datasets: [{
-        label: 'Jumlah',
-        data: [5, 2, 2, 4, 5], // ganti sesuai kebutuhan
-        backgroundColor: [
-          '#5bc0f8',
-          '#d9e9fb',
-          '#1a1a1a',
-          '#5bc0f9',
-          '#f3f3f3'
-        ],
+        data: [25, 20, 15, 10, 30], // Contoh data, sesuaikan nanti
+        backgroundColor: ['#5bc0f8', '#d9e9fb', '#1a1a1a', '#f3f3f3', '#ffcd56'],
+        borderWidth: 1
       }]
     },
     options: {
       responsive: false,
-      cutout: '10%',
       plugins: {
-        legend: { display: false }
+        legend: {
+          display: false // Legend kan sudah kamu buat manual di <ul>
+        }
+      }
+    }
+  });
+
+  // Line Chart Perkembangan Industri
+  const perkembanganCtx = document.getElementById('perkembanganChart').getContext('2d');
+  const perkembanganChart = new Chart(perkembanganCtx, {
+    type: 'line',
+    data: {
+      labels: ['2021', '2021', '2022', '2023', '2024', '2025'],
+      datasets: [{
+        label: 'Jumlah Industri',
+        data: [201, 222, 289, 304, 320, 356], // Contoh data, bisa kamu ganti dari controller
+        fill: false,
+        borderColor: '#5bc0f8',
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
       }
     }
   });
 </script>
-
-
 @endsection
