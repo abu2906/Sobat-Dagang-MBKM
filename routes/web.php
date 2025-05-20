@@ -177,15 +177,16 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::delete('/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('delete-uttp');
     Route::delete('/admin/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('uttp.destroy');
     Route::patch('/admin/uttp/update/{id}', [DirectoryBookController::class, 'update'])->name('update-uttp');
-
+    Route::put('/admin/surat/{id}/tolak', [PersuratanController::class, 'tolakSurat'])->name('surat.tolak');
     Route::get('/admin/persuratan-metrologi', [DashboardMetrologiController::class, 'showAdministrasi'])->name('persuratan-metrologi');
     Route::put('/surat/terima/{id}', [PersuratanController::class, 'terimaSurat'])->name('surat.terima');
     Route::put('/surat/tolak/{id}', [PersuratanController::class, 'tolakSurat'])->name('surat.tolak');
     Route::get('/surat/{id}/keterangan', [PersuratanController::class, 'showkirimKeterangan'])->name('create-keterangan');
     Route::get('/surat/{id}/balasan', [PersuratanController::class, 'showcreateSuratBalasan'])->name('create-surat-balasan');
     Route::post('/admin/surat/{id}/balasan', [PersuratanController::class, 'createSuratBalasan'])->name('proces-surat-balasan');
-    Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
-    Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
+    Route::get('/admin/surat/{id}/edit-balasan', [PersuratanController::class, 'editBalasan'])->name('edit-surat-balasan');
+    Route::put('/admin/surat/{id}/update-balasan', [PersuratanController::class, 'updateBalasan'])->name('update-surat-balasan');
+
 
     Route::get('/admin/dashboard-metrologi', [DashboardController::class, 'showMetrologi'])->name('dashboard-admin-metrologi');
     Route::get('/admin/alat-ukur-metrologi', [DashboardController::class, 'showMetrologi'])->name('alat-ukur-metrologi');
