@@ -25,7 +25,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Tambah Alat Ukur Sah
+                    Tambah UTTP
                 </button>
             </div>
         </div>
@@ -35,7 +35,7 @@
     <div id="modalTambahAlat" class="absolute inset-0 z-40 hidden bg-black bg-opacity-30 flex items-center justify-center">
             <div class="bg-white w-[90%] md:w-[70%] lg:w-[50%] rounded-lg shadow-lg p-6 max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center border-b pb-3 mb-4">
-                    <h2 class="text-lg font-semibold">Tambah Alat Ukur Sah</h2>
+                    <h2 class="text-lg font-semibold">Tambah UTTP</h2>
                     <button onclick="tutupModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
                 </div>
 
@@ -44,24 +44,28 @@
                 <input type="hidden" name="_method" id="formMethod" value="POST">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium">Tanggal</label>
-                            <input type="date" name="tanggal_penginputan" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Tanggal Mulai <span class="text-red-500">*</span></label>
+                            <input type="date" name="tanggal_penginputan" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">ID User</label>
-                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Tanggal Selesai <span class="text-red-500">*</span></label>
+                            <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">No Registrasi</label>
-                            <input type="text" name="no_registrasi" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">ID User <span class="text-red-500">*</span></label>
+                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Nama Usaha</label>
-                            <input type="text" name="nama_usaha" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">No Registrasi <span class="text-red-500">*</span></label>
+                            <input type="text" name="no_registrasi" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Jenis Alat</label>
-                            <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Nama Usaha <span class="text-red-500">*</span></label>
+                            <input type="text" name="nama_usaha" class="w-full border rounded px-3 py-2" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Jenis Alat <span class="text-red-500">*</span></label>
+                            <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2" required>
 								<option value="UP-MK">UP-MK</option>
 								<option value="VOL-TK">VOLUME - TK</option>
 								<option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
@@ -82,49 +86,63 @@
 							</select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Nama Alat</label>
-                            <input type="text" name="nama_alat" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
                             <label class="block text-sm font-medium">Merk / Type</label>
                             <input type="text" name="merk_type" class="w-full border rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Kapasitas</label>
+                            <input type="text" name="nama_alat" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
                             <label class="block text-sm font-medium">Nomor Seri</label>
                             <input type="text" name="nomor_seri" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Jumlah Alat</label>
-                            <input type="number" name="jumlah_alat" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Jumlah Alat <span class="text-red-500">*</span></label>
+                            <input type="number" name="jumlah_alat" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Alat Penguji</label>
-                            <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
+                            <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
 								<option value="BUS">BUS</option>
 								<option value="AT">AT</option>
 								<option value="ATB">ATB</option>
 							</select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Ctt</label>
-                            <input type="text" name="ctt" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Cap Tanda Tera <span class="text-red-500">*</span></label>
+                            <select id="ctt" name="ctt" class="w-full border rounded px-3 py-2" required>
+								<option value="SL6">SL6</option>
+								<option value="SL4">SL4</option>
+								<option value="SL2">SL2</option>
+                                <option value="SK6">SK6</option>
+								<option value="SP6">SP6</option>
+								<option value="B4">B4</option>
+                                <option value="J8">J8</option>
+                                <option value="J5">J5</option>
+                                <option value="J4">J4</option>
+                                <option value="JP8">JP8</option>
+                                <option value="D4">D4</option>
+                                <option value="H">H</option>
+                                <option value="HP">HP</option>
+							</select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">SPT Keperluan</label>
+                            <label class="block text-sm font-medium">No Surat Perintah Tugas</label>
                             <input type="text" name="spt_keperluan" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Tanggal Selesai</label>
-                            <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
+                            <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
+								<option value="BUS">Tera</option>
+								<option value="AT">Tera Ulang</option>
+							</select>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium">Terapan</label>
-                            <input type="text" name="terapan" class="w-full border rounded px-3 py-2">
+                        <div class="flex items-center space-x-2 mt-2">
+                            <input type="checkbox" name="terapan" id="terapan" class="rounded border-gray-300">
+                            <label for="terapan" class="text-sm font-medium">Cerapan</label>
                         </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium">Keterangan</label>
-                            <textarea name="keterangan" class="w-full border rounded px-3 py-2"></textarea>
-                        </div>
+
                     </div>
 
                     <div class="mt-4 flex justify-end gap-2">
@@ -204,7 +222,7 @@
         document.getElementById('formMethod').value = "POST";
 
         // Ganti Judul
-        document.getElementById('modalTitle').innerText = 'Tambah Alat Ukur Sah';
+        document.getElementById('modalTitle').innerText = 'Tambah UTTP';
     }
 
     function tutupModal() {

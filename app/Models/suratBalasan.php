@@ -20,6 +20,7 @@ class suratBalasan extends Model
         'perihal',
         'lampiran',
         'tanggal',
+        'isi_surat',
         'path_dokumen',
         'status_surat_keluar',
         'status_kepalaBidang',

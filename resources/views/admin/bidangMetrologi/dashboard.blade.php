@@ -48,7 +48,7 @@
 		</div>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 my-4">
 			<div class="lg:col-span-12 bg-white rounded-lg shadow p-6 h-60">
-				<h5 class="text-lg font-semibold mb-2">Frekuensi Pengujian Alat Tera</h5>
+				<h5 class="text-lg font-semibold mb-2">Frekuensi Pengujian Alat Ukur</h5>
 				<div class="h-40">
 					<canvas id="donutChart" class="w-full h-full"></canvas>
 				</div>

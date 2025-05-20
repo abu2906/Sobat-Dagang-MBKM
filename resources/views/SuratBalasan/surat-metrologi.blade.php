@@ -68,7 +68,7 @@
             margin: 4px 0;
         }
 
-        .isi p {
+        .isi_surat p {
             margin-bottom: 10px;
         }
 
@@ -132,7 +132,7 @@
         </div>
     </div>
     <div class="judul">
-        <h1>{{ $tanggal_pembuatan_surat }}</h1>
+        <h1>{{ \Carbon\Carbon::parse($tanggal_pembuatan_surat)->format('d-m-Y') }}</h1>
     </div>
     <table style="width: 100%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
@@ -141,15 +141,15 @@
         </tr>
         <tr>
             <td style="padding: 4px;">Sifat</td>
-            <td style="padding: 4px;">: {{ $sifat_surat }}</td>
+            <td style="padding: 4px;">: Biasa</td>
         </tr>
         <tr>
             <td style="padding: 4px;">Lampiran</td>
-            <td style="padding: 4px;">: {{ $lampiran }}</td>
+            <td style="padding: 4px;">: </td>
         </tr>
         <tr>
             <td style="padding: 4px;">Hal</td>
-            <td style="padding: 4px;">: {{ $hal }}</td>
+            <td style="padding: 4px;">: Pemberitahuan Pelaksanaan Tera/Tera Ulang UTTP</td>
         </tr>
     </table>
     <table style="width: 80%; border-collapse: collapse; margin-left: 30px; ">
@@ -167,11 +167,13 @@
         </tr>
     </table>
     <p>
-        {!! $isi !!}
+        {{ $isi_surat }}
     </p>
     <div class="ttd">
-        <p>Dikeluarkan di : Pareparae</p>
-        <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d - F - Y') }}</p>
+        <p>Dikeluarkan di : Parepare</p>
+        <p>Pada Tanggal : 
+            {{-- {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d - F - Y') }} --}}
+        </p>
         <div></div>
         <p>KEPADA DINAS PERDAGANGAN</p>
         <p>KOTA PAREPARE</p>
