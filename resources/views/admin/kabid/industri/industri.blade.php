@@ -93,16 +93,28 @@
           Filter
         </h2>
         <form class="flex flex-col sm:flex-row gap-4">
-          <label class="flex justify-between items-center bg-[#c3def5] rounded-xl px-5 py-3 w-full sm:w-1/2 cursor-pointer" for="filter1">
-            <span class="text-[#073763] text-base font-normal">Soreang</span>
-            <i class="fas fa-sliders-h text-[#073763]"></i>
-            <input class="hidden" id="filter1" type="checkbox"/>
-          </label>
-          <label class="flex justify-between items-center bg-[#c3def5] rounded-xl px-5 py-3 w-full sm:w-1/2 cursor-pointer" for="filter2">
-            <span class="text-[#7f7f7f] text-base font-normal">Filter lainnya</span>
-            <i class="fas fa-sliders-h text-[#073763]"></i>
-            <input class="hidden" id="filter2" type="checkbox"/>
-          </label>
+          <div class="relative w-full">
+              <div onclick="toggleDropdown()" class="flex items-center justify-between bg-[#CDE4F7] text-black px-4 py-2 rounded-lg w-full cursor-pointer hover:bg-[#b9daf2] transition-all duration-200">
+                  <span id="selected-kecamatan">Soreang</span>
+                  <span class="material-symbols-outlined text-sm text-gray-700">tune</span>
+              </div>
+              <div id="dropdown-kecamatan" class="hidden absolute top-full mt-2 left-0 w-full bg-white rounded-xl shadow-lg z-20 overflow-hidden border border-gray-200">
+                  <div class="hover:bg-blue-100 px-4 py-2 cursor-pointer text-gray-700" onclick="selectKecamatan('Soreang')">Soreang</div>
+                  <div class="hover:bg-blue-100 px-4 py-2 cursor-pointer text-gray-700" onclick="selectKecamatan('Bacukiki')">Bacukiki</div>
+                  <div class="hover:bg-blue-100 px-4 py-2 cursor-pointer text-gray-700" onclick="selectKecamatan('Bacukiki Barat')">Bacukiki Barat</div>
+                  <div class="hover:bg-blue-100 px-4 py-2 cursor-pointer text-gray-700" onclick="selectKecamatan('Ujung')">Ujung</div>
+              </div>
+          </div>
+          <div class="relative w-full">
+            <div onclick="toggleDropdowns()" class="flex items-center justify-between bg-[#CDE4F7] text-black px-4 py-2 rounded-lg w-full cursor-pointer hover:bg-[#b9daf2] transition-all duration-200">
+              <span id="selected-level">Invenstasi</span>
+              <span class="material-symbols-outlined text-sm text-gray-700">tune</span>
+            </div>
+            <div id="dropdown-level" class="hidden absolute top-full mt-2 left-0 w-full bg-white rounded-xl shadow-lg z-20 overflow-hidden border border-gray-200">
+              <div class="hover:bg-blue-100 px-4 py-2 cursor-pointer text-gray-700" onclick="selectLevel('Kecil')">Kecil</div>
+              <div class="hover:bg-blue-100 px-4 py-2 cursor-pointer text-gray-700" onclick="selectLevel('Menengah')">Menengah</div>
+            </div>
+        </div>
         </form>
       </section>
 
@@ -165,6 +177,44 @@
 </div>
 
 <script>
+
+  function toggleDropdown() {
+    const dropdown = document.getElementById('dropdown-kecamatan');
+    dropdown.classList.toggle('hidden');
+  }
+
+  
+  function toggleDropdowns() {
+    const dropdowns = document.getElementById('dropdown-level');
+    dropdowns.classList.toggle('hidden');
+  }
+
+  function selectKecamatan(kecamatan) {
+    document.getElementById('selected-kecamatan').textContent = kecamatan;
+    toggleDropdown();
+  }
+
+  function selectLevel(level) {
+    document.getElementById('selected-level').textContent = level;
+    toggleDropdowns();
+  }
+
+  document.addEventListener('click', function (e) {
+    const dropdown = document.getElementById('dropdown-kecamatan');
+    const trigger = document.querySelector('[onclick="toggleDropdown()"]');
+    if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
+        dropdown.classList.add('hidden');
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    const dropdowns = document.getElementById('dropdown-level');
+    const trigger = document.querySelector('[onclick="toggleDropdowns()"]');
+    if (!dropdowns.contains(e.target) && !trigger.contains(e.target)) {
+        dropdowns.classList.add('hidden');
+    }
+  });
+
 
   const chartData = {
     ikm: [25, 20, 15, 10, 30],
