@@ -83,14 +83,9 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/bidang-industri/form-permohonan', [AdminIndustriController::class, 'formPermohonan'])->name('bidangIndustri.formPermohonan');
     Route::get('/bidang-industri/riwayat-surat', [AdminIndustriController::class, 'riwayatSurat'])->name('bidangIndustri.riwayatSurat');
     Route::post('/bidang-industri/ajukan-permohonan', [AdminIndustriController::class, 'ajukanPermohonan'])->name('ajukanPermohonan');
-    Route::get('/halal', function () {
-        return view('user.halal');
+    Route::get('/bidang-industri/halal', function () {
+        return view('user.bidangIndustri.halal');
     })->name('halal');
-    Route::get('/bidang-industri/surat-balasan/{id}/view', [AdminIndustriController::class, 'viewSuratBalasan'])
-    ->name('viewSuratBalasan');
-    Route::get('/bidang-industri/surat-balasan/{id}/download', [AdminIndustriController::class, 'downloadSuratBalasan'])->name('downloadSuratBalasan');
-
-    
 });
 
 // guest
@@ -120,7 +115,6 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
         ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
         ->name('dokumen.viewi');
         
-    Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
     Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
     Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
     Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
@@ -213,7 +207,7 @@ Route::middleware(['check.role:kabid_industri'])->group(function () {
 
 //admin metrologi
 Route::middleware(['check.role:admin_metrologi'])->group(function () {
-    Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
+    Route::get('/admin/metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
     Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
     Route::post('/uttp/store-alat', [DirectoryBookController::class, 'storeAlatUkur'])->name('store-uttp');
     Route::delete('/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('delete-uttp');

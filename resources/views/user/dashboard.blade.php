@@ -29,7 +29,7 @@
             ],
             'INDUSTRI' => [
                 ['label' => 'Permohonan IKM Binaan', 'route' => route('bidangIndustri.formPermohonan')],
-                ['label' => 'Data Sertifikat Halal', 'route' => '#'],
+                ['label' => 'Data Sertifikat Halal', 'route' => route('halal')],
             ],
             'METROLOGI' => [
                 ['label' => 'Permohonan Tera/Teraulang', 'route' => route('administrasi-metrologi')],
