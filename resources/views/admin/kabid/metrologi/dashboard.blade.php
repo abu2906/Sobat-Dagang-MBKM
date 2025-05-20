@@ -27,6 +27,8 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-white shadow-md rounded-xl p-4 max-h-[600px] overflow-y-auto">
+                <div class="mb-4 text-xl font-semibold text-gray-700">Daftar UTTP Terbaru</div>
+
                 <table class="w-full text-left">
                     <thead class="bg-[#0c3252] text-white">
                         <tr>
@@ -62,13 +64,13 @@
                     </div>
 
                     <div class="bg-white shadow-md rounded-xl p-4">
-                        <p class="text-sm font-semibold mb-2">Alat Ukur</p>
+                        <p class="text-sm font-semibold mb-2">Jenis Alat Ukur</p>
                         <canvas id="chartPie" class="h-[150px]"></canvas>
                     </div>
                 </div>
 
                 <div class="bg-white shadow-md rounded-xl p-4">
-                    <p class="text-lg font-semibold mb-4">Grafik Perbandingan Pertahun</p>
+                    <p class="text-lg font-semibold mb-4">Grafik Perbandingan Jumlah Tera</p>
                     <canvas id="chartLine"></canvas>
                 </div>
             </div>
@@ -87,18 +89,22 @@
             datasets: [{
                 label: 'Jumlah Alat',
                 data: chartJenisData,
-                backgroundColor: ['#60a5fa', '#0c3252', '#f59e0b', '#10b981'], // tambah warna sesuai kebutuhan
+                backgroundColor: ['#60a5fa', '#0c3252', '#f59e0b', '#10b981'],
                 hoverOffset: 4
             }]
         },
         options: {
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    display: false // ❌ sembunyikan legend di bawah chart
+                },
+                tooltip: {
+                    enabled: true // ✅ aktifkan tooltip saat hover (default-nya sudah true, tapi aman ditulis eksplisit)
                 }
             }
         }
     });
+
 
     const ctxLine = document.getElementById('chartLine');
     new Chart(ctxLine, {
