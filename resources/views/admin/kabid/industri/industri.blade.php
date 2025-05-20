@@ -3,18 +3,18 @@
 
 @section('content')
 <div class="bg-white p-6 overflow-y-auto min-h-screen">
-  <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
+  <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
     <!-- Left Column: Dashboard Content -->
     <div>
       <div class="flex flex-col sm:flex-row sm:space-x-6 space-y-6 sm:space-y-0">
         <!-- Jumlah Surat Balasan Card (Larger) -->
-        <div class="sm:w-[250px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
-          <p class="font-semibold text-lg mb-1">Jumlah Surat Balasan</p>
-          <p class="font-extrabold text-3xl mb-1">200</p>
-          <p class="text-base">Total Seluruh Sektor</p>
+        <div class="sm:w-[300px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
+          <p class="font-semibold text-lg mb-1">Jumlah Surat Terverifikasi</p>
+          <p class="font-extrabold text-3xl mb-1">{{ $totalSuratTerverifikasi }}</p>
+          <p class="text-base">Surat Permohonan Telah Diverifikasi </p>
         </div>
         <!-- Akumulasi Perkembangan Card (Smaller) -->
-        <div class="sm:w-[300px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
+        <div class="sm:w-[350px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
           <p class="font-semibold text-lg mb-1 flex items-center gap-2">
             <i class="fas fa-file-alt"></i>
             Akumulasi Perkembangan
@@ -83,6 +83,7 @@
       <!-- Dropdown for selecting Data IKM -->
       <select aria-label="Data IKM" class="w-full bg-[#073763] text-white text-lg rounded-lg py-3 px-5 appearance-none relative" style="background-image: url('data:image/svg+xml;utf8,&lt;svg fill=\'white\' height=\'24\' viewBox=\'0 0 24 24\' width=\'24\' xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;path d=\'M7 10l5 5 5-5z\'/&gt;&lt;/svg&gt;'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.25rem;">
         <option>Data IKM</option>
+        <option>Sertifikat HALAL</option>
       </select>
 
       <!-- Filter container -->
@@ -108,7 +109,7 @@
       <!-- Cards for stats: Industri Terdaftar and Informasi Tambahan -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
         <!-- Industri Terdaftar & Tenaga Kerja card -->
-        <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[250px]  flex flex-col">
+        <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px]  flex flex-col">
           <h3 class="font-bold text-lg flex items-center gap-2 mb-3 text-[#000]">
             <span>⚖</span>
             Industri Terdaftar
@@ -124,35 +125,71 @@
         </article>
       
         <!-- Informasi Tambahan card -->
-        <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[250px]  flex flex-col">
+        <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px] flex flex-col">
           <h3 class="font-bold text-lg mb-4">Informasi Tambahan</h3>
           <div class="flex flex-col items-center">
-          <img alt="Donut chart" class="mb-4 w-24 h-24" src="https://storage.googleapis.com/a1aa/image/24cd5fc5-11c7-47e9-10d9-63935038b526.jpg"/>
-            <ul class="w-full h-full grid grid-cols-2 gap-2 text-sm text-[#000]">
+            <canvas id="donutChart" class="mb-2 w-32 h-32"></canvas>
+            <ul class="w-full h-full grid grid-cols-3 text-sm text-[#000]">
               <li class="flex items-center gap-2">
-                <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> Sandang
+                <span class="inline-block w-3 h-3 bg-[#5bc0f8] rounded-sm"></span> Sandang
               </li>
               <li class="flex items-center gap-2">
-                <span class="inline-block w-4 h-4 bg-[#d9e9fb] rounded-sm"></span> Kimia
+                <span class="inline-block w-3 h-3 bg-[#d9e9fb] rounded-sm"></span> Pangan
               </li>
               <li class="flex items-center gap-2">
-                <span class="inline-block w-4 h-4 bg-[#1a1a1a] rounded-sm"></span> Pangan
+                <span class="inline-block w-3 h-3 bg-[#1a1a1a] rounded-sm"></span> Kimia & Bahan Bangunan
               </li>
               <li class="flex items-center gap-2">
-                <span class="inline-block w-4 h-4 bg-[#f3f3f3] rounded-sm"></span> Kerajinan
+                <span class="inline-block w-3 h-3 bg-[#f3f3f3] rounded-sm"></span> Logam & Elektronika
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="inline-block w-3 h-3 bg-[#f3f3f3] rounded-sm"></span> Kerajinan
               </li>
             </ul>
           </div>
         </article>
       </section>
-
-
-      <!-- Grafik Perkembangan card -->
-      <section class="bg-white rounded-xl h-[220px] p-6 shadow-[0_10px_15px_-3px_rgba(7,55,99,0.3)] mt-6">
-        <h3 class="font-bold text-lg mb-4">Grafik Perkembangan</h3>
-        <img alt="Line chart" class="w-full h-[120px] object-cover" src="https://storage.googleapis.com/a1aa/image/78a049f8-cc3e-47be-f19c-4e69b0c2b4b7.jpg"/>
-      </section>
+      <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px] flex flex-col">
+          <h3 class="font-bold text-lg mb-4">Informasi Tambahan</h3>
+          <div class="flex flex-col items-center">
+            <canvas id="grafikChart" class="mb-2 w-32 h-32"></canvas>
+          </div>
+        </article>
     </div>
+    
+    </div>
+    
   </div>
 </div>
+
+<script>
+  const ctx = document.getElementById('donutChart').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Sandang', 'Pangan', 'Kimia & Bahan Bangunan', 'Logam & Elektronika', 'Kerajinan'],
+      datasets: [{
+        label: 'Jumlah',
+        data: [5, 2, 2, 4, 5], // ganti sesuai kebutuhan
+        backgroundColor: [
+          '#5bc0f8',
+          '#d9e9fb',
+          '#1a1a1a',
+          '#5bc0f9',
+          '#f3f3f3'
+        ],
+      }]
+    },
+    options: {
+      responsive: false,
+      cutout: '10%',
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+</script>
+
+
 @endsection

@@ -26,7 +26,7 @@
             <ul class="space-y-2 text-sm">
                 @php
                 $menuItems = [
-                ['href' => '#', 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                ['href' => route('dashboard.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => '#', 'icon' => 'folder.png', 'label' => 'Data IKM'],
                 ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
                 ['href' => route('kelolaSurat.industri'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
