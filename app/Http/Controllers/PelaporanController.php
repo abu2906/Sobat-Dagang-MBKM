@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Distributor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Exception;
+
 // Berisikan seluruh fungsi yang digunakan dalam hal pelaporan baik admin maupun distributor
 class PelaporanController extends Controller
 {
@@ -162,4 +164,56 @@ class PelaporanController extends Controller
 
         return redirect()->back()->with('success', 'Distributor berhasil dihapus.');
     }
+
+    public function inputDataToko(Request $request)
+{
+    // Validasi input jika diperlukan
+        $request->validate([
+            'nama_toko' => 'required|string|max:255',
+            'kecamatan' => 'required|string|max:255',
+            'no_register' => 'required|string|max:100',
+            'rencana_kebutuhan' => 'required|string|max:255',
+        ]);
+
+        // Simpan atau proses data
+        // Contoh: simpan ke database jika sudah ada modelnya
+        // Toko::create($request->all());
+
+        // Redirect atau tampilkan pesan
+        return back()->with('success', 'Data toko berhasil ditambahkan.');
+}
+    public function showForm()    {
+        return view('user.bidangPerdagangan.inputDataToko');
+    }
+
+        public function inputDataDistribusi(Request $request)
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'nama_barang'    => 'required|string',
+            'stok'           => 'required|numeric|min:0',
+            'penyaluran'     => 'required|numeric|min:0',
+            'tanggal_input'  => 'required|date',
+        ]);
+
+        // Simpan ke database
+        // DistribusiPupuk::create([
+        //     'nama_barang'   => $validated['nama_barang'],
+        //     'stok'          => $validated['stok'],
+        //     'penyaluran'    => $validated['penyaluran'],
+        //     'tanggal_input' => $validated['tanggal_input'],
+        // ]);
+
+        return redirect()->back()->with('success', 'Data distribusi berhasil ditambahkan.');
+    }
+    public function showDataDistribusi()    {
+        // Ambil semua data distribusi
+        // $data = DistribusiPupuk::orderBy('tanggal_input', 'desc')->get();
+
+        // Kirim ke view
+        // return view('user.bidangPerdagangan.inputDataDistribusi', compact('data'));
+        return view('user.bidangPerdagangan.inputDataDistribusi');
+    }
+
+
 }

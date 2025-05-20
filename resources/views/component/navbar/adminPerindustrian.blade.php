@@ -29,7 +29,7 @@
                 ['href' => '#', 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => '#', 'icon' => 'folder.png', 'label' => 'Data IKM'],
                 ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
-                ['href' => '#', 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                ['href' => route('kelolaSurat.industri'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
 
@@ -49,7 +49,7 @@
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
                     {{-- <p class="text-sm font-semibold">{{ Auth::user()->name }}</p> --}}
-                    <p class="text-sm font-semibold">Andi Magfirah Maqbul</p>
+                    <p class="text-sm font-semibold">Bidang Industri</p>
                     <p class="text-xs">Admin</p>
                 </div>
             </div>

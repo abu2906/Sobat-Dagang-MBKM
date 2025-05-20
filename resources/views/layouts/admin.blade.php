@@ -24,7 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
+<body x-data="{ open: true }" class="overflow-hidden font-sans bg-white">
 
     @if ($user)
         @switch($user->role)

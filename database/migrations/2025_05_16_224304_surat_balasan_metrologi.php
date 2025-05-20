@@ -14,9 +14,6 @@ return new class extends Migration
         Schema::create('surat_keluar_metrologi', function (Blueprint $table) {
             $table->string('id_surat_balasan')->primary();
             $table->string('id_surat');
-            $table->string('sifat');
-            $table->string('perihal');
-            $table->string('lampiran');
             $table->string('tanggal');
             $table->string('path_dokumen')->nullable();
             $table->enum('status_surat_keluar', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');

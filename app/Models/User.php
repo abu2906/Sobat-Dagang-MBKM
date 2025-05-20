@@ -41,7 +41,8 @@ class User extends Authenticatable
         'kecamatan',
         'kelurahan',
         'kelurahan',
-        'role'
+        'role',
+        'avatar'
     ];
 
     public function dataAlatUkurs()

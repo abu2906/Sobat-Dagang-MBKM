@@ -137,7 +137,6 @@ class DashboardPerdaganganController extends Controller{
             'lokasi' => $lokasi,
         ]);
     }
-
     private function getSuratPerdaganganData()
     {
         $jenis = [
@@ -518,7 +517,6 @@ class DashboardPerdaganganController extends Controller{
     }
 
     
-
     public function ajukanPermohonan(Request $request)
     {
         // Custom pesan error dalam Bahasa Indonesia
