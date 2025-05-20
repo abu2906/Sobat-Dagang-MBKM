@@ -81,9 +81,9 @@
     <!-- Right Column: Data IKM Content -->
     <div>
       <!-- Dropdown for selecting Data IKM -->
-      <select aria-label="Data IKM" class="w-full bg-[#073763] text-white text-lg rounded-lg py-3 px-5 appearance-none relative" style="background-image: url('data:image/svg+xml;utf8,&lt;svg fill=\'white\' height=\'24\' viewBox=\'0 0 24 24\' width=\'24\' xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;path d=\'M7 10l5 5 5-5z\'/&gt;&lt;/svg&gt;'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.25rem;">
-        <option>Data IKM</option>
-        <option>Sertifikat HALAL</option>
+      <select id="dataSelector" class="w-full bg-[#073763] text-white text-lg rounded-lg py-3 px-5 appearance-none relative" style="background-image: url('data:image/svg+xml;utf8,&lt;svg fill=\'white\' height=\'24\' viewBox=\'0 0 24 24\' width=\'24\' xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;path d=\'M7 10l5 5 5-5z\'/&gt;&lt;/svg&gt;'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.25rem;">
+        <option value="ikm">Data IKM</option>
+        <option value="halal">Sertifikat Halal</option>
       </select>
 
       <!-- Filter container -->
@@ -126,24 +126,26 @@
       
         <!-- Informasi Tambahan card -->
         <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px] flex flex-col">
-          <h3 class="font-bold text-lg mb-4">Distribusi Industri</h3>
+          <h3 class="font-bold text-lg mb-2">Distribusi Industri</h3>
           <div class="flex flex-col items-center">
             <canvas id="distribusiPie" class="mb-2 w-32 h-32"></canvas>
             <ul class="w-full h-full grid grid-cols-3 text-sm text-[#000]">
               <li class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 bg-[#5bc0f8] rounded-sm"></span> Sandang
+                <span class="inline-block w-2 h-2 bg-[#5bc0f8] rounded-sm"></span> Sandang
               </li>
               <li class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 bg-[#d9e9fb] rounded-sm"></span> Pangan
+                <span class="inline-block w-2 h-2 bg-[#d9e9fb] rounded-sm"></span> Pangan
               </li>
               <li class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 bg-[#1a1a1a] rounded-sm"></span> Kimia & Bahan Bangunan
+                <span class="inline-block w-2 h-2 bg-[#ffcd56] rounded-sm"></span> Kerajinan
+              </li>
+            </ul>
+            <ul class="w-full h-full grid grid-cols-2 text-sm text-[#000]">  
+              <li class="flex items-center gap-2">
+                <span class="inline-block w-2 h-2 bg-[#f3f3f3] rounded-sm"></span> Logam & Elektronika
               </li>
               <li class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 bg-[#f3f3f3] rounded-sm"></span> Logam & Elektronika
-              </li>
-              <li class="flex items-center gap-2">
-                <span class="inline-block w-3 h-3 bg-[#ffcd56] rounded-sm"></span> Kerajinan
+                <span class="inline-block w-2 h-2 bg-[#1a1a1a] rounded-sm"></span> Kimia & Bahan Bangunan
               </li>
             </ul>
           </div>
@@ -163,14 +165,19 @@
 </div>
 
 <script>
-    // Pie Chart Distribusi Industri
+
+  const chartData = {
+    ikm: [25, 20, 15, 10, 30],
+    halal: [10, 15, 20, 5, 50]
+  };
+  // Pie Chart Distribusi Industri
   const distribusiCtx = document.getElementById('distribusiPie').getContext('2d');
   const distribusiPie = new Chart(distribusiCtx, {
     type: 'pie',
     data: {
       labels: ['Sandang', 'Pangan', 'Kimia & Bahan Bangunan', 'Logam & Elektronika', 'Kerajinan'],
       datasets: [{
-        data: [25, 20, 15, 10, 30], // Contoh data, sesuaikan nanti
+        data: chartData.ikm, // default IKM
         backgroundColor: ['#5bc0f8', '#d9e9fb', '#1a1a1a', '#f3f3f3', '#ffcd56'],
         borderWidth: 1
       }]
@@ -211,7 +218,16 @@
           beginAtZero: true
         }
       }
-    }
-  });
+  }
+});
+
+document.getElementById('dataSelector').addEventListener('change', function () {
+  const selected = this.value;
+  
+  // Ubah data Pie Chart sesuai pilihan
+  distribusiPie.data.datasets[0].data = chartData[selected];
+  distribusiPie.update();
+});
+
 </script>
 @endsection
