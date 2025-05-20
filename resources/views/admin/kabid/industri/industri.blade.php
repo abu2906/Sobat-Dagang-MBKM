@@ -73,6 +73,18 @@
               <td class="px-2 py-1">PENGGILING IKAN</td>
               <td class="px-2 py-1 text-center">7<span class="inline-block w-6"></span>7</td>
             </tr>
+            <tr class="bg-[#dbe5f0] font-normal rounded-b-xl">
+              <td class="px-2 py-1">US. Andif</td>
+              <td class="px-2 py-1">Andi Magfirah</td>
+              <td class="px-2 py-1">PENGGILING DAGING</td>
+              <td class="px-2 py-1 text-center">14<span class="inline-block w-6"></span>0</td>
+            </tr>
+            <tr class="bg-[#dbe5f0] font-normal rounded-b-xl">
+              <td class="px-2 py-1">US. Fira</td>
+              <td class="px-2 py-1">Syafira Fatwa</td>
+              <td class="px-2 py-1">PENGGILING IKAN</td>
+              <td class="px-2 py-1 text-center">9<span class="inline-block w-6"></span>5</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -164,7 +176,7 @@
         </article>
       </section>
       <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] mt-6 h-[400px] flex flex-col">
-        <h3 class="font-bold text-lg mb-4">Informasi Tambahan</h3>
+        <h3 class="font-bold text-lg mb-4">Perkembangan IKM dari Tahun ke Tahun</h3>
         <div class="flex flex-col items-center">
           <canvas id="perkembanganChart" class="mb-2 w-300 h-full"></canvas>
         </div>
