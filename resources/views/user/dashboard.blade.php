@@ -140,20 +140,29 @@
                 }).format(waktu);
 
                 const wrapper = document.createElement('div');
-                wrapper.className = `flex items-end ${isMe ? 'justify-end' : 'justify-start'}`;
+                wrapper.className = `flex items-end ${isMe ? 'justify-end' : 'justify-start'} gap-2`;
 
-                wrapper.innerHTML = `
-                    <div class="flex items-center justify-center w-8 h-8 ${isMe ? 'ml-2' : 'mr-2'} text-sm font-bold text-white bg-gray-400 rounded-full select-none">
-                        ${initial}
-                    </div>
-                    <div class="max-w-[70%] p-3 text-sm leading-snug shadow ${isMe ? 'bg-[#083458] text-white' : 'bg-gray-200 text-black'} rounded-3xl ${isMe ? 'rounded-br-md' : 'rounded-bl-md'}">
+                const bubble = `
+                    <div class="max-w-[70%] p-3 text-sm leading-snug shadow ${isMe ? 'bg-[#083458] text-white rounded-3xl rounded-br-md' : 'bg-gray-200 text-black rounded-3xl rounded-bl-md'}">
                         <div class="mb-1 text-xs font-semibold">${senderName}</div>
                         <div>${chat.chat.replace(/\n/g, '<br>')}</div>
                         <div class="text-[10px] text-gray-400 text-right mt-1">${waktuFormatted}</div>
                     </div>
                 `;
 
+                const avatar = `
+                    <div class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-gray-400 rounded-full select-none">
+                        ${initial}
+                    </div>
+                `;
+
+                wrapper.innerHTML = isMe
+                    ? `${bubble}${avatar}`  // avatar kanan
+                    : `${avatar}${bubble}`; // avatar kiri
+
                 chatMessages.appendChild(wrapper);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
             });
 
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -210,15 +219,16 @@
                 wrapper.className = `flex items-end justify-end`;
 
                 wrapper.innerHTML = `
-                    <div class="flex items-center justify-center w-8 h-8 ml-2 text-sm font-bold text-white bg-gray-400 rounded-full select-none">
-                        ${initial}
-                    </div>
+                    
                     <div class="max-w-[70%] p-3 text-sm leading-snug shadow bg-[#083458] text-white rounded-3xl rounded-br-md">
                         <div class="mb-1 text-xs font-semibold">${senderName}</div>
                         <div>${chat.chat.replace(/\n/g, '<br>')}</div>
                         <div class="text-[10px] text-gray-400 text-right mt-1">
                             ${waktuFormatted}
                         </div>
+                    </div>
+                    <div class="flex items-center justify-center w-8 h-8 ml-2 text-sm font-bold text-white bg-gray-400 rounded-full select-none">
+                        ${initial}
                     </div>
                 `;
 
