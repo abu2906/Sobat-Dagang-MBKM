@@ -135,7 +135,7 @@ class DashboardMetrologiController extends Controller
     }
 
 
-    private function getJumlahSurat()
+    public function getJumlahSurat()
     {
         $totalSuratMasuk = DB::table('surat_metrologi')->count();
         $totalSuratDiterima = DB::table('surat_metrologi')->where('status_surat_masuk', 'Disetujui')->count();
@@ -148,7 +148,13 @@ class DashboardMetrologiController extends Controller
         {
             $totalSuratMenunggu == 0;
         }
-        $totalSuratDitolak = DB::table('surat_metrologi')->where('status_surat_masuk', 'Ditolak')->count();
+        $totalSuratMenungguKabid = DB::table('surat_keluar_metrologi')->where('status_kepalaBidang', 'Menunggu')->count();
+        if($totalSuratMenungguKabid < 1)
+        {
+            $totalSuratMenungguKabid == 0;
+        }
+
+        $totalSuratDitolak = DB::table('surat_keluar_metrologi')->where('status_kepalaBidang', 'Ditolak')->count();
         if($totalSuratDitolak < 1)
         {
             $totalSuratDitolak == 0;
@@ -175,6 +181,7 @@ class DashboardMetrologiController extends Controller
             'totalSuratDiterima' => $totalSuratDiterima,
             'totalSuratDitolak' => $totalSuratDitolak,
             'totalSuratMenunggu' => $totalSuratMenunggu,
+            'totalSuratMenungguKabid' => $totalSuratMenungguKabid,
             'suratTerbaru' => $suratTerbaru,
             'totalSuratTerkirim' => $suratTerkirim
         ];
