@@ -39,7 +39,7 @@
                     <button onclick="tutupModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
                 </div>
 
-                <form id="form-alat" method="POST">
+                <form id="form-alat" method="POST" action="{{ route('store-uttp') }}" onsubmit="handleSubmit(event)">
                 @csrf
                 <input type="hidden" name="_method" id="formMethod" value="POST">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -212,6 +212,33 @@
 </div>
 
 <script>
+    function handleSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        
+        // Submit form menggunakan fetch
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Jika berhasil, redirect ke halaman management UTTP tanpa parameter
+                window.location.href = "{{ route('management-uttp-metrologi') }}";
+            } else {
+                // Jika gagal, tampilkan pesan error
+                alert('Terjadi kesalahan saat menyimpan data');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan data');
+        });
+    }
+
     function openModal(){
         document.getElementById('modalTambahAlat').classList.remove('hidden');
 
@@ -255,16 +282,32 @@
         form.elements['keterangan'].value = data.keterangan || '';
     }
 
-    // Script untuk membuka modal otomatis dan mengisi ID User
+    // Script untuk membuka modal otomatis dan mengisi field
     document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
         const autoOpen = urlParams.get('auto_open');
         const userId = urlParams.get('user_id');
+        const jenisPermohonan = urlParams.get('jenis_permohonan');
 
         if (autoOpen === 'true') {
-            openModal();
+            const modal = document.getElementById('modalTambahAlat');
+            modal.classList.remove('hidden');
+            
+            const form = document.getElementById('form-alat');
+            form.reset();
+            document.getElementById('formMethod').value = "POST";
+            
             if (userId) {
-                document.getElementById('form-alat').elements['id_user'].value = userId;
+                form.elements['id_user'].value = userId;
+            }
+
+            if (jenisPermohonan) {
+                // Jika jenis permohonan mengandung kata "tera_ulang", set ke "Tera Ulang"
+                if (jenisPermohonan.toLowerCase().includes('tera_ulang')) {
+                    form.elements['keterangan'].value = 'AT'; // Tera Ulang
+                } else {
+                    form.elements['keterangan'].value = 'BUS'; // Tera
+                }
             }
         }
     });

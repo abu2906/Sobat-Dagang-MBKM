@@ -202,7 +202,7 @@
 								</svg>
 							</button>
 						@elseif ($surat->status_admin === 'Selesai')
-							<a href="{{ route('management-uttp-metrologi', ['auto_open' => 'true', 'user_id' => $surat->user_id]) }}"
+							<a href="{{ route('management-uttp-metrologi', ['auto_open' => 'true', 'user_id' => $surat->user_id, 'jenis_permohonan' => $surat->jenis_surat]) }}"
 								class="text-blue-600 hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Tambah UTTP">
 								<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
