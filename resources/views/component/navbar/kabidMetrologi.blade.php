@@ -47,12 +47,13 @@
             <div class="flex items-center">
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
-                    <p class="text-sm font-semibold">Kepala Bidang Metrologi</p>
+                    <p class="text-sm font-semibold">Kabid Metrologi</p>
+                    <p class="text-xs">Admin</p>
                 </div>
             </div>
 
             <div class="flex flex-col space-y-2">
-                <form method="POST" action="#">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
                         class="flex items-center px-3 py-1 text-black bg-white rounded-full hover:bg-gray-200">

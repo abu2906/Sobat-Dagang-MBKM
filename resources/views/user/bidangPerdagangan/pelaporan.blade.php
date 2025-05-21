@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets\img\background\perdagangan.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
-    <a href="{{ url()->previous() }}"
+    <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
+    <a href="{{ route('user.dashboard') }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">arrow_back</span>
     </a>
@@ -46,7 +46,7 @@
                             <a href="{{ route('pelaporan.showDataDistribusi', ['id_toko' => $toko->id_toko]) }}">
                                 <button>
                                     <p class="px-4 py-2 text-sm font-bold font-istok rounded-xl text-white bg-[#083458] w-fit ">
-                                        Tambahka Data Distribusi
+                                        Tambahkan Data Distribusi
                                     </p>
                                 </button>
                             </a>

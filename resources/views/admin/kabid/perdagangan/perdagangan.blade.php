@@ -1,7 +1,6 @@
 @extends('layouts.admin')
-@section('title', 'Dashboard Kabid Bidang Perdagangan')
+@section('title', 'Dashboard Kabid Perdagangan')
 @section('content')
-
 <div class="min-h-screen p-6 bg-white">
     <h1 class="mb-4 text-2xl font-bold text-black">Dashboard Bidang Perdagangan</h1>
 

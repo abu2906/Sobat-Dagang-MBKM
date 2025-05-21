@@ -1,5 +1,4 @@
 <div class="flex h-screen relative z-[100]">
-
     <div :class="open ? 'w-64' : 'w-20'"
         class="bg-[#0c3252] text-white flex flex-col justify-between rounded-r-xl transition-all duration-300 relative shadow-md z-10">
 
@@ -26,11 +25,8 @@
             <ul class="space-y-2 text-sm">
                 @php
                 $menuItems = [
-                ['href' => route('dashboard.perdagangan'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                ['href' => route('dashboard-perdagangan.form-tambah-barang'), 'icon' => 'add_barang.png', 'label' => 'Tambahkan Barang'],
-                ['href' => route('updateHarga.update'), 'icon' => 'tag.png', 'label' => 'Update Harga Barang'],
-                ['href' => route('dashboard-perdagangan.hapus-barang'), 'icon' => 'delete.png', 'label' => 'Hapus Data Barang'],
-                ['href' => route('lihat.laporan.distribusi'), 'icon' => 'report-filled.png', 'label' => 'Lihat Laporan Distribusi'],
+                    ['href' => route('dashboard-kadis'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                    ['href' => route('persuratan-kadis'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
 
@@ -49,8 +45,7 @@
             <div class="flex items-center">
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
-                    <p class="text-sm font-semibold">Bidang Perdagangan</p>
-                    <p class="text-xs">Admin</p>
+                    <p class="text-sm font-semibold">Kepala Dinas</p>
                 </div>
             </div>
 
@@ -66,3 +61,4 @@
             </div>
         </div>
     </div>
+</div> 

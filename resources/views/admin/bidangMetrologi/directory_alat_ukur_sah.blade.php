@@ -39,7 +39,7 @@
                     <button onclick="tutupModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
                 </div>
 
-                <form id="form-alat" method="POST">
+                <form id="form-alat" method="POST" action="{{ route('store-uttp') }}" onsubmit="handleSubmit(event)">
                 @csrf
                 <input type="hidden" name="_method" id="formMethod" value="POST">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -98,10 +98,6 @@
                             <input type="text" name="nomor_seri" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Jumlah Alat <span class="text-red-500">*</span></label>
-                            <input type="number" name="jumlah_alat" class="w-full border rounded px-3 py-2" required>
-                        </div>
-                        <div>
                             <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
                             <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
 								<option value="BUS">BUS</option>
@@ -134,8 +130,8 @@
                         <div>
                             <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
                             <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
-								<option value="BUS">Tera</option>
-								<option value="AT">Tera Ulang</option>
+								<option value="Tera">Tera</option>
+								<option value="Tera Ulang">Tera Ulang</option>
 							</select>
                         </div>
                         <div class="flex items-center space-x-2 mt-2">
@@ -212,6 +208,33 @@
 </div>
 
 <script>
+    function handleSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        
+        // Submit form menggunakan fetch
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Jika berhasil, redirect ke halaman management UTTP tanpa parameter
+                window.location.href = "{{ route('management-uttp-metrologi') }}";
+            } else {
+                // Jika gagal, tampilkan pesan error
+                alert('Terjadi kesalahan saat menyimpan data');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan data');
+        });
+    }
+
     function openModal(){
         document.getElementById('modalTambahAlat').classList.remove('hidden');
 
@@ -230,30 +253,59 @@
     }
 
     function openEditModal(data, updateRoute) {
-    document.getElementById('modalTambahAlat').classList.remove('hidden');
-    const form = document.getElementById('form-alat');
+        document.getElementById('modalTambahAlat').classList.remove('hidden');
+        const form = document.getElementById('form-alat');
 
-    // Ganti action dan method
-    form.action = updateRoute;
-    document.getElementById('formMethod').value = "PATCH";
+        // Ganti action dan method
+        form.action = updateRoute;
+        document.getElementById('formMethod').value = "PATCH";
 
-    // Assign field manual
-    form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
-    form.elements['id_user'].value = data.id_user || '';
-    form.elements['no_registrasi'].value = data.no_registrasi || '';
-    form.elements['nama_usaha'].value = data.nama_usaha || '';
-    form.elements['jenis_alat'].value = data.jenis_alat || '';
-    form.elements['nama_alat'].value = data.nama_alat || '';
-    form.elements['merk_type'].value = data.merk_type || '';
-    form.elements['nomor_seri'].value = data.nomor_seri || '';
-    form.elements['jumlah_alat'].value = data.jumlah_alat || '';
-    form.elements['alat_penguji'].value = data.alat_penguji || '';
-    form.elements['ctt'].value = data.ctt || '';
-    form.elements['spt_keperluan'].value = data.spt_keperluan || '';
-    form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
-    form.elements['terapan'].value = data.terapan || '';
-    form.elements['keterangan'].value = data.keterangan || '';
+        // Assign field manual
+        form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
+        form.elements['id_user'].value = data.id_user || '';
+        form.elements['no_registrasi'].value = data.no_registrasi || '';
+        form.elements['nama_usaha'].value = data.nama_usaha || '';
+        form.elements['jenis_alat'].value = data.jenis_alat || '';
+        form.elements['nama_alat'].value = data.nama_alat || '';
+        form.elements['merk_type'].value = data.merk_type || '';
+        form.elements['nomor_seri'].value = data.nomor_seri || '';
+        form.elements['alat_penguji'].value = data.alat_penguji || '';
+        form.elements['ctt'].value = data.ctt || '';
+        form.elements['spt_keperluan'].value = data.spt_keperluan || '';
+        form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
+        form.elements['terapan'].value = data.terapan || '';
+        form.elements['keterangan'].value = data.keterangan || '';
     }
+
+    // Script untuk membuka modal otomatis dan mengisi field
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoOpen = urlParams.get('auto_open');
+        const userId = urlParams.get('user_id');
+        const jenisPermohonan = urlParams.get('jenis_permohonan');
+
+        if (autoOpen === 'true') {
+            const modal = document.getElementById('modalTambahAlat');
+            modal.classList.remove('hidden');
+            
+            const form = document.getElementById('form-alat');
+            form.reset();
+            document.getElementById('formMethod').value = "POST";
+            
+            if (userId) {
+                form.elements['id_user'].value = userId;
+            }
+
+            if (jenisPermohonan) {
+                // Jika jenis permohonan mengandung kata "tera_ulang", set ke "Tera Ulang"
+                if (jenisPermohonan.toLowerCase().includes('tera_ulang')) {
+                    form.elements['keterangan'].value = 'Tera Ulang'; // Tera Ulang
+                } else {
+                    form.elements['keterangan'].value = 'Tera'; // Tera
+                }
+            }
+        }
+    });
 </script>
 
 
