@@ -3,8 +3,8 @@
 @section('content')
 
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets\img\background\perdagangan.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
-    <a href="{{ url()->previous() }}"
+    <img src="{{ asset('assets/img/background/perdagangan.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
+    <a href="{{ route('user.dashboard') }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">arrow_back</span>
     </a>
@@ -14,10 +14,11 @@
         </p>
     </div>
 </div>
-<div class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="w-full max-w-md p-8 bg-white border border-gray-300 shadow-md rounded-2xl">
+
+<div class="flex items-start justify-center w-full bg-gray-100">
+    <div class="w-full max-w-md p-8 bg-white border border-gray-300 shadow-md rounded-2xl my-16">
         <h2 class="mb-6 text-lg font-semibold text-center text-black">INPUT DATA DISTRIBUSI</h2>
-                @if ($errors->any())
+        @if ($errors->any())
             <div class="p-4 mb-4 text-red-700 bg-red-100 border border-red-400 rounded">
                 <ul class="list-disc list-inside">
                     @foreach ($errors->all() as $error)
@@ -38,6 +39,7 @@
                 {{ session('success') }}
             </div>
         @endif
+
         <form action="{{ route('pelaporan.inputDataDistribusi') }}" method="POST">
             @csrf
 

@@ -4,7 +4,7 @@
 
 <div class="relative w-full h-64">
     <img src="{{ asset('assets\img\background\perdagangan.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
-    <a href="{{ url()->previous() }}"
+    <a href="{{ route('user.dashboard') }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">arrow_back</span>
     </a>
