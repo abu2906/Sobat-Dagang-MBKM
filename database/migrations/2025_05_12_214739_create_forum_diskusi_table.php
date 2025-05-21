@@ -8,23 +8,25 @@ class CreateForumDiskusiTable extends Migration
 {
     public function up()
     {
-    Schema::create('forum_diskusi', function (Blueprint $table) {
-        $table->id('id_pengaduan');
-        $table->unsignedBigInteger('id_user');
-        $table->unsignedBigInteger('id_disdag')->nullable();
-        $table->text('chat');
-        $table->timestamp('waktu');
-        $table->string('status');
+        Schema::create('forum_diskusi', function (Blueprint $table) {
+            $table->id('id_pengaduan');
+            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_disdag')->nullable();
+            $table->text('chat');
+            $table->timestamp('waktu');
+            $table->string('status');
 
-        $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
-        // foreign key id_disdag sesuai dengan tabel disdag (pastikan benar)
-        $table->foreign('id_disdag')->references('id_disdag')->on('disdag')->onDelete('cascade');
-    });
+            // kolom timestamps otomatis membuat created_at dan updated_at
+            $table->timestamps();
 
+            $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
+            $table->foreign('id_disdag')->references('id_disdag')->on('disdag')->onDelete('cascade');
+        });
     }
+
 
     public function down()
     {
-        Schema::dropIfExists('pengaduan');
+        Schema::dropIfExists('forum_diskusi');
     }
 }

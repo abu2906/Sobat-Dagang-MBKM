@@ -23,6 +23,8 @@ class DataIkm extends Model
         'luas',
         'jenis_industri',
         'komoditi',
+        'kecamatan',       
+        'kelurahan',
         'jumlah_tenaga_kerja',
         'nilai_investasi',
         'nib',

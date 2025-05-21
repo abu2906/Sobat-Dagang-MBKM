@@ -54,33 +54,44 @@
                     <div class="p-10 w-3/4 mx-auto flex justify-center">
                         <section id="tab-content"
                             class="inline-block bg-[#d0e6ff] rounded-2xl p-10 min-h-[200px] text-center text-blue-900 text-xl font-normal shadow-inner">
-                            <form id="form-ikm" method="POST" action="#">
+                            <form id="form-ikm" method="POST" action="{{ route('admin.industri.dataIKM.store') }}">
                                 @csrf
                                 {{-- DATA IKM --}}
+
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
                                 <section id="form-data-ikm"
                                     class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm w-full max-w-full overflow-hidden">
                                     <div>
                                         <label class="block mb-1 font-medium">Nama Usaha</label>
-                                        <input type="text" required
+                                        <input name="nama_ikm" type="text" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Nama Usaha">
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Luas Usaha</label>
-                                        <input type="text" required
-                                            class="border border-black outline-black  p-2 rounded-2xl w-full focus:outline-2"
+                                        <input name="luas" type="text" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Luas Usaha">
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Nama Pemilik</label>
-                                        <input type="text" required
-                                            class="border border-black outline-black  p-2 rounded-2xl w-full focus:outline-2"
+                                        <input name="nama_pemilik" type="text" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Nama Pemilik">
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Jenis Industri</label>
-                                        <select required
-                                            class="border border-black outline-black  p-2 rounded-2xl w-full focus:outline-2">
+                                        <select name="jenis_industri" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                             <option disabled selected value="">Pilih Jenis Industri</option>
                                             <option value="Sandang">Sandang</option>
                                             <option value="Pangan">Pangan</option>
@@ -92,14 +103,14 @@
 
                                     <div>
                                         <label class="block mb-1 font-medium">Kecamatan</label>
-                                        <select id="kecamatan" required
+                                        <select id="kecamatan" name="kecamatan" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                             <option value="" disabled selected>Pilih Kecamatan</option>
                                         </select>
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Kelurahan</label>
-                                        <select id="kelurahan" required
+                                        <select id="kelurahan" name="kelurahan" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             disabled>
                                             <option value="" disabled selected>Pilih Kelurahan</option>
@@ -107,8 +118,8 @@
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Komoditi</label>
-                                        <select required
-                                            class="border border-black outline-black  p-2 rounded-2xl w-full focus:outline-2">
+                                        <select name="komoditi" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                             <option disabled selected value="">Pilih Komoditi</option>
                                             <option value="Komoditi 1">Komoditi 1</option>
                                             <option value="Komoditi 2">Komoditi 2</option>
@@ -117,35 +128,32 @@
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">NIB (Nomor Induk Berusaha)</label>
-                                        <input type="text" required
-                                            class="border border-black outline-black  p-2 rounded-2xl w-full focus:outline-2"
+                                        <input name="nib" type="text" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan NIB (Nomor Induk Berusaha)">
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Alamat</label>
-                                        <input type="text" required
-                                            class="border border-black outline-black  p-2 rounded-2xl w-full focus:outline-2"
+                                        <input name="alamat" type="text" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Alamat">
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Tenaga Kerja (Orang)</label>
-                                        <div class="flex space-x-2">
-                                            <input type="number" min="0" placeholder="Laki-laki" required
-                                                class="border border-black outline-black  p-2 rounded-2xl w-full md:w-1/2 focus:outline-2">
-                                            <input type="number" min="0" placeholder="Perempuan" required
-                                                class="border border-black outline-black  p-2 rounded-2xl w-full md:w-1/2 focus:outline-2">
-                                        </div>
+                                        <input name="jumlah_tenaga_kerja" type="number" min="0" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
+                                            placeholder="Jumlah Tenaga Kerja">
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Nomor HP/Telepon</label>
-                                        <input type="tel" required
-                                            class="border border-black outline-black  p-2 rounded-2xl w-full focus:outline-2"
+                                        <input name="no_telp" type="tel" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Nomor Hp/Telepon">
                                     </div>
                                     <div>
                                         <label class="block mb-1 font-medium">Nilai Investasi</label>
-                                        <input type="text" required
-                                            class="border border-black outline-black  p-2 rounded-2xl w-full focus:outline-2"
+                                        <input name="nilai_investasi" type="number" min="0" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Nilai Investasi">
                                     </div>
                                     <div class="col-span-1 md:col-span-2 flex justify-center gap-4 mt-6">
@@ -194,26 +202,26 @@
                                     class="hidden relative z-0 grid grid-cols-1 gap-4 text-sm">
                                     <div class="flex flex-col">
                                         <label class="mb-2 font-medium text-gray-700">Pemerintah Pusat (%)</label>
-                                        <input type="number" min="0" max="100" step="1"
-                                            placeholder="Masukan Angka (contoh: 20)" required
+                                        <input name="pemerintah_pusat" type="number" min="0" max="100"
+                                            step="0.01" placeholder="Masukan Angka (contoh: 20)" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
                                     <div class="flex flex-col">
                                         <label class="mb-2 font-medium text-gray-700">Pemerintah Daerah (%)</label>
-                                        <input type="number" min="0" max="100" step="1"
-                                            placeholder="Masukan Angka (contoh: 20)" required
+                                        <input name="pemerintah_daerah" type="number" min="0" max="100"
+                                            step="0.01" placeholder="Masukan Angka (contoh: 20)" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
                                     <div class="flex flex-col">
                                         <label class="mb-2 font-medium text-gray-700">Swasta Nasional (%)</label>
-                                        <input type="number" min="0" max="100" step="1"
-                                            placeholder="Masukan Angka (contoh: 20)" required
+                                        <input name="swasta_nasional" type="number" min="0" max="100"
+                                            step="0.01" placeholder="Masukan Angka (contoh: 20)" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
                                     <div class="flex flex-col">
                                         <label class="mb-2 font-medium text-gray-700">Asing (%)</label>
-                                        <input type="number" min="0" max="100" step="1"
-                                            placeholder="Masukan Angka (contoh: 20)" required
+                                        <input name="asing" type="number" min="0" max="100"
+                                            step="0.01" placeholder="Masukan Angka (contoh: 20)" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
                                     <div class="flex justify-center gap-4 mt-6">
@@ -224,65 +232,63 @@
                                     </div>
                                 </section>
 
+
                                 {{-- KARYAWAN --}}
                                 <section id="form-karyawan" class="hidden relative z-0 grid grid-cols-1 gap-4 text-sm">
                                     <div class="flex flex-col">
                                         <label class="mb-2 font-medium text-gray-700">Jumlah Karyawan</label>
-                                        <input type="number" min="0" max="100" step="1"
-                                            placeholder="Masukan Jumlah Karyawan" required
+                                        <input name="jumlah_karyawan" type="number" min="0" max="100"
+                                            step="1" placeholder="Masukan Jumlah Karyawan" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
 
                                     <div class="flex flex-col">
-                                        <label for="tingkat_pendidikan" class="mb-2 font-medium text-gray-700">
-                                            <div>
-                                                <label class="block mb-1 font-medium">Tingkat Pendidikan (Orang)</label>
-                                                <div class="flex flex-wrap gap-2">
-                                                    <input type="number" name="pendidikan_sd" min="0"
-                                                        placeholder="SD" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-full md:w-[130px] focus:outline-2">
-                                                    <input type="number" name="pendidikan_smp" min="0"
-                                                        placeholder="SMP" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-full md:w-[130px] focus:outline-2">
-                                                    <input type="number" name="pendidikan_sma" min="0"
-                                                        placeholder="SMA/SMK" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-full md:w-[130px] focus:outline-2">
-                                                    <input type="number" name="pendidikan_d3" min="0"
-                                                        placeholder="D1 sd. D3" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-full md:w-[130px] focus:outline-2">
-                                                </div>
-                                                <div class="flex justify-center flex-wrap gap-2 mt-2">
-                                                    <input type="number" name="pendidikan_s1" min="0"
-                                                        placeholder="S1/D4" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-[130px] focus:outline-2">
-                                                    <input type="number" name="pendidikan_s2" min="0"
-                                                        placeholder="S2" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-[130px] focus:outline-2">
-                                                    <input type="number" name="pendidikan_s3" min="0"
-                                                        placeholder="S3" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-[130px] focus:outline-2">
-                                                </div>
-                                            </div>
-                                            <div class="mt-4">
-                                                <label class="block mb-1 font-medium text-gray-700">Status Tenaga Kerja
-                                                    (Orang)</label>
-                                                <div class="flex gap-2">
-                                                    <input type="number" name="status_tetap" min="0"
-                                                        placeholder="Tetap" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-full md:w-1/2 focus:outline-2">
-                                                    <input type="number" name="status_tidak_tetap" min="0"
-                                                        placeholder="Tidak Tetap" required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-full md:w-1/2 focus:outline-2">
-                                                </div>
-                                            </div>
+                                        <label class="mb-2 font-medium text-gray-700">Tingkat Pendidikan (Orang)</label>
+                                        <div class="flex flex-wrap gap-2">
+                                            <input name="sd" type="number" min="0" placeholder="SD"
+                                                required
+                                                class="border border-black outline-black p-2 rounded-2xl w-full md:w-[130px] focus:outline-2">
+                                            <input name="smp" type="number" min="0" placeholder="SMP"
+                                                required
+                                                class="border border-black outline-black p-2 rounded-2xl w-full md:w-[130px] focus:outline-2">
+                                            <input name="sma_smk" type="number" min="0" placeholder="SMA/SMK"
+                                                required
+                                                class="border border-black outline-black p-2 rounded-2xl w-full md:w-[130px] focus:outline-2">
+                                            <input name="s1_d4" type="number" min="0" placeholder="D1 sd. D3"
+                                                required
+                                                class="border border-black outline-black p-2 rounded-2xl w-full md:w-[130px] focus:outline-2">
+                                        </div>
+                                        <div class="flex justify-center flex-wrap gap-2 mt-2">
+                                            <input name="s1_d4" type="number" min="0" placeholder="S1/D4"
+                                                required
+                                                class="border border-black outline-black p-2 rounded-2xl w-[130px] focus:outline-2">
+                                            <input name="s2" type="number" min="0" placeholder="S2"
+                                                required
+                                                class="border border-black outline-black p-2 rounded-2xl w-[130px] focus:outline-2">
+                                            <input name="s3" type="number" min="0" placeholder="S3"
+                                                required
+                                                class="border border-black outline-black p-2 rounded-2xl w-[130px] focus:outline-2">
+                                        </div>
+                                    </div>
 
-                                            <div class="flex justify-center gap-4 mt-6">
-                                                <button type="button"
-                                                    class="prev bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Sebelumnya</button>
-                                                <button type="button" id="next-karyawan"
-                                                    class="bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Selanjutnya</button>
-                                            </div>
+                                    <div class="flex flex-col mt-4">
+                                        <label class="mb-2 font-medium text-gray-700">Status Tenaga Kerja</label>
+                                        <select name="status" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full md:w-1/2 focus:outline-2">
+                                            <option value="" disabled selected>Pilih Status</option>
+                                            <option value="tetap">Tetap</option>
+                                            <option value="tidak tetap">Tidak Tetap</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="flex justify-center gap-4 mt-6">
+                                        <button type="button"
+                                            class="prev bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Sebelumnya</button>
+                                        <button type="button" id="next-karyawan"
+                                            class="bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Selanjutnya</button>
+                                    </div>
                                 </section>
+
 
                                 {{-- PEMAKAIAN BAHAN --}}
                                 <section id="form-pemakaian-bahan"
@@ -295,7 +301,6 @@
                                     </div>
 
                                     <div id="form-bahan-container" class="flex flex-col gap-4"></div>
-
 
                                     <div id="bahan-template" class="flex flex-col gap-4">
                                         <div class="bahan-item border p-4 rounded-xl shadow" id="bahan-template">
@@ -337,7 +342,7 @@
 
                                             <div class="mb-2">
                                                 <label class="block mb-1 font-medium">Satuan Standar</label>
-                                                <input type="text" name="satuan[]" required
+                                                <input type="text" name="satuan_standar_bahan[]" required
                                                     class="border border-black outline-black p-2 rounded-2xl w-full"
                                                     placeholder="Masukkan Satuan Standar (liter, ton, dsb)">
                                             </div>
@@ -365,11 +370,12 @@
                                                     <input type="number" name="nilai_impor[]" min="0" required
                                                         class="border border-black outline-black p-2 rounded-2xl w-full md:w-1/3"
                                                         placeholder="Nilai (Rp)">
-                                                    <input type="text" name="negara_asal[]" required
+                                                    <input type="text" name="negara_asal_impor[]" required
                                                         class="border border-black outline-black p-2 rounded-2xl w-full md:w-1/3"
                                                         placeholder="Negara Asal">
                                                 </div>
                                             </div>
+
                                             <button type="button"
                                                 class="hapus-bahan self-end text-sm text-red-600 hover:underline mt-2">Hapus</button>
                                         </div>
@@ -389,9 +395,8 @@
                                 <section id="form-penggunaan-air"
                                     class="hidden relative z-0 grid grid-cols-1 gap-4 text-sm">
                                     <div class="flex flex-col">
-                                        <label for="jenis_pengeluaran" class="mb-2 font-medium text-gray-700">Sumber
-                                            Air</label>
-                                        <select id="jenis_pengeluaran" name="jenis_pengeluaran" required
+                                        <label for="sumber_air" class="mb-2 font-medium text-gray-700">Sumber Air</label>
+                                        <select id="sumber_air" name="sumber_air" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                             <option value="" disabled selected>-- Pilih Sumber Air --</option>
                                             <option value="air_permukaan">Air Permukaan (sungai, danau, mata air, laut)
@@ -402,10 +407,10 @@
                                         </select>
                                     </div>
                                     <div class="flex flex-col">
-                                        <label for="banyaknya_penggunaan" class="mb-2 font-medium text-gray-700">Banyaknya
-                                            Penggunaan (m³)</label>
-                                        <input type="number" id="banyaknya_penggunaan" name="banyaknya_penggunaan"
-                                            min="0" required
+                                        <label for="banyaknya_penggunaan_m3"
+                                            class="mb-2 font-medium text-gray-700">Banyaknya Penggunaan (m³)</label>
+                                        <input type="number" id="banyaknya_penggunaan_m3" name="banyaknya_penggunaan_m3"
+                                            min="0.01" step="0.01" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Jumlah Penggunaan">
                                     </div>
@@ -413,7 +418,7 @@
                                         <label for="biaya" class="mb-2 font-medium text-gray-700">Biaya (Rp)</label>
                                         <input type="number" id="biaya" name="biaya" min="0" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
-                                            placeholder="Masukkan Biaya (contoh: 200000">
+                                            placeholder="Masukkan Biaya (contoh: 200000)">
                                     </div>
 
                                     {{-- Tombol Navigasi --}}
@@ -424,6 +429,7 @@
                                             class="bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Selanjutnya</button>
                                     </div>
                                 </section>
+
 
                                 {{-- PENGELUARAN --}}
                                 <section id="form-pengeluaran" class="hidden relative z-0 grid grid-cols-1 gap-4 text-sm">
@@ -438,7 +444,7 @@
                                     <div class="flex flex-col">
                                         <label for="lainnya" class="mb-2 font-medium text-gray-700">Pengeluaran Lainnya
                                             (Rp)</label>
-                                        <input type="number" id="lainnya" name="lainnya" required
+                                        <input type="number" id="lainnya" name="lainnya" min="0" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="contoh: 60000">
                                     </div>
@@ -450,6 +456,8 @@
                                             class="bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Selanjutnya</button>
                                     </div>
                                 </section>
+
+
                                 {{-- BAHAN BAKAR --}}
                                 <section id="form-bahan-bakar" class="hidden relative z-0 grid grid-cols-1 gap-4 text-sm">
                                     <div class="mb-4 flex justify-end">
@@ -497,11 +505,12 @@
                                             <div class="mb-2">
                                                 <label class="block mb-1 font-medium">Proses Produksi</label>
                                                 <div class="flex flex-col md:flex-row gap-2">
-                                                    <input type="number" name="banyaknya_produksi[]" min="0"
-                                                        required
+                                                    <input type="number" name="banyaknya_proses_produksi[]"
+                                                        min="0" required
                                                         class="border border-black outline-black p-2 rounded-2xl w-full md:w-1/2"
                                                         placeholder="Banyak (Contoh: 30)">
-                                                    <input type="number" name="nilai_produksi[]" min="0" required
+                                                    <input type="number" name="nilai_proses_produksi[]" min="0"
+                                                        required
                                                         class="border border-black outline-black p-2 rounded-2xl w-full md:w-1/2"
                                                         placeholder="Nilai (Contoh: 30000)">
                                                 </div>
@@ -532,6 +541,7 @@
                                     </div>
                                 </section>
 
+
                                 {{-- LISTRIK --}}
                                 <section id="form-listrik" class="hidden relative z-0 grid grid-cols-1 gap-4 text-sm">
                                     <div>
@@ -549,20 +559,23 @@
                                         <label class="block mb-1 font-medium">Banyaknya Penggunaan (kWh)</label>
                                         <input type="number" name="banyaknya_penggunaan_listrik" min="0" required
                                             placeholder="Masukkan penggunaan listrik (kWh)"
-                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2" />
                                     </div>
+
                                     <div>
                                         <label class="block mb-1 font-medium">Nilai Penggunaan (Rp)</label>
                                         <input type="number" name="nilai_penggunaan_listrik" min="0" required
                                             placeholder="Masukkan Nilai (Contoh: 250000)"
-                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2" />
                                     </div>
+
                                     <div>
                                         <label class="block mb-1 font-medium">Peruntukkan Listrik</label>
                                         <input type="text" id="peruntukkan_listrik" name="peruntukkan_listrik"
                                             required placeholder="Masukkan peruntukkan listrik"
-                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2" />
                                     </div>
+
                                     <div class="flex justify-center gap-4 mt-6">
                                         <button type="button"
                                             class="prev bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Sebelumnya</button>
@@ -571,9 +584,11 @@
                                     </div>
                                 </section>
 
+
                                 {{-- MESIN PRODUKSI --}}
                                 <section id="form-mesin-produksi"
                                     class="hidden relative z-0 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
                                     <div>
                                         <label class="block mb-1 font-medium">Jenis Mesin/Peralatan</label>
                                         <input type="text" id="jenis_mesin" name="jenis_mesin" required
@@ -606,28 +621,31 @@
                                         <label class="block mb-1 font-medium">Negara Pembuat</label>
                                         <input type="text" id="negara_pembuat" name="negara_pembuat" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
-                                            placeholder="Masukkan Negara ">
+                                            placeholder="Masukkan Negara">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Tahun Perolehan</label>
-                                        <input type="number" id="tahun_perolehan" name="tahun_perolehan" required
+                                        <input type="number" id="tahun_perolehan" name="tahun_perolehan" min="1900"
+                                            required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
-                                            placeholder="Masukkan Tahun ">
+                                            placeholder="Masukkan Tahun">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Tahun Pembuatan</label>
-                                        <input type="number" id="tahun_pembuatan" name="tahun_pembuatan" required
+                                        <input type="number" id="tahun_pembuatan" name="tahun_pembuatan" min="1900"
+                                            required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
-                                            placeholder="Masukkan Tahun ">
+                                            placeholder="Masukkan Tahun">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Jumlah Unit</label>
-                                        <input type="number" id="banyaknya" name="banyaknya" min="0" required
+                                        <input type="number" id="jumlah_unit" name="jumlah_unit" min="0"
+                                            required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
-                                            placeholder="Masukkan Banyaknya">
+                                            placeholder="Masukkan Jumlah Unit">
                                     </div>
 
                                     <div class="col-span-1 md:col-span-2 flex justify-center gap-4 mt-6">
@@ -638,9 +656,11 @@
                                     </div>
                                 </section>
 
+
                                 {{-- PRODUKSI --}}
                                 <section id="form-produksi"
                                     class="hidden relative z-0 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+
                                     <div>
                                         <label class="block mb-1 font-medium">Jenis Produksi</label>
                                         <input type="text" id="jenis_produksi" name="jenis_produksi" required
@@ -658,14 +678,15 @@
 
                                     <div>
                                         <label class="block mb-1 font-medium">Kode HS (Harmonized System)</label>
-                                        <input type="text" id="kode_hs" name="kode_hs" required
+                                        <input type="text" id="produksi_kode_hs" name="produksi_kode_hs" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Kode HS">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Spesifikasi</label>
-                                        <input type="text" id="spesifikasi" name="spesifikasi" required
+                                        <input type="text" id="produksi_spesifikasi" name="produksi_spesifikasi"
+                                            required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Spesifikasi Produksi">
                                     </div>
@@ -680,7 +701,7 @@
 
                                     <div>
                                         <label class="block mb-1 font-medium">Nilai</label>
-                                        <input type="text" id="nilai_produksi" name="nilai_produksi" required
+                                        <input type="number" id="nilai_produksi" name="nilai_produksi" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Nilai Produksi">
                                     </div>
@@ -693,18 +714,18 @@
                                     </div>
 
                                     <div>
-                                        <label class="block mb-1 font-medium">Persentase Produk yang Diekspor</label>
+                                        <label class="block mb-1 font-medium">Persentase Produk yang Diekspor (%)</label>
                                         <input type="number" id="persentase_ekspor" name="persentase_ekspor"
-                                            min="0" max="100" required
+                                            min="0" max="100" step="0.01" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Persentase Produk yang Diekspor">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Negara Tujuan Ekspor</label>
-                                        <input type="text" id="negara_ekspor" name="negara_ekspor" required
+                                        <input type="text" id="negara_ekspor" name="negara_ekspor"
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
-                                            placeholder="Masukkan Negara Tujuan Ekspor">
+                                            placeholder="Masukkan Negara Tujuan Ekspor (boleh kosong)">
                                     </div>
 
                                     <div>
@@ -719,9 +740,10 @@
                                         <button type="button"
                                             class="prev bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Sebelumnya</button>
                                         <button type="button" id="next-produksi"
-                                            class=" bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Selanjutnya</button>
+                                            class="bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Selanjutnya</button>
                                     </div>
                                 </section>
+
 
                                 {{-- PERSEDIAAN --}}
                                 <section id="form-persediaan" class="hidden relative z-0 grid grid-cols-1 gap-4 text-sm">
@@ -742,14 +764,14 @@
 
                                     <div>
                                         <label class="block mb-1 font-medium">Awal (Rp)</label>
-                                        <input type="number" name="awal_rp" min="0" required
+                                        <input type="number" id="awal" name="awal" min="0" required
                                             placeholder="Masukkan Nilai Awal (Contoh: 50000)"
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Akhir (Rp)</label>
-                                        <input type="number" name="akhir_rp" min="0" required
+                                        <input type="number" id="akhir" name="akhir" min="0" required
                                             placeholder="Masukkan Nilai Akhir (Contoh: 50000)"
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
@@ -761,6 +783,7 @@
                                             class="bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Selanjutnya</button>
                                     </div>
                                 </section>
+
 
                                 {{-- PENDAPATAN --}}
                                 <section id="form-pendapatan"
@@ -787,56 +810,56 @@
                                     </div>
                                 </section>
 
+
                                 {{-- MODAL --}}
                                 <section id="form-modal"
                                     class="hidden relative z-0 grid grid-cols-1 gap-4 text-sm w-[300px]">
                                     <div>
                                         <label class="block mb-1 font-medium">Jenis Barang Modal</label>
-                                        <input type="text" name="sumber" required
-                                            placeholder="Masukkan Sumber Pendapatan"
+                                        <input type="text" name="jenis_barang" required
+                                            placeholder="Masukkan Jenis Barang Modal"
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Pembelian/Penambahan dan Pembuatan/Perbaikan
-                                            Besar(Rp)</label>
-                                        <input type="number" name="nilai" min="0" required
-                                            placeholder="Masukkan Nilai (Contoh:100000)"
+                                            Besar (Rp)</label>
+                                        <input type="number" name="pembelian_penambahan_perbaikan" min="0"
+                                            required placeholder="Masukkan Nilai (Contoh: 100000)"
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Penjualan/Pengurangan Barang Modal
                                             (Rp)</label>
-                                        <input type="number" name="nilai" min="0" required
-                                            placeholder="Masukkan Nilai (Contoh:100000)"
+                                        <input type="number" name="pengurangan_barang_modal" min="0" required
+                                            placeholder="Masukkan Nilai (Contoh: 100000)"
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
 
                                     <div>
-                                        <label class="block mb-1 font-medium">Penyusutan Barang
-                                            (Rp)</label>
-                                        <input type="number" name="nilai" min="0" required
-                                            placeholder="Masukkan Nilai (Contoh:100000)"
+                                        <label class="block mb-1 font-medium">Penyusutan Barang (Rp)</label>
+                                        <input type="number" name="penyusutan_barang" min="0" required
+                                            placeholder="Masukkan Nilai (Contoh: 100000)"
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
 
                                     <div>
                                         <label class="block mb-1 font-medium">Nilai Taksiran seluruh barang modal tetap
-                                            menurut harga berlaku
-                                            (Rp)</label>
-                                        <input type="number" name="nilai" min="0" required
-                                            placeholder="Masukkan Nilai (Contoh:100000)"
+                                            menurut harga berlaku (Rp)</label>
+                                        <input type="number" name="nilai_taksiran" min="0" required
+                                            placeholder="Masukkan Nilai (Contoh: 100000)"
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
                                     </div>
 
                                     <div class="flex justify-center gap-4 mt-6">
                                         <button type="button"
                                             class="prev bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Sebelumnya</button>
-                                        <button type="button" id="next-pendapatan"
+                                        <button type="button" id="next-modal"
                                             class="bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Selanjutnya</button>
                                     </div>
                                 </section>
+
 
                                 {{-- BENTUK PENGELOLAAN --}}
                                 <section id="form-bentuk-pengelolaan"
@@ -910,10 +933,11 @@
                                     <div class="flex justify-center gap-4 mt-6">
                                         <button type="button"
                                             class="prev bg-[#083458] text-white px-6 py-2 rounded-3xl hover:opacity-90">Sebelumnya</button>
-                                        <button type="submit" id="next-pengeluaran"
+                                        <button type="submit" id="submit-pengelolaan"
                                             class="bg-[#F49F1E] text-white px-6 py-2 rounded-3xl hover:opacity-90">Simpan</button>
                                     </div>
                                 </section>
+
 
                             </form>
                         </section>
@@ -1138,16 +1162,32 @@
                                 }
                             });
                         </script>
-
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
-                                document.querySelectorAll('input[type="text"]').forEach(input => input.value = "Contoh Data");
-                                document.querySelectorAll('input[type="number"]').forEach(input => input.value = 10);
-                                document.querySelectorAll('select').forEach(select => {
-                                    if (select.options.length > 1) select.selectedIndex = 1;
+                                const form = document.getElementById('form-ikm');
+
+                                // Mengisi semua input berdasarkan tipe
+                                form.querySelectorAll('input').forEach(el => {
+                                    // Cek jika elemen input bukan token CSRF dan bukan field dengan type hidden
+                                    if (el.name !== '_token' && el.type !== 'hidden') {
+                                        if (el.type === 'number') {
+                                            // Cek tahun perolehan dan pembuatan
+                                            if (el.id === 'tahun_perolehan' || el.id === 'tahun_pembuatan') {
+                                                el.value = el.value < 1900 ? 1900 : el.value;
+                                            } else {
+                                                el.value = 98; // Ubah dengan nilai yang sesuai
+                                            }
+                                        } else if (el.type === 'tel') {
+                                            el.value = '081234567890'; // Nomor HP otomatis
+                                        } else {
+                                            el.value = 'Contoh'; // Untuk input teks lainnya
+                                        }
+                                    }
                                 });
                             });
                         </script>
+
+
 
                     </div>
                 </div>
