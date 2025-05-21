@@ -98,10 +98,6 @@
                             <input type="text" name="nomor_seri" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Jumlah Alat <span class="text-red-500">*</span></label>
-                            <input type="number" name="jumlah_alat" class="w-full border rounded px-3 py-2" required>
-                        </div>
-                        <div>
                             <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
                             <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
 								<option value="BUS">BUS</option>
@@ -273,7 +269,6 @@
         form.elements['nama_alat'].value = data.nama_alat || '';
         form.elements['merk_type'].value = data.merk_type || '';
         form.elements['nomor_seri'].value = data.nomor_seri || '';
-        form.elements['jumlah_alat'].value = data.jumlah_alat || '';
         form.elements['alat_penguji'].value = data.alat_penguji || '';
         form.elements['ctt'].value = data.ctt || '';
         form.elements['spt_keperluan'].value = data.spt_keperluan || '';

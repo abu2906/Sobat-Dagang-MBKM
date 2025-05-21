@@ -54,7 +54,6 @@ class DirectoryBookController extends Controller
             'nama_alat' => $request->nama_alat,
             'merk_type' => $request->merk_type,
             'nomor_seri' => $request->nomor_seri,
-            'jumlah_alat' => $request->jumlah_alat,
             'alat_penguji' => $request->alat_penguji,
             'ctt' => $request->ctt,
             'spt_keperluan' => $request->spt_keperluan,
@@ -105,7 +104,7 @@ class DirectoryBookController extends Controller
 
     public function update(Request $request, $id)
     {
-        $uttp = UTTP::findOrFail($id);
+        $uttp = Uttp::findOrFail($id);
 
         $uttp->update([
             'tanggal_penginputan' => $request->tanggal_penginputan,
@@ -116,7 +115,6 @@ class DirectoryBookController extends Controller
             'nama_alat' => $request->nama_alat,
             'merk_type' => $request->merk_type,
             'nomor_seri' => $request->nomor_seri,
-            'jumlah_alat' => $request->jumlah_alat,
             'alat_penguji' => $request->alat_penguji,
             'ctt' => $request->ctt,
             'spt_keperluan' => $request->spt_keperluan,

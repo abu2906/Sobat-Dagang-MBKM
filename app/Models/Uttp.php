@@ -24,7 +24,6 @@ class Uttp extends Model
         'jenis_alat',
         'merk_type',
         'nomor_seri',
-        'jumlah_alat',
         'alat_penguji',
         'ctt',
         'spt_keperluan',
