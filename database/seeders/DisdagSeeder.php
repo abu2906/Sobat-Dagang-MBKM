@@ -17,7 +17,8 @@ class DisdagSeeder extends Seeder
                 'role' => 'master_admin',
             ],
             [
-                'nip' => '197201021993041002',
+                'nip' => 'git merge Andif
+',
                 'email' => 'admin_perdagangan@disdag.local',
                 'role' => 'admin_perdagangan',
             ],
