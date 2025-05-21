@@ -14,13 +14,13 @@
 
             <div class="bg-white shadow-md rounded-xl p-4 text-center">
                 <p class="text-gray-500">Jumlah Surat Ditolak</p>
-                <h2 class="text-3xl font-bold">7</h2>
+                <h2 class="text-3xl font-bold">{{ $totalSuratDitolak }}</h2>
                 <p class="text-sm text-gray-400">Total Keseluruhan</p>
             </div>
 
             <div class="bg-white shadow-md rounded-xl p-4 text-center">
                 <p class="text-gray-500">Jumlah Surat Diterima</p>
-                <h2 class="text-3xl font-bold">0</h2>
+                <h2 class="text-3xl font-bold">{{ $totalSuratDiterima }}</h2>
                 <p class="text-sm text-gray-400">Total Keseluruhan</p>
             </div>
 
@@ -102,15 +102,14 @@
         options: {
             plugins: {
                 legend: {
-                    display: false // ❌ sembunyikan legend di bawah chart
+                    display: false
                 },
                 tooltip: {
-                    enabled: true // ✅ aktifkan tooltip saat hover (default-nya sudah true, tapi aman ditulis eksplisit)
+                    enabled: true
                 }
             }
         }
     });
-
 
     const ctxLine = document.getElementById('chartLine');
     new Chart(ctxLine, {
@@ -119,16 +118,16 @@
             labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
             datasets: [
                 {
-                    label: 'Series1',
-                    data: [4, 6, 8, 5, 6, 7, 8, 5, 4, 6, 3, 4],
+                    label: 'Tahun {{ $currentYear }}',
+                    data: {!! $currentYearData !!},
                     borderColor: '#60a5fa',
                     backgroundColor: 'rgba(96, 165, 250, 0.2)',
                     tension: 0.4,
                     fill: true
                 },
                 {
-                    label: 'Series2',
-                    data: [3, 5, 6, 5, 8, 6, 9, 6, 5, 7, 4, 5],
+                    label: 'Tahun {{ $lastYear }}',
+                    data: {!! $lastYearData !!},
                     borderColor: '#0c3252',
                     backgroundColor: 'rgba(12, 50, 82, 0.2)',
                     tension: 0.4,
@@ -139,7 +138,21 @@
         options: {
             plugins: {
                 legend: {
-                    display: false,
+                    display: true,
+                    position: 'bottom'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah Tera'
+                    }
                 }
             }
         }
