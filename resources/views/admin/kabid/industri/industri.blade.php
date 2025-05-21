@@ -29,10 +29,10 @@
         <table class="w-full table-wrapper border-collapse border-spacing-0 table-fixed text-[11px] rounded-t-xl">
             <thead class="sm:text-xs leading-4 sm:leading-5 rounded-t-xl">
             <tr>
-              <th class="bg-[#00365e] sticky top-0 z-20 text-white text-[10px] font-semibold px-2 py-2 w-[30%] rounded-tl-xl">NAMA USAHA</th>
-              <th class="bg-[#00365e] sticky top-0 z-20 text-white text-[10px] font-semibold px-2 py-2 w-[30%]">NAMA PEMILIK</th>
-              <th class="bg-[#00365e] sticky top-0 z-20 text-white text-[10px] font-semibold px-2 py-2 w-[30%]">NAMA PRODUK</th>
-              <th class="bg-[#00365e] sticky top-0 z-20 text-white text-[10px] font-semibold px-2 py-2 w-[30%] rounded-tr-xl">KECAMATAN</th>
+              <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 w-[30%] rounded-tl-xl">NAMA USAHA</th>
+              <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 w-[30%]">NAMA PEMILIK</th>
+              <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 w-[30%]">NAMA PRODUK</th>
+              <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 w-[30%] rounded-tr-xl">KECAMATAN</th>
             </tr>
           </thead>
           <tbody class="text-black text-[10px] sm:text-xs leading-4 sm:leading-5 rounded-b-xl" id="data-industri"></tbody>
@@ -84,20 +84,17 @@
       <section class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
         <!-- Industri Terdaftar & Tenaga Kerja card -->
         <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px]  flex flex-col">
-          <h3 class="font-bold text-lg flex items-center gap-2 mb-3 text-[#000]">
+          <h3 class="font-bold text-lg flex items-center gap-2 mb-8 text-[#000]">
             <span>⚖</span>
             Industri Terdaftar
           </h3>
-          <div class= 'summary' >
-            <p class="text-[#073763] font-extrabold text-2xl mb-1">0 Usaha</p>
-            <p class="mb-1"><span class="font-bold">0</span> Penggiling Daging</p>
-            <p class="mb-4"><span class="font-bold">0</span> Penggiling Ikan</p>
-            <h4 class="font-extrabold text-xl text-[#073763] mb-2">Tenaga Kerja</h4>
+            <p class="text-[#073763] font-extrabold text-center text-6xl mb-1">0</p>
+            <p class="text-[#073763] font-extrabold text-center text-3xl mb-6">Usaha</p>
+            <h4 class="font-extrabold text-xl text-[#073763] mt-4">Tenaga Kerja</h4>
             <p class="flex items-center gap-2 text-[#073763] font-semibold">
               <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> 0 <span class="text-sm">Laki-Laki</span>
               <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span> 0 <span class="text-sm">Perempuan</span>
             </p>
-          </div>
         </article>
       
         <!-- Informasi Tambahan card -->
@@ -278,18 +275,14 @@
 // Fungsi render summary industri
 function renderSummary(data) {
   const totalUsaha = data.length;
-  const penggilingDaging = data.filter(item => item.produk === 'Sandang').length;
-  const penggilingIkan = data.filter(item => item.produk === 'Pangan').length;
 
   const totalLaki = data.reduce((sum, item) => sum + (item.tl_l || 0), 0);
   const totalPerempuan = data.reduce((sum, item) => sum + (item.tk_p || 0), 0);
 
   // Update isi elemen summary di halaman
-  document.querySelector('.text-2xl.mb-1').innerText = `${totalUsaha} Usaha`;
-  document.querySelectorAll('.p.mb-1')[0].innerHTML = `<span class="font-bold">${Sandang}</span> Sandang`;
-  document.querySelectorAll('. p.mb-1')[1].innerHTML = `<span class="font-bold">${penggilingIkan}</span> Pangan`;
+  document.querySelector('.text-6xl.mb-1').innerText = `${totalUsaha}`;
 
-  const tenagaKerjaElement = document.querySelector('.flex.items-center.gap-2.text-[#073763]');
+  const tenagaKerjaElement = document.querySelector('flex.items-center.gap-2.text-[#073763].font-semibold');
   tenagaKerjaElement.innerHTML = `
     <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> ${totalLaki} <span class="text-sm">Laki-Laki</span>
     <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span> ${totalPerempuan} <span class="text-sm">Perempuan</span>
