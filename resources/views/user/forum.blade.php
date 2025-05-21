@@ -1,0 +1,134 @@
+@extends('layouts.home')
+@section('title', 'Forum Diskusi')
+
+@section('content')
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div class="w-full max-w-sm bg-white shadow-xl rounded-lg overflow-hidden h-[500px] flex flex-col">
+        <div class="flex justify-between items-center bg-[#083458] text-white p-3 rounded-t-lg">
+            <h2 class="font-semibold text-base">Forum Diskusi</h2>
+            <a href="{{ route('user.dashboard') }}" class="text-white hover:text-gray-300 text-lg font-bold">&times;</a>
+        </div>
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-50 text-sm">
+            {{-- Pesan akan dimuat lewat JS --}}
+        </div>
+        <form id="chat-form" class="p-3 border-t border-gray-200 flex items-center gap-2">
+            <input type="text" id="chat-input" class="flex-1 border border-gray-300 rounded-full px-3 py-1.5 text-sm focus:outline-none" placeholder="Ketik pesan..." required>
+            <button type="submit" class="bg-[#083458] text-white px-4 py-1.5 text-sm rounded-full hover:bg-[#0a4a78]">Kirim</button>
+        </form>
+    </div>
+</div>
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const userId = {!! json_encode(auth()->guard('user')->id()) !!};
+
+    async function ambilChat() {
+        try {
+            const res = await fetch('/forum-chat/load');
+            if (!res.ok) throw new Error('Gagal ambil data chat');
+            const data = await res.json();
+
+            chatMessages.innerHTML = '';
+
+            data.forEach(chat => {
+                const isMe = chat.id_user === userId;
+                const senderName = chat.user?.nama ?? chat.disdag?.nama ?? 'Admin Dinas Perdagangan';
+                const initial = senderName.charAt(0).toUpperCase();
+                const waktu = new Date(chat.waktu);
+                const waktuFormatted = new Intl.DateTimeFormat('id-ID', {
+                    hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Makassar'
+                }).format(waktu);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = `flex items-end ${isMe ? 'justify-end' : 'justify-start'} gap-2`;
+
+                const bubble = `
+                    <div class="max-w-[75%] p-2.5 text-sm leading-snug shadow ${isMe ? 'bg-[#083458] text-white rounded-3xl rounded-br-md' : 'bg-gray-200 text-black rounded-3xl rounded-bl-md'}">
+                        <div class="mb-1 text-xs font-semibold">${senderName}</div>
+                        <div>${chat.chat.replace(/\n/g, '<br>')}</div>
+                        <div class="text-[10px] text-gray-400 text-right mt-1">${waktuFormatted}</div>
+                    </div>
+                `;
+
+                const avatar = `
+                    <div class="flex items-center justify-center w-7 h-7 text-xs font-bold text-white bg-gray-400 rounded-full select-none">
+                        ${initial}
+                    </div>
+                `;
+
+                wrapper.innerHTML = isMe ? `${bubble}${avatar}` : `${avatar}${bubble}`;
+                chatMessages.appendChild(wrapper);
+                
+            });
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    chatForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        try {
+            const response = await fetch('/forum-chat/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+                body: JSON.stringify({ chat: message }),
+            });
+
+            if (!response.ok) throw new Error('Response not OK');
+            const data = await response.json();
+
+            if (data.success) {
+                chatInput.value = '';
+                ambilChat();
+            setTimeout(() => {
+                const waktu = new Date();
+                const waktuFormatted = new Intl.DateTimeFormat('id-ID', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'Asia/Makassar'
+                }).format(waktu);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'flex items-end justify-start gap-2';
+
+                const autoReply = `
+                    <div class="flex items-center justify-center w-7 h-7 text-xs font-bold text-white bg-gray-400 rounded-full select-none">
+                        A
+                    </div>
+                    <div class="max-w-[75%] p-2.5 text-sm leading-snug shadow bg-gray-200 text-black rounded-3xl rounded-bl-md">
+                        <div class="mb-1 text-xs font-semibold">Admin Dinas Perdagangan</div>
+                        <div>Terima kasih atas pesan Anda. Silakan cek forum diskusi secara berkala untuk melihat tanggapan dari tim kami.</div>
+                        <div class="text-[10px] text-gray-400 text-right mt-1">${waktuFormatted}</div>
+                    </div>
+                `;
+                wrapper.innerHTML = autoReply;
+                chatMessages.appendChild(wrapper);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500); // 1.5 detik delay
+        } else {
+            alert('Gagal mengirim pesan');
+        }
+    } catch (err) {
+        console.error('Error:', err);
+        alert(err.message);
+    }
+    });
+
+    ambilChat();
+});
+</script>
+@endsection

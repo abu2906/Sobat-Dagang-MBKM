@@ -8,6 +8,10 @@ use App\Models\Distributor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Exception;
+use App\Models\RencanaKebutuhanDistributor;
+use App\Models\Toko;
+use Carbon\Carbon;
+use App\Models\StokOpname;
 
 // Berisikan seluruh fungsi yang digunakan dalam hal pelaporan baik admin maupun distributor
 class PelaporanController extends Controller
@@ -17,35 +21,71 @@ class PelaporanController extends Controller
         return view('user.bidangPerdagangan.pelaporan_penyaluran');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $userId = session('id_user');
-
-        // Cek apakah user sudah ada di tabel distributor
         $distributor = Distributor::where('id_user', $userId)->first();
 
-        if (!$distributor) {
-            // Jika belum mengisi form distributor
-            return redirect()->route('pelaporan-penyaluran');
-        }
-
-        if ($distributor->status === 'menunggu') {
-            // Jika status masih menunggu verifikasi
+        if (!$distributor) return redirect()->route('pelaporan-penyaluran');
+        if ($distributor->status === 'menunggu' || $distributor->status === 'ditolak') {
             return redirect()->route('cekpengajuan');
         }
 
-        if ($distributor->status === 'diterima') {
-            // Jika status sudah diterima, tampilkan halaman pelaporan
-            return view('user.bidangPerdagangan.pelaporan');
+        $tokoList = Toko::with('rencana')->get();
+        $tokos = Toko::where('id_distributor', $distributor->id_distributor)->get();
+
+        $bulan = $request->input('bulan', now()->month);
+        $tahun = $request->input('tahun', now()->year);
+        $tokoId = $request->input('toko');
+
+        $query = StokOpname::where('id_distributor', $distributor->id_distributor)
+            ->whereYear('tanggal', $tahun)
+            ->whereMonth('tanggal', $bulan);
+
+        if (!empty($tokoId)) {
+            $query->where('id_toko', $tokoId);
         }
 
-        if ($distributor->status === 'ditolak') {
-            // Jika status masih menunggu verifikasi
-            return redirect()->route('cekpengajuan');
+        $stokOpnames = $query->get();
+
+        $dataByMinggu = [];
+        $mingguBelumTerisi = []; // Menampung info minggu kosong per barang
+
+        foreach ($stokOpnames as $record) {
+            $day = \Carbon\Carbon::parse($record->tanggal)->day;
+            $minggu = match (true) {
+                $day >= 1 && $day <= 7 => 1,
+                $day >= 8 && $day <= 14 => 2,
+                $day >= 15 && $day <= 21 => 3,
+                default => 4,
+            };
+
+            $nama_barang = $record->nama_barang;
+
+            $dataByMinggu[$nama_barang]['minggu_' . $minggu] = [
+                'stok_awal' => $record->stok_awal,
+                'penyaluran' => $record->penyaluran,
+                'stok_akhir' => $record->stok_akhir,
+            ];
         }
 
-        // Jika status lainnya (opsional, misal: Ditolak), kamu bisa atur juga
-        return redirect()->route('pelaporan-penyaluran')->with('error', 'Status pengajuan tidak valid.');
+        foreach ($dataByMinggu as $nama_barang => &$mingguData) {
+            for ($i = 1; $i <= 4; $i++) {
+                $key = 'minggu_' . $i;
+                if (!isset($mingguData[$key])) {
+                    $mingguData[$key] = ['stok_awal' => '-', 'penyaluran' => '-', 'stok_akhir' => '-'];
+                    $mingguBelumTerisi[$nama_barang][] = $i; // Simpan minggu yang kosong
+                }
+            }
+            ksort($mingguData);
+        }
+
+        return view('user.bidangPerdagangan.pelaporan', [
+            'tokoList' => $tokoList,
+            'tokos' => $tokos,
+            'dataByMinggu' => $dataByMinggu,
+            'mingguBelumTerisi' => $mingguBelumTerisi,
+        ]);
     }
 
     public function verifikasiPengajuan()
@@ -166,54 +206,164 @@ class PelaporanController extends Controller
     }
 
     public function inputDataToko(Request $request)
-{
-    // Validasi input jika diperlukan
+    {
+        // Validasi input
         $request->validate([
             'nama_toko' => 'required|string|max:255',
             'kecamatan' => 'required|string|max:255',
             'no_register' => 'required|string|max:100',
-            'rencana_kebutuhan' => 'required|string|max:255',
+            'rencana_kebutuhan' => 'required|numeric',
+            'tahun' => 'required|digits:4|integer|min:2000|max:' . date('Y'),
         ]);
 
-        // Simpan atau proses data
-        // Contoh: simpan ke database jika sudah ada modelnya
-        // Toko::create($request->all());
+        try {
+            DB::beginTransaction();
 
-        // Redirect atau tampilkan pesan
-        return back()->with('success', 'Data toko berhasil ditambahkan.');
-}
+            // Ambil id_user dari session
+            $id_user = session('id_user');
+            if (!$id_user) {
+                return back()->with('error', 'User belum login.');
+            }
+
+            // Cari distributor berdasarkan id_user
+            $distributor = \App\Models\Distributor::where('id_user', $id_user)->first();
+
+            if (!$distributor) {
+                return back()->with('error', 'Distributor untuk user ini tidak ditemukan.');
+            }
+
+            // Simpan ke rencana_kebutuhan_distributor
+            $rencana = RencanaKebutuhanDistributor::create([
+                'jumlah' => $request->input('rencana_kebutuhan'),
+                'tahun' => $request->input('tahun'),
+                'id_barang_pelaporan' => null,
+            ]);
+
+            // Simpan ke tabel toko dengan foreign key ke rencana kebutuhan dan distributor
+            Toko::create([
+                'id_rancangan' => $rencana->id_rancangan,
+                'id_distributor' => $distributor->id_distributor,
+                'nama_toko' => $request->input('nama_toko'),
+                'kecamatan' => $request->input('kecamatan'),
+                'no_register' => $request->input('no_register'),
+            ]);
+
+            DB::commit();
+            return back()->with('success', 'Data toko dan rencana kebutuhan berhasil ditambahkan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+
     public function showForm()    {
         return view('user.bidangPerdagangan.inputDataToko');
     }
-
-        public function inputDataDistribusi(Request $request)
+    public function inputDataDistribusi(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'nama_barang'    => 'required|string',
-            'stok'           => 'required|numeric|min:0',
-            'penyaluran'     => 'required|numeric|min:0',
-            'tanggal_input'  => 'required|date',
+        $userId = session('id_user');
+        $distributor = Distributor::where('id_user', $userId)->first();
+
+        if (!$distributor) {
+            return redirect()->back()->with('error', 'Distributor tidak ditemukan.');
+        }
+
+        $request->validate([
+            'id_toko' => 'required|exists:toko,id_toko',
+            'nama_barang' => 'required|string',
+            'stok' => 'required|integer|min:0',
+            'penyaluran' => 'required|integer|min:0',
+            'tanggal_input' => 'required|date',
         ]);
 
+        $tanggalInput = Carbon::parse($request->tanggal_input);
+        $mingguInput = $this->getMingguKe($tanggalInput);
+
+        // Ambil semua entri sebelumnya (bulan yang sama) untuk kombinasi distributor + toko + barang
+        $entriesThisMonth = StokOpname::where('id_distributor', $distributor->id_distributor)
+            ->where('id_toko', $request->id_toko)
+            ->where('nama_barang', $request->nama_barang)
+            ->whereYear('tanggal', $tanggalInput->year)
+            ->whereMonth('tanggal', $tanggalInput->month)
+            ->get();
+
+        // Hitung minggu keberapa saja yang sudah diinput
+        $mingguSudahDiisi = $entriesThisMonth->map(function ($entry) {
+            return $this->getMingguKe($entry->tanggal);
+        })->unique()->sort()->values();
+
+        if ($mingguSudahDiisi->isEmpty()) {
+            // Pertama kali input: hanya boleh minggu ke-1
+            if ($mingguInput !== 1) {
+                return redirect()->route('pelaporan.showDataDistribusi', ['id_toko' => $request->id_toko])
+                    ->with('error', 'Input data pertama hanya diizinkan pada minggu ke-1 (tanggal 1–7). Tanggal yang Anda pilih: ' . $tanggalInput->format('d M Y'));
+            }
+        } else {
+            $mingguTerakhir = $mingguSudahDiisi->last();
+
+            if ($mingguSudahDiisi->contains($mingguInput)) {
+                return redirect()->route('pelaporan.showDataDistribusi', ['id_toko' => $request->id_toko])
+                    ->with('error', "Anda sudah mengisi data distribusi untuk minggu ke-{$mingguInput} bulan ini.");
+            }
+
+            if ($mingguInput > $mingguTerakhir + 1) {
+                return redirect()->route('pelaporan.showDataDistribusi', ['id_toko' => $request->id_toko])
+                    ->with('error', "Anda belum mengisi data distribusi untuk minggu ke-" . ($mingguTerakhir + 1) . ". Harap lengkapi terlebih dahulu.");
+            }
+        }
+
+        // Perhitungan stok
+        $stokAwal = $request->stok;
+        $penyaluran = $request->penyaluran;
+        $stokAkhir = $stokAwal - $penyaluran;
+
         // Simpan ke database
-        // DistribusiPupuk::create([
-        //     'nama_barang'   => $validated['nama_barang'],
-        //     'stok'          => $validated['stok'],
-        //     'penyaluran'    => $validated['penyaluran'],
-        //     'tanggal_input' => $validated['tanggal_input'],
-        // ]);
+        StokOpname::create([
+            'id_distributor' => $distributor->id_distributor,
+            'id_toko' => $request->id_toko,
+            'stok_awal' => $stokAwal,
+            'penyaluran' => $penyaluran,
+            'stok_akhir' => $stokAkhir,
+            'tanggal' => $tanggalInput->toDateString(),
+            'nama_barang' => $request->nama_barang,
+        ]);
 
-        return redirect()->back()->with('success', 'Data distribusi berhasil ditambahkan.');
+        return redirect()->route('pelaporan.showDataDistribusi', ['id_toko' => $request->id_toko])
+            ->with('success', 'Data distribusi berhasil ditambahkan.');
     }
-    public function showDataDistribusi()    {
-        // Ambil semua data distribusi
-        // $data = DistribusiPupuk::orderBy('tanggal_input', 'desc')->get();
 
-        // Kirim ke view
-        // return view('user.bidangPerdagangan.inputDataDistribusi', compact('data'));
-        return view('user.bidangPerdagangan.inputDataDistribusi');
+// Fungsi untuk menentukan minggu keberapa berdasarkan tanggal
+    private function getMingguKe($tanggal)
+    {
+        $day = Carbon::parse($tanggal)->day;
+
+        if ($day >= 1 && $day <= 7) {
+            return 1;
+        } elseif ($day >= 8 && $day <= 14) {
+            return 2;
+        } elseif ($day >= 15 && $day <= 21) {
+            return 3;
+        } else {
+            return 4;
+        }
     }
+
+
+
+
+
+    public function showDataDistribusi($id_toko)
+    {
+        // Cari data toko berdasarkan id
+        $toko = Toko::findOrFail($id_toko);
+
+        // Kirim data toko ke view form input data distribusi
+        return view('user.bidangPerdagangan.inputDataDistribusi', [
+            'toko' => $toko
+        ]);
+    }
+
 
 
 }

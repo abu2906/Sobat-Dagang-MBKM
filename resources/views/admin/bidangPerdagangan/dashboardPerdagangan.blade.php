@@ -114,7 +114,7 @@
                                         ];
                                     @endphp
                                     <td class="px-4 py-2">{{ $jenisSuratMap[$item->jenis_surat] ?? $item->jenis_surat }}</td>
-                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                                    <td class="px-4 py-2">{{ \Carbon\Carbon::parse($item->tgl_pengajuan)->format('d-m-Y') }}</td>
                                     <td class="px-4 py-3">
                                         @if ($item->status == 'diterima')
                                             <span class="font-medium text-green-600">Disetujui</span>
@@ -163,7 +163,7 @@
                             <td class="px-4 py-2 ">{{ $harga->nama_barang }}</td>
                             <td class="px-4 py-2">{{ $harga->kategori_barang }}</td>
                             <td class="px-4 py-2">Rp{{ number_format($harga->harga_satuan, 0, ',', '.') }}</td>
-                            <td class="px-4 py-2">{{ \Carbon\Carbon::parse($harga->updated_at)->format('d M Y') }}</td>
+                            <td class="px-4 py-2">{{ \Carbon\Carbon::parse($harga->tanggal)->format('d M Y') }}</td>
                         </tr>
                     @empty
                         <tr>
