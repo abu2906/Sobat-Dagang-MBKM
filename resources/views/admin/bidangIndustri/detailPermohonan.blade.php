@@ -377,67 +377,67 @@
         </div>
     </div>
 </div>
-            <script>
-                $(document).ready(function() {
-                    $("#summernote_edit").summernote({
-                        tabsize: 2,
-                        height: 150,
-                        toolbar: [
-                            ["style", ["bold", "italic", "underline", "clear"]],
-                            ["fontsize", ["fontsize"]],
-                            ["color", ["color"]],
-                            ["para", ["ul", "ol", "paragraph"]],
-                        ],
-                    });
-                });
+<script>
+    $(document).ready(function() {
+        $("#summernote_edit").summernote({
+            tabsize: 2,
+            height: 150,
+            toolbar: [
+                ["style", ["bold", "italic", "underline", "clear"]],
+                ["fontsize", ["fontsize"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+            ],
+        });
+    });
 
-                $(document).ready(function() {
-                    $("#summernote_rekomendasi").summernote({
-                        tabsize: 2,
-                        height: 150,
-                        toolbar: [
-                            ["style", ["bold", "italic", "underline", "clear"]],
-                            ["fontsize", ["fontsize"]],
-                            ["color", ["color"]],
-                            ["para", ["ul", "ol", "paragraph"]],
-                        ],
-                    });
-                });
+    $(document).ready(function() {
+        $("#summernote_rekomendasi").summernote({
+            tabsize: 2,
+            height: 150,
+            toolbar: [
+                ["style", ["bold", "italic", "underline", "clear"]],
+                ["fontsize", ["fontsize"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+            ],
+        });
+    });
 
-                $(document).ready(function() {
-                    $("#summernote_tolak").summernote({
-                        tabsize: 2,
-                        height: 150,
-                        toolbar: [
-                            ["style", ["bold", "italic", "underline", "clear"]],
-                            ["fontsize", ["fontsize"]],
-                            ["color", ["color"]],
-                            ["para", ["ul", "ol", "paragraph"]],
-                        ],
-                    });
-                });
+    $(document).ready(function() {
+        $("#summernote_tolak").summernote({
+            tabsize: 2,
+            height: 150,
+            toolbar: [
+                ["style", ["bold", "italic", "underline", "clear"]],
+                ["fontsize", ["fontsize"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+            ],
+        });
+    });
 
-                function handleSetujuClick(button) {
-                    const modalId = button.getAttribute('data-modal');
-                    if (modalId) {
-                        openModal(modalId);
-                    } else {
-                        alert('Jenis surat tidak dikenali atau belum didukung.');
-                    }
-                }
+    function handleSetujuClick(button) {
+        const modalId = button.getAttribute('data-modal');
+        if (modalId) {
+            openModal(modalId);
+        } else {
+            alert('Jenis surat tidak dikenali atau belum didukung.');
+        }
+    }
 
-                function openModal(id) {
-                    const modal = document.getElementById(id);
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                    }
-                }
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
 
-                function closeModal(id) {
-                    const modal = document.getElementById(id);
-                    if (modal) {
-                        modal.classList.add('hidden');
-                    }
-                }
-            </script>
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+</script>
 @endsection

@@ -62,7 +62,7 @@ class AdminIndustriController extends Controller
         ];
     }
 
-    public function detailSurat($id)
+    public function detailSuratt($id)
     {
         $data = PermohonanSurat::where('id_permohonan', $id)->first();
         $dokumen = DocumentUser::where('id_permohonan', $id)->first();
@@ -75,7 +75,7 @@ class AdminIndustriController extends Controller
         ]);
     }
 
-     public function viewDokumen($id, $type)
+     public function viewDokumenn($id, $type)
     {
         $dokumen = DB::table('document_user')->where('id_permohonan', $id)->first();
 
@@ -100,7 +100,7 @@ class AdminIndustriController extends Controller
         return response()->file(storage_path("app/public/{$filePath}"));
     }
 
-    public function tolak(Request $request, $id)
+    public function tolakk(Request $request, $id)
     {
         // Validasi input
         $request->validate([
@@ -308,7 +308,7 @@ class AdminIndustriController extends Controller
         return view('admin.bidangIndustri.halal');
     }
 
-    public function kelolaSurat()
+    public function kelolaSuratt()
     {
         $rekapSurat = $this->getSuratIndustriData();
         $dataSurat = PermohonanSurat::with('user')
@@ -335,7 +335,7 @@ class AdminIndustriController extends Controller
         return view('user.bidangIndustri.formPermohonan');
     }
 
-    public function riwayatSurat()
+    public function riwayatSuratt()
     {
         if (!auth()->guard('user')->check()) {
             return redirect()->route('login')->with('error', 'Harap login terlebih dahulu');

@@ -59,7 +59,7 @@
     <div class="overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
         <div class="overflow-y-auto max-h-[500px] scrollbar-hide">
             <table class="min-w-full text-sm text-left">
-                <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
+                <thead class="bg-[#083358] text-white text-center font-semibold sticky top-0 z-10">
                     <tr>
                         <th class="px-4 py-3 border-b rounded-tl-xl bg-[#083358]">No</th>
                         <th class="px-4 py-3 border-b bg-[#083358]">Nama Pemohon</th>
