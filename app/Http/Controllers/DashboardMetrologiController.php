@@ -204,7 +204,12 @@ class DashboardMetrologiController extends Controller
 
     public function showAdministrasiKabid()
     {
-        $suratList = SuratMetrologi::with('user', 'suratBalasan')
+        $suratList = SuratMetrologi::with(['user', 'suratBalasan' => function($query) {
+            $query->where('status_kepalaBidang', '!=', 'Draft');
+        }])
+            ->whereHas('suratBalasan', function($query) {
+                $query->where('status_kepalaBidang', '!=', 'Draft');
+            })
             ->orderBy('created_at', 'desc')
             ->get();
         $dataJumlahSurat = $this->getJumlahSurat();

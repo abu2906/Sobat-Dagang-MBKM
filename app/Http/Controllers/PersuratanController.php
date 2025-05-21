@@ -68,8 +68,13 @@ class PersuratanController extends Controller
     {
         $id_srt = str_replace('_', '/', $id);
         $surat = suratMetrologi::with('user')->where('id_surat', $id_srt)->firstOrFail();
+        
+        // Check if there's a draft
+        $draft = suratBalasan::where('id_surat', $id_srt)
+            ->where('status_surat_keluar', 'Draft')
+            ->first();
 
-        return view('admin.bidangMetrologi.buat_surat', compact('id', 'surat'));
+        return view('admin.bidangMetrologi.buat_surat', compact('id', 'surat', 'draft'));
     }
 
     public function createSuratBalasan(Request $request, $id)
@@ -81,10 +86,12 @@ class PersuratanController extends Controller
         $validated = $request->validate([
             'id_surat_balasan' => 'required|string',
             'tanggal_pembuatan_surat' => 'required|date',
-            // 'tanggal_surat' => 'required|date',
             'nama_yang_dituju' => 'required|string',
             'isi_surat' => 'required|string',
         ]);
+
+        // Cek apakah ini adalah draft
+        $isDraft = $request->input('action') === 'draft';
 
         // Simpan lampiran jika ada
         $lampiranPath = '-';
@@ -92,36 +99,62 @@ class PersuratanController extends Controller
             $lampiranPath = $request->file('lampiran')->store('lampiran_surat', 'public');
         }
 
-        // Generate PDF dari view blade
-        $pdf = Pdf::loadView('SuratBalasan.surat-metrologi', [
-            'nomor_surat' => $validated['id_surat_balasan'],
-            'tanggal_pembuatan_surat' => $validated['tanggal_pembuatan_surat'],
-            'nama_yang_dituju' => $validated['nama_yang_dituju'],
-            'isi_surat' => $validated['isi_surat'],
-        ])->setPaper('legal', 'portrait');
+        // Generate PDF hanya jika bukan draft
+        $path_dokumen = null;
+        if (!$isDraft) {
+            // Generate PDF dari view blade
+            $pdf = Pdf::loadView('SuratBalasan.surat-metrologi', [
+                'nomor_surat' => $validated['id_surat_balasan'],
+                'tanggal_pembuatan_surat' => $validated['tanggal_pembuatan_surat'],
+                'nama_yang_dituju' => $validated['nama_yang_dituju'],
+                'isi_surat' => $validated['isi_surat'],
+            ])->setPaper('legal', 'portrait');
 
-        // Simpan PDF ke storage
-        $namaFile = str_replace('/', '_', $validated['id_surat_balasan']) . '_' . now()->format('Ymd_His') . '.pdf';
-        Storage::disk('public')->put('surat_balasan/' . $namaFile, $pdf->output());
+            // Simpan PDF ke storage
+            $namaFile = str_replace('/', '_', $validated['id_surat_balasan']) . '_' . now()->format('Ymd_His') . '.pdf';
+            Storage::disk('public')->put('surat_balasan/' . $namaFile, $pdf->output());
+            $path_dokumen = 'surat_balasan/' . $namaFile;
+        }
 
-        // Simpan data ke database
-        $surat = new SuratBalasan();
-        $surat->id_surat_balasan = $validated['id_surat_balasan'];
-        $surat->id_surat = $id_surat_masuk;
-        $surat->tanggal = $validated['tanggal_pembuatan_surat'];
-        $surat->path_dokumen = 'surat_balasan/' . $namaFile;
-        $surat->status_surat_keluar = 'Menunggu';
-        $surat->status_kepalaBidang = 'Menunggu';
-        $surat->isi_surat = $validated['isi_surat'];
-        $surat->save();
+        // Cek apakah sudah ada draft
+        $existingDraft = SuratBalasan::where('id_surat', $id_surat_masuk)
+            ->where('status_surat_keluar', 'Draft')
+            ->first();
 
-        $id_srt= str_replace(['_'], '/', $id);
-        $surat = suratMetrologi::where('id_surat', $id_srt)->firstOrFail();
-        $surat->status_admin = 'Menunggu Persetujuan';
-        $surat->save();
+        if ($existingDraft) {
+            // Update draft yang sudah ada
+            $existingDraft->update([
+                'id_surat_balasan' => $validated['id_surat_balasan'],
+                'tanggal' => $validated['tanggal_pembuatan_surat'],
+                'path_dokumen' => $path_dokumen,
+                'status_surat_keluar' => $isDraft ? 'Draft' : 'Menunggu',
+                'status_kepalaBidang' => $isDraft ? 'Draft' : 'Menunggu',
+                'isi_surat' => $validated['isi_surat'],
+            ]);
 
+            $surat = $existingDraft;
+        } else {
+            // Buat draft baru
+            $surat = new SuratBalasan();
+            $surat->id_surat_balasan = $validated['id_surat_balasan'];
+            $surat->id_surat = $id_surat_masuk;
+            $surat->tanggal = $validated['tanggal_pembuatan_surat'];
+            $surat->path_dokumen = $path_dokumen;
+            $surat->status_surat_keluar = $isDraft ? 'Draft' : 'Menunggu';
+            $surat->status_kepalaBidang = $isDraft ? 'Draft' : 'Menunggu';
+            $surat->isi_surat = $validated['isi_surat'];
+            $surat->save();
+        }
 
-        return redirect($request->redirect_to)->with('success', 'Surat balasan berhasil dibuat dan disimpan sebagai PDF.');
+        if (!$isDraft) {
+            $id_srt = str_replace(['_'], '/', $id);
+            $surat = suratMetrologi::where('id_surat', $id_srt)->firstOrFail();
+            $surat->status_admin = 'Menunggu Persetujuan';
+            $surat->save();
+        }
+
+        $message = $isDraft ? 'Draft surat balasan berhasil disimpan.' : 'Surat balasan berhasil dibuat dan disimpan sebagai PDF.';
+        return redirect($request->redirect_to)->with('success', $message);
     }
 
     public function editBalasan($id)
