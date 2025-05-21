@@ -63,26 +63,13 @@
 			modal.classList.remove('hidden');
 			modal.style.display = 'flex'; // Supaya flexbox aktif untuk center
 			document.getElementById('tolak_id_surat').value = id;
-			document.getElementById('formTolak').action = `/admin/surat/${id}/tolak`;
+			document.getElementById('formTolak').action = `/admin/surat/${btoa(id)}/tolak`;
 		}
 
 		function closeTolakModal() {
 			const modal = document.getElementById('tolakModal');
 			modal.classList.add('hidden');
 			modal.style.display = 'none';
-		}
-	</script>
-
-
-	<script>
-		function openTolakModal(id) {
-			document.getElementById('tolakModal').classList.remove('hidden');
-			document.getElementById('tolak_id_surat').value = id;
-			document.getElementById('formTolak').action = `/admin/surat/${id}/tolak`;
-		}
-
-		function closeTolakModal() {
-			document.getElementById('tolakModal').classList.add('hidden');
 		}
 	</script>
 

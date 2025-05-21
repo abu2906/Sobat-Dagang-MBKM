@@ -69,13 +69,13 @@
                     <td class="px-5 text-center py-3 border-b space-y-1">
                         @if ($surat->status_kadis === 'Menunggu')
                             <!-- TOMBOL TERIMA -->
-                            <form action="{{ route('setujuiKadis', ['id' => $surat->id_surat_balasan]) }}" method="POST" class="inline-block">
+                            <form action="{{ route('setujuiKadis', ['encoded_id' => base64_encode($surat->id_surat_balasan)]) }}" method="POST" class="inline-block">
                                 @csrf
                                 <button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
                             </form>
 
                             <!-- TOMBOL TOLAK -->
-                            <form action="{{ route('tolakKadis', ['id' => $surat->id_surat_balasan]) }}" method="POST" class="inline-block">
+                            <form action="{{ route('tolakKadis', ['encoded_id' => base64_encode($surat->id_surat_balasan)]) }}" method="POST" class="inline-block">
                                 @csrf
                                 <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
                             </form>

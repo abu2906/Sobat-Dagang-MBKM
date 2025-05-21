@@ -196,12 +196,13 @@ class PersuratanController extends Controller
         return redirect()->back()->with('success', 'Surat berhasil diterima.');
     }
 
-    public function tolakSurat(Request $request, $id)
+    public function tolakSurat(Request $request, $encoded_id)
     {
         $request->validate([
             'keterangan' => 'required|string|max:1000',
         ]);
 
+        $id = base64_decode($encoded_id);
         $surat = SuratMetrologi::where('id_surat', $id)->firstOrFail();
         $surat->status_admin = 'Ditolak';
         $surat->status_surat_masuk = 'Ditolak';
@@ -212,18 +213,20 @@ class PersuratanController extends Controller
     }
 
 
-    public function terimaKabid($id, Request $request)
+    public function terimaKabid($encoded_id, Request $request)
     {
-        $surat = SuratBalasan::findOrFail($id);
-        $surat->status_kepalaBidang = 'Disetujui';
-        $surat->status_kadis = 'Menunggu'; // Reset status Kadis ke Menunggu agar bisa disetujui/ditolak lagi
-        $surat->save();
+        $id = base64_decode($encoded_id);
+        $suratBalasan = SuratBalasan::findOrFail($id);
+        $suratBalasan->status_kepalaBidang = 'Disetujui';
+        $suratBalasan->status_kadis = 'Menunggu';
+        $suratBalasan->save();
 
-        return back()->with('success', 'Surat berhasil disetujui.');
+        return redirect()->back()->with('success', 'Surat berhasil diterima');
     }
 
-    public function tolakKabid($id, Request $request)
+    public function tolakKabid($encoded_id, Request $request)
     {
+        $id = base64_decode($encoded_id);
         $suratBalasan = SuratBalasan::findOrFail($id);
         $suratBalasan->status_kepalaBidang = 'Ditolak';
         $suratBalasan->save();
@@ -237,8 +240,9 @@ class PersuratanController extends Controller
         return back()->with('success', 'Surat berhasil ditolak.');
     }
 
-    public function setujuiKadis($id)
+    public function setujuiKadis($encoded_id)
     {
+        $id = base64_decode($encoded_id);
         $surat = suratBalasan::findOrFail($id);
         $surat->status_kadis = 'Disetujui';
         $surat->save();
@@ -254,8 +258,9 @@ class PersuratanController extends Controller
         return redirect()->back()->with('success', 'Surat berhasil disetujui');
     }
 
-    public function tolakKadis(Request $request, $id)
+    public function tolakKadis(Request $request, $encoded_id)
     {
+        $id = base64_decode($encoded_id);
         $surat = suratBalasan::findOrFail($id);
         $surat->status_kadis = 'Ditolak';
         $surat->save();

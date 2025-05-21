@@ -1,4 +1,4 @@
-@extends('layouts.metrologi.admin')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-6 bg-gray-100 min-h-screen">
@@ -69,13 +69,13 @@
 					<td class="px-5 text-center py-3 border-b space-y-1">
 						@if ($surat->suratBalasan->status_kepalaBidang === 'Menunggu')
 							<!-- TOMBOL TERIMA -->
-							<form action="{{ route('terimaKabid', ['id' => $surat->suratBalasan->id_surat_balasan]) }}" method="POST" class="inline-block">
+							<form action="{{ route('terimaKabid', ['encoded_id' => base64_encode($surat->suratBalasan->id_surat_balasan)]) }}" method="POST" class="inline-block">
 								@csrf
 								<button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
 							</form>
 
 							<!-- TOMBOL TOLAK -->
-							<form action="{{ route('tolakKabid', ['id' => $surat->suratBalasan->id_surat_balasan, 'role' => 'admin']) }}" method="POST" class="inline-block">
+							<form action="{{ route('tolakKabid', ['encoded_id' => base64_encode($surat->suratBalasan->id_surat_balasan)]) }}" method="POST" class="inline-block">
 								@csrf
 								<button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
 							</form>
