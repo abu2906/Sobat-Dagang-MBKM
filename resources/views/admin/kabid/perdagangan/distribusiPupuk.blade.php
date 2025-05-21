@@ -19,19 +19,16 @@
 
                 {{-- Harga Pupuk --}}
                 <div class="bg-white p-4 rounded-xl shadow h-32 flex flex-col justify-between">
-                    <h2 class="text-black font-semibold text-base">Harga Pupuk</h2>
+                    <h2 class="text-black font-semibold text-base">Toko Penyaluran Terbanyakn</h2>
                     <div class="space-y-1 text-sm">
                         <div class="flex justify-between">
-                            <span class="w-20">UREA</span>
-                            <span class="font-semibold">Rp. 300.000</span>
+                            <span >Kaka Uceng</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="w-20">NPK</span>
-                            <span class="font-semibold">Rp. 300.000</span>
+                            <span >Udang Gacor</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="w-20">NPK-FK</span>
-                            <span class="font-semibold">Rp. 300.000</span>
+                            <span >Kepiting Gacor</span>
                         </div>
                     </div>
                 </div>
@@ -75,13 +72,11 @@
             {{-- Analisa Pupuk --}}
             <div class="p-4 rounded-xl space-y-4">
 
-                {{-- Header Analisa --}}
-                <div class="bg-[#053B6E] text-white px-4 py-2 rounded-md flex justify-between items-center">
+                <div class="bg-[#083458] text-white px-4 py-2 rounded-md flex justify-between items-center">
                     <span class="font-semibold">Analisa Pupuk</span>
-                    <span class="text-sm cursor-pointer">&#9660;</span>
+                    {{-- <span class="text-sm cursor-pointer">&#9660;</span> --}}
                 </div>
 
-                {{-- Filter Section --}}
                 <div class="bg-white p-4 rounded-xl shadow-md space-y-3 relative">
                     <div class="flex items-center gap-1 font-semibold text-gray-800">
                         <span class="material-symbols-outlined text-base">tune</span>
@@ -127,9 +122,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {{-- Jumlah Pupuk Terdistribusi --}}
                     <div class="bg-white rounded-xl shadow h-46 p-4 flex flex-col justify-start">
-                        <p class="text-lg text-black font-medium mb-1">Jumlah Pupuk Terdistribusi</p>
+                        <p class="text-lg text-black font-medium mb-1 text-center">Jumlah Pupuk Terdistribusi</p>
                         <h2 class="text-4xl font-bold text-[#083458] text-center mt-6">11.000</h2>
-                        <p class="text-2xl font-bold text-[#083458] text-center mt-2">Jumlah pupuk</p>
+                        <p class="text-2xl font-bold text-[#083458] text-center mt-2">/Sak</p>
                     </div>
 
                     {{-- Informasi Tambahan --}}

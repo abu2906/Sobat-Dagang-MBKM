@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Dashboard Industri')
+@section('title', 'Dashboard Kabid Industri')
 
 @section('content')
 <div class="bg-white p-6 overflow-y-auto min-h-screen">
@@ -88,12 +88,12 @@
         <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px]  flex flex-col">
           <h3 class="font-bold text-lg flex items-center gap-2 mb-8 text-[#000]">
             <span>⚖</span>
-            Industri Terdaftar
-          </h3>
+              Industri Terdaftar
+            </h3>
             <p class="text-[#073763] font-extrabold text-center text-6xl mb-1">0</p>
             <p class="text-[#073763] font-extrabold text-center text-3xl mb-6">Usaha</p>
             <h4 class="font-extrabold text-xl text-[#073763] mt-4">Tenaga Kerja</h4>
-            <p class="flex items-center gap-2 text-[#073763] font-semibold">
+            <p id="tenagaKerjaSummary" class="flex items-center gap-2 text-[#073763] font-semibold">
               <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span>0<span class="text-sm">Laki-Laki</span>
               <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span>0<span class="text-sm">Perempuan</span>
             </p>
@@ -278,13 +278,13 @@
 function renderSummary(data) {
   const totalUsaha = data.length;
 
-  const totalLaki = data.reduce((sum, item) => sum + (item.tl_l || 0), 0);
+  const totalLaki = data.reduce((sum, item) => sum + (item.tk_l || 0), 0);
   const totalPerempuan = data.reduce((sum, item) => sum + (item.tk_p || 0), 0);
 
   // Update isi elemen summary di halaman
-  document.querySelector('.text-6xl.mb-1').innerText = `${totalUsaha}`;
+  document.querySelector('.text-6xl.mb-1').innerText = ${totalUsaha};
 
-  const tenagaKerjaElement = document.querySelector('flex.items-center.gap-2.text-[#073763].font-semibold');
+  const tenagaKerjaElement = document.getElementById('tenagaKerjaSummary');
   tenagaKerjaElement.innerHTML = `
     <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> ${totalLaki} <span class="text-sm">Laki-Laki</span>
     <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span> ${totalPerempuan} <span class="text-sm">Perempuan</span>
@@ -315,8 +315,6 @@ function selectKecamatan(kecamatan) {
   // Update summary
   renderSummary(filteredData);
 }
-
-
 
 </script>
 @endsection

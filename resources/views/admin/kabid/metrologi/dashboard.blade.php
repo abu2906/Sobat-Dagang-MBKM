@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Kabid Metrologi')
 
 @section('content')
 <div class="flex">
@@ -59,7 +59,7 @@
             <div class="flex flex-col gap-6">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white shadow-md rounded-xl p-4 text-center text-sm flex flex-col items-center justify-center h-full">
-                        <div class="text-3xl mb-2">⚖️</div>
+                        <div class="text-3xl mb-2">⚖</div>
                         <p class="text-gray-500 text-sm">Jumlah Alat Ukur Valid</p>
                         <h2 class="text-2xl font-bold">{{ $jumlahValid }}</h2>
                     </div>

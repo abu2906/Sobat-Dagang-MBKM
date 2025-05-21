@@ -2,11 +2,14 @@
 @section('title', 'Lihat Laporan Distribusi Barang')
 
 @section('content')
-<div class="relative w-full">
-    <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
-    <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
-        <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Background" class="object-cover w-full h-full -ml-16">
-    </div>
+<div class="relative w-full h-64">
+    <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
+    <a href="{{ route('dashboard.perdagangan') }}"
+            class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+            <span class="text-2xl material-symbols-outlined">
+                arrow_back
+            </span>
+    </a>
 </div>
 <div class="container px-4 mx-auto">
     <h2 class="mt-6 text-center text-2xl font-bold mb-6 uppercase tracking-wide text-[#083358]">LAPORAN PENYALURAN PUPUK BERSUBSIDI</h2>

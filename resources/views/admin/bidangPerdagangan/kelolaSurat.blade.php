@@ -11,7 +11,7 @@
             <span class="text-2xl material-symbols-outlined">
                 arrow_back
             </span>
-        </a>
+    </a>
 </div>
 <div class="container px-4 mx-auto -mt-8">
     <div class="flex justify-center mb-6">
