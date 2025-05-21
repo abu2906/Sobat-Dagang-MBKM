@@ -27,8 +27,6 @@
                 @php
                 $menuItems = [
                 ['href' => route('kabid.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                ['href' => '#', 'icon' => 'folder.png', 'label' => 'Data IKM'],
-                ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Sertifikat Halal'],
                 ['href' => route('kabid.surat'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
