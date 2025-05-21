@@ -25,18 +25,20 @@
       </div>
 
 
-      <div class="bg-white rounded-xl p-4 sm:p-6 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] max-h-[500px] overflow-y-auto mb-4 mt-6">
-        <table class="w-full table-wrapper border-collapse border-spacing-0 table-fixed text-[11px] rounded-t-xl">
-            <thead class="sm:text-xs leading-4 sm:leading-5 rounded-t-xl">
-            <tr>
-              <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 w-[30%] rounded-tl-xl">NAMA USAHA</th>
-              <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 w-[30%]">NAMA PEMILIK</th>
-              <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 w-[30%]">NAMA PRODUK</th>
-              <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 w-[30%] rounded-tr-xl">KECAMATAN</th>
-            </tr>
-          </thead>
-          <tbody class="text-black text-[10px] sm:text-xs leading-4 sm:leading-5 rounded-b-xl" id="data-industri"></tbody>
-        </table>
+      <div class="bg-white rounded-xl p-4 sm:p-6 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] max-h-[500px] mb-4 mt-6">
+        <div class="max-h-[470px] overflow-y-auto overflow-x-hidden">
+        <table class="w-full table-wrapper border-collapse border-spacing-0 text-[11px] rounded-t-xl">
+        <thead class="sm:text-xs leading-4 sm:leading-5 rounded-t-xl">
+          <tr>
+            <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 rounded-tl-xl">NAMA USAHA</th>
+            <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2">NAMA PEMILIK</th>
+            <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2">NAMA PRODUK</th>
+            <th class="bg-[#00365e] sticky top-0 text-white text-[10px] font-bold px-2 py-2 rounded-tr-xl">KECAMATAN</th>
+          </tr>
+        </thead>
+        <tbody class="text-black text-[10px] sm:text-xs leading-4 sm:leading-5" id="data-industri"></tbody>
+      </table>
+      </div>
       </div>
     </div>
 
@@ -92,14 +94,14 @@
             <p class="text-[#073763] font-extrabold text-center text-3xl mb-6">Usaha</p>
             <h4 class="font-extrabold text-xl text-[#073763] mt-4">Tenaga Kerja</h4>
             <p class="flex items-center gap-2 text-[#073763] font-semibold">
-              <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> 0 <span class="text-sm">Laki-Laki</span>
-              <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span> 0 <span class="text-sm">Perempuan</span>
+              <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span>0<span class="text-sm">Laki-Laki</span>
+              <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span>0<span class="text-sm">Perempuan</span>
             </p>
         </article>
       
         <!-- Informasi Tambahan card -->
         <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px] flex flex-col">
-          <h3 class="font-bold text-lg mb-2">Distribusi Industri</h3>
+          <h3 class="font-bold text-lg mb-2">Sebaran Jenis Industri</h3>
           <div class="flex flex-col items-center">
             <canvas id="distribusiPie" class="mb-3 w-32 h-32"></canvas>
             <ul class="w-full h-full grid grid-cols-3 text-sm text-[#000]">
@@ -125,7 +127,7 @@
         </article>
       </section>
       <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] mt-6 h-[400px] flex flex-col">
-        <h3 class="font-bold text-lg mb-4">Perkembangan IKM dari Tahun ke Tahun</h3>
+        <h3 class="font-bold text-xl mb-4">Pertumbuhan IKM</h3>
         <div class="flex flex-col items-center">
           <canvas id="perkembanganChart" class="mb-2 w-300 h-full"></canvas>
         </div>
@@ -208,7 +210,7 @@
   const perkembanganChart = new Chart(perkembanganCtx, {
     type: 'line',
     data: {
-      labels: ['2021', '2021', '2022', '2023', '2024', '2025'],
+      labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
       datasets: [{
         label: 'Jumlah Industri',
         data: [201, 222, 289, 304, 320, 356], // Contoh data, bisa kamu ganti dari controller
