@@ -3,9 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
 <section class="px-4 py-12 bg-white">
-    
     <div class="grid items-center gap-8 mx-auto max-w-7xl md:grid-cols-2">
         <div>
             <h1 class="text-3xl font-bold text-[#2E3C51] mb-4">
@@ -29,7 +27,7 @@
             ],
             'INDUSTRI' => [
                 ['label' => 'Permohonan IKM Binaan', 'route' => route('bidangIndustri.formPermohonan')],
-                ['label' => 'Data Sertifikat Halal', 'route' => '#'],
+                ['label' => 'Data Sertifikat Halal', 'route' => route('halal')],
             ],
             'METROLOGI' => [
                 ['label' => 'Permohonan Tera/Teraulang', 'route' => route('administrasi-metrologi')],
@@ -87,32 +85,7 @@
     @endforeach
 </div>
 
-<button id="open-chat" class="fixed bottom-5 right-5 bg-[#083458] rounded-full p-3 shadow-lg hover:scale-110 transition">
+<a href="{{ route('forum.chat') }}" class="fixed bottom-5 right-5 bg-[#083458] rounded-full p-3 shadow-lg hover:scale-110 transition">
     <img src="{{ asset('assets/img/icon/pengaduan.png') }}" alt="Chat" class="w-8 h-8">
-</button>
-
-@include('component.chat', ['chats' => \App\Models\ForumDiskusi::with('user')->orderBy('waktu')->get()])
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const chatModal = document.getElementById('chat-modal');
-    const openChatBtn = document.getElementById('open-chat');
-    const closeChatBtn = document.getElementById('close-chat');
-    const chatForm = document.getElementById('chat-form');
-    const chatInput = document.getElementById('chat-input');
-    const chatMessages = document.getElementById('chat-messages');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    // Modal open-close (udah aman)
-    openChatBtn?.addEventListener('click', () => {
-        chatModal.classList.remove('hidden');
-    });
-    closeChatBtn?.addEventListener('click', () => {
-        chatModal.classList.add('hidden');
-    });
-
-    });
-});
-</script>
-
+</a>
 @endsection

@@ -68,7 +68,9 @@
     {{-- Tabel Laporan --}}
     @if (!empty($data))
     <div class="px-4 py-2 mt-4 mb-6 overflow-x-auto text-center border shadow text-center-gray-200 rounded-2xl">
-        <h3 class="mb-4 text-lg font-semibold">Detail Laporan</h3>
+        <h3 class="mb-4 text-lg font-semibold">Detail Laporan
+            
+        </h3>
         <table class="min-w-full border table-auto text-center-collapse rounded-2xl">
             <thead>
                 <tr>
@@ -97,17 +99,17 @@
                         {{-- Stok Awal --}}
                         <td class="text-center border">{{ $barang['UREA']['stok_awal'] ?? 0 }}</td>
                         <td class="text-center border ">{{ $barang['NPK']['stok_awal'] ?? 0 }}</td>
-                        <td class="text-center border">{{ $barang['NPK FK']['stok_awal'] ?? 0 }}</td>
+                        <td class="text-center border">{{ $barang['NPK-FK']['stok_awal'] ?? 0 }}</td>
 
                         {{-- Distribusi --}}
                         <td class="text-center border">{{ $barang['UREA']['penyaluran'] ?? 0 }}</td>
                         <td class="text-center border">{{ $barang['NPK']['penyaluran'] ?? 0 }}</td>
-                        <td class="text-center border">{{ $barang['NPK FK']['penyaluran'] ?? 0 }}</td>
+                        <td class="text-center border">{{ $barang['NPK-FK']['penyaluran'] ?? 0 }}</td>
 
                         {{-- Stok Akhir --}}
                         <td class="text-center border">{{ $barang['UREA']['stok_akhir'] ?? 0 }}</td>
                         <td class="text-center border">{{ $barang['NPK']['stok_akhir'] ?? 0 }}</td>
-                        <td class="text-center border">{{ $barang['NPK FK']['stok_akhir'] ?? 0 }}</td>
+                        <td class="text-center border">{{ $barang['NPK-FK']['stok_akhir'] ?? 0 }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -215,21 +217,21 @@
             datasets: [
                 {
                     label: 'UREA',
-                    data: lineChartData.UREA,
+                    data: lineChartData.UREA ?? [],
                     borderColor: '#3B82F6',
                     fill: false,
                     tension: 0.4
                 },
                 {
                     label: 'NPK',
-                    data: lineChartData.NPK,
+                    data: lineChartData.NPK ?? [],
                     borderColor: '#F59E0B',
                     fill: false,
                     tension: 0.4
                 },
                 {
-                    label: 'NPK FK',
-                    data: lineChartData["NPK FK"],
+                    label: 'NPK-FK',
+                    data: lineChartData["NPK-FK"] ?? [],
                     borderColor: '#10B981',
                     fill: false,
                     tension: 0.4
@@ -239,21 +241,12 @@
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                }
+                legend: { position: 'top' },
+                tooltip: { mode: 'index', intersect: false }
             },
             scales: {
-                x: {
-                    beginAtZero: true
-                },
-                y: {
-                    beginAtZero: true
-                }
+                x: { beginAtZero: true },
+                y: { beginAtZero: true }
             }
         }
     });
