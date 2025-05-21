@@ -308,7 +308,7 @@ class DashboardPerdaganganController extends Controller{
     $lineChartData = [
         'UREA' => [],
         'NPK' => [],
-        'NPK FK' => [],
+        'NPK-FK' => [],
     ];
 
     // Jika tidak memilih apapun, tampilkan data bulan dan tahun saat ini
@@ -371,7 +371,7 @@ class DashboardPerdaganganController extends Controller{
     foreach ($data as $toko => $pupuk) {
         $lineChartLabels[] = $toko;
 
-        foreach (['UREA', 'NPK', 'NPK FK'] as $jenis) {
+        foreach (['UREA', 'NPK', 'NPK-FK'] as $jenis) {
             $lineChartData[$jenis][] = $pupuk[$jenis]['penyaluran'] ?? 0;
         }
     }

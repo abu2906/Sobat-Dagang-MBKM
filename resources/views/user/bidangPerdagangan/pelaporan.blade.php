@@ -46,7 +46,7 @@
                             <a href="{{ route('pelaporan.showDataDistribusi', ['id_toko' => $toko->id_toko]) }}">
                                 <button>
                                     <p class="px-4 py-2 text-sm font-bold font-istok rounded-xl text-white bg-[#083458] w-fit ">
-                                        Tambahka Data Distribusi
+                                        Tambahkan Data Distribusi
                                     </p>
                                 </button>
                             </a>

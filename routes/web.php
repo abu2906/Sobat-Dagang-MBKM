@@ -57,12 +57,13 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
     Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
     Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
-   
+
     //pengaduan    
     Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
     Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
     Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat');
 
+    
     //pelaporan
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
     Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');

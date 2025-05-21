@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;  
 use App\Models\PermohonanSurat;
 use App\Models\Barang;
+use App\Models\StokOpname;
 use Carbon\Carbon;
 
 class KabidPerdaganganController extends Controller
@@ -51,6 +52,7 @@ class KabidPerdaganganController extends Controller
                 'dataBulanan' => $dataBulanan
             ]);
         }
+        
 
         return view('admin.kabid.perdagangan.perdagangan', [
             'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
@@ -71,11 +73,6 @@ class KabidPerdaganganController extends Controller
         $permohonan->save();
 
         return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
-    }
-
-    public function distribusiPupuk()
-    {
-        return view('admin.kabid.perdagangan.distribusiPupuk');
     }
 
     public function analisisPasar(Request $request)
@@ -196,4 +193,79 @@ class KabidPerdaganganController extends Controller
             'barChartData' => $barChartData,  
         ]);
     }
+public function distribusiPupuk()
+{
+    // Data distribusi per toko dan jenis pupuk
+    $data = DB::table('stok_opname')
+        ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+        ->join('distributor', 'stok_opname.id_distributor', '=', 'distributor.id_distributor')
+        ->select(
+            'toko.nama_toko',
+            'toko.no_register',
+            'stok_opname.nama_barang',
+            DB::raw('SUM(stok_opname.penyaluran) as total_penyaluran')
+        )
+        ->groupBy('toko.id_toko', 'stok_opname.nama_barang', 'toko.nama_toko', 'toko.no_register')
+        ->get()
+        ->groupBy('nama_toko');
+
+    $jumlahToko = $data->count();
+
+    $dataPupuk = StokOpname::selectRaw('nama_barang as jenis_pupuk, SUM(penyaluran) as total')
+        ->groupBy('nama_barang')
+        ->pluck('total', 'jenis_pupuk');
+
+    $totalDistribusi = $dataPupuk->sum();
+
+    // Data untuk line chart per tahun
+    $lineData = DB::table('stok_opname')
+        ->select(
+            DB::raw('YEAR(tanggal) as tahun'),
+            'nama_barang',
+            DB::raw('SUM(penyaluran) as total_penyaluran')
+        )
+        ->groupBy('tahun', 'nama_barang')
+        ->orderBy('tahun')
+        ->get();
+
+    $labels = $lineData->pluck('tahun')->unique()->values()->all();
+
+    $jenisPupuk = $lineData->pluck('nama_barang')->unique();
+
+    $datasets = [];
+
+    foreach ($jenisPupuk as $jenis) {
+        $dataPerTahun = [];
+        foreach ($labels as $tahun) {
+            $record = $lineData->firstWhere(function($item) use ($tahun, $jenis) {
+                return $item->tahun == $tahun && $item->nama_barang == $jenis;
+            });
+            $dataPerTahun[] = $record ? (int) $record->total_penyaluran : 0;
+        }
+        $color = match($jenis) {
+            'NPK' => 'red',
+            'UREA' => 'blue',
+            'NPK-FK' => 'orange',
+            default => 'gray'
+        };
+
+        $datasets[] = [
+            'label' => $jenis,
+            'data' => $dataPerTahun,
+            'borderColor' => $color,
+            'tension' => 0.3,
+            'fill' => false
+        ];
+    }
+
+    return view('admin.kabid.perdagangan.distribusiPupuk', [
+        'data' => $data,
+        'jumlahToko' => $jumlahToko,
+        'dataPupuk' => $dataPupuk,
+        'totalDistribusi' => $totalDistribusi,
+        'labels' => $labels,
+        'datasets' => $datasets,
+    ]);
+}
+
 }
