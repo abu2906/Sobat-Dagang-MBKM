@@ -17,19 +17,16 @@
                     <p class="text-sm text-gray-500">Total toko</p>
                 </div>
 
-                {{-- Harga Pupuk --}}
                 <div class="bg-white p-4 rounded-xl shadow h-32 flex flex-col justify-between">
                     <h2 class="text-black font-semibold text-base">Toko Penyaluran Terbanyak</h2>
                     <div class="space-y-1 text-sm">
-                        <div class="flex justify-between">
-                            <span >Kaka Uceng</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span >Udang Gacor</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span >Kepiting Gacor</span>
-                        </div>
+                        @forelse ($tokoPenyaluranTerbanyak as $toko)
+                            <div class="flex justify-between">
+                                <span>{{ $toko->nama_toko }} = {{ number_format($toko->total_penyaluran) }}</span>
+                            </div>
+                        @empty
+                            <div class="text-gray-500">Belum ada data</div>
+                        @endforelse
                     </div>
                 </div>
             </div>

@@ -209,6 +209,14 @@ class KabidPerdaganganController extends Controller
             ->groupBy('nama_toko');
 
         $jumlahToko = $data->count();
+        
+        $tokoPenyaluranTerbanyak = DB::table('stok_opname')
+        ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+        ->select('toko.nama_toko', DB::raw('SUM(stok_opname.penyaluran) as total_penyaluran'))
+        ->groupBy('stok_opname.id_toko', 'toko.nama_toko')
+        ->orderByDesc('total_penyaluran')
+        ->limit(3)
+        ->get();
 
         $dataPupuk = StokOpname::selectRaw('nama_barang as jenis_pupuk, SUM(penyaluran) as total')
             ->groupBy('nama_barang')
@@ -264,6 +272,7 @@ class KabidPerdaganganController extends Controller
             'totalDistribusi' => $totalDistribusi,
             'labels' => $labels,
             'datasets' => $datasets,
+            'tokoPenyaluranTerbanyak' => $tokoPenyaluranTerbanyak,
         ]);
     }
 
