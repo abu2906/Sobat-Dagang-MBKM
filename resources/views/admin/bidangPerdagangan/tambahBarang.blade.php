@@ -4,8 +4,7 @@
 @section('content')
 <div class="w-full h-36">
     <img src="{{ asset('assets/img/background/dagang.jpg') }}"
-        alt="Background"
-        class="object-cover w-full h-full">
+        alt="Background" class="object-cover w-full h-full">
 </div>
 
 <div class="flex items-center justify-center px-4 -mt-6">
