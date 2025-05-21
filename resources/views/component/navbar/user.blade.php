@@ -1,3 +1,4 @@
+@auth('user')
 <nav class="navbar relative w-full px-4 py-2 text-white">
     <div class="flex items-center justify-between w-full">
         <div class="navbar-left">
@@ -77,12 +78,16 @@
         </div>
     </div>
 </nav>
-
 <script>
-    const burgerBtn = document.getElementById('burger-btn');
-    const navMenu = document.getElementById('nav-menu');
+    document.addEventListener('DOMContentLoaded', function () {
+        const burgerBtn = document.getElementById('burger-btn');
+        const navMenu = document.getElementById('nav-menu');
 
-    burgerBtn.addEventListener('click', () => {
-        navMenu.classList.toggle('hidden');
+        if (burgerBtn && navMenu) {
+            burgerBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('hidden');
+            });
+        }
     });
 </script>
+@endauth

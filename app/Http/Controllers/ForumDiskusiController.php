@@ -10,24 +10,9 @@ class ForumDiskusiController extends Controller
     public function index()
     {
         $chats = ForumDiskusi::with('user')->orderBy('waktu', 'asc')->get();
-        return view('forum.index', compact('chats'));
+        return view('user.forum', compact('chats'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'chat' => 'required|string',
-        ]);
-
-        ForumDiskusi::create([
-            'id_user' => Auth::id(),
-            'chat' => $request->chat,
-            'waktu' => now(),
-            'status' => 'terkirim'
-        ]);
-
-        return back();
-    }
     public function kirimPesan(Request $request)
 {
     $request->validate(['chat' => 'required|string']);

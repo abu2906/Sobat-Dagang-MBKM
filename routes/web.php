@@ -59,10 +59,9 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
    
     //pengaduan    
-    Route::get('/forum', [ForumDiskusiController::class, 'index'])->name('forum.index');
-    Route::post('/forum', [ForumDiskusiController::class, 'store'])->name('forum.store');
     Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
     Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
+    Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat');
 
     //pelaporan
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
@@ -166,7 +165,6 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::post('/admin/surat/{id}/balasan', [PersuratanController::class, 'createSuratBalasan'])->name('proces-surat-balasan');
     Route::get('/admin/surat/{id}/edit-balasan', [PersuratanController::class, 'editBalasan'])->name('edit-surat-balasan');
     Route::put('/admin/surat/{id}/update-balasan', [PersuratanController::class, 'updateBalasan'])->name('update-surat-balasan');
-
 
     Route::get('/admin/dashboard-metrologi', [DashboardController::class, 'showMetrologi'])->name('dashboard-admin-metrologi');
     Route::get('/admin/alat-ukur-metrologi', [DashboardController::class, 'showMetrologi'])->name('alat-ukur-metrologi');
