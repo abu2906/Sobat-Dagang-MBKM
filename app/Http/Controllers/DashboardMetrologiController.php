@@ -29,11 +29,11 @@ class DashboardMetrologiController extends Controller
     
     public function showKabid() {
         $dataSurat = $this->getJumlahSurat();
-        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('SUM(jumlah_alat) as total'))->groupBy('jenis_alat')->get();
+        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('COUNT(*) as total'))->groupBy('jenis_alat')->get();
         $jumlahValid = DB::table('uttp')
             ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
             ->where('data_alat_ukur.status', 'Valid')
-            ->sum('uttp.jumlah_alat');
+            ->count();
         $uttps = DataAlatUkur::with('uttp')->get();
         $donutData = $this->getDonutChartData();
         return view('admin.kabid.metrologi.dashboard', array_merge(
@@ -124,9 +124,9 @@ class DashboardMetrologiController extends Controller
         $data = [];
 
         foreach ($jenisList as $jenis) {
-        $jumlah = Uttp::where('alat_penguji', $jenis)->sum('jumlah_alat');
-        $data[$jenis] = $jumlah;
-    }
+            $jumlah = Uttp::where('alat_penguji', $jenis)->count();
+            $data[$jenis] = $jumlah;
+        }
 
         return [
             'donutLabels' => json_encode(array_keys($data)),
@@ -204,12 +204,26 @@ class DashboardMetrologiController extends Controller
 
     public function showAdministrasiKabid()
     {
-        $suratList = SuratMetrologi::with('user', 'suratBalasan')
+        $suratList = SuratMetrologi::with(['user', 'suratBalasan' => function($query) {
+            $query->where('status_kepalaBidang', '!=', 'Draft');
+        }])
+            ->whereHas('suratBalasan', function($query) {
+                $query->where('status_kepalaBidang', '!=', 'Draft');
+            })
             ->orderBy('created_at', 'desc')
             ->get();
         $dataJumlahSurat = $this->getJumlahSurat();
 
         return view('admin.kabid.metrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
+    }
+
+    public function showUttp()
+    {
+        $alatUkur = DataAlatUkur::with('uttp')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
     }
 
     public function showKadis()

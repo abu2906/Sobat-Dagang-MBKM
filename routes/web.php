@@ -173,6 +173,7 @@ Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, '
 Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::get('/admin/metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
     Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
+    Route::get('/kabid/metrologi/directory-uttp', [DirectoryBookController::class, 'showDirectoryKabidMetrologi'])->name('directory-uttp-kabid');
     Route::post('/uttp/store-alat', [DirectoryBookController::class, 'storeAlatUkur'])->name('store-uttp');
     Route::delete('/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('delete-uttp');
     Route::delete('/admin/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('uttp.destroy');

@@ -28,6 +28,15 @@ class DirectoryBookController extends Controller
         return view('admin.bidangMetrologi.directory_alat_ukur_sah', compact('alatUkur'));
     }
 
+    public function showDirectoryKabidMetrologi()
+    {
+        $alatUkur = DataAlatUkur::with('uttp')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
+    }
+
     public function storeAlatUkur(Request $request)
     {
         $request->validate([
@@ -54,7 +63,6 @@ class DirectoryBookController extends Controller
             'nama_alat' => $request->nama_alat,
             'merk_type' => $request->merk_type,
             'nomor_seri' => $request->nomor_seri,
-            'jumlah_alat' => $request->jumlah_alat,
             'alat_penguji' => $request->alat_penguji,
             'ctt' => $request->ctt,
             'spt_keperluan' => $request->spt_keperluan,
@@ -105,7 +113,7 @@ class DirectoryBookController extends Controller
 
     public function update(Request $request, $id)
     {
-        $uttp = UTTP::findOrFail($id);
+        $uttp = Uttp::findOrFail($id);
 
         $uttp->update([
             'tanggal_penginputan' => $request->tanggal_penginputan,
@@ -116,7 +124,6 @@ class DirectoryBookController extends Controller
             'nama_alat' => $request->nama_alat,
             'merk_type' => $request->merk_type,
             'nomor_seri' => $request->nomor_seri,
-            'jumlah_alat' => $request->jumlah_alat,
             'alat_penguji' => $request->alat_penguji,
             'ctt' => $request->ctt,
             'spt_keperluan' => $request->spt_keperluan,

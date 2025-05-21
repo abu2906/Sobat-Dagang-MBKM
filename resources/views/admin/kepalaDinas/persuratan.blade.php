@@ -66,27 +66,33 @@
                             {{ $surat->status_kadis }}
                         </span>
                     </td>
-                    <td class="px-5 text-center py-3 border-b space-y-1">
-                        @if ($surat->status_kadis === 'Menunggu')
-                            <!-- TOMBOL TERIMA -->
-                            <form action="{{ route('setujuiKadis', ['encoded_id' => base64_encode($surat->id_surat_balasan)]) }}" method="POST" class="inline-block">
-                                @csrf
-                                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
-                            </form>
+                    <td class="px-5 text-center py-3 border-b">
+                        <div class="flex flex-wrap items-center justify-center gap-2">
+                            @if ($surat->status_kadis === 'Menunggu')
+                                <!-- TOMBOL TERIMA -->
+                                <form action="{{ route('setujuiKadis', ['encoded_id' => base64_encode($surat->id_surat_balasan)]) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
+                                </form>
 
-                            <!-- TOMBOL TOLAK -->
-                            <form action="{{ route('tolakKadis', ['encoded_id' => base64_encode($surat->id_surat_balasan)]) }}" method="POST" class="inline-block">
-                                @csrf
-                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
-                            </form>
-                        @endif
+                                <!-- TOMBOL TOLAK -->
+                                <form action="{{ route('tolakKadis', ['encoded_id' => base64_encode($surat->id_surat_balasan)]) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
+                                </form>
+                            @endif
 
-                        <!-- TOMBOL PREVIEW -->
-                        <button onclick="toggleModal(true, '{{ asset('storage/' . $surat->path_dokumen) }}', '{{ $surat->status_kadis }}')"
-                            class="text-black text-lg ml-1 hover:text-blue-700">
-                            👁️
-                        </button>
+                            <!-- TOMBOL PREVIEW -->
+                            <button onclick="toggleModal(true, '{{ asset('storage/' . $surat->path_dokumen) }}', '{{ $surat->status_kadis }}')"
+                            class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Lihat Surat Keluar">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 6h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z" />
+                                </svg>
+                            </button>
+                        </div>
                     </td>
+
                 </tr>
                 @empty
                 <tr>

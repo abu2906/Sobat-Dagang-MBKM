@@ -98,10 +98,6 @@
                             <input type="text" name="nomor_seri" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Jumlah Alat <span class="text-red-500">*</span></label>
-                            <input type="number" name="jumlah_alat" class="w-full border rounded px-3 py-2" required>
-                        </div>
-                        <div>
                             <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
                             <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
 								<option value="BUS">BUS</option>
@@ -134,8 +130,8 @@
                         <div>
                             <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
                             <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
-								<option value="BUS">Tera</option>
-								<option value="AT">Tera Ulang</option>
+								<option value="Tera">Tera</option>
+								<option value="Tera Ulang">Tera Ulang</option>
 							</select>
                         </div>
                         <div class="flex items-center space-x-2 mt-2">
@@ -273,7 +269,6 @@
         form.elements['nama_alat'].value = data.nama_alat || '';
         form.elements['merk_type'].value = data.merk_type || '';
         form.elements['nomor_seri'].value = data.nomor_seri || '';
-        form.elements['jumlah_alat'].value = data.jumlah_alat || '';
         form.elements['alat_penguji'].value = data.alat_penguji || '';
         form.elements['ctt'].value = data.ctt || '';
         form.elements['spt_keperluan'].value = data.spt_keperluan || '';
@@ -304,9 +299,9 @@
             if (jenisPermohonan) {
                 // Jika jenis permohonan mengandung kata "tera_ulang", set ke "Tera Ulang"
                 if (jenisPermohonan.toLowerCase().includes('tera_ulang')) {
-                    form.elements['keterangan'].value = 'AT'; // Tera Ulang
+                    form.elements['keterangan'].value = 'Tera Ulang'; // Tera Ulang
                 } else {
-                    form.elements['keterangan'].value = 'BUS'; // Tera
+                    form.elements['keterangan'].value = 'Tera'; // Tera
                 }
             }
         }
