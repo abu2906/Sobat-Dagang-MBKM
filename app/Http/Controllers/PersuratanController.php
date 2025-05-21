@@ -98,7 +98,7 @@ class PersuratanController extends Controller
             'tanggal_pembuatan_surat' => $validated['tanggal_pembuatan_surat'],
             'nama_yang_dituju' => $validated['nama_yang_dituju'],
             'isi_surat' => $validated['isi_surat'],
-        ])->setPaper('a4', 'portrait');
+        ])->setPaper('legal', 'portrait');
 
         // Simpan PDF ke storage
         $namaFile = str_replace('/', '_', $validated['id_surat_balasan']) . '_' . now()->format('Ymd_His') . '.pdf';
@@ -161,7 +161,7 @@ class PersuratanController extends Controller
             'tanggal_pembuatan_surat' => $validated['tanggal_pembuatan_surat'],
             'nama_yang_dituju' => $validated['nama_yang_dituju'],
             'isi_surat' => $validated['isi_surat'],
-        ])->setPaper('a4', 'portrait');
+        ])->setPaper('legal', 'portrait');
 
         $namaFile = str_replace('/', '_', $validated['id_surat_balasan']) . '_' . now()->format('Ymd_His') . '.pdf';
         Storage::disk('public')->put('surat_balasan/' . $namaFile, $pdf->output());
