@@ -24,6 +24,8 @@ class suratBalasan extends Model
         'path_dokumen',
         'status_surat_keluar',
         'status_kepalaBidang',
+        'status_kadis',
+        'keterangan_kadis'
     ];
 
     public function suratMetrologi(): BelongsTo

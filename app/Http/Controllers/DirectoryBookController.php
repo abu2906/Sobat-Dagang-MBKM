@@ -21,7 +21,9 @@ class DirectoryBookController extends Controller
 
     public function showDirectoryAdminMetrologi()
     {
-        $alatUkur = DataAlatUkur::with('uttp')->get();
+        $alatUkur = DataAlatUkur::with('uttp')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('admin.bidangMetrologi.directory_alat_ukur_sah', compact('alatUkur'));
     }

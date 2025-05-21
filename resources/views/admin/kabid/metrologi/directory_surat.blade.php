@@ -1,4 +1,4 @@
-@extends('layouts.metrologi.admin')
+@extends('layouts.admin')
 
 @section('content')
 <div class="p-6 bg-gray-100 min-h-screen">
@@ -31,8 +31,8 @@
             <a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
                 <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
                 <div>
-                    <p class="text-base font-medium text-white">Surat Terkirim</p>
-                    <p class="text-2xl font-bold text-white">0</p>
+                    <p class="text-base font-medium text-white">Surat Menunggu</p>
+                    <p class="text-2xl font-bold text-white">{{ $totalSuratMenungguKabid }}</p>
                 </div>
             </a>
         </div>
@@ -69,13 +69,13 @@
 					<td class="px-5 text-center py-3 border-b space-y-1">
 						@if ($surat->suratBalasan->status_kepalaBidang === 'Menunggu')
 							<!-- TOMBOL TERIMA -->
-							<form action="{{ route('terimaKabid', ['id' => $surat->suratBalasan->id_surat_balasan]) }}" method="POST" class="inline-block">
+							<form action="{{ route('terimaKabid', ['encoded_id' => base64_encode($surat->suratBalasan->id_surat_balasan)]) }}" method="POST" class="inline-block">
 								@csrf
 								<button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
 							</form>
 
 							<!-- TOMBOL TOLAK -->
-							<form action="{{ route('tolakKabid', ['id' => $surat->suratBalasan->id_surat_balasan, 'role' => 'admin']) }}" method="POST" class="inline-block">
+							<form action="{{ route('tolakKabid', ['encoded_id' => base64_encode($surat->suratBalasan->id_surat_balasan)]) }}" method="POST" class="inline-block">
 								@csrf
 								<button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
 							</form>

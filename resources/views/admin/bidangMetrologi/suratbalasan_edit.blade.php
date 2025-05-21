@@ -1,6 +1,19 @@
 @extends('layouts.metrologi.admin')
 
 @section('content')
+
+<style>
+    .ck-editor__editable_inline {
+        min-height: 400px;
+    }
+
+    /* Tambahan untuk mencegah list terpotong */
+    .ck-content ol,
+    .ck-content ul {
+        padding-left: 1.5rem !important;
+    }
+</style>
+
 <div class="p-6 bg-gray-100 min-h-screen">
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
         <div class="absolute bottom-[-30px] w-full px-8">
@@ -36,7 +49,7 @@
 
                     <div class="form-group row md:col-span-2">
                         <label for="isi_urat" class="block font-medium mb-1">Isi Surat</label>
-                        <textarea name="isi_surat" class="form-control border px-4 py-2 w-full rounded-lg" rows="20" required>{{ old('isi_surat', $suratBalasan->isi_surat ?? '') }}</textarea>
+                        <textarea id="editor" name="isi_surat" class="form-control">{{ old('isi_surat', $suratBalasan->isi_surat ?? '') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -48,4 +61,34 @@
         </form>
     </div>
 </div>
+
+<script>
+    let editorInstance;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .then(editor => {
+                editorInstance = editor;
+
+                // Sinkronisasi isi CKEditor saat submit
+                const form = document.querySelector('form');
+                form.addEventListener('submit', function (e) {
+                    const editorData = editor.getData();
+
+                    if (!editorData || editorData.trim() === '') {
+                        alert('Isi surat tidak boleh kosong!');
+                        e.preventDefault();
+                        return;
+                    }
+
+                    // Set data ke textarea secara eksplisit agar bisa dikirim
+                    document.querySelector('#editor').value = editorData;
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
 @endsection

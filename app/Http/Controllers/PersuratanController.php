@@ -17,7 +17,9 @@ class PersuratanController extends Controller
     public function showAdministrasiMetrologi()
     {
         if (Auth::guard('user')->check()) {
-            $permohonan = suratMetrologi::where('user_id', Auth::guard('user')->id())->latest()->get();
+            $permohonan = suratMetrologi::where('user_id', Auth::guard('user')->id())
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             return view('user.bidangMetrologi.administrasi', compact('permohonan'));
         }
@@ -96,7 +98,7 @@ class PersuratanController extends Controller
             'tanggal_pembuatan_surat' => $validated['tanggal_pembuatan_surat'],
             'nama_yang_dituju' => $validated['nama_yang_dituju'],
             'isi_surat' => $validated['isi_surat'],
-        ])->setPaper('a4', 'portrait');
+        ])->setPaper('legal', 'portrait');
 
         // Simpan PDF ke storage
         $namaFile = str_replace('/', '_', $validated['id_surat_balasan']) . '_' . now()->format('Ymd_His') . '.pdf';
@@ -159,7 +161,7 @@ class PersuratanController extends Controller
             'tanggal_pembuatan_surat' => $validated['tanggal_pembuatan_surat'],
             'nama_yang_dituju' => $validated['nama_yang_dituju'],
             'isi_surat' => $validated['isi_surat'],
-        ])->setPaper('a4', 'portrait');
+        ])->setPaper('legal', 'portrait');
 
         $namaFile = str_replace('/', '_', $validated['id_surat_balasan']) . '_' . now()->format('Ymd_His') . '.pdf';
         Storage::disk('public')->put('surat_balasan/' . $namaFile, $pdf->output());
@@ -194,12 +196,13 @@ class PersuratanController extends Controller
         return redirect()->back()->with('success', 'Surat berhasil diterima.');
     }
 
-    public function tolakSurat(Request $request, $id)
+    public function tolakSurat(Request $request, $encoded_id)
     {
         $request->validate([
             'keterangan' => 'required|string|max:1000',
         ]);
 
+        $id = base64_decode($encoded_id);
         $surat = SuratMetrologi::where('id_surat', $id)->firstOrFail();
         $surat->status_admin = 'Ditolak';
         $surat->status_surat_masuk = 'Ditolak';
@@ -210,17 +213,20 @@ class PersuratanController extends Controller
     }
 
 
-    public function terimaKabid($id, Request $request)
+    public function terimaKabid($encoded_id, Request $request)
     {
-        $surat = SuratBalasan::findOrFail($id);
-        $surat->status_kepalaBidang = 'Disetujui'; // atau 'Diterima'
-        $surat->save();
+        $id = base64_decode($encoded_id);
+        $suratBalasan = SuratBalasan::findOrFail($id);
+        $suratBalasan->status_kepalaBidang = 'Disetujui';
+        $suratBalasan->status_kadis = 'Menunggu';
+        $suratBalasan->save();
 
-        return back()->with('success', 'Surat berhasil disetujui.');
+        return redirect()->back()->with('success', 'Surat berhasil diterima');
     }
 
-    public function tolakKabid($id, Request $request)
+    public function tolakKabid($encoded_id, Request $request)
     {
+        $id = base64_decode($encoded_id);
         $suratBalasan = SuratBalasan::findOrFail($id);
         $suratBalasan->status_kepalaBidang = 'Ditolak';
         $suratBalasan->save();
@@ -234,4 +240,48 @@ class PersuratanController extends Controller
         return back()->with('success', 'Surat berhasil ditolak.');
     }
 
+    public function setujuiKadis($encoded_id)
+    {
+        $id = base64_decode($encoded_id);
+        $surat = suratBalasan::findOrFail($id);
+        $surat->status_kadis = 'Disetujui';
+        $surat->save();
+
+        // Update status surat masuk ke Diterima
+        $suratMetrologi = $surat->suratMetrologi;
+        if ($suratMetrologi) {
+            $suratMetrologi->status_admin = 'Diterima';
+            $suratMetrologi->status_surat_masuk = 'Disetujui'; // Update status permohonan user
+            $suratMetrologi->save();
+        }
+
+        return redirect()->back()->with('success', 'Surat berhasil disetujui');
+    }
+
+    public function tolakKadis(Request $request, $encoded_id)
+    {
+        $id = base64_decode($encoded_id);
+        $surat = suratBalasan::findOrFail($id);
+        $surat->status_kadis = 'Ditolak';
+        $surat->save();
+
+        // Update status surat masuk ke Butuh Revisi
+        $suratMetrologi = $surat->suratMetrologi;
+        if ($suratMetrologi) {
+            $suratMetrologi->status_admin = 'Butuh Revisi';
+            $suratMetrologi->save();
+        }
+
+        return redirect()->back()->with('success', 'Surat berhasil ditolak');
+    }
+
+    public function tandaiSelesai($id)
+    {
+        $id_srt = str_replace('_', '/', $id);
+        $surat = suratMetrologi::where('id_surat', $id_srt)->firstOrFail();
+        $surat->status_admin = 'Selesai';
+        $surat->save();
+
+        return redirect()->back()->with('success', 'Surat berhasil ditandai sebagai selesai');
+    }
 }

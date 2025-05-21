@@ -16,8 +16,11 @@ return new class extends Migration
             $table->string('id_surat');
             $table->string('tanggal');
             $table->string('path_dokumen')->nullable();
+            $table->text('isi_surat')->after('tanggal')->nullable();
             $table->enum('status_surat_keluar', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
             $table->enum('status_kepalaBidang', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
+            $table->enum('status_kadis', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu')->after('status_kepalaBidang');
+            $table->text('keterangan_kadis')->nullable()->after('status_kadis');
             $table->timestamps();
 
             $table->foreign('id_surat')->references('id_surat')->on('surat_metrologi')->onDelete('cascade');
