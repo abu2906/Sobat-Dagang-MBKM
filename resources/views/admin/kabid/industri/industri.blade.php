@@ -6,11 +6,11 @@
   <div class="mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
     <!-- Left Column: Dashboard Content -->
     <div>
-      <div class="flex flex-col sm:flex-row sm:space-x-6 space-y-6 sm:space-y-0 ">
+      <div class="flex flex-col mt-0 sm:flex-row sm:space-x-6 space-y-6 sm:space-y-0 ">
         <!-- Jumlah Surat Balasan Card (Larger) -->
         <div class="sm:w-[370px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
-          <p class="font-semibold text-lg mb-1">Jumlah Surat Terverifikasi</p>
-          <p class="font-extrabold text-3xl mb-1">{{ $totalSuratTerverifikasi }}</p>
+          <p class="font-semibold text-lg mb-1 mt-0">Jumlah Surat Terverifikasi</p>
+          <p class="font-extrabold text-3xl mb-1 mt-0">{{ $totalSuratTerverifikasi }}</p>
           <p class="text-base">Surat Permohonan Telah Diverifikasi </p>
         </div>
         <!-- Akumulasi Perkembangan Card (Smaller) -->
@@ -25,67 +25,17 @@
       </div>
 
 
-
-      <div class="bg-white rounded-xl p-4 sm:p-6 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] overflow-x-auto mt-6">
-        <table class="min-w-full border-collapse border-spacing-0 table-fixed text-[11px] rounded-t-xl">
-            <thead class="bg-[#00365e] text-white text-[10px] sm:text-xs leading-4 sm:leading-5 rounded-t-xl">
+      <div class="bg-white rounded-xl p-4 sm:p-6 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] max-h-[500px] overflow-y-auto mb-4 mt-6">
+        <table class="w-full table-wrapper border-collapse border-spacing-0 table-fixed text-[11px] rounded-t-xl">
+            <thead class="sm:text-xs leading-4 sm:leading-5 rounded-t-xl">
             <tr>
-              <th class="text-left font-semibold px-2 py-2 w-[25%] rounded-tl-xl">NAMA USAHA</th>
-              <th class="text-left font-semibold px-2 py-2 w-[25%]">NAMA PEMILIK</th>
-              <th class="text-left font-semibold px-2 py-2 w-[35%]">NAMA PRODUK</th>
-              <th class="text-center font-semibold px-2 py-2 w-[15%] rounded-tr-xl">
-                <div>T.K. (ORG)</div>
-                <div class="flex justify-center space-x-4 mt-1 text-[8px] font-normal">
-                  <span>L</span>
-                  <span>P</span>
-                </div>
-              </th>
+              <th class="bg-[#00365e] sticky top-0 z-20 text-white text-[10px] font-semibold px-2 py-2 w-[30%] rounded-tl-xl">NAMA USAHA</th>
+              <th class="bg-[#00365e] sticky top-0 z-20 text-white text-[10px] font-semibold px-2 py-2 w-[30%]">NAMA PEMILIK</th>
+              <th class="bg-[#00365e] sticky top-0 z-20 text-white text-[10px] font-semibold px-2 py-2 w-[30%]">NAMA PRODUK</th>
+              <th class="bg-[#00365e] sticky top-0 z-20 text-white text-[10px] font-semibold px-2 py-2 w-[30%] rounded-tr-xl">KECAMATAN</th>
             </tr>
           </thead>
-          <tbody class="text-black text-[10px] sm:text-xs leading-4 sm:leading-5 rounded-b-xl">
-            <tr class="bg-[#dbe5f0] font-normal">
-              <td class="px-2 py-1">US.Reski</td>
-              <td class="px-2 py-1">Rahkmad Qadri</td>
-              <td class="px-2 py-1">PENGGILING DAGING</td>
-              <td class="px-2 py-1 text-center">2<span class="inline-block w-6"></span>0</td>
-            </tr>
-            <tr class="bg-[#e7edf5] font-normal">
-              <td class="px-2 py-1">US. Sumber Makmur</td>
-              <td class="px-2 py-1">Supriadi</td>
-              <td class="px-2 py-1">PENGGILING DAGING</td>
-              <td class="px-2 py-1 text-center">6<span class="inline-block w-6"></span>0</td>
-            </tr>
-            <tr class="bg-[#dbe5f0] font-normal">
-              <td class="px-2 py-1">US. Winarto</td>
-              <td class="px-2 py-1">Winarto</td>
-              <td class="px-2 py-1">PENGGILING DAGING</td>
-              <td class="px-2 py-1 text-center">3<span class="inline-block w-6"></span>0</td>
-            </tr>
-            <tr class="bg-[#e7edf5] font-normal">
-              <td class="px-2 py-1">US. Ahmad</td>
-              <td class="px-2 py-1">Ahmad Rizaldy</td>
-              <td class="px-2 py-1">PENGGILING IKAN</td>
-              <td class="px-2 py-1 text-center">3<span class="inline-block w-6"></span>3</td>
-            </tr>
-            <tr class="bg-[#dbe5f0] font-normal rounded-b-xl">
-              <td class="px-2 py-1">US. Amiruddin</td>
-              <td class="px-2 py-1">Amiruddin</td>
-              <td class="px-2 py-1">PENGGILING IKAN</td>
-              <td class="px-2 py-1 text-center">7<span class="inline-block w-6"></span>7</td>
-            </tr>
-            <tr class="bg-[#dbe5f0] font-normal rounded-b-xl">
-              <td class="px-2 py-1">US. Andif</td>
-              <td class="px-2 py-1">Andi Magfirah</td>
-              <td class="px-2 py-1">PENGGILING DAGING</td>
-              <td class="px-2 py-1 text-center">14<span class="inline-block w-6"></span>0</td>
-            </tr>
-            <tr class="bg-[#dbe5f0] font-normal rounded-b-xl">
-              <td class="px-2 py-1">US. Fira</td>
-              <td class="px-2 py-1">Syafira Fatwa</td>
-              <td class="px-2 py-1">PENGGILING IKAN</td>
-              <td class="px-2 py-1 text-center">9<span class="inline-block w-6"></span>5</td>
-            </tr>
-          </tbody>
+          <tbody class="text-black text-[10px] sm:text-xs leading-4 sm:leading-5 rounded-b-xl" id="data-industri"></tbody>
         </table>
       </div>
     </div>
@@ -138,21 +88,23 @@
             <span>⚖</span>
             Industri Terdaftar
           </h3>
-          <p class="text-[#073763] font-extrabold text-2xl mb-1">14 Usaha</p>
-          <p class="mb-1"><span class="font-bold">3</span> Penggiling Daging</p>
-          <p class="mb-4"><span class="font-bold">11</span> Penggiling Ikan</p>
-          <h4 class="font-extrabold text-xl text-[#073763] mb-2">Tenaga Kerja</h4>
-          <p class="flex items-center gap-2 text-[#073763] font-semibold">
-            <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> 63 <span class="text-sm">Laki-Laki</span>
-            <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span> 57 <span class="text-sm">Perempuan</span>
-          </p>
+          <div class= 'summary' >
+            <p class="text-[#073763] font-extrabold text-2xl mb-1">0 Usaha</p>
+            <p class="mb-1"><span class="font-bold">0</span> Penggiling Daging</p>
+            <p class="mb-4"><span class="font-bold">0</span> Penggiling Ikan</p>
+            <h4 class="font-extrabold text-xl text-[#073763] mb-2">Tenaga Kerja</h4>
+            <p class="flex items-center gap-2 text-[#073763] font-semibold">
+              <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> 0 <span class="text-sm">Laki-Laki</span>
+              <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span> 0 <span class="text-sm">Perempuan</span>
+            </p>
+          </div>
         </article>
       
         <!-- Informasi Tambahan card -->
         <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] h-[300px] flex flex-col">
           <h3 class="font-bold text-lg mb-2">Distribusi Industri</h3>
           <div class="flex flex-col items-center">
-            <canvas id="distribusiPie" class="mb-2 w-32 h-32"></canvas>
+            <canvas id="distribusiPie" class="mb-3 w-32 h-32"></canvas>
             <ul class="w-full h-full grid grid-cols-3 text-sm text-[#000]">
               <li class="flex items-center gap-2">
                 <span class="inline-block w-2 h-2 bg-[#5bc0f8] rounded-sm"></span> Sandang
@@ -165,10 +117,10 @@
               </li>
             </ul>
             <ul class="w-full h-full grid grid-cols-2 text-sm text-[#000]">  
-              <li class="flex items-center gap-2">
+              <li class="flex items-center gap-3">
                 <span class="inline-block w-2 h-2 bg-[#f3f3f3] rounded-sm"></span> Logam & Elektronika
               </li>
-              <li class="flex items-center gap-2">
+              <li class="flex items-center gap-3">
                 <span class="inline-block w-2 h-2 bg-[#1a1a1a] rounded-sm"></span> Kimia & Bahan Bangunan
               </li>
             </ul>
@@ -189,23 +141,23 @@
 </div>
 
 <script>
-
+  // Toggle dropdown kecamatan
   function toggleDropdown() {
-    const dropdown = document.getElementById('dropdown-kecamatan');
-    dropdown.classList.toggle('hidden');
+    document.getElementById('dropdown-kecamatan').classList.toggle('hidden');
   }
 
-  
+  // Toggle dropdown level
   function toggleDropdowns() {
-    const dropdowns = document.getElementById('dropdown-level');
-    dropdowns.classList.toggle('hidden');
+    document.getElementById('dropdown-level').classList.toggle('hidden');
   }
 
+  // Pilih kecamatan
   function selectKecamatan(kecamatan) {
     document.getElementById('selected-kecamatan').textContent = kecamatan;
     toggleDropdown();
   }
 
+  // Pilih level
   function selectLevel(level) {
     document.getElementById('selected-level').textContent = level;
     toggleDropdowns();
@@ -283,13 +235,93 @@
   }
 });
 
-document.getElementById('dataSelector').addEventListener('change', function () {
-  const selected = this.value;
-  
-  // Ubah data Pie Chart sesuai pilihan
-  distribusiPie.data.datasets[0].data = chartData[selected];
-  distribusiPie.update();
+  document.getElementById('dataSelector').addEventListener('change', function () {
+    const selected = this.value;
+    
+    // Ubah data Pie Chart sesuai pilihan
+    distribusiPie.data.datasets[0].data = chartData[selected];
+    distribusiPie.update();
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+  fetch("/json/data-industri.json")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Gagal memuat data");
+      }
+      return response.json();
+    })
+    .then(data => {
+      const tableBody = document.getElementById("data-industri");
+      tableBody.innerHTML = "";
+
+      data.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="px-2 py-2">${item.nama_usaha}</td>
+          <td class="px-2 py-2">${item.nama_pemilik}</td>
+          <td class="px-2 py-2">${item.produk}</td>
+          <td class="px-2 py-2">${item.kecamatan}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      // Simpan data ke variabel global
+      window.dataIndustri = data;
+
+      // Tampilkan summary awal (semua kecamatan)
+      renderSummary(data);
+    })
+    .catch(error => console.error("Error:", error));
 });
+
+// Fungsi render summary industri
+function renderSummary(data) {
+  const totalUsaha = data.length;
+  const penggilingDaging = data.filter(item => item.produk === 'Sandang').length;
+  const penggilingIkan = data.filter(item => item.produk === 'Pangan').length;
+
+  const totalLaki = data.reduce((sum, item) => sum + (item.tl_l || 0), 0);
+  const totalPerempuan = data.reduce((sum, item) => sum + (item.tk_p || 0), 0);
+
+  // Update isi elemen summary di halaman
+  document.querySelector('.text-2xl.mb-1').innerText = `${totalUsaha} Usaha`;
+  document.querySelectorAll('.p.mb-1')[0].innerHTML = `<span class="font-bold">${Sandang}</span> Sandang`;
+  document.querySelectorAll('. p.mb-1')[1].innerHTML = `<span class="font-bold">${penggilingIkan}</span> Pangan`;
+
+  const tenagaKerjaElement = document.querySelector('.flex.items-center.gap-2.text-[#073763]');
+  tenagaKerjaElement.innerHTML = `
+    <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> ${totalLaki} <span class="text-sm">Laki-Laki</span>
+    <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span> ${totalPerempuan} <span class="text-sm">Perempuan</span>
+  `;
+}
+
+// Pilih kecamatan dan render summary + table
+function selectKecamatan(kecamatan) {
+  document.getElementById('selected-kecamatan').textContent = kecamatan;
+  toggleDropdown();
+
+  const filteredData = window.dataIndustri.filter(item => item.kecamatan === kecamatan);
+
+  // Update table
+  const tableBody = document.getElementById("data-industri");
+  tableBody.innerHTML = "";
+  filteredData.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td class="px-2 py-2">${item.nama_usaha}</td>
+      <td class="px-2 py-2">${item.nama_pemilik}</td>
+      <td class="px-2 py-2">${item.produk}</td>
+      <td class="px-2 py-2">${item.kecamatan}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+
+  // Update summary
+  renderSummary(filteredData);
+}
+
+
 
 </script>
 @endsection

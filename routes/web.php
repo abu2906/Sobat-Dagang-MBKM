@@ -233,7 +233,7 @@ Route::middleware(['check.role:kabid_perdagangan'])->group(function () {
 Route::middleware(['check.role:kabid_industri'])->group(function () {
     Route::get('/kabid-industri/dashboard', [KabidIndustriController::class, 'dashboardKabid'])->name('kabid.industri');
     Route::get('/kabid-industri/surat', [KabidIndustriController::class, 'verifSurat'])->name('kabid.surat');
-    Route::put('/kabid-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujui'])->name('surat.setujui');
+    Route::put('/kabid-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('surat.setujui');
 
 });
 
