@@ -28,6 +28,15 @@ class DirectoryBookController extends Controller
         return view('admin.bidangMetrologi.directory_alat_ukur_sah', compact('alatUkur'));
     }
 
+    public function showDirectoryKabidMetrologi()
+    {
+        $alatUkur = DataAlatUkur::with('uttp')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
+    }
+
     public function storeAlatUkur(Request $request)
     {
         $request->validate([

@@ -217,6 +217,15 @@ class DashboardMetrologiController extends Controller
         return view('admin.kabid.metrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
     }
 
+    public function showUttp()
+    {
+        $alatUkur = DataAlatUkur::with('uttp')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
+    }
+
     public function showKadis()
     {
         $suratList = suratBalasan::with('suratMetrologi.user')
