@@ -125,7 +125,7 @@ class KabidIndustriController extends Controller
         ]);
     }
 
-    public function setujui($id)
+    public function setujuiI($id)
     {
         $permohonan = PermohonanSurat::findOrFail($id);
 
