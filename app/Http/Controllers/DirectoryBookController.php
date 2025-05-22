@@ -220,8 +220,7 @@ class DirectoryBookController extends Controller
         }else{
             $status='Kadaluarsa';
         };
-        DataAlatUkur::update([
-            'id_uttp' => $request->id_uttp,
+        DataAlatUkur::where('id_uttp', $uttp->id)->update([
             'tanggal_exp' => Carbon::parse($request->tanggal_selesai)->addYear(),
             'status' => $status
         ]);
