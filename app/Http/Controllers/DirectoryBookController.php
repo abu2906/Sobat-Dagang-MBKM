@@ -9,6 +9,7 @@ use App\Models\Uttp;
 use App\Models\DataAlatUkur;
 use App\Mail\NotifikasiUttpKadaluarsa;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 
 class DirectoryBookController extends Controller
