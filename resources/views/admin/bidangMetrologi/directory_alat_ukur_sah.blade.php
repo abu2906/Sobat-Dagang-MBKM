@@ -9,8 +9,15 @@
         <div class="absolute bottom-[-30px] w-full px-8">
             <div class="flex flex-wrap items-center justify-between p-4 rounded-xl shadow-md">
                 <!-- Filter/Search Input -->
+                <div class="flex space-x-2 mb-2 md:mb-0">
+                    <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
+                        <option value="">Semua</option>
+                        <option value="Valid">Valid</option>
+                        <option value="Kadaluarsa">Kadaluarsa</option>
+                    </select>
+                </div>
                 <div class="relative flex-grow mt-2 md:mt-0">
-                    <input type="text" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full shadow text-sm w-full">
+                    <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full shadow text-sm w-full">
                     <span class="absolute left-3 top-2 text-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
@@ -19,7 +26,6 @@
                         </svg>
                     </span>
                 </div>
-
                 <!-- Add Button -->
                 <button onclick="openModal()" class="mt-2 md:mt-0 text-white flex items-center gap-2 bg-[#0c3252] transition-colors duration-300 hover:bg-[#F49F1E] hover:text-black rounded-full px-8 py-2 ml-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -232,6 +238,32 @@
 </div>
 
 <script>
+    const statusFilter = document.getElementById("statusFilter");
+    const searchInput = document.getElementById("searchInput");
+    const rows = document.querySelectorAll("tbody tr");
+
+    function applyFilters() {
+        const selectedStatus = statusFilter.value.toLowerCase();
+        const keyword = searchInput.value.toLowerCase();
+
+        rows.forEach(row => {
+            if (!row.querySelector('td')) return;
+
+            const statusCell = row.querySelector('td:nth-child(7)');
+            const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
+            const rowText = row.textContent.toLowerCase();
+
+            const matchStatus = !selectedStatus || status === selectedStatus;
+            const matchSearch = !keyword || rowText.includes(keyword);
+
+            row.style.display = (matchStatus && matchSearch) ? '' : 'none';
+        });
+    }
+
+    statusFilter.addEventListener("change", applyFilters);
+    searchInput.addEventListener("input", applyFilters);
+    applyFilters();
+    
     function togglePopup(show) {
         const modal = document.getElementById('popupDetailAlat');
         if (show) {
