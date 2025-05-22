@@ -31,8 +31,8 @@
         <a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
             <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
             <div>
-                <p class="text-base font-medium text-white">Surat Terkirim</p>
-                <p class="text-2xl font-bold text-white">0</p>
+                <p class="text-base font-medium text-white">Jumlah Surat Menunggu</p>
+                <p class="text-2xl font-bold text-white">{{ $totalSuratMenunggu }}</p>
             </div>
         </a>
     </div>
