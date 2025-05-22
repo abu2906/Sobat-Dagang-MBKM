@@ -82,7 +82,7 @@
             {{-- Analisa Pupuk --}}
             <div class="p-4 space-y-4 rounded-xl">
 
-                {{-- Header Analisa --}}
+                {{-- Header Analisa --}}dis
                 <div class="bg-[#083458] text-white px-4 py-2 rounded-md flex justify-between items-center">
                     <span class="font-semibold">Analisa Pupuk</span>
                 </div>

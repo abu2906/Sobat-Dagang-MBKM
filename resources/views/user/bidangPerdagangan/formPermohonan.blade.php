@@ -50,7 +50,7 @@
     </div>
     @endif
 
-    <form action="{{ route('ajukanPermohonan') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('ajukanPermohonan_perdagangan') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 font-roboto">
             <div>
