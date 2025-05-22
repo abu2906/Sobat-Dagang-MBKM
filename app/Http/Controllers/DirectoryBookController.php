@@ -16,9 +16,21 @@ class DirectoryBookController extends Controller
 {
     public function showDirectoryUserMetrologi()
     {
-        $alatUkur = DataAlatUkur::with('uttp')->get();
-        return view('user.bidangMetrologi.directory', compact('alatUkur'));
-        
+        $latestData = DataAlatUkur::select('data_alat_ukur.*')
+            ->join('uttp', 'data_alat_ukur.id_uttp', '=', 'uttp.id_uttp')
+            ->join(DB::raw('(
+                SELECT uttp.no_registrasi, MAX(data_alat_ukur.tanggal_exp) as max_exp
+                FROM data_alat_ukur
+                JOIN uttp ON uttp.id_uttp = data_alat_ukur.id_uttp
+                GROUP BY uttp.no_registrasi
+            ) as latest'), function ($join) {
+                $join->on('uttp.no_registrasi', '=', 'latest.no_registrasi')
+                    ->on('data_alat_ukur.tanggal_exp', '=', 'latest.max_exp');
+            })
+            ->with('uttp')
+            ->get();
+
+        return view('user.bidangMetrologi.directory', ['alatUkur' => $latestData]);
     }       
 
     public function showDirectoryAdminMetrologi()
