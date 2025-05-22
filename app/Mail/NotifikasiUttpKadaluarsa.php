@@ -34,24 +34,4 @@ class NotifikasiUttpKadaluarsa extends Mailable
             subject: 'Notifikasi Uttp Kadaluarsa',
         );
     }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: '/',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
 }
