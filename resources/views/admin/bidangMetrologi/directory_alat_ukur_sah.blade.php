@@ -31,6 +31,20 @@
         </div>
     </div>
 
+    <!-- Modal Popup Review -->
+    <div id="popupDetailAlat" class="fixed inset-0 z-50 hidden justify-center items-center bg-opacity-50">
+        <div class="bg-white p-6 rounded-xl w-[450px] max-w-full relative shadow-xl">
+            <button onclick="togglePopup(false)" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl font-bold">&times;</button>
+            <h2 class="text-center font-bold text-lg mb-4">
+                Detail Alat Ukur - 
+                <span id="popupNoReg" class="text-gray-600"></span>
+            </h2>
+            <table class="w-full text-sm">
+                <tbody id="popupDetailBody"></tbody>
+            </table>
+        </div>
+    </div>
+
     <!-- Modal Tambah Alat Ukur -->
     <div id="modalTambahAlat" class="absolute inset-0 z-40 hidden bg-black bg-opacity-30 flex items-center justify-center">
             <div class="bg-white w-[90%] md:w-[70%] lg:w-[50%] rounded-lg shadow-lg p-6 max-h-[90vh] overflow-y-auto">
@@ -181,25 +195,35 @@
                         </span>
                     </td>
                     <td class="px-5 text-center py-3 border-b">
-                    <!-- Tombol Edit -->
-                    <button
-                        onclick="openEditModal({{ $data->uttp }}, '{{ route('update-uttp', $data->uttp->id_uttp) }}')"
-                        class="p-2 rounded hover:bg-blue-100 transition duration-200"
-                        title="Edit">
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
-
-
-                        <!-- Tombol hapus -->
-                        <form action="{{ route('delete-uttp', $data->uttp->id_uttp) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="p-2 rounded hover:bg-red-100 transition duration-200" title="Hapus">
-                                <span class="material-symbols-outlined">delete</span>
+                        <div class="flex justify-center space-x-2">
+                            <!-- Tombol Preview -->
+                            <button class="flex items-center space-x-1 text-black hover:text-gray-600 transition p-2 rounded hover:bg-blue-100 transition duration-200" onclick="loadDetailAlat('{{ $data->uttp->id_uttp }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
                             </button>
-                        </form>
-                    </td>
 
+                            <!-- Tombol Edit -->
+                            <button
+                                onclick="openEditModal({{ $data->uttp }}, '{{ route('update-uttp', $data->uttp->id_uttp) }}')"
+                                class="p-2 rounded hover:bg-blue-100 transition duration-200"
+                                title="Edit">
+                                <span class="material-symbols-outlined">edit</span>
+                            </button>
+
+                            <!-- Tombol hapus -->
+                            <!-- <form action="{{ route('delete-uttp', $data->uttp->id_uttp) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-2 rounded hover:bg-red-100 transition duration-200" title="Hapus">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </form> -->
+                        </div>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -208,6 +232,55 @@
 </div>
 
 <script>
+    function togglePopup(show) {
+        const modal = document.getElementById('popupDetailAlat');
+        if (show) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        } else {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    function loadDetailAlat(id) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        fetch(`/alat-ukur/detail`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ id: id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('popupNoReg').textContent = data.no_registrasi;
+            
+            const detailBody = document.getElementById('popupDetailBody');
+            detailBody.innerHTML = `
+                <tr><td class="py-2 font-semibold">Jenis Alat</td><td class="py-2">: ${data.jenis_alat ?? '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Nama Usaha</td><td class="py-2">: ${data.nama_usaha ?? '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Merk/Type</td><td class="py-2">: ${data.merk_type ?? '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Kapasitas</td><td class="py-2">: ${data.nama_alat ?? '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Nomor Seri</td><td class="py-2">: ${data.nomor_seri ?? '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Alat Penguji</td><td class="py-2">: ${data.alat_penguji ?? '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Cap Tanda Tera</td><td class="py-2">: ${data.ctt ?? '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">No Surat Perintah Tugas</td><td class="py-2">: ${data.spt_keperluan ?? '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Tanggal Tera</td><td class="py-2">: ${new Date(data.tanggal_penginputan ?? '-').toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td></tr>
+                <tr><td class="py-2 font-semibold">Tanggal Selesai</td><td class="py-2">: ${new Date(data.tanggal_selesai ?? '-').toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td></tr>
+                <tr><td class="py-2 font-semibold">Keterangan</td><td class="py-2">: ${data.keterangan || '-'}</td></tr>
+            `;
+            
+            togglePopup(true);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat memuat detail alat');
+        });
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
         const form = event.target;
