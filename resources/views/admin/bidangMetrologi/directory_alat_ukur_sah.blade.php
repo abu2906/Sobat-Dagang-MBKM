@@ -82,7 +82,7 @@
                         <div>
                             <label class="block text-sm font-medium">ID User</label>
                             <input type="number" name="id_user" class="w-full border rounded px-3 py-2">
-                            <p class="text-xs text-gray-500 mt-1">Kosongkan bila pengguna tidak terdaftar pada sistem</p>
+                            <p class="text-xs text-gray-500 mt-1">Kosongkan bila pemilik uttp tidak terdaftar pada sistem</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium">No Registrasi <span class="text-red-500">*</span></label>
@@ -95,6 +95,7 @@
                         <div>
                             <label class="block text-sm font-medium">Jenis Alat <span class="text-red-500">*</span></label>
                             <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2" required>
+                                <option value="" class="text-gray-400" selected>Pilih Jenis Alat</option>
 								<option value="UP-MK">UP-MK</option>
 								<option value="VOL-TK">VOLUME - TK</option>
 								<option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
@@ -129,6 +130,7 @@
                         <div>
                             <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
                             <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
+                                <option value="" class="text-gray-400" selected>Pilih Alat Penguji</option>
 								<option value="BUS">BUS</option>
 								<option value="AT">AT</option>
 								<option value="ATB">ATB</option>
@@ -137,6 +139,7 @@
                         <div>
                             <label class="block text-sm font-medium">Cap Tanda Tera <span class="text-red-500">*</span></label>
                             <select id="ctt" name="ctt" class="w-full border rounded px-3 py-2" required>
+                                <option value="" class="text-gray-400" selected>Pilih Cap Tanda Tera</option>
 								<option value="SL6">SL6</option>
 								<option value="SL4">SL4</option>
 								<option value="SL2">SL2</option>
@@ -159,6 +162,7 @@
                         <div>
                             <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
                             <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
+                                <option value="" class="text-gray-400" selected>Pilih Keterangan</option>
 								<option value="Tera">Tera</option>
 								<option value="Tera Ulang">Tera Ulang</option>
 							</select>
