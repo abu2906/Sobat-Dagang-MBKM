@@ -189,10 +189,12 @@ class DirectoryBookController extends Controller
 
     public function periksaKadaluarsa()
     {
+        $targetDate = Carbon::now()->addDays(7)->toDateString();
+
+        // Cari alat ukur yang tanggal_exp-nya sama dengan $targetDate
         $dataKedaluwarsa = DataAlatUkur::with('uttp.user')
-            ->whereDate('tanggal_exp', '<', now())
-            ->where('notifikasi_terkirim', false)
-            ->get();
+            ->where('tanggal_exp', $targetDate)
+            ->where('notifikasi_terkirim', false)->get();
 
         foreach ($dataKedaluwarsa as $data) {
             $user = $data->uttp->user;
