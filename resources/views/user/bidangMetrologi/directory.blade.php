@@ -23,14 +23,14 @@
                 </span>
             </div>
             @if(request()->routeIs('alat.user'))
-                <a href="{{ route('directory-metrologi') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full">
-                    Alat Ukur Publik
-                </a>
-            @else
-                <a href="{{ route('alat.user', Auth::guard('user')->id()) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">
+                <a href="{{ route('directory-metrologi') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">
                     Alat Ukur Saya
                 </a>
-            @endif
+            @else
+                <a href="{{ route('alat.user', Auth::guard('user')->id()) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full">
+                    Alat Ukur Saya
+                </a>
+            @endif
         </div>
     </div>
 

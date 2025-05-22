@@ -6,9 +6,11 @@
 
 <ul>
     <li>Nama Usaha: <strong>{{ $dataAlatUkur->uttp->nama_usaha }}</strong></li>
-    <li>Nama Alat: <strong>{{ $dataAlatUkur->uttp->nama_alat }}</strong></li>
+    <li>Jenis Alat: <strong>{{ $dataAlatUkur->uttp->jenis_alat }}</strong></li>
+    <li>Merk/Type: <strong>{{ $dataAlatUkur->uttp->merk_type }}</strong></li>
+    <li>Nomor Seri: <strong>{{ $dataAlatUkur->uttp->nomor_seri }}</strong></li>
     <li>No Registrasi: <strong>{{ $dataAlatUkur->uttp->no_registrasi }}</strong></li>
     <li>Tanggal Expired: <strong>{{ \Carbon\Carbon::parse($dataAlatUkur->tanggal_exp)->format('d-m-Y') }}</strong></li>
 </ul>
 
-<p>Silakan lakukan kalibrasi ulang melalui sistem kami.</p>
+<p>Silakan lakukan tera ulang melalui sistem kami "SOBAT DAGANG".</p>
