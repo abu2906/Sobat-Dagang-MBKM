@@ -73,10 +73,16 @@ class DirectoryBookController extends Controller
             'keterangan' => $request->keterangan,
         ]);
 
+        $today = Carbon::today();
+        if(Carbon::parse($uttp->tanggal_selesai)->addYear()->greaterThan($today)){
+            $status = 'Valid';
+        }else{
+            $status='Kadaluarsa';
+        };
         DataAlatUkur::create([
             'id_uttp' => $uttp->id_uttp,
             'tanggal_exp' => Carbon::parse($uttp->tanggal_selesai)->addYear(),
-            'status' => 'Valid',
+            'status' => $status
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil ditambahkan');
