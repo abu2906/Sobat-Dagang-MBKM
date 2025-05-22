@@ -132,30 +132,35 @@
 document.addEventListener("DOMContentLoaded", function () {
     const statusFilter = document.getElementById("statusFilter");
     const searchInput = document.getElementById("searchInput");
-
-    const rows = document.querySelectorAll("tbody tr[data-status]");
+    const rows = document.querySelectorAll("tbody tr");
 
     function applyFilters() {
         const selectedStatus = statusFilter.value.toLowerCase();
         const keyword = searchInput.value.toLowerCase();
 
         rows.forEach(row => {
-            const status = row.getAttribute("data-status").toLowerCase();
+            // Skip header row
+            if (!row.querySelector('td')) return;
+
+            const statusCell = row.querySelector('td:nth-child(4)');
+            const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
 
             const matchStatus = !selectedStatus || status === selectedStatus;
             const matchSearch = !keyword || rowText.includes(keyword);
 
-            if (matchStatus && matchSearch) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
+            row.style.display = (matchStatus && matchSearch) ? '' : 'none';
         });
     }
 
+    // Apply filters when status changes
     statusFilter.addEventListener("change", applyFilters);
+    
+    // Apply filters when search input changes
     searchInput.addEventListener("input", applyFilters);
+    
+    // Apply initial filters
+    applyFilters();
 });
 </script>
 
