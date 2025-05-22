@@ -25,9 +25,6 @@ class NotifikasiUttpKadaluarsa extends Mailable
         return $this->subject('Pemberitahuan UTTP Kadaluarsa')
             ->view('emails.kadaluarsa');
     }
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
