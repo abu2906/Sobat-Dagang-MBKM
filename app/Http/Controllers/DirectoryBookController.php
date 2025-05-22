@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use App\Exports\UttpExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class DirectoryBookController extends Controller
 {
@@ -61,9 +62,18 @@ class DirectoryBookController extends Controller
                 'no_registrasi' => 'required|string|max:255',
                 'jenis_alat' => 'required|string',
                 'id_user' => 'nullable|exists:user,id_user',
+                'sertifikat' => 'nullable|file|mimes:pdf|max:10240', // Max 10MB
             ], [
                 'id_user.exists' => 'ID User tidak valid',
+                'sertifikat.mimes' => 'File sertifikat harus berformat PDF',
+                'sertifikat.max' => 'Ukuran file sertifikat maksimal 10MB',
             ]);
+
+            // Handle certificate upload if present
+            $sertifikatPath = null;
+            if ($request->hasFile('sertifikat')) {
+                $sertifikatPath = $request->file('sertifikat')->store('sertifikat', 'public');
+            }
 
             // Cek apakah no_registrasi sudah digunakan
             $existingUttps = Uttp::where('no_registrasi', $request->no_registrasi)
@@ -138,6 +148,7 @@ class DirectoryBookController extends Controller
                 'tanggal_selesai' => $request->tanggal_selesai,
                 'terapan' => $request->terapan,
                 'keterangan' => $request->keterangan,
+                'sertifikat_path' => $sertifikatPath,
             ]);
 
             $today = Carbon::today();
@@ -235,7 +246,8 @@ class DirectoryBookController extends Controller
                 'terapan' => $dataAlatUkur->uttp->terapan,
                 'keterangan' => $dataAlatUkur->uttp->keterangan,
                 'status' => $dataAlatUkur->status,
-                'tanggal_exp' => $dataAlatUkur->tanggal_exp
+                'tanggal_exp' => $dataAlatUkur->tanggal_exp,
+                'sertifikat_path' => $dataAlatUkur->uttp->sertifikat_path
             ];
 
             return response()->json($response);
@@ -263,11 +275,25 @@ class DirectoryBookController extends Controller
         try {
             $request->validate([
                 'id_user' => 'nullable|exists:user,id_user',
+                'sertifikat' => 'nullable|file|mimes:pdf|max:10240', // Max 10MB
             ], [
                 'id_user.exists' => 'ID User tidak valid',
+                'sertifikat.mimes' => 'File sertifikat harus berformat PDF',
+                'sertifikat.max' => 'Ukuran file sertifikat maksimal 10MB',
             ]);
 
             $uttp = Uttp::findOrFail($id);
+
+            // Handle certificate upload if present
+            if ($request->hasFile('sertifikat')) {
+                // Delete old certificate if exists
+                if ($uttp->sertifikat_path) {
+                    Storage::disk('public')->delete($uttp->sertifikat_path);
+                }
+                $sertifikatPath = $request->file('sertifikat')->store('sertifikat', 'public');
+            } else {
+                $sertifikatPath = $uttp->sertifikat_path;
+            }
 
             // Cek apakah no_registrasi sudah digunakan
             $existingUttps = Uttp::where('no_registrasi', $request->no_registrasi)
@@ -334,6 +360,7 @@ class DirectoryBookController extends Controller
                 'tanggal_selesai' => $request->tanggal_selesai,
                 'terapan' => $request->terapan,
                 'keterangan' => $request->keterangan,
+                'sertifikat_path' => $sertifikatPath,
             ]);
 
             $today = Carbon::today();

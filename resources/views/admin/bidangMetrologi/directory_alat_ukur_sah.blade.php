@@ -160,12 +160,16 @@
                             <input type="text" name="spt_keperluan" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
                             <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
                                 <option value="" class="text-gray-400" selected>Pilih Keterangan</option>
-								<option value="Tera">Tera</option>
-								<option value="Tera Ulang">Tera Ulang</option>
-							</select>
+                                <option value="Tera">Tera</option>
+                                <option value="Tera Ulang">Tera Ulang</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Sertifikat (PDF)</label>
+                            <input type="file" name="sertifikat" accept=".pdf" class="w-full border rounded px-3 py-2">
                         </div>
                         <div class="flex items-center space-x-2 mt-2">
                             <input type="checkbox" name="terapan" id="terapan" class="rounded border-gray-300">
@@ -316,6 +320,7 @@
                 <tr><td class="py-2 font-semibold">Tanggal Tera</td><td class="py-2">: ${new Date(data.tanggal_penginputan ?? '-').toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td></tr>
                 <tr><td class="py-2 font-semibold">Tanggal Selesai</td><td class="py-2">: ${new Date(data.tanggal_selesai ?? '-').toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td></tr>
                 <tr><td class="py-2 font-semibold">Keterangan</td><td class="py-2">: ${data.keterangan || '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Sertifikat</td><td class="py-2">: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
             `;
             
             togglePopup(true);
@@ -413,6 +418,18 @@
         form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
         form.elements['terapan'].checked = data.terapan || false;
         form.elements['keterangan'].value = data.keterangan || '';
+
+        // Tampilkan file sertifikat yang sudah ada
+        const sertifikatContainer = form.querySelector('[name="sertifikat"]').parentElement;
+        if (data.sertifikat_path) {
+            const existingFile = document.createElement('div');
+            existingFile.className = 'mt-2 text-sm text-gray-600';
+            existingFile.innerHTML = `
+                <p>File saat ini: <a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a></p>
+                <p class="text-xs text-gray-500 mt-1">Upload file baru untuk mengganti sertifikat</p>
+            `;
+            sertifikatContainer.appendChild(existingFile);
+        }
     }
 
     // Script untuk membuka modal otomatis dan mengisi field
@@ -444,6 +461,40 @@
             }
         }
     });
+
+    function getDetail(id) {
+        fetch(`/admin/metrologi/detail/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('detailTanggalMulai').textContent = data.tanggal_penginputan || '-';
+                document.getElementById('detailNoRegistrasi').textContent = data.no_registrasi || '-';
+                document.getElementById('detailNamaUsaha').textContent = data.nama_usaha || '-';
+                document.getElementById('detailJenisAlat').textContent = data.jenis_alat || '-';
+                document.getElementById('detailNamaAlat').textContent = data.nama_alat || '-';
+                document.getElementById('detailMerkType').textContent = data.merk_type || '-';
+                document.getElementById('detailNomorSeri').textContent = data.nomor_seri || '-';
+                document.getElementById('detailAlatPenguji').textContent = data.alat_penguji || '-';
+                document.getElementById('detailCtt').textContent = data.ctt || '-';
+                document.getElementById('detailSptKeperluan').textContent = data.spt_keperluan || '-';
+                document.getElementById('detailTanggalSelesai').textContent = data.tanggal_selesai || '-';
+                document.getElementById('detailTerapan').textContent = data.terapan ? 'Ya' : 'Tidak';
+                document.getElementById('detailKeterangan').textContent = data.keterangan || '-';
+                
+                // Update certificate display
+                const sertifikatElement = document.getElementById('detailSertifikat');
+                if (data.sertifikat_path) {
+                    sertifikatElement.innerHTML = `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>`;
+                } else {
+                    sertifikatElement.innerHTML = '<span class="text-gray-500">Belum di upload oleh admin</span>';
+                }
+
+                document.getElementById('modalDetail').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengambil data');
+            });
+    }
 </script>
 
 

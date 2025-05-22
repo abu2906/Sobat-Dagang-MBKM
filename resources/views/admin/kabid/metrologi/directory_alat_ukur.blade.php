@@ -172,6 +172,7 @@
                 <tr><td class="py-1 font-semibold">Tanggal Mulai</td><td>: ${data.tanggal_penginputan ?? '-'}</td></tr>
                 <tr><td class="py-1 font-semibold">Tanggal Selesai</td><td>: ${data.tanggal_selesai ?? '-'}</td></tr>
                 <tr><td class="py-1 font-semibold">Keterangan</td><td>: ${data.keterangan ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Sertifikat</td><td>: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
             `;
 
             togglePopup(true);
