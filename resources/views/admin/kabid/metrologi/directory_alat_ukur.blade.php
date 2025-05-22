@@ -44,6 +44,7 @@
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">No</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Jenis Alat</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nomor Registrasi</th>
+                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nama Usaha</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Tanggal Tera</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Tanggal Exp</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Status</th>
@@ -56,6 +57,7 @@
                     <td class="px-5 text-center py-3 border-b">{{ $index + 1 }}</td>
                     <td class="px-5 text-center py-3 border-b">{{ $data->uttp->jenis_alat }}</td>
                     <td class="px-5 text-center py-3 border-b">{{ $data->uttp->no_registrasi }}</td>
+                    <td class="px-5 text-center py-3 border-b">{{ $data->uttp->nama_usaha }}</td>
                     <td class="px-5 text-center py-3 border-b">{{ \Carbon\Carbon::parse($data->uttp->tanggal_penginputan)->format('d F Y') }}</td>
                     <td class="px-5 text-center py-3 border-b">
                         {{ optional($data)->tanggal_exp ? \Carbon\Carbon::parse($data->tanggal_exp)->format('d F Y') : '-' }}
@@ -67,10 +69,10 @@
                             {{ $data->status ?? '-' }}
                         </span>
                     </td>
-                    <td class="px-5 py-3 border-b">
+                    <td class="px-5 text-center py-3 border-b">
                         <div class="flex justify-center">
-                            <button class="flex items-center space-x-2 text-black hover:text-gray-600 transition" onclick="loadDetailAlat('{{ $data->uttp->id_uttp }}')">
-                                <!-- Icon Preview -->
+                            <button class="flex space-x-2 text-black hover:text-gray-600 transition" onclick="loadDetailAlat('{{ $data->uttp->id_uttp }}')">
+                                        <!-- Icon Preview -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -81,7 +83,6 @@
                             </button>
                         </div>
                     </td>
-
                 </tr>
                 @endforeach
             </tbody>

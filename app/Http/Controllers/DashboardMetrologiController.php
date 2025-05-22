@@ -34,7 +34,10 @@ class DashboardMetrologiController extends Controller
             ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
             ->where('data_alat_ukur.status', 'Valid')
             ->count();
-        $uttps = DataAlatUkur::with('uttp')->get();
+        $uttps = DataAlatUkur::with('uttp')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
         $donutData = $this->getDonutChartData();
         $calibrationData = $this->getCalibrationComparisonData();
         

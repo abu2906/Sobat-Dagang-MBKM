@@ -177,6 +177,7 @@ Route::middleware(['role.check:user'])->group(function () {
     Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
     Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
     Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
+    Route::post('/alat-ukur/detail-user', [DirectoryBookController::class, 'getDetailUser'])->name('alat.detail.user');
 });
 
 Route::middleware(['auth:disdag'])->group(function () {

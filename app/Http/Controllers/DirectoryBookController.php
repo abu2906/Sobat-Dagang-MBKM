@@ -91,10 +91,60 @@ class DirectoryBookController extends Controller
 
     public function getDetail(Request $request)
     {
-        $id = $request->input('id');
-        $uttp = Uttp::with('user')->findOrFail($id);
+        try {
+            $id = $request->input('id');
+            if (!$id) {
+                return response()->json(['error' => 'ID tidak ditemukan'], 400);
+            }
 
-        return response()->json($uttp);
+            $uttp = Uttp::with('user')->find($id);
+            if (!$uttp) {
+                return response()->json(['error' => 'Data UTTP tidak ditemukan'], 404);
+            }
+
+            return response()->json($uttp);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Terjadi kesalahan saat mengambil data'], 500);
+        }
+    }
+
+    public function getDetailUser(Request $request)
+    {
+        try {
+            $id = $request->input('id');
+            if (!$id) {
+                return response()->json(['error' => 'ID tidak ditemukan'], 400);
+            }
+
+            $dataAlatUkur = DataAlatUkur::with('uttp')->where('id_uttp', $id)->first();
+            if (!$dataAlatUkur) {
+                return response()->json(['error' => 'Data alat ukur tidak ditemukan'], 404);
+            }
+
+            // Format data untuk response
+            $response = [
+                'no_registrasi' => $dataAlatUkur->uttp->no_registrasi,
+                'nama_usaha' => $dataAlatUkur->uttp->nama_usaha,
+                'nama_alat' => $dataAlatUkur->uttp->nama_alat,
+                'jenis_alat' => $dataAlatUkur->uttp->jenis_alat,
+                'merk_type' => $dataAlatUkur->uttp->merk_type,
+                'nomor_seri' => $dataAlatUkur->uttp->nomor_seri,
+                'jumlah_alat' => $dataAlatUkur->uttp->jumlah_alat,
+                'alat_penguji' => $dataAlatUkur->uttp->alat_penguji,
+                'ctt' => $dataAlatUkur->uttp->ctt,
+                'spt_keperluan' => $dataAlatUkur->uttp->spt_keperluan,
+                't_u' => $dataAlatUkur->uttp->t_u,
+                'tanggal_selesai' => $dataAlatUkur->uttp->tanggal_selesai,
+                'terapan' => $dataAlatUkur->uttp->terapan,
+                'keterangan' => $dataAlatUkur->uttp->keterangan,
+                'status' => $dataAlatUkur->status,
+                'tanggal_exp' => $dataAlatUkur->tanggal_exp
+            ];
+
+            return response()->json($response);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Terjadi kesalahan saat mengambil data'], 500);
+        }
     }
 
     public function destroy($id)
