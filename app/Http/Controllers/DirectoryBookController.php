@@ -10,7 +10,7 @@ use App\Models\DataAlatUkur;
 use App\Mail\NotifikasiUttpKadaluarsa;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\DB;
 
 class DirectoryBookController extends Controller
 {
