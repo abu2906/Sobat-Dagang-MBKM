@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Kabid Metrologi')
 
 @section('content')
 <div class="flex">
@@ -13,21 +13,27 @@
             </div>
 
             <div class="bg-white shadow-md rounded-xl p-4 text-center">
-                <p class="text-gray-500">Perkembangan Data</p>
-                <h2 class="text-3xl font-bold">210</h2>
-                <p class="text-sm text-gray-400">Hingga Bulan Ini</p>
+                <p class="text-gray-500">Jumlah Surat Ditolak</p>
+                <h2 class="text-3xl font-bold">7</h2>
+                <p class="text-sm text-gray-400">Total Keseluruhan</p>
             </div>
 
-            <div class="bg-white shadow-md rounded-xl p-4">
-                <div class="flex gap-2 mt-2">
-                    <h2 class="text-3xl font-bold">Fitur Coming Soon</h2>
-                </div>
+            <div class="bg-white shadow-md rounded-xl p-4 text-center">
+                <p class="text-gray-500">Jumlah Surat Diterima</p>
+                <h2 class="text-3xl font-bold">0</h2>
+                <p class="text-sm text-gray-400">Total Keseluruhan</p>
             </div>
+
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-white shadow-md rounded-xl p-4 max-h-[600px] overflow-y-auto">
-                <div class="mb-4 text-xl font-semibold text-gray-700">Daftar UTTP Terbaru</div>
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-xl font-semibold text-gray-700">Daftar UTTP Terbaru</div>
+                    <a href="{{ route('directory-uttp-kabid') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        Lihat Semua
+                    </a>
+                </div>
 
                 <table class="w-full text-left">
                     <thead class="bg-[#0c3252] text-white">
@@ -57,8 +63,8 @@
 
             <div class="flex flex-col gap-6">
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-white shadow-md rounded-xl p-4 text-center text-sm">
-                        <div class="text-3xl mb-2">⚖️</div>
+                    <div class="bg-white shadow-md rounded-xl p-4 text-center text-sm flex flex-col items-center justify-center h-full">
+                        <div class="text-3xl mb-2">⚖</div>
                         <p class="text-gray-500 text-sm">Jumlah Alat Ukur Valid</p>
                         <h2 class="text-2xl font-bold">{{ $jumlahValid }}</h2>
                     </div>

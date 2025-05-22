@@ -81,20 +81,19 @@ class KabidPerdaganganController extends Controller
         $lokasi = $request->lokasi ?? 'Pasar Sumpang';
 
         // Menentukan periode tanggal yang digunakan untuk filter data
-        $startDate = $request->start_date ?? now()->subDays(6)->format('Y-m-d'); // 6 hari sebelumnya
-        $endDate = $request->end_date ?? now()->format('Y-m-d'); // Hari ini
+        $startDate = $request->start_date ?? now()->subDays(30)->format('Y-m-d');
+        $endDate = $request->end_date ?? now()->format('Y-m-d');
 
         // Inisialisasi variabel yang akan digunakan
-        $tanggalList = collect();  // Koleksi tanggal yang digunakan untuk tabel harga
-        $barangs = Barang::orderBy('nama_barang')->get();  // Mengambil semua barang dari tabel Barang
-        $dataHarga = [];  // Menyimpan harga barang per tanggal
-        $top10HargaTertinggi = [];  // Menyimpan 10 barang dengan harga tertinggi
-        $topHargaNaik = [];  // Menyimpan barang dengan harga naik tertinggi
-        $topHargaTurun = [];  // Menyimpan barang dengan harga turun tertinggi
+        $tanggalList = collect();
+        $barangs = Barang::orderBy('nama_barang')->get(); 
+        $dataHarga = [];  
+        $topHargaNaik = []; 
+        $topHargaTurun = [];  
         $barChartData = [
-            'labels' => [],  // Label untuk bar chart (nama barang)
-            'today' => [],  // Data harga hari ini
-            'yesterday' => []  // Data harga kemarin
+            'labels' => [], 
+            'today' => [],
+            'yesterday' => []
         ];
 
         // Cek jika lokasi yang dipilih adalah 'Pasar Sumpang' atau 'Pasar Lakessi'
@@ -193,79 +192,81 @@ class KabidPerdaganganController extends Controller
             'barChartData' => $barChartData,  
         ]);
     }
-public function distribusiPupuk()
-{
-    // Data distribusi per toko dan jenis pupuk
-    $data = DB::table('stok_opname')
-        ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
-        ->join('distributor', 'stok_opname.id_distributor', '=', 'distributor.id_distributor')
-        ->select(
-            'toko.nama_toko',
-            'toko.no_register',
-            'stok_opname.nama_barang',
-            DB::raw('SUM(stok_opname.penyaluran) as total_penyaluran')
-        )
-        ->groupBy('toko.id_toko', 'stok_opname.nama_barang', 'toko.nama_toko', 'toko.no_register')
-        ->get()
-        ->groupBy('nama_toko');
+    public function distribusiPupuk(Request $request)
+    {
+        $kecamatan = $request->input('kecamatan');
 
-    $jumlahToko = $data->count();
+        // Query data utama
+        $query = DB::table('stok_opname')
+            ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+            ->join('distributor', 'stok_opname.id_distributor', '=', 'distributor.id_distributor');
 
-    $dataPupuk = StokOpname::selectRaw('nama_barang as jenis_pupuk, SUM(penyaluran) as total')
-        ->groupBy('nama_barang')
-        ->pluck('total', 'jenis_pupuk');
-
-    $totalDistribusi = $dataPupuk->sum();
-
-    // Data untuk line chart per tahun
-    $lineData = DB::table('stok_opname')
-        ->select(
-            DB::raw('YEAR(tanggal) as tahun'),
-            'nama_barang',
-            DB::raw('SUM(penyaluran) as total_penyaluran')
-        )
-        ->groupBy('tahun', 'nama_barang')
-        ->orderBy('tahun')
-        ->get();
-
-    $labels = $lineData->pluck('tahun')->unique()->values()->all();
-
-    $jenisPupuk = $lineData->pluck('nama_barang')->unique();
-
-    $datasets = [];
-
-    foreach ($jenisPupuk as $jenis) {
-        $dataPerTahun = [];
-        foreach ($labels as $tahun) {
-            $record = $lineData->firstWhere(function($item) use ($tahun, $jenis) {
-                return $item->tahun == $tahun && $item->nama_barang == $jenis;
-            });
-            $dataPerTahun[] = $record ? (int) $record->total_penyaluran : 0;
+        if ($kecamatan) {
+            $query->where('toko.kecamatan', $kecamatan);
         }
-        $color = match($jenis) {
-            'NPK' => 'red',
-            'UREA' => 'blue',
-            'NPK-FK' => 'orange',
-            default => 'gray'
-        };
 
-        $datasets[] = [
-            'label' => $jenis,
-            'data' => $dataPerTahun,
-            'borderColor' => $color,
-            'tension' => 0.3,
-            'fill' => false
+        $data = $query->select(
+                'toko.nama_toko',
+                'toko.no_register',
+                'stok_opname.nama_barang',
+                DB::raw('SUM(stok_opname.penyaluran) as total_penyaluran')
+            )
+            ->groupBy('toko.id_toko', 'stok_opname.nama_barang', 'toko.nama_toko', 'toko.no_register')
+            ->get()
+            ->groupBy('nama_toko');
+
+        $jumlahToko = $data->count();
+
+        // Data pie chart (total pupuk per jenis)
+        $dataPupuk = DB::table('stok_opname')
+            ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+            ->when($kecamatan, function ($query) use ($kecamatan) {
+                $query->where('toko.kecamatan', $kecamatan);
+            })
+            ->select('stok_opname.nama_barang', DB::raw('SUM(stok_opname.penyaluran) as total'))
+            ->groupBy('stok_opname.nama_barang')
+            ->pluck('total', 'stok_opname.nama_barang');
+
+        $totalDistribusi = $dataPupuk->sum();
+
+        // 🔵 Data line chart (perkembangan per tahun)
+        $dataPerTahun = DB::table('stok_opname')
+            ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+            ->when($kecamatan, function ($query) use ($kecamatan) {
+                $query->where('toko.kecamatan', $kecamatan);
+            })
+            ->select(DB::raw('YEAR(stok_opname.created_at) as tahun'), DB::raw('SUM(penyaluran) as total'))
+            ->groupBy(DB::raw('YEAR(stok_opname.created_at)'))
+            ->orderBy('tahun')
+            ->get();
+
+        $lineLabels = $dataPerTahun->pluck('tahun')->toArray();
+        $lineValues = $dataPerTahun->pluck('total')->toArray();
+
+        $lineDatasets = [
+            [
+                'label' => 'Total Penyaluran Pupuk per Tahun',
+                'data' => $lineValues,
+                'borderColor' => 'rgba(75, 192, 192, 1)',
+                'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
+                'fill' => true,
+                'tension' => 0.4,
+            ]
         ];
+
+        return view('admin.kabid.perdagangan.distribusiPupuk', [
+            'data' => $data,
+            'jumlahToko' => $jumlahToko,
+            'dataPupuk' => $dataPupuk,
+            'totalDistribusi' => $totalDistribusi,
+            'selectedKecamatan' => $kecamatan,
+            'lineLabels' => $lineLabels,
+            'lineDatasets' => $lineDatasets,
+        ]);
     }
 
-    return view('admin.kabid.perdagangan.distribusiPupuk', [
-        'data' => $data,
-        'jumlahToko' => $jumlahToko,
-        'dataPupuk' => $dataPupuk,
-        'totalDistribusi' => $totalDistribusi,
-        'labels' => $labels,
-        'datasets' => $datasets,
-    ]);
-}
+
+
+
 
 }

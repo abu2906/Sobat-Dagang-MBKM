@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets\img\background\perdagangan.jpg') }}" alt="Background" class="object-cover w-full h-full" />
+    <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
     <a href="{{ route('user.dashboard') }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">arrow_back</span>
@@ -32,7 +32,7 @@
             </button>
         </div>
     </div>
-    <div class="container px-4 pb-4 mx-auto">
+    <div class="w-full overflow-x-auto custom-scrollbar">
         <table class="min-w-full overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
@@ -115,6 +115,17 @@
         </div>
     </div>
 </div>
+
+<style>
+.custom-scrollbar {
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+}
+.custom-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+</style>
+
 
 @endsection
 

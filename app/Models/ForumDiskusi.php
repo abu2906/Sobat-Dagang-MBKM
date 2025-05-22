@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class ForumDiskusi extends Model
 {
     protected $table = 'forum_diskusi';
-    protected $primaryKey = 'id_pengaduan'; // karena kamu pakai id_pengaduan sebagai primary key
-    public $timestamps = false; // karena kamu pakai kolom waktu manual
+    protected $primaryKey = 'id_pengaduan';
 
     protected $fillable = [
         'id_user',
@@ -15,6 +14,10 @@ class ForumDiskusi extends Model
         'chat',
         'waktu',
         'status',
+    ];
+
+    protected $casts = [
+        'waktu' => 'datetime',
     ];
 
     public function user()

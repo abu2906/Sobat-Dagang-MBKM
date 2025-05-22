@@ -113,14 +113,22 @@ class DashboardPerdaganganController extends Controller{
             $volatilitas = '0%';
         }
 
-        // Data distribusi pupuk
-        // $pupuk = DB::table('distribusi_pupuk')
-        //     ->selectRaw('SUM(urea) as urea, SUM(npk) as npk, SUM(npk_fk) as npk_fk')
-        //     ->first();
+        // Tambahkan ini di awal sebelum return view
+        $tahunIni = Carbon::now()->year;
+
+        $pupukTahunan = DB::table('stok_opname')
+            ->selectRaw('
+                SUM(CASE WHEN UPPER(nama_barang) = "UREA" THEN penyaluran ELSE 0 END) as urea,
+                SUM(CASE WHEN UPPER(nama_barang) = "NPK" THEN penyaluran ELSE 0 END) as npk,
+                SUM(CASE WHEN UPPER(nama_barang) = "NPK-FK" THEN penyaluran ELSE 0 END) as npk_fk
+            ')
+            ->whereYear('tanggal', $tahunIni)
+            ->first();
 
         // Kirim semua data ke view
         return view('admin.bidangPerdagangan.dashboardPerdagangan', [
             'dataSurat' => $dataSurat,
+            'pupukTahunan' => $pupukTahunan,
             'daftarHarga' => $daftarHarga,
             'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
             'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
@@ -298,94 +306,94 @@ class DashboardPerdaganganController extends Controller{
     }
 
     public function laporanPupuk(Request $request)
-{
-    $bulan = $request->input('bulan');
-    $tahun = $request->input('tahun');
+    {
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
 
-    $data = [];
-    $pieData = [];
-    $lineChartLabels = [];
-    $lineChartData = [
-        'UREA' => [],
-        'NPK' => [],
-        'NPK-FK' => [],
-    ];
+        $data = [];
+        $pieData = [];
+        $lineChartLabels = [];
+        $lineChartData = [
+            'UREA' => [],
+            'NPK' => [],
+            'NPK-FK' => [],
+        ];
 
-    // Jika tidak memilih apapun, tampilkan data bulan dan tahun saat ini
-    if (empty($bulan) && empty($tahun)) {
-        $bulan = now()->month;
-        $tahun = now()->year;
-    }
+        // Jika tidak memilih apapun, tampilkan data bulan dan tahun saat ini
+        if (empty($bulan) && empty($tahun)) {
+            $bulan = now()->month;
+            $tahun = now()->year;
+        }
 
-    // Validasi: jika request berisi bulan dan tahun, tapi kosong, tampilkan pesan
-    if (!empty($bulan) && !empty($tahun) && $request->has('bulan') && $request->has('tahun')) {
+        // Validasi: jika request berisi bulan dan tahun, tapi kosong, tampilkan pesan
+        if (!empty($bulan) && !empty($tahun) && $request->has('bulan') && $request->has('tahun')) {
+            return view('admin.bidangPerdagangan.lihatLaporan', [
+                'data' => [],
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+                'pieData' => [],
+                'lineChartLabels' => [],
+                'lineChartData' => [],
+                'message' => 'Silakan pilih salah satu: bulan atau tahun saja.'
+            ]);
+        }
+
+        // Ambil data stok_opname
+        $query = StokOpname::with('toko');
+
+        if (!empty($bulan) && empty($tahun)) {
+            $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', now()->year);
+        } elseif (!empty($tahun) && empty($bulan)) {
+            $query->whereYear('tanggal', $tahun);
+        } else {
+            $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+        }
+
+        $stokOpnames = $query->get();
+
+        foreach ($stokOpnames as $record) {
+            $toko = $record->toko->nama_toko ?? 'Tidak diketahui';
+            $barang = strtoupper($record->nama_barang);
+
+            // Data Tabel
+            if (!isset($data[$toko][$barang])) {
+                $data[$toko][$barang] = [
+                    'stok_awal' => 0,
+                    'penyaluran' => 0,
+                    'stok_akhir' => 0,
+                ];
+            }
+
+            $data[$toko][$barang]['stok_awal'] += $record->stok_awal;
+            $data[$toko][$barang]['penyaluran'] += $record->penyaluran;
+            $data[$toko][$barang]['stok_akhir'] += $record->stok_akhir;
+
+            // Data Pie Chart
+            if (!isset($pieData[$barang])) {
+                $pieData[$barang] = 0;
+            }
+            $pieData[$barang] += $record->penyaluran;
+        }
+
+        // Data Line Chart
+        foreach ($data as $toko => $pupuk) {
+            $lineChartLabels[] = $toko;
+
+            foreach (['UREA', 'NPK', 'NPK-FK'] as $jenis) {
+                $lineChartData[$jenis][] = $pupuk[$jenis]['penyaluran'] ?? 0;
+            }
+        }
+
         return view('admin.bidangPerdagangan.lihatLaporan', [
-            'data' => [],
+            'data' => $data,
             'bulan' => $bulan,
             'tahun' => $tahun,
-            'pieData' => [],
-            'lineChartLabels' => [],
-            'lineChartData' => [],
-            'message' => 'Silakan pilih salah satu: bulan atau tahun saja.'
+            'pieData' => $pieData,
+            'lineChartLabels' => $lineChartLabels,
+            'lineChartData' => $lineChartData,
+            'message' => ''
         ]);
     }
-
-    // Ambil data stok_opname
-    $query = StokOpname::with('toko');
-
-    if (!empty($bulan) && empty($tahun)) {
-        $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', now()->year);
-    } elseif (!empty($tahun) && empty($bulan)) {
-        $query->whereYear('tanggal', $tahun);
-    } else {
-        $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
-    }
-
-    $stokOpnames = $query->get();
-
-    foreach ($stokOpnames as $record) {
-        $toko = $record->toko->nama_toko ?? 'Tidak diketahui';
-        $barang = strtoupper($record->nama_barang);
-
-        // Data Tabel
-        if (!isset($data[$toko][$barang])) {
-            $data[$toko][$barang] = [
-                'stok_awal' => 0,
-                'penyaluran' => 0,
-                'stok_akhir' => 0,
-            ];
-        }
-
-        $data[$toko][$barang]['stok_awal'] += $record->stok_awal;
-        $data[$toko][$barang]['penyaluran'] += $record->penyaluran;
-        $data[$toko][$barang]['stok_akhir'] += $record->stok_akhir;
-
-        // Data Pie Chart
-        if (!isset($pieData[$barang])) {
-            $pieData[$barang] = 0;
-        }
-        $pieData[$barang] += $record->penyaluran;
-    }
-
-    // Data Line Chart
-    foreach ($data as $toko => $pupuk) {
-        $lineChartLabels[] = $toko;
-
-        foreach (['UREA', 'NPK', 'NPK-FK'] as $jenis) {
-            $lineChartData[$jenis][] = $pupuk[$jenis]['penyaluran'] ?? 0;
-        }
-    }
-
-    return view('admin.bidangPerdagangan.lihatLaporan', [
-        'data' => $data,
-        'bulan' => $bulan,
-        'tahun' => $tahun,
-        'pieData' => $pieData,
-        'lineChartLabels' => $lineChartLabels,
-        'lineChartData' => $lineChartData,
-        'message' => ''
-    ]);
-}
 
     public function formPermohonan()
     {

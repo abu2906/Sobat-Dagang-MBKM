@@ -19,19 +19,16 @@
 
                 {{-- Harga Pupuk --}}
                 <div class="flex flex-col justify-between h-32 p-4 bg-white shadow rounded-xl">
-                    <h2 class="text-base font-semibold text-black">Harga Pupuk</h2>
+                    <h2 class="text-base font-semibold text-black">Toko Penyaluran Terbanyak</h2>
                     <div class="space-y-1 text-sm">
                         <div class="flex justify-between">
-                            <span class="w-20">UREA</span>
-                            <span class="font-semibold">Rp. 300.000</span>
+                            <span >Kaka Uceng</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="w-20">NPK</span>
-                            <span class="font-semibold">Rp. 300.000</span>
+                            <span >Udang Gacor</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="w-20">NPK-FK</span>
-                            <span class="font-semibold">Rp. 300.000</span>
+                            <span >Kepiting Gacor</span>
                         </div>
                     </div>
                 </div>
@@ -82,52 +79,47 @@
             {{-- Analisa Pupuk --}}
             <div class="p-4 space-y-4 rounded-xl">
 
-                {{-- Header Analisa --}}dis
                 <div class="bg-[#083458] text-white px-4 py-2 rounded-md flex justify-between items-center">
                     <span class="font-semibold">Analisa Pupuk</span>
+                    {{-- <span class="text-sm cursor-pointer">&#9660;</span> --}}
                 </div>
 
-                {{-- Filter Section --}}
                 <div class="relative p-4 space-y-3 bg-white shadow-md rounded-xl">
                     <div class="flex items-center gap-1 font-semibold text-gray-800">
                         <span class="text-base material-symbols-outlined">tune</span>
                         <span>Filter</span>
                     </div>
 
-                    <div class="flex gap-3">
-                        <div class="relative w-full">
-                            <div onclick="toggleDropdown()" class="flex items-center justify-between bg-[#CDE4F7] text-black px-4 py-2 rounded-lg w-full cursor-pointer hover:bg-[#b9daf2] transition-all duration-200">
-                                <span id="selected-kecamatan">Soreang</span>
-                                <span class="text-sm text-gray-700 material-symbols-outlined">tune</span>
-                            </div>
-                            <div id="dropdown-kecamatan" class="absolute left-0 z-20 hidden w-full mt-2 overflow-hidden bg-white border border-gray-200 shadow-lg top-full rounded-xl">
-                                <div class="px-4 py-2 text-gray-700 cursor-pointer hover:bg-blue-100" onclick="selectKecamatan('Soreang')">Soreang</div>
-                                <div class="px-4 py-2 text-gray-700 cursor-pointer hover:bg-blue-100" onclick="selectKecamatan('Bacukiki')">Bacukiki</div>
-                                <div class="px-4 py-2 text-gray-700 cursor-pointer hover:bg-blue-100" onclick="selectKecamatan('Bacukiki Barat')">Bacukiki Barat</div>
-                                <div class="px-4 py-2 text-gray-700 cursor-pointer hover:bg-blue-100" onclick="selectKecamatan('Ujung')">Ujung</div>
+                    <form method="GET" action="{{ route('distribusi.pupuk') }}">
+                        <div class="flex gap-3">
+                            <div class="relative w-full">
+                                <select name="kecamatan" onchange="this.form.submit()" class="bg-[#CDE4F7] text-black px-4 py-2 rounded-lg w-full cursor-pointer">
+                                    <option value="">-- Pilih Kecamatan --</option>
+                                    <option value="Soreang" {{ request('kecamatan') == 'Soreang' ? 'selected' : '' }}>Soreang</option>
+                                    <option value="Bacukiki" {{ request('kecamatan') == 'Bacukiki' ? 'selected' : '' }}>Bacukiki</option>
+                                    <option value="Bacukiki Barat" {{ request('kecamatan') == 'Bacukiki Barat' ? 'selected' : '' }}>Bacukiki Barat</option>
+                                    <option value="Ujung" {{ request('kecamatan') == 'Ujung' ? 'selected' : '' }}>Ujung</option>
+                                </select>
                             </div>
                         </div>
+                    </form>
 
-                        <div class="flex items-center justify-between bg-[#CDE4F7] text-gray-400 px-4 py-2 rounded-lg w-full cursor-pointer hover:bg-[#b9daf2] transition-all duration-200">
-                            <span>filter lainnya</span>
-                            <span class="text-sm material-symbols-outlined">tune</span>
-                        </div>
-                    </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div class="flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
                             <span>UREA</span>
-                            <span>2.666</span>
+                            <span>{{ number_format($dataPupuk['UREA'] ?? 0) }}</span>
                         </div>
                         <div class="flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
                             <span>NPK-FK</span>
-                            <span>2.666</span>
+                            <span>{{ number_format($dataPupuk['NPK-FK'] ?? 0) }}</span>
                         </div>
                         <div class="col-span-2 flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
                             <span>NPK</span>
-                            <span>5.666</span>
+                            <span>{{ number_format($dataPupuk['NPK'] ?? 0) }}</span>
                         </div>
                     </div>
+
                 </div>
     
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -135,7 +127,7 @@
                     <div class="flex flex-col justify-start p-4 bg-white shadow rounded-xl h-46">
                         <p class="mb-1 text-lg font-medium text-black">Jumlah Pupuk Terdistribusi</p>
                         <h2 class="text-4xl font-bold text-[#083458] text-center mt-6">{{ number_format($totalDistribusi) }}</h2>
-                        <p class="text-2xl font-bold text-[#083458] text-center mt-2">Jumlah pupuk</p>
+                        <p class="text-2xl font-bold text-[#083458] text-center mt-2">Sak</p>
                     </div>
 
                     {{-- Informasi Tambahan --}}
@@ -155,28 +147,11 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 <script>
-    function toggleDropdown() {
-        const dropdown = document.getElementById('dropdown-kecamatan');
-        dropdown.classList.toggle('hidden');
-    }
-
-    function selectKecamatan(kecamatan) {
-        document.getElementById('selected-kecamatan').textContent = kecamatan;
-        toggleDropdown();
-    }
-
-    document.addEventListener('click', function (e) {
-        const dropdown = document.getElementById('dropdown-kecamatan');
-        const trigger = document.querySelector('[onclick="toggleDropdown()"]');
-        if (!dropdown.contains(e.target) && !trigger.contains(e.target)) {
-            dropdown.classList.add('hidden');
-        }
-    });
-
     Chart.register(ChartDataLabels);
 
-    // Data untuk pie chart
     const pieLabels = @json($dataPupuk->keys());
     const pieData = @json($dataPupuk->values());
 
@@ -200,15 +175,11 @@
             plugins: {
                 datalabels: {
                     color: '#000',
-                    font: { weight: 'bold', size: 16 },
-                    formatter: (value, context) => {
-                        const total = context.chart.data.datasets[0].data
-                            .map(x => Number(x))
-                            .reduce((a, b) => a + b, 0);
-                        const val = Number(value);
-                        const percentage = ((val / total) * 100).toFixed(1) + '%';
-                        return percentage;
-                    }
+                    font: {
+                        weight: 'bold',
+                        size: 16
+                    },
+                    formatter: (value) => value  // Hanya tampilkan nilai saja, tanpa %
                 },
                 legend: {
                     position: 'bottom',
@@ -220,10 +191,7 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            const value = context.raw;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = (value / total * 100).toFixed(1);
-                            return `${context.label}: ${value} (${percentage}%)`;
+                            return `${context.label}: ${context.raw}`;
                         }
                     }
                 }
@@ -232,12 +200,12 @@
         plugins: [ChartDataLabels]
     });
 
-    // Data untuk line chart
-    const lineLabels = @json($labels);
-    const lineDatasets = @json($datasets);
+
+    // Line Chart
+    const lineLabels = @json($lineLabels);
+    const lineDatasets = @json($lineDatasets);
 
     const lineCtx = document.getElementById('lineChart').getContext('2d');
-
     new Chart(lineCtx, {
         type: 'line',
         data: {
@@ -262,12 +230,21 @@
             },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Total Penyaluran'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tahun'
+                    }
                 }
             }
         }
     });
-
 </script>
 
 @endsection

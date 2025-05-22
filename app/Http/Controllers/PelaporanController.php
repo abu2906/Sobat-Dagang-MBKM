@@ -30,9 +30,8 @@ class PelaporanController extends Controller
         if ($distributor->status === 'menunggu' || $distributor->status === 'ditolak') {
             return redirect()->route('cekpengajuan');
         }
-
-        $tokoList = Toko::with('rencana')->get();
-        $tokos = Toko::where('id_distributor', $distributor->id_distributor)->get();
+        $tokoview = Toko::where('id_distributor', $distributor->id_distributor)->get();
+        $tokos = Toko::where('id_distributor', $distributor->id_distributor)->paginate(3);
 
         $bulan = $request->input('bulan', now()->month);
         $tahun = $request->input('tahun', now()->year);
@@ -81,7 +80,7 @@ class PelaporanController extends Controller
         }
 
         return view('user.bidangPerdagangan.pelaporan', [
-            'tokoList' => $tokoList,
+            'tokoview' => $tokoview,
             'tokos' => $tokos,
             'dataByMinggu' => $dataByMinggu,
             'mingguBelumTerisi' => $mingguBelumTerisi,

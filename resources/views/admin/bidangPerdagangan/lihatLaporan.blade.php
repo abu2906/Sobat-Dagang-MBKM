@@ -2,11 +2,9 @@
 @section('title', 'Lihat Laporan Distribusi Barang')
 
 @section('content')
-<div class="relative w-full">
-    <img src="{{ asset('assets/img/background/perdagangan.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
-    <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
-        <img src="{{ asset('assets/img/background/perdagangan.jpg') }}" alt="Background" class="object-cover w-full h-full -ml-16">
-    </div>
+<div class="w-full h-36">
+    <img src="{{ asset('assets/img/background/dagang.jpg') }}"
+        alt="Background" class="object-cover w-full h-full">
 </div>
 <div class="container px-4 mx-auto">
     <h2 class="mt-6 text-center text-2xl font-bold mb-6 uppercase tracking-wide text-[#083358]">LAPORAN PENYALURAN PUPUK BERSUBSIDI</h2>
@@ -116,30 +114,9 @@
         </table>
     </div>
     @else
-    <div class="px-4 py-2 mt-4 mb-6 overflow-x-auto text-center border shadow text-center-gray-200 rounded-xl">
-            <table class="min-w-full text-sm text-center">
-                <thead class="bg-[#083358] text-white text-xs">
-                <tr>
-                    <th rowspan="2" class="px-2 py-1 text-center align-middle border">TOKO</th>
-                    <th colspan="3" class="text-center border">STOK AWAL</th>
-                    <th colspan="3" class="text-center border">PENYALURAN</th>
-                    <th colspan="3" class="text-center border">STOK AKHIR</th>
-                </tr>
-                <tr>
-                    <th class="text-center border">UREA</th>
-                    <th class="text-center border">NPK</th>
-                    <th class="text-center border">NPK FK</th>
-                    <th class="text-center border">UREA</th>
-                    <th class="text-center border">NPK</th>
-                    <th class="text-center border">NPK FK</th>
-                    <th class="text-center border">UREA</th>
-                    <th class="text-center border">NPK</th>
-                    <th class="text-center border">NPK FK</th>
-                </tr>
-            </thead>
-            </table>
+    <div class="px-4 py-2 mt-4 mb-6 overflow-x-auto text-center border shadow text-center-gray-200 rounded-2xl">
         <div class="px-4 py-2 mb-4 text-sm text-center text-white bg-[#083358] rounded-md v">
-            Silahkan Pilih Bulan atau Tahun untuk Melihat Laporan Distribusi.
+            Data Belum Tersedia Bulan ini
         </div>
     </div>
     @endif
