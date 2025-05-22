@@ -114,7 +114,9 @@ class KabidIndustriController extends Controller
     {
 
         $rekapSurat = $this->getSuratIndustriData();
-        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
+        $suratMasuk = PermohonanSurat::whereIn('status', ['menunggu', 'diterima', 'ditolak'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
 
         return view('admin.kabid.industri.verifSurat', [
             'totalSuratIndustri' => $rekapSurat['totalSuratIndustri'],

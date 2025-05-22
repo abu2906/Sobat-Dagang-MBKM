@@ -7,6 +7,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
 use App\Models\ForumDiskusi;
+use Illuminate\Support\Facades\Schema;
+
+
 class AppServiceProvider extends ServiceProvider
 {
     /**

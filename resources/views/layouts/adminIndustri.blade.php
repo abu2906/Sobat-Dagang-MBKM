@@ -16,7 +16,7 @@
 <body x-data="{ open: true }" class="bg-gray-100 font-sans overflow-auto">
 
 
-    @include('component.navbar.adminIndustri')
+    @include('component.navbar.adminPerindustrian')
 
     <!-- Main Content Area -->
     <div :class="open ? 'ml-64' : 'ml-20'" class="flex-1 relative z-0 p-0 overflow-y-auto transition-all duration-300">
