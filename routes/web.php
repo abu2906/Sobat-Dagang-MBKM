@@ -19,7 +19,6 @@ use App\Http\Controllers\PersuratanController;
 use App\Http\Controllers\DashboardPerdaganganController;
 use App\Http\Controllers\PelaporanPenyaluranController;
 use App\Http\Controllers\SobatHargaController;
-use App\Http\Controllers\KepalaDinasController;
 use App\Http\Controllers\KabidPerdaganganController;
 use App\Http\Controllers\ForumDiskusiController;
 use App\Http\Middleware\UserAuthMiddleware;
@@ -217,8 +216,9 @@ Route::middleware(['check.role:disdag,kabid_metrologi'])->group(function () {
 
 // Kepala Dinas Routes
 Route::middleware(['check.role:disdag,kepala_dinas'])->group(function () {
-    Route::get('/kadis/dashboard', [KepalaDinasController::class, 'index'])->name('dashboard-kadis');
-    Route::get('/kadis/persuratan', [KepalaDinasController::class, 'administrasi'])->name('persuratan-kadis');
+    Route::get('/kadis/dashboard', [DashboardMetrologiController::class, 'showKadis'])->name('dashboard-kadis');
+    Route::get('/kadis/persuratan', [DashboardMetrologiController::class, 'showPersuratanKadis'])->name('persuratan-kadis');
+    Route::get('/kadis/persuratan/metrologi', [DashboardMetrologiController::class, 'showPersuratanMetrologiKadis'])->name('surat-metrologi-kadis');
     Route::post('/kadis/surat/{encoded_id}/setujui', [PersuratanController::class, 'setujuiKadis'])->name('setujuiKadis');
     Route::post('/kadis/surat/{encoded_id}/tolak', [PersuratanController::class, 'tolakKadis'])->name('tolakKadis');
 });

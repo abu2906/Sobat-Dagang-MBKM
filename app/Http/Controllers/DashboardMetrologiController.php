@@ -275,28 +275,11 @@ class DashboardMetrologiController extends Controller
         return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
     }
 
-    public function showKadis()
-    {
-        $suratList = suratBalasan::with('suratMetrologi.user')
-            ->where('status_kepalaBidang', 'Disetujui')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $totalSurat = suratBalasan::count();
-        $totalSuratDisetujui = suratBalasan::where('status_kadis', 'Disetujui')->count();
-        $totalSuratDitolak = suratBalasan::where('status_kadis', 'Ditolak')->count();
-        $totalSuratMenunggu = suratBalasan::where('status_kadis', 'Menunggu')->count();
-
-        return view('admin.kepalaDinas.dashboard', compact(
-            'suratList',
-            'totalSurat',
-            'totalSuratDisetujui',
-            'totalSuratDitolak',
-            'totalSuratMenunggu',
-        ));
-    }
-
     public function showPersuratanKadis()
+    {
+        return view('admin.kepalaDinas.persuratan');
+    }
+    public function showPersuratanMetrologiKadis()
     {
         $suratList = suratBalasan::with('suratMetrologi.user')
             ->where('status_kepalaBidang', 'Disetujui')
@@ -315,7 +298,7 @@ class DashboardMetrologiController extends Controller
             ->where('status_kadis', 'Menunggu')
             ->count();
 
-        return view('admin.kepalaDinas.persuratan', compact(
+        return view('admin.kepalaDinas.metrologi', compact(
             'suratList',
             'totalSurat',
             'totalSuratDisetujui',
