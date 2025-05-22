@@ -90,12 +90,12 @@
             <span>⚖</span>
             Industri Terdaftar
           </h3>
-            <p class="text-[#073763] font-extrabold text-center text-6xl mb-1">0</p>
+            <p class="text-[#073763] font-extrabold text-center text-6xl mb-3">0</p>
             <p class="text-[#073763] font-extrabold text-center text-3xl mb-6">Usaha</p>
-            <h4 class="font-extrabold text-xl text-[#073763] mt-4">Tenaga Kerja</h4>
-            <p class="flex items-center gap-2 text-[#073763] font-semibold">
+            {{-- <h4 class="font-extrabold text-xl text-[#073763] mt-4">Tenaga Kerja</h4>
+            <p id= "tenagaKerjaSummary"class="flex items-center gap-2 text-[#073763] font-semibold">
               <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span>0<span class="text-sm">Laki-Laki</span>
-              <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span>0<span class="text-sm">Perempuan</span>
+              <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span>0<span class="text-sm">Perempuan</span> --}}
             </p>
         </article>
       
@@ -278,13 +278,13 @@
 function renderSummary(data) {
   const totalUsaha = data.length;
 
-  const totalLaki = data.reduce((sum, item) => sum + (item.tl_l || 0), 0);
+  const totalLaki = data.reduce((sum, item) => sum + (item.tk_l || 0), 0);
   const totalPerempuan = data.reduce((sum, item) => sum + (item.tk_p || 0), 0);
 
   // Update isi elemen summary di halaman
-  document.querySelector('.text-6xl.mb-1').innerText = `${totalUsaha}`;
+  document.querySelector('.text-6xl.mb-3').innerText = `${totalUsaha}`;
 
-  const tenagaKerjaElement = document.querySelector('flex.items-center.gap-2.text-[#073763].font-semibold');
+  const tenagaKerjaElement = document.querySelector('tenagaKerjaSummary');
   tenagaKerjaElement.innerHTML = `
     <span class="inline-block w-4 h-4 bg-[#5bc0f8] rounded-sm"></span> ${totalLaki} <span class="text-sm">Laki-Laki</span>
     <span class="inline-block w-4 h-4 bg-[#f26c6c] rounded-sm"></span> ${totalPerempuan} <span class="text-sm">Perempuan</span>
