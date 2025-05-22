@@ -33,13 +33,11 @@ class User extends Authenticatable
         'nib',
         'alamat_lengkap',
         'jenis_kelamin',
-        'telp',
         'email',
         'telp',
         'password',
         'kabupaten',
         'kecamatan',
-        'kelurahan',
         'kelurahan',
         'role'
     ];
@@ -53,8 +51,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function user()
+    public function uttps()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->hasMany(Uttp::class, 'id_user', 'id_user');
     }
+
 }

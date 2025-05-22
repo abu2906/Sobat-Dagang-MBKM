@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Uttp;
 use App\Models\DataAlatUkur;
+use App\Mail\NotifikasiUttpKadaluarsa;
 use Illuminate\Support\Carbon;
 
 
@@ -184,12 +185,23 @@ class DirectoryBookController extends Controller
 
         return redirect()->back()->with('success', 'Data alat ukur berhasil diperbarui.');
     }
-    // public function update(Request $request, $id)
-    // {
-    //     $uttp = Uttp::with('user')->findOrFail($id);
-    //     $uttp->update($request->all());
 
-    //     return redirect()->back()->with('success', 'Data berhasil diperbarui');
-    // }
+    public function periksaKadaluarsa()
+    {
+        $kadaluarsa = DataAlatUkur::with('uttp.user')
+            ->whereDate('tanggal_exp', '<', Carbon::today())
+            ->where('status', '!=', 'Kadaluarsa')
+            ->get();
+
+        foreach ($kadaluarsa as $data) {
+            $user = $data->uttp->user;
+
+            if ($user) {
+                Mail::to($user->email)->send(new NotifikasiUttpKadaluarsa($data));
+                $data->update(['status' => 'Kadaluarsa']);
+            }
+        }
+        return response()->json(['pesan' => 'Notifikasi dikirim ke pengguna yang alatnya kadaluarsa.']);
+    }
 
 }

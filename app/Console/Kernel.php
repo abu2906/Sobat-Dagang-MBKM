@@ -18,6 +18,10 @@ class Kernel extends ConsoleKernel
     {
         // Menjadwalkan command untuk jalan setiap pagi jam 00:00
         $schedule->command('copy:yesterday-price')->dailyAt('00:00');
+
+        $schedule->call(function () {
+            app(\App\Http\Controllers\DirectoryBookController::class)->periksaKadaluarsa();
+        })->dailyAt('06:00');
     }
 
     protected function commands()
