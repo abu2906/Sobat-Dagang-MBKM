@@ -31,7 +31,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="">
                         <label for="nomor_surat" class="block font-medium mb-1">Nomor Surat</label>
-                        <input type="text" name="id_surat_balasan" class="border px-4 py-2 w-full rounded-lg" value="{{ $draft->id_surat_balasan ?? '' }}" required>
+                        <input type="text" name="id_surat_balasan" id="id_surat_balasan" 
+                            class="border px-4 py-2 w-full rounded-lg" 
+                            value="{{ $draft->id_surat_balasan ?? '' }}" 
+                            required
+                            onchange="validateNomorSuratBalasan(this)">
+                        <div id="nomor-surat-error" class="text-red-500 text-sm mt-1 hidden"></div>
+                        @error('id_surat_balasan')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <input type="hidden" name="tanggal_pembuatan_surat" value="{{ date('Y-m-d') }}">
                     <div class="form-group row">
@@ -85,6 +93,36 @@
                 console.error(error);
             });
     });
+
+    function validateNomorSuratBalasan(input) {
+        const nomorSurat = input.value;
+        
+        // Kirim request ke server untuk cek nomor surat
+        fetch('/check-nomor-surat-balasan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ nomor_surat: nomorSurat })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const errorElement = document.getElementById('nomor-surat-error');
+            if (data.exists) {
+                errorElement.textContent = 'Nomor surat balasan ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.';
+                errorElement.classList.remove('hidden');
+                input.setCustomValidity('Nomor surat balasan ini sudah digunakan');
+            } else {
+                errorElement.textContent = '';
+                errorElement.classList.add('hidden');
+                input.setCustomValidity('');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
 </script>
 
 

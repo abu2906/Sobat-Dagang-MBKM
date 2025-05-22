@@ -173,6 +173,7 @@ Route::get('/persuratan', [PersuratanController::class, 'index'])->name('persura
 Route::middleware(['role.check:user'])->group(function () {
     Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
     Route::post('/store-surat', [PersuratanController::class, 'storeSuratMetrologi'])->name('proses-surat-metrologi');
+    Route::post('/check-nomor-surat', [PersuratanController::class, 'checkNomorSurat'])->name('check-nomor-surat');
     Route::get('/lihat-dokumen/{id}', [PersuratanController::class, 'showDokumenMetrologi'])->name('lihat-dokumen');
     Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
     Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
@@ -196,6 +197,7 @@ Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/surat/{id}/keterangan', [PersuratanController::class, 'showkirimKeterangan'])->name('create-keterangan');
     Route::get('/surat/{id}/balasan', [PersuratanController::class, 'showcreateSuratBalasan'])->name('create-surat-balasan');
     Route::post('/admin/surat/{id}/balasan', [PersuratanController::class, 'createSuratBalasan'])->name('proces-surat-balasan');
+    Route::post('/check-nomor-surat-balasan', [PersuratanController::class, 'checkNomorSuratBalasan'])->name('check-nomor-surat-balasan');
     Route::get('/admin/surat/{id}/edit-balasan', [PersuratanController::class, 'editBalasan'])->name('edit-surat-balasan');
     Route::put('/admin/surat/{id}/update-balasan', [PersuratanController::class, 'updateBalasan'])->name('update-surat-balasan');
     Route::put('/admin/surat/{id}/selesai', [PersuratanController::class, 'tandaiSelesai'])->name('surat.selesai');

@@ -257,4 +257,36 @@
 
 
     <script src="{{ asset('assets/js/switch.js') }}"></script>
+
+    <script>
+        function validateNomorSurat(input) {
+            const nomorSurat = input.value;
+            
+            // Kirim request ke server untuk cek nomor surat
+            fetch('/check-nomor-surat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ nomor_surat: nomorSurat })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const errorElement = document.getElementById('nomor-surat-error');
+                if (data.exists) {
+                    errorElement.textContent = 'Nomor surat ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.';
+                    errorElement.classList.remove('hidden');
+                    input.setCustomValidity('Nomor surat ini sudah digunakan');
+                } else {
+                    errorElement.textContent = '';
+                    errorElement.classList.add('hidden');
+                    input.setCustomValidity('');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
 @endsection
