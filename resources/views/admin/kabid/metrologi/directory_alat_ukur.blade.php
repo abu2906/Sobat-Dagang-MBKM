@@ -8,7 +8,7 @@
         <div class="absolute bottom-[-30px] w-full px-8">
             <div class="flex flex-wrap items-center justify-between p-4 rounded-xl shadow-md">
                 <!-- Filter/Search Input -->
-                 <div class="flex space-x-2 mb-2 md:mb-0">
+                <div class="flex space-x-2 mb-2 md:mb-0">
                     <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
                         <option value="">Semua</option>
                         <option value="Valid">Valid</option>

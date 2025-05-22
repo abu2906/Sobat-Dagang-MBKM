@@ -292,7 +292,7 @@ class DashboardMetrologiController extends Controller
             'totalSurat',
             'totalSuratDisetujui',
             'totalSuratDitolak',
-            'totalSuratMenunggu'
+            'totalSuratMenunggu',
         ));
     }
 
