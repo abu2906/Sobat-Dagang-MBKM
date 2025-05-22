@@ -220,10 +220,11 @@ class DirectoryBookController extends Controller
         }else{
             $status='Kadaluarsa';
         };
-        DataAlatUkur::where('id_uttp', $uttp->id)->update([
+        $uttp->dataAlatUkur->update([
             'tanggal_exp' => Carbon::parse($request->tanggal_selesai)->addYear(),
             'status' => $status
         ]);
+
 
         return redirect()->back()->with('success', 'Data alat ukur berhasil diperbarui.');
     }
