@@ -188,20 +188,24 @@ class DirectoryBookController extends Controller
 
     public function periksaKadaluarsa()
     {
-        $kadaluarsa = DataAlatUkur::with('uttp.user')
-            ->whereDate('tanggal_exp', '<', Carbon::today())
-            ->where('status', '!=', 'Kadaluarsa')
+        $dataKedaluwarsa = DataAlatUkur::with('uttp.user')
+            ->whereDate('tanggal_exp', '<', now())
+            ->where('notifikasi_terkirim', false)
             ->get();
 
-        foreach ($kadaluarsa as $data) {
+        foreach ($dataKedaluwarsa as $data) {
             $user = $data->uttp->user;
 
             if ($user) {
                 Mail::to($user->email)->send(new NotifikasiUttpKadaluarsa($data));
-                $data->update(['status' => 'Kadaluarsa']);
+
+                // Tandai bahwa notifikasi sudah dikirim
+                $data->update([
+                    'status' => 'Kadaluarsa',
+                    'notifikasi_terkirim' => true,
+                ]);
             }
         }
-        return response()->json(['pesan' => 'Notifikasi dikirim ke pengguna yang alatnya kadaluarsa.']);
     }
 
 }
