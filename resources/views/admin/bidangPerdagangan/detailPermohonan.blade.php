@@ -4,8 +4,8 @@
 @section('content')
 <div class="bg-white ">
 <div class="bg-white">
-    <div class="relative w-full">
-        <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Port Background" class="object-cover w-full h-64 md:h-full">
+    <div class="relative w-full h-64">
+        <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
         <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
             <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Background" class="object-cover w-full h-full -ml-16">
         </div>
@@ -26,25 +26,25 @@
 <div class="flex items-center justify-center min-h-screen bg-white">
     <div class="w-full max-w-2xl p-6 bg-white border border-gray-200 shadow-lg rounded-3xl">
         <div class="space-y-4 text-sm">
-            <div class="grid grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
                 <div class="font-semibold text-black">Nama Lengkap</div>
                 <div>{{ $user->nama ?? 'Null' }}</div>
             </div>
-            <div class="grid grid-cols-2 p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 p-4">
                 <div class="font-semibold text-black">Jenis Kelamin</div>
                 <div>{{ $user->jenis_kelamin ?? 'Null' }}</div>
             </div>
-            <div class="grid grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
                 <div class="font-semibold text-black">Nomor Telepon</div>
                 <div>{{ $user->telp ?? 'Null' }}</div>
             </div>
-            <div class="grid grid-cols-2 p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 p-4">
                 <div class="font-semibold text-black">Email</div>
                 <div>{{ $user->email ?? 'Null' }}</div>
             </div>
 
             {{-- Tanggal Masuk --}}
-            <div class="grid grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
                 <div class="font-semibold text-black">Tanggal Masuk</div>
                 <div>
                     {{ $data && $data->created_at ? \Carbon\Carbon::parse($data->created_at)->format('d-m-Y') : 'Tidak tersedia' }}
@@ -52,7 +52,7 @@
             </div>
 
             {{-- Jenis Surat --}}
-            <div class="grid grid-cols-2 p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 p-4">
                 <div class="font-semibold text-black">Jenis Surat</div>
                 @php
                 $jenisSuratMap = [
@@ -65,13 +65,13 @@
             </div>
 
             {{-- Titik Koordinat --}}
-            <div class="grid grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
                 <div class="font-semibold text-black">Titik Koordinat</div>
                 <div>{{ $data->titik_koordinat ?? 'Tidak tersedia' }}</div>
             </div>
 
             <!-- Dokumen NPWP -->
-            <div class="grid grid-cols-2 p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 p-4">
                 <div class="font-semibold text-black">Dokumen NPWP</div>
                 <div>
                     @if ($dokumen && $dokumen->npwp)
@@ -86,7 +86,7 @@
             </div>
 
             <!-- Akta Perusahaan -->
-            <div class="grid grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
                 <div class="font-semibold text-black">Akta Perusahaan</div>
                 <div>
                     @if ($dokumen && $dokumen->akta_perusahaan)
@@ -101,7 +101,7 @@
             </div>
 
             <!-- Dokumen NIB -->
-            <div class="grid grid-cols-2 p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 p-4">
                 <div class="font-semibold text-black">Dokumen NIB</div>
                 <div>
                     @if ($dokumen && $dokumen->dokument_nib)
@@ -116,7 +116,7 @@
             </div>
 
             <!-- Foto KTP -->
-            <div class="grid grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
                 <div class="font-semibold text-black">Foto KTP</div>
                 <div>
                     @if ($dokumen && $dokumen->foto_ktp)
@@ -131,7 +131,7 @@
             </div>
 
             <!-- Foto Usaha -->
-            <div class="grid grid-cols-2 p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 p-4">
                 <div class="font-semibold text-black">Foto Usaha</div>
                 <div>
                     @if ($dokumen && $dokumen->foto_usaha)
@@ -145,7 +145,7 @@
                 </div>
             </div>
             <!-- Foto KTP -->
-            <div class="grid grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
+            <div class="grid grid-cols-1 md:grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
                 <div class="font-semibold text-justify text-black">File Surat</div>
                 <div>
                     @if ($dokumen && $dokumen->foto_ktp)
@@ -195,7 +195,7 @@
                     <div class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                         <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalRekomendasi')">&times;</button>
                         <h2 class="mb-4 text-lg font-bold text-center">FORMULIR SURAT REKOMENDASI</h2>
-                        <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             @csrf
                             @method('PUT')
                             <div>
@@ -273,14 +273,13 @@
                     </div>
                 </form>
             </div>
-
             <!-- Modal Surat Keterangan -->
             <div id="modalKeterangan" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50">
                 <form action="{{ route('permohonan.keterangan', $data->id_permohonan) }}" method="POST">
                     <div class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                         <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalKeterangan')">&times;</button>
                         <h2 class="mb-4 text-lg font-bold text-center">FORMULIR SURAT KETERANGAN</h2>
-                        <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             @csrf
                             @method('PUT')
                             <div>
@@ -288,7 +287,7 @@
                                 <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
-                                <label class="block mb-1 text-sm font-semibold">Nama Pemohon Surat</label>
+                                <label class="block mb-1 text-sm font-semibold">Nama Pengirim Surat</label>
                                 <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
@@ -296,7 +295,7 @@
                                 <input name="jabatan" type="text" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
-                                <label class="block mb-1 text-sm font-semibold">Nama Penerima</label>
+                                <label class="block mb-1 text-sm font-semibold">Nama Pemohon</label>
                                 <input name="nama_penerima" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}">
                             </div>
                             <div>
@@ -343,7 +342,7 @@
                     </div>
                 </form>
             </div>
-            <!-- Modal Surat Keterangan DItolak -->
+            <!-- Modal Surat DItolak -->
             <div id="modaltolak" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50">
                 <form action="{{ route('permohonan.tolak', $data->id_permohonan) }}" method="POST" class="relative w-full max-w-xl p-6 bg-white rounded-lg">
                     @csrf
@@ -352,7 +351,7 @@
                     <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modaltolak')">&times;</button>
                     <h2 class="mb-4 text-lg font-bold text-center">Formulir SURAT DI TOLAK</h2>
 
-                    <div class="grid grid-cols-2 gap-x-6 gap-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                         <div class="col-span-2">
                             <label class="block mb-1 text-sm font-semibold">Nama Pemohon</label>
                             <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}">
@@ -377,67 +376,85 @@
         </div>
     </div>
 </div>
-            <script>
-                $(document).ready(function() {
-                    $("#summernote_edit").summernote({
-                        tabsize: 2,
-                        height: 150,
-                        toolbar: [
-                            ["style", ["bold", "italic", "underline", "clear"]],
-                            ["fontsize", ["fontsize"]],
-                            ["color", ["color"]],
-                            ["para", ["ul", "ol", "paragraph"]],
-                        ],
-                    });
-                });
+<script>
+    $(document).ready(function() {
+        $("#summernote_edit").summernote({
+            tabsize: 2,
+            height: 150,
+            toolbar: [
+                ["style", ["bold", "italic", "underline", "clear"]],
+                ["fontsize", ["fontsize"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+            ],
+        });
+    });
 
-                $(document).ready(function() {
-                    $("#summernote_rekomendasi").summernote({
-                        tabsize: 2,
-                        height: 150,
-                        toolbar: [
-                            ["style", ["bold", "italic", "underline", "clear"]],
-                            ["fontsize", ["fontsize"]],
-                            ["color", ["color"]],
-                            ["para", ["ul", "ol", "paragraph"]],
-                        ],
-                    });
-                });
+    $(document).ready(function() {
+        $("#summernote_rekomendasi").summernote({
+            tabsize: 2,
+            height: 150,
+            toolbar: [
+                ["style", ["bold", "italic", "underline", "clear"]],
+                ["fontsize", ["fontsize"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+            ],
+        });
+    });
 
-                $(document).ready(function() {
-                    $("#summernote_tolak").summernote({
-                        tabsize: 2,
-                        height: 150,
-                        toolbar: [
-                            ["style", ["bold", "italic", "underline", "clear"]],
-                            ["fontsize", ["fontsize"]],
-                            ["color", ["color"]],
-                            ["para", ["ul", "ol", "paragraph"]],
-                        ],
-                    });
-                });
+    $(document).ready(function() {
+        $("#summernote_tolak").summernote({
+            tabsize: 2,
+            height: 150,
+            toolbar: [
+                ["style", ["bold", "italic", "underline", "clear"]],
+                ["fontsize", ["fontsize"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+            ],
+        });
+    });
 
-                function handleSetujuClick(button) {
-                    const modalId = button.getAttribute('data-modal');
-                    if (modalId) {
-                        openModal(modalId);
-                    } else {
-                        alert('Jenis surat tidak dikenali atau belum didukung.');
-                    }
-                }
+    function handleSetujuClick(button) {
+        const modalId = button.getAttribute('data-modal');
+        if (modalId) {
+            openModal(modalId);
+        } else {
+            alert('Jenis surat tidak dikenali atau belum didukung.');
+        }
+    }
 
-                function openModal(id) {
-                    const modal = document.getElementById(id);
-                    if (modal) {
-                        modal.classList.remove('hidden');
-                    }
-                }
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
 
-                function closeModal(id) {
-                    const modal = document.getElementById(id);
-                    if (modal) {
-                        modal.classList.add('hidden');
-                    }
-                }
-            </script>
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+    function updateModalPadding() {
+        const sidebar = document.querySelector('aside');
+        const modal = document.getElementById('modalRekomendasi');
+        if (!sidebar || !modal) return;
+
+        if (sidebar.classList.contains('w-64')) {
+            modal.style.paddingLeft = '16rem'; // 256px
+        } else if (sidebar.classList.contains('w-20')) {
+            modal.style.paddingLeft = '5rem'; // 80px
+        } else {
+            modal.style.paddingLeft = '0';
+        }
+    }
+
+    // Panggil pas load dan sidebar toggle
+    window.addEventListener('load', updateModalPadding);
+    // Misal sidebar toggle, panggil updateModalPadding();
+
+</script>
 @endsection

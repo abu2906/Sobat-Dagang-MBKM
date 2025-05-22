@@ -1,4 +1,4 @@
-<div class="flex h-screen relative z-[100]">
+<div x-data="sidebar()" x-init="checkScreen()" @resize.window="checkScreen" class="flex h-screen relative z-[100]">
 
     <div :class="open ? 'w-64' : 'w-20'"
         class="bg-[#0c3252] text-white flex flex-col justify-between rounded-r-xl transition-all duration-300 relative shadow-md z-10">

@@ -35,7 +35,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($tokoList as $toko)
+                @foreach($tokos as $toko)
                     <tr class="border-b-2 border-[#889EAF] hover:bg-gray-50">
                         <td class="px-6 py-4 text-sm font-medium text-gray-900 border-r-2 border-[#889EAF]">{{ $toko->nama_toko }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $toko->kecamatan }}</td>
@@ -56,6 +56,32 @@
             </tbody>
         </table>
     </div>
+    <div class="flex justify-center mt-6">
+            <nav class="inline-flex -space-x-px">
+                {{-- Tombol Sebelumnya --}}
+                @if ($tokos->onFirstPage())
+                    <span class="px-4 py-2 text-gray-400 bg-gray-100 border border-gray-300 rounded-l-lg">«</span>
+                @else
+                    <a href="{{ $tokos->previousPageUrl() }}" class="px-4 py-2 text-[#083458]-600 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100">«</a>
+                @endif
+
+                {{-- Halaman --}}
+                @foreach ($tokos->getUrlRange(1, $tokos->lastPage()) as $page => $url)
+                    @if ($page == $tokos->currentPage())
+                        <span class="px-4 py-2 text-white bg-[#083458] border border-gray-300">{{ $page }}</span>
+                    @else
+                    <a href="{{ $url }}" class="px-4 py-2 text-[#083458]-600 bg-white border border-gray-300 hover:bg-gray-100">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Tombol Selanjutnya --}}
+                @if ($tokos->hasMorePages())
+                    <a href="{{ $tokos->nextPageUrl() }}" class="px-4 py-2 text-[#083458]-600 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100">»</a>
+                @else
+                    <span class="px-4 py-2 text-gray-400 bg-gray-100 border border-gray-300 rounded-r-lg">»</span>
+                @endif
+            </nav>
+        </div>
     <div class="py-6 tambahkan-data">
         <a href="{{ route('pelaporan.showInputForm') }}">
             <p class="px-6 py-3 text-sm font-bold font-istok rounded-xl text-white bg-[#083458] w-fit">
@@ -65,23 +91,27 @@
     </div>
 </div>
 
-<div class="container p-6 mx-auto mt-8">
+<div class="container p-6 mx-auto mt-8 overflow-x-hidden">
     <form method="GET" id="filterForm">
-        <div class="flex justify-end mb-2 pilihanbulandantahun">
+        <div class="flex flex-wrap justify-end w-full gap-4 mb-4 pilihanbulandantahun">
             <!-- Dropdown Toko -->
-            <div class="flex flex-wrap gap-6">
-                <select name="toko"class="block w-40 px-4 py-2 text-white text-sm border border-[#889EAF] rounded-lg focus:ring-[#083458] focus:border-[#889EAF] bg-[#083458]" onchange="document.getElementById('filterForm').submit()" ...>
+            <div class="w-full sm:w-auto">
+                <select name="toko" id="tokoSelect"
+                    class="block w-full px-4 py-2 text-white text-sm border border-[#889EAF] rounded-lg focus:ring-[#083458] focus:border-[#889EAF] bg-[#083458]">
                     <option value="">Pilih Toko</option>
-                    @foreach ($tokos as $toko)
+                    @foreach ($tokoview as $toko)
                         <option value="{{ $toko->id_toko }}" {{ request('toko') == $toko->id_toko ? 'selected' : '' }}>
                             {{ $toko->nama_toko }}
                         </option>
                     @endforeach
                 </select>
             </div>
+
             <!-- Dropdown Bulan -->
-            <div>
-                <select name="bulan" class="block w-40 px-4 py-2 text-white text-sm border border-[#889EAF] rounded-lg focus:ring-[#083458] focus:border-[#889EAF] bg-[#083458]" onchange="document.getElementById('filterForm').submit()" ...>
+            <div class="w-full sm:w-auto">
+                <select name="bulan" id="bulanSelect"
+                    class="block w-full px-4 py-2 text-white text-sm border border-[#889EAF] rounded-lg focus:ring-[#083458] focus:border-[#889EAF] bg-[#083458]"
+                    onchange="document.getElementById('filterForm').submit()">
                     <option value="">Pilih Bulan</option>
                     @for ($b = 1; $b <= 12; $b++)
                         <option value="{{ $b }}" {{ request('bulan') == $b ? 'selected' : '' }}>
@@ -90,9 +120,12 @@
                     @endfor
                 </select>
             </div>
+
             <!-- Dropdown Tahun -->
-            <div>
-                <select name="tahun" class="block w-40 px-4 py-2 text-white text-sm border border-[#889EAF] rounded-lg focus:ring-[#083458] focus:border-[#889EAF] bg-[#083458]" onchange="document.getElementById('filterForm').submit()" ...>
+            <div class="w-full sm:w-auto">
+                <select name="tahun" id="tahunSelect"
+                    class="block w-full px-4 py-2 text-white text-sm border border-[#889EAF] rounded-lg focus:ring-[#083458] focus:border-[#889EAF] bg-[#083458]"
+                    onchange="document.getElementById('filterForm').submit()">
                     <option value="">Pilih Tahun</option>
                     @for ($i = date('Y'); $i >= 2020; $i--)
                         <option value="{{ $i }}" {{ request('tahun') == $i ? 'selected' : '' }}>{{ $i }}</option>
@@ -101,16 +134,22 @@
             </div>
         </div>
     </form>
+
     <div class="judul-tabel">
         <p class="px-6 py-2 text-xl font-bold font-istok rounded-3xl text-[#083458]">DISTRIBUSI</p>
     </div>
+
     <div class="overflow-x-auto hide-scrollbar rounded-2xl border-[#889EAF] shadow-md shadow-black/40">
         <table class="min-w-full border-collapse table-auto">
             <thead>
                 <tr>
-                    <th rowspan="2" class="px-6 py-3 text-center align-middle text-sm font-medium text-white bg-[#083458] border-2 border-[#889EAF]">Nama Barang</th>
+                    <th rowspan="2"
+                        class="px-6 py-3 text-center align-middle text-sm font-medium text-white bg-[#083458] border-2 border-[#889EAF]">
+                        Nama Barang</th>
                     @for ($i = 1; $i <= 4; $i++)
-                        <th class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border-2 border-[#889EAF]" colspan="3">Minggu {{ $i }}</th>
+                        <th class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border-2 border-[#889EAF]" colspan="3">
+                            Minggu {{ $i }}
+                        </th>
                     @endfor
                 </tr>
                 <tr>
@@ -123,20 +162,19 @@
             </thead>
             <tbody>
                 @foreach ($dataByMinggu as $nama_barang => $mingguData)
-                <tr class="border-b-2 border-[#889EAF] hover:bg-gray-50">
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900 border-r-2 border-[#889EAF]">{{ $nama_barang }}</td>
-                    @for ($i = 1; $i <= 4; $i++)
-                        <td class="text-center px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $mingguData["minggu_$i"]['stok_awal'] }}</td>
-                        <td class="text-center px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $mingguData["minggu_$i"]['penyaluran'] }}</td>
-                        <td class="text-center px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]" >{{ $mingguData["minggu_$i"]['stok_akhir'] }}</td>
-                    @endfor
-                </tr>
+                    <tr class="border-b-2 border-[#889EAF] hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900 border-r-2 border-[#889EAF]">{{ $nama_barang }}</td>
+                        @for ($i = 1; $i <= 4; $i++)
+                            <td class="text-center px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $mingguData["minggu_$i"]['stok_awal'] }}</td>
+                            <td class="text-center px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $mingguData["minggu_$i"]['penyaluran'] }}</td>
+                            <td class="text-center px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $mingguData["minggu_$i"]['stok_akhir'] }}</td>
+                        @endfor
+                    </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 </div>
-
 <style>
     .hide-scrollbar {
         scrollbar-width: none;
@@ -151,5 +189,23 @@
     }
 </style>
 
+<script>
+    document.getElementById('tokoSelect').addEventListener('change', function () {
+        const bulanSelect = document.getElementById('bulanSelect');
+        const tahunSelect = document.getElementById('tahunSelect');
+
+        // Jika user belum pilih bulan/tahun, set otomatis ke sekarang
+        if (!bulanSelect.value) {
+            bulanSelect.value = new Date().getMonth() + 1; // Bulan dimulai dari 0
+        }
+
+        if (!tahunSelect.value) {
+            tahunSelect.value = new Date().getFullYear();
+        }
+
+        // Kirim form
+        document.getElementById('filterForm').submit();
+    });
+</script>
 
 @endsection

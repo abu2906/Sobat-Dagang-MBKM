@@ -50,7 +50,7 @@
     </div>
     @endif
 
-    <form action="{{ route('ajukanPermohonan') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('ajukanPermohonan_perdagangan') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 font-roboto">
             <div>
@@ -58,9 +58,9 @@
                     <span class="text-red-500">*</span>
                 </label>
                 <select id="jenis_surat" name="jenis_surat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="surat_rekomendasi_perdagangan">Surat Rekomendasi</option>
-                    <option value="surat_keterangan_perdagangan">Surat Keterangan</option>
-                </select>
+                    <option value="surat_rekomendasi_perdagangan" {{ (isset($draft) && $draft->jenis_surat == 'surat_rekomendasi_perdagangan') ? 'selected' : '' }}>Surat Rekomendasi</option>
+                    <option value="surat_keterangan_perdagangan" {{ (isset($draft) && $draft->jenis_surat == 'surat_keterangan_perdagangan') ? 'selected' : '' }}>Surat Keterangan</option>
+            </select>
             </div>
             <div class="mb-4">
                 <label for="kecamatan">Kecamatan
@@ -69,16 +69,15 @@
                 <select id="kecamatan" name="kecamatan"
                     class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">Pilih Kecamatan</option>
-                    <option value="bacukiki">Bacukiki</option>
-                    <option value="bacukiki_barat">Bacukiki Barat</option>
-                    <option value="soreang">Soreang</option>
-                    <option value="ujung">Ujung</option>
-                </select>
+                    <option value="bacukiki" {{ (isset($draft) && $draft->kecamatan == 'bacukiki') ? 'selected' : '' }}>Bacukiki</option>
+                    <option value="bacukiki_barat" {{ (isset($draft) && $draft->kecamatan == 'bacukiki_barat') ? 'selected' : '' }}>Bacukiki Barat</option>
+                    <option value="soreang" {{ (isset($draft) && $draft->kecamatan == 'soreang') ? 'selected' : '' }}>Soreang</option>
+                    <option value="ujung" {{ (isset($draft) && $draft->kecamatan == 'ujung') ? 'selected' : '' }}>Ujung</option>
+            </select>
             </div>
             <div x-data="{ showInfo: false }">
                 <label for="titik_koordinat" class="block mb-1">
                     Titik Koordinat <span class="text-red-500">*</span>
-                    <!-- Icon Info -->
                     <button type="button" @click="showInfo = true" class="ml-1 text-blue-500 hover:text-blue-700 focus:outline-none">
                         <svg class="inline w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8 3a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm0-7a1 1 0 100 2 1 1 0 000-2zM9 9h2v5H9V9z" clip-rule="evenodd" />
@@ -86,8 +85,9 @@
                     </button>
                 </label>
 
-                <input id="titik_koordinat" type="text" name="titik_koordinat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan Titik Koordinat Usaha Anda (ex. -4.028889, 119.633521)">
-
+                <input id="titik_koordinat" type="text" name="titik_koordinat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                placeholder="Masukkan Titik Koordinat Usaha Anda (ex. -4.028889, 119.633521)" 
+                                value="{{ old('titik_koordinat', $draft->titik_koordinat ?? '') }}">
                 <!-- Pop-up / Modal Info -->
                 <div x-show="showInfo" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" @click.away="showInfo = false" x-transition>
                     <div class="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-xl relative">
@@ -105,15 +105,19 @@
                     </div>
                 </div>
             </div>
-
             <div class="mb-4">
                 <label for="kelurahan">Kelurahan
                     <span class="text-red-500">*</span>
                 </label>
                 <select id="kelurahan" name="kelurahan"
-                    class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    disabled>
+                    class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">Pilih Kelurahan</option>
+                     @foreach ($listKelurahan as $kel)
+                        <option value="{{ $kel }}"
+                            {{ old('kelurahan', $draft->kelurahan ?? '') == $kel ? 'selected' : '' }}>
+                            {{ ucwords(str_replace('_', ' ', $kel)) }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
             <div>
@@ -124,7 +128,9 @@
                     <label for="foto_usaha" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
                         Pilih File
                     </label>
-                    <span id="file-foto_usaha" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
+                    <span id="file-foto_usaha" class="text-gray-500 truncate max-w-[200px]">
+                         {{ $dokumen->foto_usaha ? basename($dokumen->foto_usaha) : 'Tidak ada file yang dipilih' }}
+                    </span>
                     <input type="file" id="foto_usaha" name="foto_usaha" class="hidden"
                         accept="image/*"
                         onchange="document.getElementById('file-foto_usaha').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
@@ -137,7 +143,9 @@
                 </label>
                 <div class="flex items-center space-x-2">
                     <label for="foto_ktp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
-                    <span id="file-foto_ktp" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
+                    <span id="file-foto_ktp" class="text-gray-500 truncate max-w-[200px]">
+                         {{ $dokumen->foto_ktp ? basename($dokumen->foto_ktp) : 'Tidak ada file yang dipilih' }}
+                    </span>
                     <input type="file" id="foto_ktp" name="foto_ktp" class="hidden"
                         accept="image/*"
                         onchange="document.getElementById('file-foto_ktp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
@@ -150,7 +158,9 @@
                 </label>
                 <div class="flex items-center space-x-2">
                     <label for="dokumen_nib" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
-                    <span id="file-dokumen_nib" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
+                    <span id="file-dokumen_nib" class="text-gray-500 truncate max-w-[200px]">
+                         {{ $dokumen->dokument_nib ? basename($dokumen->dokument_nib) : 'Tidak ada file yang dipilih' }}
+                    </span>
                     <input type="file" id="dokumen_nib" name="dokumen_nib" class="hidden"
                         accept=".pdf"
                         onchange="document.getElementById('file-dokumen_nib').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
@@ -163,7 +173,8 @@
                 </label>
                 <div class="flex items-center space-x-2">
                     <label for="npwp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
-                    <span id="file-npwp" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
+                    <span id="file-npwp" class="text-gray-500 truncate max-w-[200px]">
+                        {{ $dokumen->npwp ? basename($dokumen->npwp) : 'Tidak ada file yang dipilih' }}</span>
                     <input type="file" id="npwp" name="npwp" class="hidden"
                         accept=".pdf,.jpg,.jpeg,.png"
                         onchange="document.getElementById('file-npwp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
@@ -178,8 +189,10 @@
                     <label for="surat" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
                         Pilih File
                     </label>
-                    <span id="file-surat" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
-                    <input type="file" id="surat" name="surat" class="hidden" required
+                    <span id="file-surat" class="text-gray-500 truncate max-w-[200px]">
+                         {{ $draft->file_surat ? basename($draft->file_surat) : 'Tidak ada file yang dipilih' }}
+                    </span>
+                    <input type="file" id="surat" name="surat" class="hidden"
                         accept=".pdf,.doc,.docx"
                         onchange="document.getElementById('file-surat').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
@@ -191,7 +204,8 @@
                 </label>
                 <div class="flex items-center space-x-2">
                     <label for="akta_perusahaan" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
-                    <span id="file-akta_perusahaan" class="text-gray-500 truncate max-w-[200px]">Tidak ada file yang dipilih</span>
+                    <span id="file-akta_perusahaan" class="text-gray-500 truncate max-w-[200px]">
+                        {{ $dokumen->akta_perusahaan ?? 'Tidak ada file yang dipilih' }}</span>
                     <input type="file" id="akta_perusahaan" name="akta_perusahaan" class="hidden"
                         accept=".pdf"
                         onchange="document.getElementById('file-akta_perusahaan').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
@@ -200,7 +214,7 @@
             </div>
         </div>
         <div class="flex justify-center mt-6 mb-4 space-x-4">
-            <button type="button" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Draft</button>
+            <button type="button" id="draftPerdagangan" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Draft</button>
             <button type="button" id="btn-ajukan" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
                 Ajukan
             </button>
@@ -217,6 +231,22 @@
                     <button type="submit"
                         class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
                         Ya, Ajukan
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="modal-draft" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+            <div class="w-11/12 max-w-md p-6 bg-white shadow-xl rounded-2xl">
+                <h2 class="mb-4 text-lg font-semibold">Konfirmasi Pengajuan</h2>
+                <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin menyimpan surat permohonan ini?</p>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()"
+                        class="px-4 py-2 text-black transition-all bg-gray-200 rounded-full hover:bg-gray-300">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
+                        Ya, Simpan
                     </button>
                 </div>
             </div>

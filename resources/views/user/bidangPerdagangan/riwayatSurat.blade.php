@@ -32,7 +32,7 @@
             </button>
         </div>
     </div>
-    <div class="container px-4 pb-4 mx-auto">
+    <div class="w-full overflow-x-auto custom-scrollbar">
         <table class="min-w-full overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
@@ -115,6 +115,17 @@
         </div>
     </div>
 </div>
+
+<style>
+.custom-scrollbar {
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+}
+.custom-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+</style>
+
 
 @endsection
 

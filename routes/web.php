@@ -58,12 +58,12 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
     Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
-    //pengaduan    
+    //pengaduan
     Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
     Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
     Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat');
 
-    
+
     //pelaporan
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
     Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
@@ -78,7 +78,8 @@ Route::middleware(['auth.role:user'])->group(function () {
     //perdagangan
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
     Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
-    Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan');
+    Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan_perdagangan');
+    Route::post('/bidang-perdagangan/draft-permohonan', [DashboardPerdaganganController::class, 'draftPermohonan'])->name('draftPermohonan_perdagangan');
     
     // Metrologi
     Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');

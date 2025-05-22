@@ -24,7 +24,7 @@ class CreateFormPermohonanTable extends Migration
             $table->string('titik_koordinat');
             $table->string('file_surat');
             $table->string('file_balasan')->nullable();
-            $table->enum('status', ['menunggu', 'ditolak', 'diterima'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'ditolak', 'diterima', 'disimpan'])->default('menunggu');
 
             $table->timestamps();
         });

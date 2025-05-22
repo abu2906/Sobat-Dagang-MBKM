@@ -114,30 +114,9 @@
         </table>
     </div>
     @else
-    <div class="px-4 py-2 mt-4 mb-6 overflow-x-auto text-center border shadow text-center-gray-200 rounded-xl">
-            <table class="min-w-full text-sm text-center">
-                <thead class="bg-[#083358] text-white text-xs">
-                <tr>
-                    <th rowspan="2" class="px-2 py-1 text-center align-middle border">TOKO</th>
-                    <th colspan="3" class="text-center border">STOK AWAL</th>
-                    <th colspan="3" class="text-center border">PENYALURAN</th>
-                    <th colspan="3" class="text-center border">STOK AKHIR</th>
-                </tr>
-                <tr>
-                    <th class="text-center border">UREA</th>
-                    <th class="text-center border">NPK</th>
-                    <th class="text-center border">NPK FK</th>
-                    <th class="text-center border">UREA</th>
-                    <th class="text-center border">NPK</th>
-                    <th class="text-center border">NPK FK</th>
-                    <th class="text-center border">UREA</th>
-                    <th class="text-center border">NPK</th>
-                    <th class="text-center border">NPK FK</th>
-                </tr>
-            </thead>
-            </table>
+    <div class="px-4 py-2 mt-4 mb-6 overflow-x-auto text-center border shadow text-center-gray-200 rounded-2xl">
         <div class="px-4 py-2 mb-4 text-sm text-center text-white bg-[#083358] rounded-md v">
-            Silahkan Pilih Bulan atau Tahun untuk Melihat Laporan Distribusi.
+            Data Belum Tersedia Bulan ini
         </div>
     </div>
     @endif
