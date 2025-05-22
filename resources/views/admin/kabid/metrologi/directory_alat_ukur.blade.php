@@ -11,9 +11,8 @@
                  <div class="flex space-x-2 mb-2 md:mb-0">
                     <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
                         <option value="">Semua</option>
-                        <option value="Menunggu">Menunggu</option>
-                        <option value="Disetujui">Disetujui</option>
-                        <option value="Ditolak">Ditolak</option>
+                        <option value="Valid">Valid</option>
+                        <option value="Kadaluarsa">Kadaluarsa</option>
                     </select>
                 </div>
                 <div class="relative flex-grow mt-2 md:mt-0">
