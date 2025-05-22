@@ -9,7 +9,7 @@
         <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
             <img src="{{ asset('assets/img/background/user_industri.png') }}" alt="Background" class="object-cover w-full h-full -ml-16">
         </div>
-        <a href="{{ route('industri.detailSurat', $data->id_permohonan) }}"
+        <a href="{{ route('kelolaSurat.industri', $data->id_permohonan) }}"
             class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
             <span class="text-2xl material-symbols-outlined">
                 arrow_back
@@ -207,7 +207,7 @@
                             <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
                         </div>
                         <div>
-                            <label>Nama Pengirim</label>
+                            <label>Nama Pemohon</label>
                             <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}" >
                         </div>
                         <div>
@@ -296,7 +296,7 @@
                                 <input name="jabatan" type="text" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
-                                <label class="block mb-1 text-sm font-semibold">Nama Penerima</label>
+                                <label class="block mb-1 text-sm font-semibold">Nama Pemohon</label>
                                 <input name="nama_penerima" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}">
                             </div>
                             <div>
@@ -332,7 +332,8 @@
                                 </select>
                             </div>
                             <div class="col-span-2">
-                                <label class="block mb-1 text-sm font-semibold">Keterangan Surat</label>
+                                <label class="block mb-1 text-sm font-semibold">Keterangan Surat</label><span class="text-red-500 text-sm mt-1 block">*</span>
+
                                 <textarea name="isi" id="summernote_edit" class="w-full px-3 py-2 border rounded" rows="3" required required></textarea>
                             </div>
                         </div>
@@ -354,7 +355,7 @@
 
                     <div class="grid grid-cols-2 gap-x-6 gap-y-4">
                         <div class="col-span-2">
-                            <label class="block mb-1 text-sm font-semibold">Nama Pengirim</label>
+                            <label class="block mb-1 text-sm font-semibold">Nama Pemohon</label>
                             <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}">
                         </div>
                         <div class="col-span-2">

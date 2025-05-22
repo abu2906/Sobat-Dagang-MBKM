@@ -308,6 +308,11 @@ class AdminIndustriController extends Controller
         return view('admin.bidangIndustri.halal');
     }
 
+    public function dataHalal()
+    {
+        return view('user.bidangIndustri.halal');
+    }
+
     public function kelolaSuratt()
     {
         $rekapSurat = $this->getSuratIndustriData();
@@ -378,7 +383,7 @@ class AdminIndustriController extends Controller
         return view('user.bidangIndustri.riwayatSurat', compact('riwayatSurat'));
     }
 
-    public function ajukanPermohonan(Request $request)
+    public function ajukanPermohonann(Request $request)
     {
         // Validasi input
         $validated = $request->validate([
