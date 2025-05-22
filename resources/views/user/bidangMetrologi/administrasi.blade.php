@@ -222,9 +222,6 @@
 					</div>
 				</div>
 
-				<div class="mb-4">
-					<h2>Data Pemohon : </h2>
-				</div>
 
 				<div class="mb-4">
 					<label class="block font-semibold mb-1">Alamat Alat</label>

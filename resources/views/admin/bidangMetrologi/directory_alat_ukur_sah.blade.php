@@ -254,6 +254,8 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     const statusFilter = document.getElementById("statusFilter");
     const searchInput = document.getElementById("searchInput");
@@ -327,7 +329,12 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Terjadi kesalahan saat memuat detail alat');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Terjadi kesalahan saat memuat detail alat',
+                confirmButtonText: 'OK'
+            });
         });
     }
 
@@ -335,42 +342,89 @@
         event.preventDefault();
         const form = event.target;
         
-        // Hapus pesan error yang ada
-        const errorMessages = form.querySelectorAll('.error-message');
-        errorMessages.forEach(el => el.remove());
-        
-        // Submit form menggunakan fetch
-        fetch(form.action, {
-            method: form.method,
-            body: new FormData(form),
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        // Validasi ukuran file sertifikat
+        const sertifikatInput = form.querySelector('[name="sertifikat"]');
+        if (sertifikatInput.files.length > 0) {
+            const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+            if (sertifikatInput.files[0].size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ukuran File Terlalu Besar',
+                    text: 'Ukuran file maksimal adalah 10MB. Silakan pilih file yang lebih kecil.',
+                    confirmButtonText: 'OK'
+                });
+                return;
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = "{{ route('management-uttp-metrologi') }}";
-            } else {
-                // Tampilkan pesan error untuk setiap field
-                if (data.errors) {
-                    Object.keys(data.errors).forEach(field => {
-                        const input = form.querySelector(`[name="${field}"]`);
-                        if (input) {
-                            const errorDiv = document.createElement('div');
-                            errorDiv.className = 'error-message text-red-500 text-sm mt-1';
-                            errorDiv.textContent = data.errors[field][0];
-                            input.parentNode.appendChild(errorDiv);
+        }
+
+        // Konfirmasi sebelum submit
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah Anda yakin ingin menyimpan data ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Simpan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Hapus pesan error yang ada
+                const errorMessages = form.querySelectorAll('.error-message');
+                errorMessages.forEach(el => el.remove());
+                
+                // Submit form menggunakan fetch
+                fetch(form.action, {
+                    method: form.method,
+                    body: new FormData(form),
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Data berhasil disimpan',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.href = "{{ route('management-uttp-metrologi') }}";
+                        });
+                    } else {
+                        // Tampilkan pesan error untuk setiap field
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(field => {
+                                const input = form.querySelector(`[name="${field}"]`);
+                                if (input) {
+                                    const errorDiv = document.createElement('div');
+                                    errorDiv.className = 'error-message text-red-500 text-sm mt-1';
+                                    errorDiv.textContent = data.errors[field][0];
+                                    input.parentNode.appendChild(errorDiv);
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message || 'Terjadi kesalahan saat menyimpan data',
+                                confirmButtonText: 'OK'
+                            });
                         }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat menyimpan data',
+                        confirmButtonText: 'OK'
                     });
-                } else {
-                    alert(data.message || 'Terjadi kesalahan saat menyimpan data');
-                }
+                });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat menyimpan data');
         });
     }
 
@@ -388,7 +442,56 @@
     }
 
     function tutupModal() {
+        // Konfirmasi sebelum menutup modal jika ada perubahan
+        const form = document.getElementById('form-alat');
+        const formData = new FormData(form);
+        let hasChanges = false;
+
+        // Cek apakah ada perubahan pada form
+        for (let [key, value] of formData.entries()) {
+            if (key !== 'sertifikat' && value !== '') {
+                hasChanges = true;
+                break;
+            }
+        }
+
+        if (hasChanges) {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: 'Apakah Anda yakin ingin menutup form? Perubahan yang belum disimpan akan hilang.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Tutup',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    closeModalAndReset();
+                }
+            });
+        } else {
+            closeModalAndReset();
+        }
+    }
+
+    function closeModalAndReset() {
         document.getElementById('modalTambahAlat').classList.add('hidden');
+        
+        // Reset form
+        const form = document.getElementById('form-alat');
+        form.reset();
+        
+        // Hapus semua pesan error
+        const errorMessages = form.querySelectorAll('.error-message');
+        errorMessages.forEach(el => el.remove());
+        
+        // Hapus tampilan sertifikat yang ada
+        const sertifikatContainer = form.querySelector('[name="sertifikat"]').parentElement;
+        const existingFile = sertifikatContainer.querySelector('.mt-2');
+        if (existingFile) {
+            existingFile.remove();
+        }
     }
 
     function openEditModal(data, updateRoute) {
@@ -402,6 +505,13 @@
         // Hapus pesan error yang ada
         const errorMessages = form.querySelectorAll('.error-message');
         errorMessages.forEach(el => el.remove());
+
+        // Hapus tampilan sertifikat yang ada sebelum menambahkan yang baru
+        const sertifikatContainer = form.querySelector('[name="sertifikat"]').parentElement;
+        const existingFile = sertifikatContainer.querySelector('.mt-2');
+        if (existingFile) {
+            existingFile.remove();
+        }
 
         // Assign field manual
         form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
@@ -420,7 +530,6 @@
         form.elements['keterangan'].value = data.keterangan || '';
 
         // Tampilkan file sertifikat yang sudah ada
-        const sertifikatContainer = form.querySelector('[name="sertifikat"]').parentElement;
         if (data.sertifikat_path) {
             const existingFile = document.createElement('div');
             existingFile.className = 'mt-2 text-sm text-gray-600';
