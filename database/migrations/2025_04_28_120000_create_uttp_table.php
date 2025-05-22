@@ -30,6 +30,7 @@ class CreateUttpTable extends Migration
             $table->date('tanggal_selesai')->nullable();
             $table->string('terapan')->nullable();
             $table->text('keterangan')->nullable();
+            $table->string('sertifikat_path')->nullable();
             $table->timestamps();
         });
     }
