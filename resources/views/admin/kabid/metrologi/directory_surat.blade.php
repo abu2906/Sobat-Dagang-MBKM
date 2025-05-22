@@ -139,7 +139,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const keyword = searchInput.value.toLowerCase();
 
         rows.forEach(row => {
-            // Skip header row
             if (!row.querySelector('td')) return;
 
             const statusCell = row.querySelector('td:nth-child(4)');
@@ -153,13 +152,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Apply filters when status changes
     statusFilter.addEventListener("change", applyFilters);
-    
-    // Apply filters when search input changes
     searchInput.addEventListener("input", applyFilters);
-    
-    // Apply initial filters
     applyFilters();
 });
 </script>
