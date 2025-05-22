@@ -7,7 +7,7 @@
         <div class="flex flex-wrap px-8 items-center justify-between ">
             <div class="flex space-x-2">
                 <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
-                    <option>Status</option>
+                    <option value="">Semua</option>
                     <option value="kadaluarsa">Kadaluarsa</option>
                     <option value="valid">Valid</option>
                 </select>
