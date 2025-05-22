@@ -129,8 +129,8 @@
                         Pilih File
                     </label>
                     <span id="file-foto_usaha" class="text-gray-500 truncate max-w-[200px]">
-                         {{ $dokumen->foto_usaha ? basename($dokumen->foto_usaha) : 'Tidak ada file yang dipilih' }}
-                    </span>
+                        {{ isset($dokumen) && $dokumen->foto_usaha ? basename($dokumen->foto_usaha) : 'Tidak ada file yang dipilih' }}
+                    </span>   
                     <input type="file" id="foto_usaha" name="foto_usaha" class="hidden"
                         accept="image/*"
                         onchange="document.getElementById('file-foto_usaha').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
@@ -144,7 +144,7 @@
                 <div class="flex items-center space-x-2">
                     <label for="foto_ktp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
                     <span id="file-foto_ktp" class="text-gray-500 truncate max-w-[200px]">
-                         {{ $dokumen->foto_ktp ? basename($dokumen->foto_ktp) : 'Tidak ada file yang dipilih' }}
+                        {{ isset($dokumen) && $dokumen->foto_ktp ? basename($dokumen->foto_ktp) : 'Tidak ada file yang dipilih' }}
                     </span>
                     <input type="file" id="foto_ktp" name="foto_ktp" class="hidden"
                         accept="image/*"
@@ -159,7 +159,7 @@
                 <div class="flex items-center space-x-2">
                     <label for="dokumen_nib" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
                     <span id="file-dokumen_nib" class="text-gray-500 truncate max-w-[200px]">
-                         {{ $dokumen->dokument_nib ? basename($dokumen->dokument_nib) : 'Tidak ada file yang dipilih' }}
+                        {{ isset($dokumen) && $dokumen->dokumen_nib ? basename($dokumen->dokumen_nib) : 'Tidak ada file yang dipilih' }}
                     </span>
                     <input type="file" id="dokumen_nib" name="dokumen_nib" class="hidden"
                         accept=".pdf"
@@ -174,7 +174,7 @@
                 <div class="flex items-center space-x-2">
                     <label for="npwp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
                     <span id="file-npwp" class="text-gray-500 truncate max-w-[200px]">
-                        {{ $dokumen->npwp ? basename($dokumen->npwp) : 'Tidak ada file yang dipilih' }}</span>
+                        {{ isset($dokumen) && $dokumen->npwp ? basename($dokumen->npwp) : 'Tidak ada file yang dipilih' }}
                     <input type="file" id="npwp" name="npwp" class="hidden"
                         accept=".pdf,.jpg,.jpeg,.png"
                         onchange="document.getElementById('file-npwp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
@@ -190,7 +190,7 @@
                         Pilih File
                     </label>
                     <span id="file-surat" class="text-gray-500 truncate max-w-[200px]">
-                         {{ $draft->file_surat ? basename($draft->file_surat) : 'Tidak ada file yang dipilih' }}
+                        {{ isset($draft) && $draft->file_surat ? basename($draft->file_surat) : 'Tidak ada file yang dipilih' }}
                     </span>
                     <input type="file" id="surat" name="surat" class="hidden"
                         accept=".pdf,.doc,.docx"
@@ -205,7 +205,7 @@
                 <div class="flex items-center space-x-2">
                     <label for="akta_perusahaan" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
                     <span id="file-akta_perusahaan" class="text-gray-500 truncate max-w-[200px]">
-                        {{ $dokumen->akta_perusahaan ?? 'Tidak ada file yang dipilih' }}</span>
+                        {{ isset($dokumen) && $dokumen->akta_perusahaan ? basename($dokumen->akta_perusahaan) : 'Tidak ada file yang dipilih' }}
                     <input type="file" id="akta_perusahaan" name="akta_perusahaan" class="hidden"
                         accept=".pdf"
                         onchange="document.getElementById('file-akta_perusahaan').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">

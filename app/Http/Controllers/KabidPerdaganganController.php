@@ -237,7 +237,7 @@ class KabidPerdaganganController extends Controller
 
         $totalDistribusi = $dataPupuk->sum();
 
-        // 🔵 Data line chart (perkembangan per tahun)
+        // Data line chart (perkembangan per tahun)
         $dataPerTahun = DB::table('stok_opname')
             ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
             ->when($kecamatan, function ($query) use ($kecamatan) {
@@ -267,17 +267,10 @@ class KabidPerdaganganController extends Controller
             'jumlahToko' => $jumlahToko,
             'dataPupuk' => $dataPupuk,
             'totalDistribusi' => $totalDistribusi,
-            // 'labels' => $labels,
-            // 'datasets' => $datasets,
             'tokoPenyaluranTerbanyak' => $tokoPenyaluranTerbanyak,
             'selectedKecamatan' => $kecamatan,
             'lineLabels' => $lineLabels,
             'lineDatasets' => $lineDatasets,
         ]);
     }
-
-
-
-
-
 }

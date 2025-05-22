@@ -2,8 +2,7 @@
 @section('title', 'Dashboard Perdagangan')
 
 @section('content')
-<div class="min-h-screen p-6 bg-gray-100">
-    <!-- Statistik Surat -->
+<div class="min-h-screen p-6 bg-white">
     <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-4">
         <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
@@ -40,9 +39,8 @@
 
     <!-- Grafik dan Informasi Tambahan -->
     <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
-        <!-- Statistik Indeks Harga -->
         <div class="w-full max-w-xl p-4 mx-auto bg-white shadow-lg rounded-2xl">
-        <!-- Judul -->
+
             <div class="flex items-center gap-2 mb-4 text-base font-semibold text-gray-800 sm:text-lg">
             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M3 3v18h18" />
@@ -75,9 +73,7 @@
             <p id="volatilitas" class="text-base font-semibold sm:text-lg">94.1%</p>
         </div>
     </div>
-</div>
-
-
+    </div>
 
         <!-- Pie Chart Informasi Pupuk -->
         <div class="p-4 bg-white shadow-lg rounded-2xl">
@@ -95,7 +91,7 @@
 
     <div class="flex flex-col gap-6 mb-6 lg:flex-row lg:items-start ">
     <!-- Kiri: Tabel Surat -->
-        <div class="w-full overflow-hidden border border-gray-200 lg:w-3/4 rounded-xl">
+        <div class="w-full overflow-hidden border lg:w-3/4 rounded-xl">
             <h2 class="mt-4 mb-4 text-lg font-semibold text-center text-black lg:text-left">Daftar Surat Masuk</h2>
             <div class="overflow-x-auto max-h-[500px] custom-scrollbar">
                 <table class="min-w-full text-sm text-left">

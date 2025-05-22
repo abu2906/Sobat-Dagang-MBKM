@@ -424,10 +424,12 @@ class DashboardPerdaganganController extends Controller{
             ->first();
     }
 
+
     // Cek apakah data ditemukan
     if (!$dokumen) {
-        return back()->with('error', 'Dokumen tidak ditemukan.');
+    session()->flash('warning', 'Dokumen belum diunggah.');
     }
+
     return view('user.bidangPerdagangan.formPermohonan', compact('draft', 'listKelurahan', 'dokumen'));
     }
 
@@ -640,198 +642,195 @@ class DashboardPerdaganganController extends Controller{
         }
     }
 
-// public function ajukanPermohonan(Request $request)
-// {
-//     $idUser = session('id_user');
-
-//     // Ambil draft terakhir user
-//     $draft = DB::table('form_permohonan')
-//         ->where('id_user', $idUser)
-//         ->where('status', 'disimpan')
-//         ->orderBy('created_at', 'desc')
-//         ->first();
-
-//     if (!$draft) {
-//         return redirect()->back()->with('error', 'Tidak ada draft permohonan yang ditemukan.');
-//     }
-
-//     $dokumen = DB::table('document_user')->where('id_permohonan', $draft->id_permohonan)->first();
-
-//     // Validasi dinamis
-//     $rules = [
-//         'jenis_surat' => 'required|in:surat_rekomendasi_perdagangan,surat_keterangan_perdagangan,dan_lainnya_perdagangan',
-//         'kecamatan' => 'required|string',
-//         'kelurahan' => 'required|string',
-//         'titik_koordinat' => 'required|string',
-//         'foto_usaha' => ($dokumen && $dokumen->foto_usaha) ? 'nullable|image|mimes:jpeg,png,jpg|max:512' : 'required|image|mimes:jpeg,png,jpg|max:512',
-//         'foto_ktp' => ($dokumen && $dokumen->foto_ktp) ? 'nullable|image|mimes:jpeg,png,jpg|max:512' : 'required|image|mimes:jpeg,png,jpg|max:512',
-//         'dokumen_nib' => ($dokumen && $dokumen->dokument_nib) ? 'nullable|mimes:pdf|max:512' : 'required|mimes:pdf|max:512',
-//         'npwp' => ($dokumen && $dokumen->npwp) ? 'nullable|mimes:pdf,jpg,jpeg,png|max:512' : 'required|mimes:pdf,jpg,jpeg,png|max:512',
-//         'akta_perusahaan' => ($dokumen && $dokumen->akta_perusahaan) ? 'nullable|mimes:pdf|max:512' : 'required|mimes:pdf|max:512',
-//         'surat' => ($draft && $draft->file_surat) ? 'nullable|file|mimes:pdf,doc,docx|max:512' : 'required|file|mimes:pdf,doc,docx|max:512',
-//     ];
-
-//     $messages = [ 'jenis_surat.required' => 'Jenis surat wajib diisi.',
-//             'jenis_surat.in' => 'Jenis surat tidak valid.',
-//             'kecamatan.required' => 'Kecamatan wajib diisi.',
-//             'kelurahan.required' => 'Kelurahan wajib diisi.',
-//             'titik_koordinat.required' => 'Titik koordinat wajib diisi.',
-//             'foto_usaha.required' => 'Foto usaha wajib diunggah.',
-//             'foto_usaha.image' => 'Foto usaha harus berupa gambar.',
-//             'foto_usaha.mimes' => 'Foto usaha harus berformat jpeg, png, atau jpg.',
-//             'foto_usaha.max' => 'Ukuran foto usaha tidak boleh lebih dari 512 kilobyte.',
-//             'foto_ktp.required' => 'Foto KTP wajib diunggah.',
-//             'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
-//             'foto_ktp.mimes' => 'Foto KTP harus berformat jpeg, png, atau jpg.',
-//             'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 512 KILOBYTE.',
-//             'dokumen_nib.required' => 'Dokumen NIB wajib diunggah.',
-//             'dokumen_nib.mimes' => 'Dokumen NIB harus berformat PDF.',
-//             'dokumen_nib.max' => 'Ukuran dokumen NIB tidak boleh lebih dari 512 KILOBYTE.',
-//             'npwp.required' => 'Dokumen NPWP wajib diunggah.',
-//             'npwp.mimes' => 'NPWP harus berformat PDF atau gambar.',
-//             'npwp.max' => 'Ukuran dokumen NPWP tidak boleh lebih dari 512 KILOBYTE.',
-//             'akta_perusahaan.required' => 'Akta perusahaan wajib diunggah.',
-//             'akta_perusahaan.mimes' => 'Akta perusahaan harus berformat PDF.',
-//             'akta_perusahaan.max' => 'Ukuran akta perusahaan tidak boleh lebih dari 512 KILOBYTE.',
-//             'surat.required' => 'File surat wajib diunggah.',
-//             'surat.mimes' => 'File surat harus berformat PDF, DOC, atau DOCX.',
-//             'surat.max' => 'Ukuran file surat tidak boleh lebih dari 512 KILOBYTE.',
-//         ];
-
-//     $validated = $request->validate($rules, $messages);
-
-//     try {
-//         // Update file hanya jika user upload ulang
-//         $fotoUsahaPath = $request->hasFile('foto_usaha') ? $request->file('foto_usaha')->store('DokumentUser', 'public') : $dokumen->foto_usaha;
-//         $fotoKTPPath = $request->hasFile('foto_ktp') ? $request->file('foto_ktp')->store('DokumentUser', 'public') : $dokumen->foto_ktp;
-//         $dokumenNibPath = $request->hasFile('dokumen_nib') ? $request->file('dokumen_nib')->store('DokumentUser', 'public') : $dokumen->dokument_nib;
-//         $npwpPath = $request->hasFile('npwp') ? $request->file('npwp')->store('DokumentUser', 'public') : $dokumen->npwp;
-//         $aktaPerusahaanPath = $request->hasFile('akta_perusahaan') ? $request->file('akta_perusahaan')->store('DokumentUser', 'public') : $dokumen->akta_perusahaan;
-//         $fileSuratPath = $request->hasFile('surat') ? $request->file('surat')->store('DokumentUser', 'public') : $draft->file_surat;
-
-//         // Update form_permohonan
-//         DB::table('form_permohonan')->where('id_permohonan', $draft->id_permohonan)->update([
-//             'jenis_surat' => $request->jenis_surat,
-//             'kecamatan' => $request->kecamatan,
-//             'kelurahan' => $request->kelurahan,
-//             'titik_koordinat' => $request->titik_koordinat,
-//             'file_surat' => $fileSuratPath,
-//             'status' => 'menunggu',
-//             'updated_at' => now(),
-//         ]);
-
-//         // Update dokumen
-//         DB::table('document_user')->where('id_permohonan', $draft->id_permohonan)->update([
-//             'foto_usaha' => $fotoUsahaPath,
-//             'foto_ktp' => $fotoKTPPath,
-//             'dokument_nib' => $dokumenNibPath,
-//             'npwp' => $npwpPath,
-//             'akta_perusahaan' => $aktaPerusahaanPath,
-//             'updated_at' => now(),
-//         ]);
-
-//         return redirect()->route('bidangPerdagangan.riwayatSurat')->with('success', 'Pengajuan surat berhasil diajukan.');
-//     } catch (Exception $e) {
-//         Log::error("Gagal mengajukan permohonan: " . $e->getMessage());
-//         return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-//     }
-// }
- 
     public function ajukanPermohonan(Request $request)
     {
-        // Custom pesan error dalam Bahasa Indonesia
-        $messages = [
-            'jenis_surat.required' => 'Jenis surat wajib diisi.',
-            'jenis_surat.in' => 'Jenis surat tidak valid.',
-            'kecamatan.required' => 'Kecamatan wajib diisi.',
-            'kelurahan.required' => 'Kelurahan wajib diisi.',
-            'titik_koordinat.required' => 'Titik koordinat wajib diisi.',
-            'foto_usaha.required' => 'Foto usaha wajib diunggah.',
-            'foto_usaha.image' => 'Foto usaha harus berupa gambar.',
-            'foto_usaha.mimes' => 'Foto usaha harus berformat jpeg, png, atau jpg.',
-            'foto_usaha.max' => 'Ukuran foto usaha tidak boleh lebih dari 512 kilobyte.',
-            'foto_ktp.required' => 'Foto KTP wajib diunggah.',
-            'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
-            'foto_ktp.mimes' => 'Foto KTP harus berformat jpeg, png, atau jpg.',
-            'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 512 KILOBYTE.',
-            'dokumen_nib.required' => 'Dokumen NIB wajib diunggah.',
-            'dokumen_nib.mimes' => 'Dokumen NIB harus berformat PDF.',
-            'dokumen_nib.max' => 'Ukuran dokumen NIB tidak boleh lebih dari 512 KILOBYTE.',
-            'npwp.required' => 'Dokumen NPWP wajib diunggah.',
-            'npwp.mimes' => 'NPWP harus berformat PDF atau gambar.',
-            'npwp.max' => 'Ukuran dokumen NPWP tidak boleh lebih dari 512 KILOBYTE.',
-            'akta_perusahaan.required' => 'Akta perusahaan wajib diunggah.',
-            'akta_perusahaan.mimes' => 'Akta perusahaan harus berformat PDF.',
-            'akta_perusahaan.max' => 'Ukuran akta perusahaan tidak boleh lebih dari 512 KILOBYTE.',
-            'surat.required' => 'File surat wajib diunggah.',
-            'surat.mimes' => 'File surat harus berformat PDF, DOC, atau DOCX.',
-            'surat.max' => 'Ukuran file surat tidak boleh lebih dari 512 KILOBYTE.',
-        ];
+        $idUser = session('id_user');
 
-        // Validasi input
-        $validated = $request->validate([
+        // Ambil draft terakhir user
+        $draft = DB::table('form_permohonan')
+            ->where('id_user', $idUser)
+            ->where('status', 'disimpan')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $dokumen = DB::table('document_user')->where('id_permohonan', $draft->id_permohonan)->first();
+
+        // Validasi dinamis
+        $rules = [
             'jenis_surat' => 'required|in:surat_rekomendasi_perdagangan,surat_keterangan_perdagangan,dan_lainnya_perdagangan',
             'kecamatan' => 'required|string',
             'kelurahan' => 'required|string',
             'titik_koordinat' => 'required|string',
-            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:512',
-            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:512',
-            'dokumen_nib' => 'required|mimes:pdf|max:512',
-            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:512',
-            'akta_perusahaan' => 'required|mimes:pdf|max:512',
-            'surat' => 'required|file|mimes:pdf,doc,docx|max:512',
-        ], $messages);
+            'foto_usaha' => ($dokumen && $dokumen->foto_usaha) ? 'nullable|image|mimes:jpeg,png,jpg|max:512' : 'required|image|mimes:jpeg,png,jpg|max:512',
+            'foto_ktp' => ($dokumen && $dokumen->foto_ktp) ? 'nullable|image|mimes:jpeg,png,jpg|max:512' : 'required|image|mimes:jpeg,png,jpg|max:512',
+            'dokumen_nib' => ($dokumen && $dokumen->dokument_nib) ? 'nullable|mimes:pdf|max:512' : 'required|mimes:pdf|max:512',
+            'npwp' => ($dokumen && $dokumen->npwp) ? 'nullable|mimes:pdf,jpg,jpeg,png|max:512' : 'required|mimes:pdf,jpg,jpeg,png|max:512',
+            'akta_perusahaan' => ($dokumen && $dokumen->akta_perusahaan) ? 'nullable|mimes:pdf|max:512' : 'required|mimes:pdf|max:512',
+            'surat' => ($draft && $draft->file_surat) ? 'nullable|file|mimes:pdf,doc,docx|max:512' : 'required|file|mimes:pdf,doc,docx|max:512',
+        ];
+
+        $messages = [ 'jenis_surat.required' => 'Jenis surat wajib diisi.',
+                'jenis_surat.in' => 'Jenis surat tidak valid.',
+                'kecamatan.required' => 'Kecamatan wajib diisi.',
+                'kelurahan.required' => 'Kelurahan wajib diisi.',
+                'titik_koordinat.required' => 'Titik koordinat wajib diisi.',
+                'foto_usaha.required' => 'Foto usaha wajib diunggah.',
+                'foto_usaha.image' => 'Foto usaha harus berupa gambar.',
+                'foto_usaha.mimes' => 'Foto usaha harus berformat jpeg, png, atau jpg.',
+                'foto_usaha.max' => 'Ukuran foto usaha tidak boleh lebih dari 512 kilobyte.',
+                'foto_ktp.required' => 'Foto KTP wajib diunggah.',
+                'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
+                'foto_ktp.mimes' => 'Foto KTP harus berformat jpeg, png, atau jpg.',
+                'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 512 KILOBYTE.',
+                'dokumen_nib.required' => 'Dokumen NIB wajib diunggah.',
+                'dokumen_nib.mimes' => 'Dokumen NIB harus berformat PDF.',
+                'dokumen_nib.max' => 'Ukuran dokumen NIB tidak boleh lebih dari 512 KILOBYTE.',
+                'npwp.required' => 'Dokumen NPWP wajib diunggah.',
+                'npwp.mimes' => 'NPWP harus berformat PDF atau gambar.',
+                'npwp.max' => 'Ukuran dokumen NPWP tidak boleh lebih dari 512 KILOBYTE.',
+                'akta_perusahaan.required' => 'Akta perusahaan wajib diunggah.',
+                'akta_perusahaan.mimes' => 'Akta perusahaan harus berformat PDF.',
+                'akta_perusahaan.max' => 'Ukuran akta perusahaan tidak boleh lebih dari 512 KILOBYTE.',
+                'surat.required' => 'File surat wajib diunggah.',
+                'surat.mimes' => 'File surat harus berformat PDF, DOC, atau DOCX.',
+                'surat.max' => 'Ukuran file surat tidak boleh lebih dari 512 KILOBYTE.',
+            ];
+
+        $validated = $request->validate($rules, $messages);
 
         try {
-            // Simpan file satu per satu
-            $fotoUsahaPath = $request->file('foto_usaha')->store('DokumentUser', 'public');
-            $fotoKTPPath = $request->file('foto_ktp')->store('DokumentUser', 'public');
-            $dokumenNibPath = $request->file('dokumen_nib')->store('DokumentUser', 'public');
-            $npwpPath = $request->file('npwp')->store('DokumentUser', 'public');
-            $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('DokumentUser', 'public');
-            $fileSuratPath = $request->file('surat')->store('DokumentUser', 'public');
+            // Update file hanya jika user upload ulang
+            $fotoUsahaPath = $request->hasFile('foto_usaha') ? $request->file('foto_usaha')->store('DokumentUser', 'public') : $dokumen->foto_usaha;
+            $fotoKTPPath = $request->hasFile('foto_ktp') ? $request->file('foto_ktp')->store('DokumentUser', 'public') : $dokumen->foto_ktp;
+            $dokumenNibPath = $request->hasFile('dokumen_nib') ? $request->file('dokumen_nib')->store('DokumentUser', 'public') : $dokumen->dokument_nib;
+            $npwpPath = $request->hasFile('npwp') ? $request->file('npwp')->store('DokumentUser', 'public') : $dokumen->npwp;
+            $aktaPerusahaanPath = $request->hasFile('akta_perusahaan') ? $request->file('akta_perusahaan')->store('DokumentUser', 'public') : $dokumen->akta_perusahaan;
+            $fileSuratPath = $request->hasFile('surat') ? $request->file('surat')->store('DokumentUser', 'public') : $draft->file_surat;
 
-            // Buat id_permohonan unik
-            $idPermohonan = Str::uuid()->toString();
-
-            // Ambil id_user dari session
-            $idUser = session('id_user');
-
-            // Simpan ke tabel form_permohonan
-            DB::table('form_permohonan')->insert([
-                'id_permohonan' => $idPermohonan,
-                'id_user' => $idUser,
+            // Update form_permohonan
+            DB::table('form_permohonan')->where('id_permohonan', $draft->id_permohonan)->update([
+                'jenis_surat' => $request->jenis_surat,
                 'kecamatan' => $request->kecamatan,
                 'kelurahan' => $request->kelurahan,
-                'tgl_pengajuan' => now()->toDateString(),
-                'jenis_surat' => $request->jenis_surat,
                 'titik_koordinat' => $request->titik_koordinat,
                 'file_surat' => $fileSuratPath,
                 'status' => 'menunggu',
-                'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
-            // Simpan ke tabel document_user
-            DB::table('document_user')->insert([
-                'id_permohonan' => $idPermohonan,
+            // Update dokumen
+            DB::table('document_user')->where('id_permohonan', $draft->id_permohonan)->update([
+                'foto_usaha' => $fotoUsahaPath,
+                'foto_ktp' => $fotoKTPPath,
+                'dokument_nib' => $dokumenNibPath,
                 'npwp' => $npwpPath,
                 'akta_perusahaan' => $aktaPerusahaanPath,
-                'foto_ktp' => $fotoKTPPath,
-                'foto_usaha' => $fotoUsahaPath,
-                'dokument_nib' => $dokumenNibPath,
-                'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
-            return redirect()->route('bidangPerdagangan.riwayatSurat')
-                ->with('success', 'Pengajuan surat berhasil diajukan.');
+            return redirect()->route('bidangPerdagangan.riwayatSurat')->with('success', 'Pengajuan surat berhasil diajukan.');
         } catch (Exception $e) {
-            Log::error('Gagal mengajukan surat: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            Log::error("Gagal mengajukan permohonan: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+ 
+// public function ajukanPermohonan(Request $request)
+    // {
+    //     // Custom pesan error dalam Bahasa Indonesia
+    //     $messages = [
+    //         'jenis_surat.required' => 'Jenis surat wajib diisi.',
+    //         'jenis_surat.in' => 'Jenis surat tidak valid.',
+    //         'kecamatan.required' => 'Kecamatan wajib diisi.',
+    //         'kelurahan.required' => 'Kelurahan wajib diisi.',
+    //         'titik_koordinat.required' => 'Titik koordinat wajib diisi.',
+    //         'foto_usaha.required' => 'Foto usaha wajib diunggah.',
+    //         'foto_usaha.image' => 'Foto usaha harus berupa gambar.',
+    //         'foto_usaha.mimes' => 'Foto usaha harus berformat jpeg, png, atau jpg.',
+    //         'foto_usaha.max' => 'Ukuran foto usaha tidak boleh lebih dari 512 kilobyte.',
+    //         'foto_ktp.required' => 'Foto KTP wajib diunggah.',
+    //         'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
+    //         'foto_ktp.mimes' => 'Foto KTP harus berformat jpeg, png, atau jpg.',
+    //         'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 512 KILOBYTE.',
+    //         'dokumen_nib.required' => 'Dokumen NIB wajib diunggah.',
+    //         'dokumen_nib.mimes' => 'Dokumen NIB harus berformat PDF.',
+    //         'dokumen_nib.max' => 'Ukuran dokumen NIB tidak boleh lebih dari 512 KILOBYTE.',
+    //         'npwp.required' => 'Dokumen NPWP wajib diunggah.',
+    //         'npwp.mimes' => 'NPWP harus berformat PDF atau gambar.',
+    //         'npwp.max' => 'Ukuran dokumen NPWP tidak boleh lebih dari 512 KILOBYTE.',
+    //         'akta_perusahaan.required' => 'Akta perusahaan wajib diunggah.',
+    //         'akta_perusahaan.mimes' => 'Akta perusahaan harus berformat PDF.',
+    //         'akta_perusahaan.max' => 'Ukuran akta perusahaan tidak boleh lebih dari 512 KILOBYTE.',
+    //         'surat.required' => 'File surat wajib diunggah.',
+    //         'surat.mimes' => 'File surat harus berformat PDF, DOC, atau DOCX.',
+    //         'surat.max' => 'Ukuran file surat tidak boleh lebih dari 512 KILOBYTE.',
+    //     ];
 
+    //     // Validasi input
+    //     $validated = $request->validate([
+    //         'jenis_surat' => 'required|in:surat_rekomendasi_perdagangan,surat_keterangan_perdagangan,dan_lainnya_perdagangan',
+    //         'kecamatan' => 'required|string',
+    //         'kelurahan' => 'required|string',
+    //         'titik_koordinat' => 'required|string',
+    //         'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:512',
+    //         'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:512',
+    //         'dokumen_nib' => 'required|mimes:pdf|max:512',
+    //         'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:512',
+    //         'akta_perusahaan' => 'required|mimes:pdf|max:512',
+    //         'surat' => 'required|file|mimes:pdf,doc,docx|max:512',
+    //     ], $messages);
+
+    //     try {
+    //         // Simpan file satu per satu
+    //         $fotoUsahaPath = $request->file('foto_usaha')->store('DokumentUser', 'public');
+    //         $fotoKTPPath = $request->file('foto_ktp')->store('DokumentUser', 'public');
+    //         $dokumenNibPath = $request->file('dokumen_nib')->store('DokumentUser', 'public');
+    //         $npwpPath = $request->file('npwp')->store('DokumentUser', 'public');
+    //         $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('DokumentUser', 'public');
+    //         $fileSuratPath = $request->file('surat')->store('DokumentUser', 'public');
+
+    //         // Buat id_permohonan unik
+    //         $idPermohonan = Str::uuid()->toString();
+
+    //         // Ambil id_user dari session
+    //         $idUser = session('id_user');
+
+    //         // Simpan ke tabel form_permohonan
+    //         DB::table('form_permohonan')->insert([
+    //             'id_permohonan' => $idPermohonan,
+    //             'id_user' => $idUser,
+    //             'kecamatan' => $request->kecamatan,
+    //             'kelurahan' => $request->kelurahan,
+    //             'tgl_pengajuan' => now()->toDateString(),
+    //             'jenis_surat' => $request->jenis_surat,
+    //             'titik_koordinat' => $request->titik_koordinat,
+    //             'file_surat' => $fileSuratPath,
+    //             'status' => 'menunggu',
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ]);
+
+    //         // Simpan ke tabel document_user
+    //         DB::table('document_user')->insert([
+    //             'id_permohonan' => $idPermohonan,
+    //             'npwp' => $npwpPath,
+    //             'akta_perusahaan' => $aktaPerusahaanPath,
+    //             'foto_ktp' => $fotoKTPPath,
+    //             'foto_usaha' => $fotoUsahaPath,
+    //             'dokument_nib' => $dokumenNibPath,
+    //             'created_at' => now(),
+    //             'updated_at' => now(),
+    //         ]);
+
+    //         return redirect()->route('bidangPerdagangan.riwayatSurat')
+    //             ->with('success', 'Pengajuan surat berhasil diajukan.');
+    //     } catch (Exception $e) {
+    //         Log::error('Gagal mengajukan surat: ' . $e->getMessage());
+    //         return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+    //     }
+    // }
+
+   
     public function draftPermohonan(Request $request)
     {
         // Custom pesan error dalam Bahasa Indonesia
