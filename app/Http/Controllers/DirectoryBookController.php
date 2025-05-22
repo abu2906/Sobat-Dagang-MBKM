@@ -63,23 +63,33 @@ class DirectoryBookController extends Controller
                 'id_user.exists' => 'ID User tidak valid',
             ]);
 
-            // Validasi custom untuk no_registrasi
-            $existingUttp = Uttp::where('no_registrasi', $request->no_registrasi)
+            // Cek apakah no_registrasi sudah digunakan
+            $existingUttps = Uttp::where('no_registrasi', $request->no_registrasi)
                 ->where('jenis_alat', $request->jenis_alat)
                 ->where('nomor_seri', $request->nomor_seri)
-                ->first();
+                ->get();
 
-            if ($existingUttp) {
-                // Jika ada UTTP dengan no_registrasi yang sama, cek id_user
-                if ($existingUttp->id_user !== null) {
-                    // Jika UTTP sebelumnya memiliki id_user, maka id_user harus sama
-                    if ($request->id_user != $existingUttp->id_user) {
-                        return response()->json([
-                            'success' => false,
-                            'errors' => [
-                                'no_registrasi' => ['No registrasi sudah digunakan oleh user lain']
-                            ]
-                        ], 422);
+            if ($existingUttps->isNotEmpty()) {
+                // Cek apakah ada UTTP dengan id_user yang berbeda
+                foreach ($existingUttps as $existingUttp) {
+                    if ($existingUttp->id_user !== null) {
+                        // Jika UTTP yang ada memiliki id_user, input baru harus memiliki id_user yang sama
+                        if ($request->id_user === null) {
+                            return response()->json([
+                                'success' => false,
+                                'errors' => [
+                                    'id_user' => ['ID User harus diisi karena no registrasi sudah terdaftar dengan user tertentu']
+                                ]
+                            ], 422);
+                        }
+                        if ($request->id_user != $existingUttp->id_user) {
+                            return response()->json([
+                                'success' => false,
+                                'errors' => [
+                                    'no_registrasi' => ['No registrasi sudah digunakan oleh user lain']
+                                ]
+                            ], 422);
+                        }
                     }
                 }
             } else {
@@ -257,24 +267,34 @@ class DirectoryBookController extends Controller
 
             $uttp = Uttp::findOrFail($id);
 
-            // Validasi custom untuk no_registrasi
-            $existingUttp = Uttp::where('no_registrasi', $request->no_registrasi)
+            // Cek apakah no_registrasi sudah digunakan
+            $existingUttps = Uttp::where('no_registrasi', $request->no_registrasi)
                 ->where('jenis_alat', $request->jenis_alat)
                 ->where('nomor_seri', $request->nomor_seri)
                 ->where('id_uttp', '!=', $id) // Exclude current UTTP
-                ->first();
+                ->get();
 
-            if ($existingUttp) {
-                // Jika ada UTTP dengan no_registrasi yang sama, cek id_user
-                if ($existingUttp->id_user !== null) {
-                    // Jika UTTP sebelumnya memiliki id_user, maka id_user harus sama
-                    if ($request->id_user != $existingUttp->id_user) {
-                        return response()->json([
-                            'success' => false,
-                            'errors' => [
-                                'no_registrasi' => ['No registrasi sudah digunakan oleh user lain']
-                            ]
-                        ], 422);
+            if ($existingUttps->isNotEmpty()) {
+                // Cek apakah ada UTTP dengan id_user yang berbeda
+                foreach ($existingUttps as $existingUttp) {
+                    if ($existingUttp->id_user !== null) {
+                        // Jika UTTP yang ada memiliki id_user, input baru harus memiliki id_user yang sama
+                        if ($request->id_user === null) {
+                            return response()->json([
+                                'success' => false,
+                                'errors' => [
+                                    'id_user' => ['ID User harus diisi karena no registrasi sudah terdaftar dengan user tertentu']
+                                ]
+                            ], 422);
+                        }
+                        if ($request->id_user != $existingUttp->id_user) {
+                            return response()->json([
+                                'success' => false,
+                                'errors' => [
+                                    'no_registrasi' => ['No registrasi sudah digunakan oleh user lain']
+                                ]
+                            ], 422);
+                        }
                     }
                 }
             } else {
