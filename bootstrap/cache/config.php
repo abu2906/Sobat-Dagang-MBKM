@@ -513,7 +513,7 @@
         'host' => 'smtp.gmail.com',
         'port' => '587',
         'username' => 'abub89025@gmail.com',
-        'password' => 'Abu29062004',
+        'password' => '',
         'timeout' => NULL,
         'local_domain' => 'localhost',
       ),
