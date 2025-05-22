@@ -6,14 +6,14 @@
     <div class="absolute left-1/2 transform -translate-x-1/2 top-[-20px] z-10 w-full">
         <div class="flex flex-wrap px-8 items-center justify-between ">
             <div class="flex space-x-2">
-                <select id="filterStatus" class="px-4 py-2 rounded-full border shadow text-sm">
+                <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
                     <option>Status</option>
                     <option value="kadaluarsa">Kadaluarsa</option>
                     <option value="valid">Valid</option>
                 </select>
             </div>
             <div class="relative flex-grow mt-2 md:mt-0">
-                <input type="text" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
+                <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
                 <span class="absolute left-3 top-2 text-gray-400">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
