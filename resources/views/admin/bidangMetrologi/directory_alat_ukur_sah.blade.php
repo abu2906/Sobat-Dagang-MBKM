@@ -249,7 +249,7 @@
         rows.forEach(row => {
             if (!row.querySelector('td')) return;
 
-            const statusCell = row.querySelector('td:nth-child(7)');
+            const statusCell = row.querySelector('td:nth-child(6)');
             const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
 
@@ -263,7 +263,7 @@
     statusFilter.addEventListener("change", applyFilters);
     searchInput.addEventListener("input", applyFilters);
     applyFilters();
-    
+
     function togglePopup(show) {
         const modal = document.getElementById('popupDetailAlat');
         if (show) {
