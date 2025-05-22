@@ -142,62 +142,87 @@
         </table>
     </div>
 
-    <script>
-        function loadDetailAlat(id) {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+<script>
 
-            fetch("{{ route('alat.detail.user') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({ id: id })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (!data) {
-                    throw new Error('No data received');
-                }
+    const statusFilter = document.getElementById("statusFilter");
+    const searchInput = document.getElementById("searchInput");
+    const rows = document.querySelectorAll("tbody tr");
 
-                document.getElementById('popupNoReg').textContent = data.no_registrasi ?? '-';
+    function applyFilters() {
+        const selectedStatus = statusFilter.value.toLowerCase();
+        const keyword = searchInput.value.toLowerCase();
 
-                const body = document.getElementById('popupDetailBody');
-                body.innerHTML = `
-                    <tr><td class="py-1 font-semibold">Nama Usaha</td><td>: ${data.nama_usaha ?? '-'}</td></tr>
-                    <tr><td class="py-1 font-semibold">Jenis Alat</td><td>: ${data.jenis_alat ?? '-'}</td></tr>
-                    <tr><td class="py-1 font-semibold">Merk / Tipe</td><td>: ${data.merk_type ?? '-'}</td></tr>
-                    <tr><td class="py-1 font-semibold">Kapasitas</td><td>: ${data.nama_alat ?? '-'}</td></tr>
-                    <tr><td class="py-1 font-semibold">Nomor Seri</td><td>: ${data.nomor_seri ?? '-'}</td></tr>
-                    <tr><td class="py-1 font-semibold">Cap Tanda Tera</td><td>: ${data.ctt ?? '-'}</td></tr>  
-                    <tr><td class="py-1 font-semibold">Keterangan</td><td>: ${data.keterangan ?? '-'}</td></tr>
-                    <tr><td class="py-1 font-semibold">Status</td><td>: ${data.status ?? '-'}</td></tr>
-                    <tr><td class="py-1 font-semibold">Tanggal Selesai</td><td>: ${formatDateDMY(data.tanggal_selesai)}</td></tr>
-                    <tr><td class="py-1 font-semibold">Tanggal Expired</td><td>: ${formatDateDMY(data.tanggal_exp)}</td></tr>
-                `;
+        rows.forEach(row => {
+            if (!row.querySelector('td')) return;
 
-                togglePopup(true);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Gagal mengambil data. Silakan coba lagi.');
-            });
-        }
-        function formatDateDMY(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}-${month}-${year}`;
-        }
+            const statusCell = row.querySelector('td:nth-child(7)');
+            const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
+            const rowText = row.textContent.toLowerCase();
 
-    </script>
+            const matchStatus = !selectedStatus || status === selectedStatus;
+            const matchSearch = !keyword || rowText.includes(keyword);
 
+            row.style.display = (matchStatus && matchSearch) ? '' : 'none';
+        });
+    }
 
+    statusFilter.addEventListener("change", applyFilters);
+    searchInput.addEventListener("input", applyFilters);
+    applyFilters();
+
+    function loadDetailAlat(id) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        fetch("{{ route('alat.detail.user') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ id: id })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data) {
+                throw new Error('No data received');
+            }
+
+            document.getElementById('popupNoReg').textContent = data.no_registrasi ?? '-';
+
+            const body = document.getElementById('popupDetailBody');
+            body.innerHTML = `
+                <tr><td class="py-1 font-semibold">Nama Usaha</td><td>: ${data.nama_usaha ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Jenis Alat</td><td>: ${data.jenis_alat ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Merk / Tipe</td><td>: ${data.merk_type ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Kapasitas</td><td>: ${data.nama_alat ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Nomor Seri</td><td>: ${data.nomor_seri ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Cap Tanda Tera</td><td>: ${data.ctt ?? '-'}</td></tr>  
+                <tr><td class="py-1 font-semibold">Keterangan</td><td>: ${data.keterangan ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Status</td><td>: ${data.status ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Tanggal Selesai</td><td>: ${formatDateDMY(data.tanggal_selesai)}</td></tr>
+                <tr><td class="py-1 font-semibold">Tanggal Expired</td><td>: ${formatDateDMY(data.tanggal_exp)}</td></tr>
+            `;
+
+            togglePopup(true);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Gagal mengambil data. Silakan coba lagi.');
+        });
+    }
+    function formatDateDMY(dateString) {
+        if (!dateString) return '-';
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    }
+
+</script>
 @endsection
