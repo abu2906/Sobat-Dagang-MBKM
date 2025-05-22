@@ -72,8 +72,9 @@
                             <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">ID User <span class="text-red-500">*</span></label>
-                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2" required>
+                            <label class="block text-sm font-medium">ID User</label>
+                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2">
+                            <p class="text-xs text-gray-500 mt-1">Kosongkan jika persuratan terjadi secara offline</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium">No Registrasi <span class="text-red-500">*</span></label>
@@ -317,21 +318,37 @@
         event.preventDefault();
         const form = event.target;
         
+        // Hapus pesan error yang ada
+        const errorMessages = form.querySelectorAll('.error-message');
+        errorMessages.forEach(el => el.remove());
+        
         // Submit form menggunakan fetch
         fetch(form.action, {
-            method: 'POST',
+            method: form.method,
             body: new FormData(form),
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             }
         })
-        .then(response => {
-            if (response.ok) {
-                // Jika berhasil, redirect ke halaman management UTTP tanpa parameter
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
                 window.location.href = "{{ route('management-uttp-metrologi') }}";
             } else {
-                // Jika gagal, tampilkan pesan error
-                alert('Terjadi kesalahan saat menyimpan data');
+                // Tampilkan pesan error untuk setiap field
+                if (data.errors) {
+                    Object.keys(data.errors).forEach(field => {
+                        const input = form.querySelector(`[name="${field}"]`);
+                        if (input) {
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error-message text-red-500 text-sm mt-1';
+                            errorDiv.textContent = data.errors[field][0];
+                            input.parentNode.appendChild(errorDiv);
+                        }
+                    });
+                } else {
+                    alert(data.message || 'Terjadi kesalahan saat menyimpan data');
+                }
             }
         })
         .catch(error => {
@@ -365,6 +382,10 @@
         form.action = updateRoute;
         document.getElementById('formMethod').value = "PATCH";
 
+        // Hapus pesan error yang ada
+        const errorMessages = form.querySelectorAll('.error-message');
+        errorMessages.forEach(el => el.remove());
+
         // Assign field manual
         form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
         form.elements['id_user'].value = data.id_user || '';
@@ -378,7 +399,7 @@
         form.elements['ctt'].value = data.ctt || '';
         form.elements['spt_keperluan'].value = data.spt_keperluan || '';
         form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
-        form.elements['terapan'].value = data.terapan || '';
+        form.elements['terapan'].checked = data.terapan || false;
         form.elements['keterangan'].value = data.keterangan || '';
     }
 

@@ -54,51 +54,104 @@ class DirectoryBookController extends Controller
 
     public function storeAlatUkur(Request $request)
     {
-        $request->validate([
-            'no_registrasi' => 'required|string|max:255',
-            'jenis_alat' => 'required|string',
-        ]);
+        try {
+            $request->validate([
+                'no_registrasi' => 'required|string|max:255',
+                'jenis_alat' => 'required|string',
+                'id_user' => 'nullable|exists:user,id_user',
+            ], [
+                'id_user.exists' => 'ID User tidak valid',
+            ]);
 
-        $lastData = Uttp::orderBy('id_uttp', 'desc')->first();
-        if (!$lastData) {
-            $newIdData = 1;
-        } else {
-            $lastIdNumber = (int) substr($lastData->id_uttp, 1);
-            $newIdNumber = $lastIdNumber + 1;
-            $newIdData = $newIdNumber;
+            // Validasi custom untuk no_registrasi
+            $existingUttp = Uttp::where('no_registrasi', $request->no_registrasi)
+                ->where('jenis_alat', $request->jenis_alat)
+                ->where('nomor_seri', $request->nomor_seri)
+                ->first();
+
+            if ($existingUttp) {
+                // Jika ada UTTP dengan no_registrasi yang sama, cek id_user
+                if ($existingUttp->id_user !== null) {
+                    // Jika UTTP sebelumnya memiliki id_user, maka id_user harus sama
+                    if ($request->id_user != $existingUttp->id_user) {
+                        return response()->json([
+                            'success' => false,
+                            'errors' => [
+                                'no_registrasi' => ['No registrasi sudah digunakan oleh user lain']
+                            ]
+                        ], 422);
+                    }
+                }
+            } else {
+                // Cek apakah no_registrasi sudah digunakan dengan jenis_alat atau nomor_seri yang berbeda
+                $differentUttp = Uttp::where('no_registrasi', $request->no_registrasi)
+                    ->where(function($query) use ($request) {
+                        $query->where('jenis_alat', '!=', $request->jenis_alat)
+                            ->orWhere('nomor_seri', '!=', $request->nomor_seri);
+                    })
+                    ->first();
+
+                if ($differentUttp) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => [
+                            'no_registrasi' => ['No registrasi sudah digunakan dengan jenis alat atau nomor seri yang berbeda']
+                        ]
+                    ], 422);
+                }
+            }
+
+            $lastData = Uttp::orderBy('id_uttp', 'desc')->first();
+            if (!$lastData) {
+                $newIdData = 1;
+            } else {
+                $lastIdNumber = (int) substr($lastData->id_uttp, 1);
+                $newIdNumber = $lastIdNumber + 1;
+                $newIdData = $newIdNumber;
+            }
+
+            $uttp = Uttp::create([
+                'id_uttp' => $newIdData,
+                'id_user' => $request->id_user,
+                'tanggal_penginputan' => $request->tanggal_penginputan,
+                'no_registrasi' => $request->no_registrasi,
+                'nama_usaha' => $request->nama_usaha,
+                'jenis_alat' => $request->jenis_alat,
+                'nama_alat' => $request->nama_alat,
+                'merk_type' => $request->merk_type,
+                'nomor_seri' => $request->nomor_seri,
+                'alat_penguji' => $request->alat_penguji,
+                'ctt' => $request->ctt,
+                'spt_keperluan' => $request->spt_keperluan,
+                'tanggal_selesai' => $request->tanggal_selesai,
+                'terapan' => $request->terapan,
+                'keterangan' => $request->keterangan,
+            ]);
+
+            $today = Carbon::today();
+            if(Carbon::parse($uttp->tanggal_selesai)->addYear()->greaterThan($today)){
+                $status = 'Valid';
+            }else{
+                $status='Kadaluarsa';
+            };
+            DataAlatUkur::create([
+                'id_uttp' => $uttp->id_uttp,
+                'tanggal_exp' => Carbon::parse($uttp->tanggal_selesai)->addYear(),
+                'status' => $status
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Data berhasil ditambahkan']);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan data'
+            ], 500);
         }
-
-        $uttp = Uttp::create([
-            'id_uttp' => $newIdData,
-            'id_user' => $request->id_user,
-            'tanggal_penginputan' => $request->tanggal_penginputan,
-            'no_registrasi' => $request->no_registrasi,
-            'nama_usaha' => $request->nama_usaha,
-            'jenis_alat' => $request->jenis_alat,
-            'nama_alat' => $request->nama_alat,
-            'merk_type' => $request->merk_type,
-            'nomor_seri' => $request->nomor_seri,
-            'alat_penguji' => $request->alat_penguji,
-            'ctt' => $request->ctt,
-            'spt_keperluan' => $request->spt_keperluan,
-            'tanggal_selesai' => $request->tanggal_selesai,
-            'terapan' => $request->terapan,
-            'keterangan' => $request->keterangan,
-        ]);
-
-        $today = Carbon::today();
-        if(Carbon::parse($uttp->tanggal_selesai)->addYear()->greaterThan($today)){
-            $status = 'Valid';
-        }else{
-            $status='Kadaluarsa';
-        };
-        DataAlatUkur::create([
-            'id_uttp' => $uttp->id_uttp,
-            'tanggal_exp' => Carbon::parse($uttp->tanggal_selesai)->addYear(),
-            'status' => $status
-        ]);
-
-        return redirect()->back()->with('success', 'Data berhasil ditambahkan');
     }
 
     public function alatUser($id_user)
@@ -195,38 +248,95 @@ class DirectoryBookController extends Controller
 
     public function update(Request $request, $id)
     {
-        $uttp = Uttp::findOrFail($id);
+        try {
+            $request->validate([
+                'id_user' => 'nullable|exists:user,id_user',
+            ], [
+                'id_user.exists' => 'ID User tidak valid',
+            ]);
 
-        $uttp->update([
-            'tanggal_penginputan' => $request->tanggal_penginputan,
-            'id_user' => $request->id_user,
-            'no_registrasi' => $request->no_registrasi,
-            'nama_usaha' => $request->nama_usaha,
-            'jenis_alat' => $request->jenis_alat,
-            'nama_alat' => $request->nama_alat,
-            'merk_type' => $request->merk_type,
-            'nomor_seri' => $request->nomor_seri,
-            'alat_penguji' => $request->alat_penguji,
-            'ctt' => $request->ctt,
-            'spt_keperluan' => $request->spt_keperluan,
-            'tanggal_selesai' => $request->tanggal_selesai,
-            'terapan' => $request->terapan,
-            'keterangan' => $request->keterangan,
-        ]);
+            $uttp = Uttp::findOrFail($id);
 
-        $today = Carbon::today();
-        if(Carbon::parse($request->tanggal_selesai)->addYear()->greaterThan($today)){
-            $status = 'Valid';
-        }else{
-            $status='Kadaluarsa';
-        };
-        $uttp->dataAlatUkur->update([
-            'tanggal_exp' => Carbon::parse($request->tanggal_selesai)->addYear(),
-            'status' => $status
-        ]);
+            // Validasi custom untuk no_registrasi
+            $existingUttp = Uttp::where('no_registrasi', $request->no_registrasi)
+                ->where('jenis_alat', $request->jenis_alat)
+                ->where('nomor_seri', $request->nomor_seri)
+                ->where('id_uttp', '!=', $id) // Exclude current UTTP
+                ->first();
 
+            if ($existingUttp) {
+                // Jika ada UTTP dengan no_registrasi yang sama, cek id_user
+                if ($existingUttp->id_user !== null) {
+                    // Jika UTTP sebelumnya memiliki id_user, maka id_user harus sama
+                    if ($request->id_user != $existingUttp->id_user) {
+                        return response()->json([
+                            'success' => false,
+                            'errors' => [
+                                'no_registrasi' => ['No registrasi sudah digunakan oleh user lain']
+                            ]
+                        ], 422);
+                    }
+                }
+            } else {
+                // Cek apakah no_registrasi sudah digunakan dengan jenis_alat atau nomor_seri yang berbeda
+                $differentUttp = Uttp::where('no_registrasi', $request->no_registrasi)
+                    ->where('id_uttp', '!=', $id) // Exclude current UTTP
+                    ->where(function($query) use ($request) {
+                        $query->where('jenis_alat', '!=', $request->jenis_alat)
+                            ->orWhere('nomor_seri', '!=', $request->nomor_seri);
+                    })
+                    ->first();
 
-        return redirect()->back()->with('success', 'Data alat ukur berhasil diperbarui.');
+                if ($differentUttp) {
+                    return response()->json([
+                        'success' => false,
+                        'errors' => [
+                            'no_registrasi' => ['No registrasi sudah digunakan dengan jenis alat atau nomor seri yang berbeda']
+                        ]
+                    ], 422);
+                }
+            }
+
+            $uttp->update([
+                'tanggal_penginputan' => $request->tanggal_penginputan,
+                'id_user' => $request->id_user,
+                'no_registrasi' => $request->no_registrasi,
+                'nama_usaha' => $request->nama_usaha,
+                'jenis_alat' => $request->jenis_alat,
+                'nama_alat' => $request->nama_alat,
+                'merk_type' => $request->merk_type,
+                'nomor_seri' => $request->nomor_seri,
+                'alat_penguji' => $request->alat_penguji,
+                'ctt' => $request->ctt,
+                'spt_keperluan' => $request->spt_keperluan,
+                'tanggal_selesai' => $request->tanggal_selesai,
+                'terapan' => $request->terapan,
+                'keterangan' => $request->keterangan,
+            ]);
+
+            $today = Carbon::today();
+            if(Carbon::parse($request->tanggal_selesai)->addYear()->greaterThan($today)){
+                $status = 'Valid';
+            }else{
+                $status='Kadaluarsa';
+            };
+            $uttp->dataAlatUkur->update([
+                'tanggal_exp' => Carbon::parse($request->tanggal_selesai)->addYear(),
+                'status' => $status
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Data alat ukur berhasil diperbarui']);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan data'
+            ], 500);
+        }
     }
 
     public function periksaKadaluarsa()

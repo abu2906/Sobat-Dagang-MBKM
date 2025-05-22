@@ -13,7 +13,7 @@ class CreateUttpTable extends Migration
     {
         Schema::create('uttp', function (Blueprint $table) {
             $table->id('id_uttp'); // Primary key
-            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_user')->nullable();
             $table->foreign('id_user')->references('id_user')->on('user')->onDelete('cascade');
             
             $table->date('tanggal_penginputan')->nullable();
