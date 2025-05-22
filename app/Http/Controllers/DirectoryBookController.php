@@ -11,6 +11,8 @@ use App\Mail\NotifikasiUttpKadaluarsa;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use App\Exports\UttpExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DirectoryBookController extends Controller
 {
@@ -381,6 +383,11 @@ class DirectoryBookController extends Controller
                 ]);
             }
         }
+    }
+
+    public function downloadUttp()
+    {
+        return Excel::download(new UttpExport, 'data_uttp.xlsx');
     }
 
 }

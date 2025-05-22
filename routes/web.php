@@ -240,3 +240,5 @@ Route::get('/surat-rekomendasi', function () {
 
 // testing
 Route::get('/tes-kirim-notifikasi', [DirectoryBookController::class, 'periksaKadaluarsa']);
+
+Route::get('/uttp/download', [DirectoryBookController::class, 'downloadUttp'])->name('uttp.download');
