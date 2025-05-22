@@ -32,6 +32,8 @@ class DirectoryBookController extends Controller
             })
             ->whereDate('data_alat_ukur.tanggal_exp', '>=', now()) // hanya valid
             ->with('uttp')
+            ->orderBy('data_alat_ukur.tanggal_exp', 'desc')
+            ->orderBy('data_alat_ukur.created_at', 'desc')
             ->get();
 
         return view('user.bidangMetrologi.directory', compact('alatUkur'));
@@ -192,6 +194,8 @@ class DirectoryBookController extends Controller
                     ->on('data_alat_ukur.tanggal_exp', '=', 'latest.max_exp');
             })
             ->with('uttp')
+            ->orderBy('data_alat_ukur.tanggal_exp', 'desc')
+            ->orderBy('data_alat_ukur.created_at', 'desc')
             ->get();
 
         return view('user.bidangMetrologi.directory', compact('alatUkur'));
