@@ -74,7 +74,7 @@
             </thead>
             <tbody>
                 @forelse ($suratList->filter(fn($s) => $s->suratBalasan) as $index => $surat)
-				<tr class="hover:bg-blue-50 transition">
+				<tr class="hover:bg-blue-50 transition data-status='{{ $surat->suratBalasan->status_kepalaBidang }}'">
 					<td class="px-5 text-center py-3 border-b">{{ $index + 1 }}</td>
 					<td class="px-5 text-center py-3 border-b">{{ $surat->id_surat }}</td>
 					<td class="px-5 text-center py-3 border-b">{{ $surat->user->nama ?? '-' }}</td>
@@ -136,11 +136,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const rows = document.querySelectorAll("tbody tr[data-status]");
 
     function applyFilters() {
-        const selectedStatus = statusFilter.value;
+        const selectedStatus = statusFilter.value.toLowerCase();
         const keyword = searchInput.value.toLowerCase();
 
         rows.forEach(row => {
-            const status = row.getAttribute("data-status");
+            const status = row.getAttribute("data-status").toLowerCase();
             const rowText = row.textContent.toLowerCase();
 
             const matchStatus = !selectedStatus || status === selectedStatus;
