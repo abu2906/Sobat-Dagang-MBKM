@@ -16,7 +16,7 @@ class DirectoryBookController extends Controller
 {
     public function showDirectoryUserMetrologi()
     {
-        $latestData = DataAlatUkur::select('data_alat_ukur.*')
+        $alatUkur = DataAlatUkur::select('data_alat_ukur.*')
             ->join('uttp', 'data_alat_ukur.id_uttp', '=', 'uttp.id_uttp')
             ->join(DB::raw('(
                 SELECT uttp.no_registrasi, MAX(data_alat_ukur.tanggal_exp) as max_exp
@@ -27,10 +27,11 @@ class DirectoryBookController extends Controller
                 $join->on('uttp.no_registrasi', '=', 'latest.no_registrasi')
                     ->on('data_alat_ukur.tanggal_exp', '=', 'latest.max_exp');
             })
+            ->whereDate('data_alat_ukur.tanggal_exp', '>=', now()) // hanya valid
             ->with('uttp')
             ->get();
 
-        return view('user.bidangMetrologi.directory', ['alatUkur' => $latestData]);
+        return view('user.bidangMetrologi.directory', compact('alatUkur'));
     }       
 
     public function showDirectoryAdminMetrologi()
@@ -102,9 +103,20 @@ class DirectoryBookController extends Controller
 
     public function alatUser($id_user)
     {
-        $alatUkur = DataAlatUkur::whereHas('uttp', function ($query) use ($id_user) {
-            $query->where('id_user', $id_user);
-        })->with('uttp')->get();
+        $alatUkur = DataAlatUkur::select('data_alat_ukur.*')
+            ->join('uttp', 'data_alat_ukur.id_uttp', '=', 'uttp.id_uttp')
+            ->where('uttp.id_user', $id_user)
+            ->join(DB::raw('(
+                SELECT uttp.no_registrasi, MAX(data_alat_ukur.tanggal_exp) as max_exp
+                FROM data_alat_ukur
+                JOIN uttp ON uttp.id_uttp = data_alat_ukur.id_uttp
+                GROUP BY uttp.no_registrasi
+            ) as latest'), function ($join) {
+                $join->on('uttp.no_registrasi', '=', 'latest.no_registrasi')
+                    ->on('data_alat_ukur.tanggal_exp', '=', 'latest.max_exp');
+            })
+            ->with('uttp')
+            ->get();
 
         return view('user.bidangMetrologi.directory', compact('alatUkur'));
     }
