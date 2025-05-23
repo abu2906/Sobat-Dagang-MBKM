@@ -318,6 +318,7 @@ class AdminIndustriController extends Controller
         $rekapSurat = $this->getSuratIndustriData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
+            ->whereIn('status', ['menunggu', 'diterima', 'ditolak'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -367,7 +368,8 @@ class AdminIndustriController extends Controller
             return redirect()->route('login')->with('error', 'Harap login terlebih dahulu');
         }
         $userId = Auth::guard('user')->id();
-        $query = PermohonanSurat::where('id_user', $userId);
+        $query = PermohonanSurat::where('id_user', $userId)
+                ->whereIn('status', ['menunggu', 'diterima', 'ditolak']);
 
         if ($searchTerm = request('search')) {
             $search = strtolower(trim($searchTerm));

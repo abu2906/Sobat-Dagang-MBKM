@@ -129,7 +129,7 @@
       <article class="bg-white rounded-xl p-4 shadow-[0_0_15px_3px_rgba(0,54,94,0.25)] mt-6 h-[400px] flex flex-col">
         <h3 class="font-bold text-xl mb-4">Pertumbuhan IKM</h3>
         <div class="flex flex-col items-center">
-          <canvas id="perkembanganChart" class="mb-2 w-300 h-full"></canvas>
+          <canvas id="perkembanganChart" class="mb-2 w-300 h-250"></canvas>
         </div>
       </article>
     </div>
