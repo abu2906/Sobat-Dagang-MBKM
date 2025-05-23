@@ -92,7 +92,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/bidang-industri/form-permohonan', [AdminIndustriController::class, 'formPermohonan'])->name('bidangIndustri.formPermohonan');
     Route::get('/bidang-industri/riwayat-surat', [AdminIndustriController::class, 'riwayatSuratt'])->name('bidangIndustri.riwayatSurat');
     Route::post('/bidang-industri/ajukan-permohonan', [AdminIndustriController::class, 'ajukanPermohonann'])->name('ajukan.Permohonan');
-    Route::get('/bidang-industri/data-sertifikat-halal', [UserHalalController::class, 'index'])->name('Halal');
+    Route::get('/bidang-industri/sertifikat-halal', [UserHalalController::class, 'index'])->name('Halal');
     Route::post('/bidang-industri/draft-permohonan', [AdminIndustriController::class, 'draftPermohonann'])->name('bidangIndustri.draftPermohonan');
 });
 
@@ -141,7 +141,7 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::put('/admin/industri/sertifikat-halal/{halal}', [HalalController::class, 'update'])->name('sertifikat.halal.update');
     Route::get('/admin/industri/sertifikat-halal', [HalalController::class, 'index'])->name('sertifikat.halal');
     Route::post('/admin/industri/sertifikat-halal/store', [HalalController::class, 'store'])->name('sertifikat.halal.store');
-    Route::get('/admin/industri/sertifikat-halal/{id}/edit', [HalalController::class, 'edit'])->name('sertifikat.halal.edit');
+    Route::put('/admin/industri/sertifikat-halal/{id}/edit', [HalalController::class, 'edit'])->name('sertifikat.halal.edit');
     Route::delete('/admin/industri/sertifikat-halal/{id}', [HalalController::class, 'destroy'])->name('sertifikat.halal.destroy');
 
         

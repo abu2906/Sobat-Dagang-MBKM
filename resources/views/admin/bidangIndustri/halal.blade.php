@@ -62,7 +62,7 @@
                       </svg>
                     </button>
 
-                    <form :action="'/admin/industri/sertifikat.halal/' + item.id_halal" method="POST"
+                    <form :action="'/admin/industri/sertifikat-halal/' + item.id_halal" method="POST"
                       @submit.prevent="if(confirm('Yakin ingin menghapus data ini?')) $el.submit()">
                       <input type="hidden" name="_token" value="{{ csrf_token() }}">
                       <input type="hidden" name="_method" value="DELETE">
@@ -91,7 +91,7 @@
   </section>
 
   <!-- Overlay -->
-  <div x-show="openModal" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"></div>
+  <div x-show="openModal" x-cloak x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"> </div>
 
   <!-- Modal -->
   <div x-show="openModal" x-transition class="fixed inset-0 flex items-start justify-center z-50 p-4">
@@ -103,9 +103,9 @@
 
       <h2 class="mb-6 text-center text-lg font-bold md:text-xl" x-text="formData.id ? 'EDIT DATA SERTIFIKASI HALAL' : 'TAMBAH DATA SERTIFIKASI HALAL'"></h2>
       <form 
-        :action="formData.id 
-            ? '{{ url('/admin/industri/sertifikat-halal/store') }}/' + formData.id 
-            : '{{ route('sertifikat.halal.store') }}'"
+        x-bind:action="formData.id 
+          ? '{{ url('/admin/industri/sertifikat-halal') }}/' + formData.id 
+          : '{{ route('sertifikat.halal.store') }}'"
         method="POST"
         enctype="multipart/form-data"
         class="space-y-6"
@@ -165,7 +165,7 @@
                 </label>
                 <select name="status" x-model="formData.status" required
                   class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                  <option value="" disabled selected>Pilih Status</option>
+                  <option value="" disabled :selected="!formData.status">Pilih Status</option>
                   <option value="Berlaku">Berlaku</option>
                   <option value="Perlu Pembaruan">Perlu Pembaruan</option>
                 </select>
@@ -190,7 +190,81 @@
     </div>
   </div>
 </section>
+
 <script>
+function halalData() {
+  return {
+    openModal: false,
+    formData: {
+      id: null,
+      nama_usaha: '',
+      no_sertifikasi_halal: '',
+      tanggal_sah: '',
+      tanggal_exp: '',
+      alamat: '',
+      status: '',
+    },
+    items: @json($data), // asumsi dari controller
+    searchQuery: '',
+
+    get filteredItems() {
+      if (!this.searchQuery) return this.items;
+      return this.items.filter(item =>
+        item.nama_usaha.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+
+    openTambah() {
+      this.formData = {
+        id: null,
+        nama_usaha: '',
+        no_sertifikasi_halal: '',
+        tanggal_sah: '',
+        tanggal_exp: '',
+        alamat: '',
+        status: '',
+      };
+      this.openModal = true;
+    },
+
+    openEdit(item) {
+      this.formData = {
+        id: item.id_halal,
+        nama_usaha: item.nama_usaha,
+        no_sertifikasi_halal: item.no_sertifikasi_halal,
+        tanggal_sah: item.tanggal_sah,
+        tanggal_exp: item.tanggal_exp,
+        alamat: item.alamat,
+        status: item.status,
+      };
+      this.openModal = true;
+    },
+
+    deleteData(id) {
+      if (confirm('Yakin ingin menghapus data ini?')) {
+        fetch(`/admin/industri/sertifikat-halal/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            this.items = this.items.filter(item => item.id_halal !== id);
+            alert('Data berhasil dihapus');
+          } else {
+            alert('Gagal menghapus data');
+          }
+        });
+      }
+    },
+  }
+}
+</script>
+
+
+<!-- <script>
   function halalData() {
     function formatDateToYMD(dateStr) {
       const d = new Date(dateStr);
@@ -239,6 +313,7 @@
         console.log('Edit Data:', JSON.parse(JSON.stringify(this.formData))); // opsional debug
       },
       openTambah() {
+        console.log('Tambah form dibuka');
         this.formData = {
           id: null,
           nama_usaha: '',
@@ -252,5 +327,5 @@
       },
     }
   }
-</script>
+</script> -->
 @endsection
