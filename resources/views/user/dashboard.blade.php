@@ -3,7 +3,6 @@
 @section('title', 'Dashboard')
 
 @section('content')
-{{-- Section Selamat Datang --}}
 <section class="px-4 py-12 bg-white">
     <div class="grid items-center gap-8 mx-auto max-w-7xl md:grid-cols-2">
         <div>
@@ -20,7 +19,6 @@
     </div>
 </section>
 
-{{-- Menu Utama --}}
 @php
     $menus = [
         'PERDAGANGAN' => [
@@ -57,7 +55,6 @@
     @endforeach
 </div>
 
-{{-- Section Fitur Tambahan --}}
 <section class="px-4 py-12 bg-white">
     <div class="grid grid-cols-1 gap-8 mx-auto md:grid-cols-3 max-w-7xl">
         @php

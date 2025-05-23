@@ -882,8 +882,7 @@ class DashboardPerdaganganController extends Controller{
     // }
 
     
-    public function draftPermohonan(Request $request)
-        {
+    public function draftPermohonan(Request $request){
             // Custom pesan error dalam Bahasa Indonesia
             $messages = [
                 'jenis_surat.required' => 'Jenis surat wajib diisi.',
@@ -976,4 +975,5 @@ class DashboardPerdaganganController extends Controller{
                 return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
             }
     }
+
 }

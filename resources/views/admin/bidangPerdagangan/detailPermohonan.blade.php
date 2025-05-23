@@ -2,7 +2,7 @@
 @section('title', 'Detail Data Pemohon')
 
 @section('content')
-<div class="bg-white ">
+<div class="bg-white">
     <div class="bg-white">
         <div class="relative w-full h-64">
             <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
@@ -183,58 +183,98 @@
                 @endif
 
                 <!-- Modal Surat Rekomendasi -->
-                <div id="modalRekomendasi" class="fixed inset-0 z-50 flex items-center justify-center hidden w-full px-4 bg-black bg-opacity-50 sm:pl-20">
-                    <form action="{{ route('permohonan.rekomendasi', $data->id_permohonan) }}" method="POST">
-                        <div class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
-                            <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalRekomendasi')">&times;</button>
-                            <h2 class="mb-4 text-lg font-bold text-center">FORMULIR SURAT REKOMENDASI</h2>
-                            <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
-                                @csrf
-                                @method('PUT')
-                                <div>
-                                <label>Nomor Surat</label>
-                                <input name="nomor_surat" type="text" class="w-full px-3 py-2 border rounded">
+                <div id="modalRekomendasi"
+                    class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 ml-24 sm:justify-center rounded-lg">
+                    <form action="{{ route('permohonan.rekomendasi', $data->id_permohonan) }}" method="POST"
+                        class="relative bg-white rounded-lg p-6 w-full max-w-full sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto
+                            scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                        style="scrollbar-width: thin;">
+                        <button type="button"
+                            class="absolute top-2 right-2 text-2xl text-gray-600 hover:text-gray-900 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            onclick="closeModal('modalRekomendasi')"
+                            aria-label="Tutup modal"
+                        >&times;</button>
+
+                        <h2 class="text-center text-xl font-bold mb-6">FORMULIR SURAT REKOMENDASI</h2>
+
+                        <div class="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="flex flex-col">
+                                <label for="nomor_surat" class="mb-1 font-semibold">Nomor Surat</label>
+                                <input id="nomor_surat" name="nomor_surat" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
                             </div>
-                            <div>
-                                <label>Tanggal Surat</label>
-                                <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
+
+                            <div class="flex flex-col">
+                                <label for="tanggal_surat" class="mb-1 font-semibold">Tanggal Surat</label>
+                                <input id="tanggal_surat" name="tanggal_surat" type="date"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
                             </div>
-                            <div>
-                                <label>Nama Pemohon</label>
-                                <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}" >
+
+                            <div class="flex flex-col">
+                                <label for="nama_pengirim" class="mb-1 font-semibold">Nama Pemohon</label>
+                                <input id="nama_pengirim" name="nama_pengirim" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}"
+                                />
                             </div>
-                            <div>
-                                <label>NIK</label>
-                                <input name="nik" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nik ?? 'Null') }}">
+
+                            <div class="flex flex-col">
+                                <label for="nik" class="mb-1 font-semibold">NIK</label>
+                                <input id="nik" name="nik" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="{{ old('nik', $user->nik ?? 'Null') }}"
+                                />
                             </div>
-                            <div>
-                                <label>Warga Negara</label>
-                                <select name="warga_negara" class="w-full px-3 py-2 border rounded">
+
+                            <div class="flex flex-col">
+                                <label for="warga_negara" class="mb-1 font-semibold">Warga Negara</label>
+                                <select id="warga_negara" name="warga_negara"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
                                     <option value="">Pilih</option>
                                     <option>WNI</option>
                                     <option>WNA</option>
                                 </select>
                             </div>
-                            <div>
-                                <label>Pekerjaan</label>
-                                <input name="pekerjaan" type="text" class="w-full px-3 py-2 border rounded">
-                            </div>
-                            <div>
-                                <label>Alamat Rumah</label>
-                                <input name="alamat_rumah" type="text" class="w-full px-3 py-2 border rounded">
+
+                            <div class="flex flex-col">
+                                <label for="pekerjaan" class="mb-1 font-semibold">Pekerjaan</label>
+                                <input id="pekerjaan" name="pekerjaan" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
                             </div>
 
-                            <div>
-                                <label>Nama Usaha</label>
-                                <input name="nama_usaha" type="text" class="w-full px-3 py-2 border rounded">
+                            <div class="flex flex-col">
+                                <label for="alamat_rumah" class="mb-1 font-semibold">Alamat Rumah</label>
+                                <input id="alamat_rumah" name="alamat_rumah" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
                             </div>
-                            <div>
-                                <label>Bentuk Usaha</label>
-                                <input name="bentuk_usaha" type="text" class="w-full px-3 py-2 border rounded">
+
+                            <div class="flex flex-col">
+                                <label for="nama_usaha" class="mb-1 font-semibold">Nama Usaha</label>
+                                <input id="nama_usaha" name="nama_usaha" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
                             </div>
-                            <div>
-                                <label>Jenis Perusahaan</label>
-                                <select name="jenis_perusahaan" class="w-full px-3 py-2 border rounded">
+
+                            <div class="flex flex-col">
+                                <label for="bentuk_usaha" class="mb-1 font-semibold">Bentuk Usaha</label>
+                                <input id="bentuk_usaha" name="bentuk_usaha" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+
+                            <div class="flex flex-col">
+                                <label for="jenis_perusahaan" class="mb-1 font-semibold">Jenis Perusahaan</label>
+                                <select id="jenis_perusahaan" name="jenis_perusahaan"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
                                     <option value="">Pilih</option>
                                     <option>Perusahaan Perseorangan</option>
                                     <option>Persekutuan Firma</option>
@@ -246,29 +286,36 @@
                                     <option>Asing</option>
                                 </select>
                             </div>
-                            <div>
-                                <label>Luas Ruangan (m<sup>2</sup>)</label>
-                                <input name="luas_ruangan" type="text" class="w-full px-3 py-2 border rounded">
+
+                            <div class="flex flex-col">
+                                <label for="luas_ruangan" class="mb-1 font-semibold">Luas Ruangan (m<sup>2</sup>)</label>
+                                <input id="luas_ruangan" name="luas_ruangan" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
                             </div>
-                            <div>
-                                <label class="block mb-1 text-sm ">Alamat Usaha</label>
-                                <input name="alamat_usaha" type="text" class="w-full px-3 py-2 border rounded">
+
+                            <div class="flex flex-col">
+                                <label for="alamat_usaha" class="mb-1 font-semibold">Alamat Usaha</label>
+                                <input id="alamat_usaha" name="alamat_usaha" type="text"
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
                             </div>
-                            <div class="col-span-2">
-                                <label class="block mb-1 text-sm ">Keterangan Surat</label>
-                                <textarea name="isi" id="summernote_rekomendasi" class="w-full px-3 py-2 border rounded " rows="3" required required></textarea>
+
+                            <div class="flex flex-col col-span-1 sm:col-span-2">
+                                <label for="isi" class="mb-1 font-semibold">Keterangan Surat</label>
+                                <textarea id="summernote_rekomendasi" name="isi" rows="4" required
+                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"></textarea>
                             </div>
-                            </div>
-                            <div class="flex justify-center gap-3 mt-4">
-                                <button class="px-4 py-2 text-white bg-gray-700 rounded">Draft</button>
-                                <button class="bg-[#083358] text-white hover:bg-blue-300 hover:text-black px-4 py-2 rounded">Simpan</button>
-                            </div>
+                        </div>
+
+                        <div class="flex justify-center gap-4 mt-6">
+                            <button type="submit" class="px-6 py-2 rounded-md bg-[#083358] text-white hover:bg-blue-300 hover:text-black transition">Simpan</button>
                         </div>
                     </form>
                 </div>
 
                 <!-- Modal Surat Keterangan -->
-                <div id="modalKeterangan" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 sm:ml-30">
+                <div id="modalKeterangan" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 ml-24 sm:justify-center">
                     <form action="{{ route('permohonan.keterangan', $data->id_permohonan) }}" method="POST" class="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                         @csrf
                         @method('PUT')
@@ -343,15 +390,14 @@
 
                         </div>
 
-                        <div class="flex justify-center gap-3 mt-4">
-                            <button type="button" class="px-4 py-2 text-white bg-gray-700 rounded">Draft</button>
+                        <div class="flex justify-center gap-4 mt-6">
                             <button type="submit" class="bg-[#083358] text-white hover:bg-blue-300 hover:text-black px-4 py-2 rounded">Simpan</button>
                         </div>
                     </form>
                 </div>
 
-                <div id="modaltolak" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 sm:pl-20">
-                    <form action="{{ route('permohonan.tolak', $data->id_permohonan) }}" method="POST" class="relative w-full max-w-xl p-6 bg-white rounded-lg">
+                <div id="modaltolak" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 ml-24 sm:justify-center">
+                    <form action="{{ route('permohonan.tolak', $data->id_permohonan) }}" method="POST" class="relative w-full max-w-xl p-6 bg-white rounded-lg">    
                         @csrf
                         @method('PUT')
 
