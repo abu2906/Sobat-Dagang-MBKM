@@ -88,11 +88,11 @@
             </div>
         </div>
     </div>
-
+<h2 class="mt-4 mb-4 text-lg font-semibold text-center text-black lg:text-left">Daftar Surat Masuk</h2>
     <div class="flex flex-col gap-6 mb-6 lg:flex-row lg:items-start ">
     <!-- Kiri: Tabel Surat -->
+
         <div class="w-full overflow-hidden border lg:w-3/4 rounded-xl">
-            <h2 class="mt-4 mb-4 text-lg font-semibold text-center text-black lg:text-left">Daftar Surat Masuk</h2>
             <div class="overflow-x-auto max-h-[500px] custom-scrollbar">
                 <table class="min-w-full text-sm text-left">
                     <thead class="sticky top-0 z-10 bg-[#083358] text-white font-semibold">

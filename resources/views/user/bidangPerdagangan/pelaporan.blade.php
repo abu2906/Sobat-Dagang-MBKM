@@ -42,14 +42,20 @@
                         <td class="px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $toko->no_register }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $toko->rencana->jumlah ?? 'N/A' }} sak</td>
                         <!-- kolom lain -->
-                        <td class="flex items-center justify-center px-6 py-4 text-sm text-gray-700">
+                        <td class="flex items-center justify-center gap-2 px-6 py-4 text-sm text-gray-700">
                             <a href="{{ route('pelaporan.showDataDistribusi', ['id_toko' => $toko->id_toko]) }}">
-                                <button>
-                                    <p class="px-4 py-2 text-sm font-bold font-istok rounded-xl text-white bg-[#083458] w-fit ">
-                                        Tambahkan Data Distribusi
-                                    </p>
+                                <button class="px-3 py-1 text-xs font-semibold rounded-md text-white bg-[#083458] hover:bg-[#0a416d] transition">
+                                    Distribusi
                                 </button>
                             </a>
+
+                            <!-- Tombol untuk membuka modal -->
+                            <button 
+                                class="px-3 py-1 text-xs font-semibold text-white transition bg-red-600 rounded-md hover:bg-red-700"
+                                onclick="openModal('{{ $toko->id_toko }}')"
+                            >
+                                Hapus
+                            </button>
                         </td>
                     </tr>
                 @endforeach
@@ -174,6 +180,22 @@
             </tbody>
         </table>
     </div>
+    <!-- Modal Konfirmasi -->
+    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-40">
+        <div class="w-full max-w-sm p-6 text-center bg-white rounded-lg shadow-md">
+            <h2 class="mb-4 text-lg font-semibold text-gray-800">Konfirmasi Hapus</h2>
+            <p class="mb-6 text-sm text-gray-600">Apakah Anda yakin ingin menghapus toko ini?</p>
+            <div class="flex justify-center gap-4">
+                <button onclick="closeModal()" class="px-4 py-1 text-xs bg-gray-300 rounded-md hover:bg-gray-400">Batal</button>
+
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-4 py-1 text-xs text-white bg-red-600 rounded-md hover:bg-red-700">Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <style>
     .hide-scrollbar {
@@ -207,5 +229,17 @@
         document.getElementById('filterForm').submit();
     });
 </script>
+<script>
+    function openModal(id) {
+        const modal = document.getElementById('confirmModal');
+        const form = document.getElementById('deleteForm');
+        form.action = `/toko/${id}`; // Atur URL dinamis
 
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('confirmModal').classList.add('hidden');
+    }
+</script>
 @endsection

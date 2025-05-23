@@ -363,6 +363,12 @@ class PelaporanController extends Controller
         ]);
     }
 
+    public function destroy($id)
+    {
+        $toko = Toko::findOrFail($id);
+        $toko->delete();
 
+        return redirect()->back()->with('success', 'Toko berhasil dihapus.');
+    }
 
 }
