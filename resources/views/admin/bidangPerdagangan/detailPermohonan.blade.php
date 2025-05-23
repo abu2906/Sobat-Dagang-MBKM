@@ -5,9 +5,9 @@
 <div class="bg-white ">
 <div class="bg-white">
     <div class="relative w-full">
-        <img src="{{ asset('assets/img/background/perdagangan.jpg') }}" alt="Port Background" class="object-cover w-full h-64 md:h-full">
+        <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Port Background" class="object-cover w-full h-64 md:h-full">
         <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
-            <img src="{{ asset('assets/img/background/perdagangan.jpg') }}" alt="Background" class="object-cover w-full h-full -ml-16">
+            <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Background" class="object-cover w-full h-full -ml-16">
         </div>
         <a href="{{ route('perdagangan.kelolaSurat') }}"
             class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
@@ -194,7 +194,7 @@
                 <form action="{{ route('permohonan.rekomendasi', $data->id_permohonan) }}" method="POST">
                     <div class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                         <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalRekomendasi')">&times;</button>
-                        <h2 class="mb-4 text-lg font-bold text-center">FORM SURAT REKOMENDASI</h2>
+                        <h2 class="mb-4 text-lg font-bold text-center">FORMULIR SURAT REKOMENDASI</h2>
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             @csrf
                             @method('PUT')
@@ -207,7 +207,7 @@
                             <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
                         </div>
                         <div>
-                            <label>Nama Pengirim</label>
+                            <label>Nama Pemohon</label>
                             <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}" >
                         </div>
                         <div>
@@ -254,7 +254,7 @@
                             </select>
                         </div>
                         <div>
-                            <label>Luas Ruangan</label>
+                            <label>Luas Ruangan (m<sup>2</sup>)</label>
                             <input name="luas_ruangan" type="text" class="w-full px-3 py-2 border rounded">
                         </div>
                         <div>
@@ -279,7 +279,7 @@
                 <form action="{{ route('permohonan.keterangan', $data->id_permohonan) }}" method="POST">
                     <div class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                         <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalKeterangan')">&times;</button>
-                        <h2 class="mb-4 text-lg font-bold text-center">FORM SURAT KETERANGAN</h2>
+                        <h2 class="mb-4 text-lg font-bold text-center">FORMULIR SURAT KETERANGAN</h2>
                         <div class="grid grid-cols-2 gap-4 text-sm">
                             @csrf
                             @method('PUT')
@@ -288,7 +288,7 @@
                                 <input name="tanggal_surat" type="date" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
-                                <label class="block mb-1 text-sm font-semibold">Nama Pengirim Surat</label>
+                                <label class="block mb-1 text-sm font-semibold">Nama Pemohon Surat</label>
                                 <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
@@ -350,11 +350,11 @@
                     @method('PUT')
 
                     <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modaltolak')">&times;</button>
-                    <h2 class="mb-4 text-lg font-bold text-center">FORM SURAT DI TOLAK</h2>
+                    <h2 class="mb-4 text-lg font-bold text-center">Formulir SURAT DI TOLAK</h2>
 
                     <div class="grid grid-cols-2 gap-x-6 gap-y-4">
                         <div class="col-span-2">
-                            <label class="block mb-1 text-sm font-semibold">Nama Pengirim</label>
+                            <label class="block mb-1 text-sm font-semibold">Nama Pemohon</label>
                             <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}">
                         </div>
                         <div class="col-span-2">

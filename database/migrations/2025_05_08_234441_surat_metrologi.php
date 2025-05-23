@@ -14,8 +14,9 @@ return new class extends Migration
             $table->string('alamat_alat')->nullable();
             $table->enum('jenis_surat',['tera', 'tera_ulang'])->default('tera');
             $table->string('dokumen')->nullable();
+            $table->text('keterangan')->nullable();
             $table->enum('status_surat_masuk', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
-            $table->enum('status_admin', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
+            $table->enum('status_admin', ['Menunggu', 'Diproses', 'Ditolak', 'Menunggu Persetujuan', 'Diterima', 'Butuh Revisi', 'Selesai'])->default('Menunggu');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id_user')->on('user')->onDelete('cascade');

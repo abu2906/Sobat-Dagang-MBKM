@@ -140,7 +140,7 @@
         <h1>SURAT KETERANGAN</h1>
     </div>
     <p>Yang Bertanda tangan dibawah ini:</p>
-    <table style="width: 100%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 97%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama</td>
             <td style="padding: 4px;">: {{ $nama_pengirim }}</td>
@@ -151,29 +151,29 @@
         </tr>
     </table>
     <p>Dengan ini Menerangkan Bahwa:</p>
-    <table style="width: 80%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 100%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
-            <td style="padding: 4px;">Nama</td>
+            <td style="padding: 4px; width: 155px; ">Nama</td>
             <td style="padding: 4px;">: {{$nama_penerima}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Tempat, tanggal Lahir</td>
+            <td style="padding: 4px; width: 155px;">Tempat, tanggal lahir</td>
             <td style="padding: 4px;">: {{$tampat_lahir}},{{$tanggal_lahir}} </td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Jenis Kelamin</td>
+            <td style="padding: 4px; width: 155px;">Jenis Kelamin</td>
             <td style="padding: 4px;">: {{$jenis_kelamin}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Alamat</td>
+            <td style="padding: 4px; width: 155px;">Alamat</td>
             <td style="padding: 4px;">: {{$alamat_lengkap}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Agama</td>
+            <td style="padding: 4px; width: 155px;">Agama</td>
             <td style="padding: 4px;">: {{$agama}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Status</td>
+            <td style="padding: 4px; width: 155px;">Status</td>
             <td style="padding: 4px;">: {{$status_pernikahan}}</td>
         </tr>
     </table>
@@ -182,11 +182,11 @@
     </p>
     <div class="penutup">
         <p>
-            Demikian Surat Rekomendasi ini dibuat untuk menjadi salah satu persyaratan izin usaha dan bukan merupakan surat perizinan.
+            Demikian Surat Keterangan ini dibuat untuk menjadi salah satu persyaratan izin usaha dan bukan merupakan surat perizinan.
         </p>
     </div>
     <div class="ttd">
-        <p>Dikeluarkan di : Pareparae</p>
+        <p>Dikeluarkan di : Parepare</p>
         <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d F Y') }}</p>
         <div></div>
         <p>KEPADA DINAS PERDAGANGAN</p>

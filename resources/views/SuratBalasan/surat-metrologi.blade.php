@@ -68,7 +68,7 @@
             margin: 4px 0;
         }
 
-        .isi p {
+        .isi_surat p {
             margin-bottom: 10px;
         }
 
@@ -131,49 +131,47 @@
             <p>Kode Pos 91122 Email: perindag@pareparekota.go.id & dinas.perdagangan.pare@gmail.com</p>
         </div>
     </div>
-    <div class="judul">
-        <h1>{{ $tanggal_pembuatan_surat }}</h1>
-    </div>
-    <table style="width: 100%; border-collapse: collapse; margin-left: 30px; ">
+    
+
+    <table style="width: 100%; margin-top: 20px;">
         <tr>
-            <td style="padding: 4px;">Nomor</td>
-            <td style="padding: 4px;">: {{ $nomor_surat }}</td>
+            <!-- Kolom Kiri -->
+            <td style="width: 50%; vertical-align: top;"><br><br>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 1;">Nomor</td>
+                        <td style="padding: 1;">: {{ $nomor_surat }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1;">Sifat</td>
+                        <td style="padding: 1;">: Biasa</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1;">Lampiran</td>
+                        <td style="padding: 1;">: </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1;">Hal</td>
+                        <td style="padding: 1;">: Pemberitahuan Pelaksanaan Tera/Tera Ulang UTTP</td>
+                    </tr>
+                </table>
+            </td>
+
+            <!-- Kolom Kanan -->
+            <td style="width: 50%; text-align: right; vertical-align: top;">
+                <p style="margin: 1; padding: 1;"><strong>Parepare, {{ \Carbon\Carbon::parse($tanggal_pembuatan_surat)->translatedFormat('d F Y') }}</strong></p><br>
+                <p style="margin: 1; padding: 1;">Kepada</p>
+                <p style="margin: 1; padding: 1;">YTH, {{ $nama_yang_dituju }}</p><br>
+                <p style="margin: 1; padding: 1;">di</p>
+                <p style="margin: 1; padding: 1;">Tempat</p>
+            </td>
+
         </tr>
-        <tr>
-            <td style="padding: 4px;">Sifat</td>
-            <td style="padding: 4px;">: {{ $sifat_surat }}</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px;">Lampiran</td>
-            <td style="padding: 4px;">: {{ $lampiran }}</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px;">Hal</td>
-            <td style="padding: 4px;">: {{ $hal }}</td>
-        </tr>
-    </table>
-    <table style="width: 80%; border-collapse: collapse; margin-left: 30px; ">
-        <tr>
-            <td style="padding: 4px;">Kepada</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px;">YTH, {{ $nama_yang_dituju }}</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px;">di</td>
-        </tr>
-        <tr>
-            <td style="padding: 4px;">Tempat</td>
-        </tr>
-    </table>
-    <p>
-        {!! $isi !!}
-    </p>
+    </table><br>
+
+    {!! $isi_surat !!}
     <div class="ttd">
-        <p>Dikeluarkan di : Pareparae</p>
-        <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d - F - Y') }}</p>
-        <div></div>
-        <p>KEPADA DINAS PERDAGANGAN</p>
+        <p>KEPALA DINAS PERDAGANGAN</p>
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">

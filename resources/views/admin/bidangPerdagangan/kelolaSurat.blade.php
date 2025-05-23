@@ -5,13 +5,13 @@
 @section('content')
 
 <div class="relative w-full h-64">
-    <img src="{{ asset('assets\img\background\perdagangan.jpg') }}" alt="Background" class="object-cover w-full h-full" />
+    <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
     <a href="{{ route('dashboard.perdagangan') }}"
             class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
             <span class="text-2xl material-symbols-outlined">
                 arrow_back
             </span>
-        </a>
+    </a>
 </div>
 <div class="container px-4 mx-auto -mt-8">
     <div class="flex justify-center mb-6">

@@ -10,6 +10,7 @@ use App\Models\suratMetrologi;
 use App\Models\Uttp;
 use App\Models\DataAlatUkur;
 use App\Models\suratBalasan;
+use App\Models\Surat;
 
 
 class DashboardMetrologiController extends Controller
@@ -28,11 +29,11 @@ class DashboardMetrologiController extends Controller
     
     public function showKabid() {
         $dataSurat = $this->getJumlahSurat();
-        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('SUM(jumlah_alat) as total'))->groupBy('jenis_alat')->get();
+        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('COUNT(*) as total'))->groupBy('jenis_alat')->get();
         $jumlahValid = DB::table('uttp')
             ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
             ->where('data_alat_ukur.status', 'Valid')
-            ->sum('uttp.jumlah_alat');
+            ->count();
         $uttps = DataAlatUkur::with('uttp')->get();
         $donutData = $this->getDonutChartData();
         return view('admin.kabid.metrologi.dashboard', array_merge(
@@ -123,9 +124,9 @@ class DashboardMetrologiController extends Controller
         $data = [];
 
         foreach ($jenisList as $jenis) {
-        $jumlah = Uttp::where('alat_penguji', $jenis)->sum('jumlah_alat');
-        $data[$jenis] = $jumlah;
-    }
+            $jumlah = Uttp::where('alat_penguji', $jenis)->count();
+            $data[$jenis] = $jumlah;
+        }
 
         return [
             'donutLabels' => json_encode(array_keys($data)),
@@ -134,7 +135,7 @@ class DashboardMetrologiController extends Controller
     }
 
 
-    private function getJumlahSurat()
+    public function getJumlahSurat()
     {
         $totalSuratMasuk = DB::table('surat_metrologi')->count();
         $totalSuratDiterima = DB::table('surat_metrologi')->where('status_surat_masuk', 'Disetujui')->count();
@@ -147,7 +148,13 @@ class DashboardMetrologiController extends Controller
         {
             $totalSuratMenunggu == 0;
         }
-        $totalSuratDitolak = DB::table('surat_metrologi')->where('status_surat_masuk', 'Ditolak')->count();
+        $totalSuratMenungguKabid = DB::table('surat_keluar_metrologi')->where('status_kepalaBidang', 'Menunggu')->count();
+        if($totalSuratMenungguKabid < 1)
+        {
+            $totalSuratMenungguKabid == 0;
+        }
+
+        $totalSuratDitolak = DB::table('surat_keluar_metrologi')->where('status_kepalaBidang', 'Ditolak')->count();
         if($totalSuratDitolak < 1)
         {
             $totalSuratDitolak == 0;
@@ -174,6 +181,7 @@ class DashboardMetrologiController extends Controller
             'totalSuratDiterima' => $totalSuratDiterima,
             'totalSuratDitolak' => $totalSuratDitolak,
             'totalSuratMenunggu' => $totalSuratMenunggu,
+            'totalSuratMenungguKabid' => $totalSuratMenungguKabid,
             'suratTerbaru' => $suratTerbaru,
             'totalSuratTerkirim' => $suratTerkirim
         ];
@@ -186,7 +194,9 @@ class DashboardMetrologiController extends Controller
 
     public function showAdministrasi()
     {
-        $suratList = SuratMetrologi::with('user', 'suratBalasan')->get();
+        $suratList = SuratMetrologi::with('user', 'suratBalasan')
+            ->orderBy('created_at', 'desc')
+            ->get();
         $dataJumlahSurat = $this->getJumlahSurat();
 
         return view('admin.bidangMetrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
@@ -194,10 +204,74 @@ class DashboardMetrologiController extends Controller
 
     public function showAdministrasiKabid()
     {
-        $suratList = SuratMetrologi::with('user', 'suratBalasan')->get();
+        $suratList = SuratMetrologi::with(['user', 'suratBalasan' => function($query) {
+            $query->where('status_kepalaBidang', '!=', 'Draft');
+        }])
+            ->whereHas('suratBalasan', function($query) {
+                $query->where('status_kepalaBidang', '!=', 'Draft');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
         $dataJumlahSurat = $this->getJumlahSurat();
 
         return view('admin.kabid.metrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
     }
-    
+
+    public function showUttp()
+    {
+        $alatUkur = DataAlatUkur::with('uttp')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
+    }
+
+    public function showKadis()
+    {
+        $suratList = suratBalasan::with('suratMetrologi.user')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $totalSurat = suratBalasan::count();
+        $totalSuratDisetujui = suratBalasan::where('status_kadis', 'Disetujui')->count();
+        $totalSuratDitolak = suratBalasan::where('status_kadis', 'Ditolak')->count();
+        $totalSuratMenunggu = suratBalasan::where('status_kadis', 'Menunggu')->count();
+
+        return view('admin.kepalaDinas.dashboard', compact(
+            'suratList',
+            'totalSurat',
+            'totalSuratDisetujui',
+            'totalSuratDitolak',
+            'totalSuratMenunggu'
+        ));
+    }
+
+    public function showPersuratanKadis()
+    {
+        $suratList = suratBalasan::with('suratMetrologi.user')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Get statistics for letters visible to kepala dinas
+        $totalSurat = suratBalasan::where('status_kepalaBidang', 'Disetujui')->count();
+        $totalSuratDisetujui = suratBalasan::where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Disetujui')
+            ->count();
+        $totalSuratDitolak = suratBalasan::where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Ditolak')
+            ->count();
+        $totalSuratMenunggu = suratBalasan::where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Menunggu')
+            ->count();
+
+        return view('admin.kepalaDinas.persuratan', compact(
+            'suratList',
+            'totalSurat',
+            'totalSuratDisetujui',
+            'totalSuratDitolak',
+            'totalSuratMenunggu'
+        ));
+    }
 }

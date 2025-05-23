@@ -4,7 +4,7 @@
 
 <div class="relative w-full h-64">
 
-<img src="{{ asset('assets\img\background\perdagangan.jpg') }}" alt="Background" class="object-cover w-full h-full" />
+<img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
 
 <a href="{{ route('home') }}"
     class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
@@ -94,8 +94,61 @@
         </div>
     @endforeach
 </div>
-
 <script>
+    @foreach ($daftarHarga as $jenis => $pasars)
+        @foreach ($pasars as $pasar => $data)
+            const ctx{{ $loop->parent->index }}{{ $loop->index }} = document.getElementById('chart-{{ $jenis }}-{{ $loop->index }}').getContext('2d');
+            new Chart(ctx{{ $loop->parent->index }}{{ $loop->index }}, {
+                type: 'line',
+                data: {
+                    labels: {!! json_encode($data['labels']) !!}, 
+                    datasets: [{
+                        label: '',
+                        data: {!! json_encode($data['data']) !!},
+                        backgroundColor: 'rgba(8, 51, 88, 0.05)',
+                        borderColor: '#FFA500',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#FFA500'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let value = context.parsed.y;
+                                    return 'Rp' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp' + value.toLocaleString();
+                                }
+                            },
+                        },
+                        x: {
+                            ticks: {
+                                autoSkip: false
+                            },
+                        }
+                    }
+                }
+            });
+        @endforeach
+    @endforeach
+</script>
+
+{{-- <script>
     @foreach ($daftarHarga as $jenis => $pasars)
         @foreach ($pasars as $pasar => $data)
             const ctx{{ $loop->parent->index }}{{ $loop->index }} = document.getElementById('chart-{{ $jenis }}-{{ $loop->index }}').getContext('2d');
@@ -132,5 +185,5 @@
             });
         @endforeach
     @endforeach
-</script>
+</script> --}}
 @endsection

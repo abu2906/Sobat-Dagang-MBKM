@@ -1,16 +1,24 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.home')
+
+@section('title', 'Data Sertifikat Halal')
+
+@section('content')
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sertifikasi Halal</title>
-  <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
-  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
-
+<div class="relative w-full h-64">
+    <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Port Background" class="object-cover w-full h-full">
+    <a href="{{ route('user.dashboard') }}"
+        class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+        <span class="text-2xl material-symbols-outlined">
+            arrow_back
+        </span>
+    </a>
+</div>
 <body class="flex flex-col min-h-screen bg-white">
 
+<<<<<<< HEAD:resources/views/user/halal.blade.php
   <header class="bg-[#0d3b66] py-4 px-6 flex items-center justify-between">
     <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo Dinas Perdagangan" class="h-10">
     <div class="flex items-center space-x-4">
@@ -31,6 +39,9 @@
     </div>
 
    <!-- Search Bar di tengah -->
+=======
+    <!-- Search Bar di tengah -->
+>>>>>>> 327c5cc56c9e7740cc9313d3d0b1b1612e887606:resources/views/user/bidangIndustri/halal.blade.php
     <div class="absolute w-11/12 transform -translate-x-1/2 top-32 left-1/2 md:w-3/4">
       <form action="{{ route('halal.user') }}" method="GET" class="relative">
         <input
@@ -50,6 +61,7 @@
     </div>
 
 
+<<<<<<< HEAD:resources/views/user/halal.blade.php
 
   <main class="flex-1 px-6 py-10 max-w-7xl mx-auto">
   <div class="overflow-auto shadow rounded-xl border border-gray-200">
@@ -78,6 +90,32 @@
               @else
                 <span class="text-gray-400">Tidak tersedia</span>
               @endif
+=======
+  <!-- Table -->
+  <main class="flex-1 px-6 pb-10 mt-16 mb-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+    <div class="overflow-hidden rounded-b-xl">
+      <table class="w-full text-sm table-auto">
+        <thead class="bg-[#0d3b66] text-white">
+          <tr>
+            <th class="px-4 py-3 font-semibold text-left">NOMOR</th>
+            <th class="px-4 py-3 font-semibold text-left">NAMA USAHA</th>
+            <th class="px-4 py-3 font-semibold text-left">TANGGAL</th>
+            <th class="px-4 py-3 font-semibold text-left">ALAMAT</th>
+            <th class="px-4 py-3 font-semibold text-left">NO. SERTIFIKASI HALAL</th>
+            <th class="px-4 py-3 font-semibold text-left">HYPERLINK</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for($i = 1; $i <= 14; $i++)
+            <tr class="{{ $i % 2 == 0 ? 'bg-gray-100' : 'bg-white' }}">
+            <td class="px-4 py-3">{{ $i }}</td>
+            <td class="px-4 py-3">Kios Humairah</td>
+            <td class="px-4 py-3">20 April 2025</td>
+            <td class="px-4 py-3">Kompleks Pasar Wekke'e</td>
+            <td class="px-4 py-3">120100001209{{ 10 + $i }}</td>
+            <td class="px-4 py-3">
+              <a href="#" class="text-blue-500 hover:underline">Sertifikat Halal</a>
+>>>>>>> 327c5cc56c9e7740cc9313d3d0b1b1612e887606:resources/views/user/bidangIndustri/halal.blade.php
             </td>
           </tr>
         @empty

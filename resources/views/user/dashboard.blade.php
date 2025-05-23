@@ -3,9 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
 <section class="px-4 py-12 bg-white">
-    
     <div class="grid items-center gap-8 mx-auto max-w-7xl md:grid-cols-2">
         <div>
             <h1 class="text-3xl font-bold text-[#2E3C51] mb-4">
@@ -28,8 +26,8 @@
                 ['label' => 'Permohonan perizinan/non perizinan', 'route' => route('bidangPerdagangan.formPermohonan')],
             ],
             'INDUSTRI' => [
-                ['label' => 'Permohonan IKM Binaan', 'route' => '#'],
-                ['label' => 'Data Sertifikat Halal', 'route' => '#'],
+                ['label' => 'Permohonan IKM Binaan', 'route' => route('bidangIndustri.formPermohonan')],
+                ['label' => 'Data Sertifikat Halal', 'route' => route('halal')],
             ],
             'METROLOGI' => [
                 ['label' => 'Permohonan Tera/Teraulang', 'route' => route('administrasi-metrologi')],
@@ -87,89 +85,7 @@
     @endforeach
 </div>
 
-<button id="open-chat" class="fixed bottom-5 right-5 bg-[#083458] rounded-full p-3 shadow-lg hover:scale-110 transition">
+<a href="{{ route('forum.chat') }}" class="fixed bottom-5 right-5 bg-[#083458] rounded-full p-3 shadow-lg hover:scale-110 transition">
     <img src="{{ asset('assets/img/icon/pengaduan.png') }}" alt="Chat" class="w-8 h-8">
-</button>
-
-@include('component.chat', ['chats' => \App\Models\ForumDiskusi::with('user')->orderBy('waktu')->get()])
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const chatModal = document.getElementById('chat-modal');
-    const openChatBtn = document.getElementById('open-chat');
-    const closeChatBtn = document.getElementById('close-chat');
-    const chatForm = document.getElementById('chat-form');
-    const chatInput = document.getElementById('chat-input');
-    const chatMessages = document.getElementById('chat-messages');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    // Modal open-close (udah aman)
-    openChatBtn?.addEventListener('click', () => {
-        chatModal.classList.remove('hidden');
-    });
-    closeChatBtn?.addEventListener('click', () => {
-        chatModal.classList.add('hidden');
-    });
-
-    // Submit chat
-    chatForm?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const message = chatInput.value.trim();
-        if (!message) return; // jangan submit pesan kosong
-
-        try {
-            const response = await fetch('/forum-chat/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                },
-                body: JSON.stringify({ chat: message }),
-            });
-
-            if (!response.ok) throw new Error('Response not OK');
-
-            const data = await response.json();
-
-            if (data.success) {
-                // Buat elemen pesan baru
-                const isMe = true; // ini pesan kita sendiri
-                const senderName = data.chat.user?.nama ?? data.chat.disdag?.nama ?? 'Admin Dinas Perdagangan';
-                const initial = senderName.charAt(0).toUpperCase();
-                const waktu = new Date(data.chat.waktu);
-                const options = { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Makassar' };
-                const waktuFormatted = new Intl.DateTimeFormat('id-ID', options).format(waktu);
-
-                const wrapper = document.createElement('div');
-                wrapper.className = `flex items-end justify-end`;
-
-                wrapper.innerHTML = `
-                    <div class="flex items-center justify-center w-8 h-8 ml-2 text-sm font-bold text-white bg-gray-400 rounded-full select-none">
-                        ${initial}
-                    </div>
-                    <div class="max-w-[70%] p-3 text-sm leading-snug shadow bg-[#083458] text-white rounded-3xl rounded-br-md">
-                        <div class="mb-1 text-xs font-semibold">${senderName}</div>
-                        <div>${data.chat.chat.replace(/\n/g, '<br>')}</div>
-                        <div class="text-[10px] text-gray-400 text-right mt-1">
-                            ${waktuFormatted}
-                        </div>
-                    </div>
-                `;
-
-                chatMessages.appendChild(wrapper);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                chatInput.value = '';
-            } else {
-                alert('Gagal mengirim pesan');
-            }
-        } catch (err) {
-            console.error('Error:', err);
-            alert(err.message); // ini akan tampilkan pesan dari Laravel
-        }
-
-    });
-});
-</script>
-
+</a>
 @endsection

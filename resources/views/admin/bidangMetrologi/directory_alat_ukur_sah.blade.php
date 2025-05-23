@@ -25,7 +25,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Tambah Alat Ukur Sah
+                    Tambah UTTP
                 </button>
             </div>
         </div>
@@ -35,33 +35,37 @@
     <div id="modalTambahAlat" class="absolute inset-0 z-40 hidden bg-black bg-opacity-30 flex items-center justify-center">
             <div class="bg-white w-[90%] md:w-[70%] lg:w-[50%] rounded-lg shadow-lg p-6 max-h-[90vh] overflow-y-auto">
                 <div class="flex justify-between items-center border-b pb-3 mb-4">
-                    <h2 class="text-lg font-semibold">Tambah Alat Ukur Sah</h2>
+                    <h2 class="text-lg font-semibold">Tambah UTTP</h2>
                     <button onclick="tutupModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
                 </div>
 
-                <form id="form-alat" method="POST">
+                <form id="form-alat" method="POST" action="{{ route('store-uttp') }}" onsubmit="handleSubmit(event)">
                 @csrf
                 <input type="hidden" name="_method" id="formMethod" value="POST">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium">Tanggal</label>
-                            <input type="date" name="tanggal_penginputan" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Tanggal Mulai <span class="text-red-500">*</span></label>
+                            <input type="date" name="tanggal_penginputan" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">ID User</label>
-                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Tanggal Selesai <span class="text-red-500">*</span></label>
+                            <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">No Registrasi</label>
-                            <input type="text" name="no_registrasi" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">ID User <span class="text-red-500">*</span></label>
+                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Nama Usaha</label>
-                            <input type="text" name="nama_usaha" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">No Registrasi <span class="text-red-500">*</span></label>
+                            <input type="text" name="no_registrasi" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Jenis Alat</label>
-                            <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Nama Usaha <span class="text-red-500">*</span></label>
+                            <input type="text" name="nama_usaha" class="w-full border rounded px-3 py-2" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Jenis Alat <span class="text-red-500">*</span></label>
+                            <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2" required>
 								<option value="UP-MK">UP-MK</option>
 								<option value="VOL-TK">VOLUME - TK</option>
 								<option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
@@ -82,49 +86,59 @@
 							</select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Nama Alat</label>
-                            <input type="text" name="nama_alat" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
                             <label class="block text-sm font-medium">Merk / Type</label>
                             <input type="text" name="merk_type" class="w-full border rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Kapasitas</label>
+                            <input type="text" name="nama_alat" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
                             <label class="block text-sm font-medium">Nomor Seri</label>
                             <input type="text" name="nomor_seri" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Jumlah Alat</label>
-                            <input type="number" name="jumlah_alat" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Alat Penguji</label>
-                            <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
+                            <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
 								<option value="BUS">BUS</option>
 								<option value="AT">AT</option>
 								<option value="ATB">ATB</option>
 							</select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Ctt</label>
-                            <input type="text" name="ctt" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Cap Tanda Tera <span class="text-red-500">*</span></label>
+                            <select id="ctt" name="ctt" class="w-full border rounded px-3 py-2" required>
+								<option value="SL6">SL6</option>
+								<option value="SL4">SL4</option>
+								<option value="SL2">SL2</option>
+                                <option value="SK6">SK6</option>
+								<option value="SP6">SP6</option>
+								<option value="B4">B4</option>
+                                <option value="J8">J8</option>
+                                <option value="J5">J5</option>
+                                <option value="J4">J4</option>
+                                <option value="JP8">JP8</option>
+                                <option value="D4">D4</option>
+                                <option value="H">H</option>
+                                <option value="HP">HP</option>
+							</select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">SPT Keperluan</label>
+                            <label class="block text-sm font-medium">No Surat Perintah Tugas</label>
                             <input type="text" name="spt_keperluan" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Tanggal Selesai</label>
-                            <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2">
+                            <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
+                            <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
+								<option value="Tera">Tera</option>
+								<option value="Tera Ulang">Tera Ulang</option>
+							</select>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium">Terapan</label>
-                            <input type="text" name="terapan" class="w-full border rounded px-3 py-2">
+                        <div class="flex items-center space-x-2 mt-2">
+                            <input type="checkbox" name="terapan" id="terapan" class="rounded border-gray-300">
+                            <label for="terapan" class="text-sm font-medium">Cerapan</label>
                         </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium">Keterangan</label>
-                            <textarea name="keterangan" class="w-full border rounded px-3 py-2"></textarea>
-                        </div>
+
                     </div>
 
                     <div class="mt-4 flex justify-end gap-2">
@@ -194,6 +208,33 @@
 </div>
 
 <script>
+    function handleSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        
+        // Submit form menggunakan fetch
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Jika berhasil, redirect ke halaman management UTTP tanpa parameter
+                window.location.href = "{{ route('management-uttp-metrologi') }}";
+            } else {
+                // Jika gagal, tampilkan pesan error
+                alert('Terjadi kesalahan saat menyimpan data');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan data');
+        });
+    }
+
     function openModal(){
         document.getElementById('modalTambahAlat').classList.remove('hidden');
 
@@ -204,7 +245,7 @@
         document.getElementById('formMethod').value = "POST";
 
         // Ganti Judul
-        document.getElementById('modalTitle').innerText = 'Tambah Alat Ukur Sah';
+        document.getElementById('modalTitle').innerText = 'Tambah UTTP';
     }
 
     function tutupModal() {
@@ -212,30 +253,59 @@
     }
 
     function openEditModal(data, updateRoute) {
-    document.getElementById('modalTambahAlat').classList.remove('hidden');
-    const form = document.getElementById('form-alat');
+        document.getElementById('modalTambahAlat').classList.remove('hidden');
+        const form = document.getElementById('form-alat');
 
-    // Ganti action dan method
-    form.action = updateRoute;
-    document.getElementById('formMethod').value = "PATCH";
+        // Ganti action dan method
+        form.action = updateRoute;
+        document.getElementById('formMethod').value = "PATCH";
 
-    // Assign field manual
-    form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
-    form.elements['id_user'].value = data.id_user || '';
-    form.elements['no_registrasi'].value = data.no_registrasi || '';
-    form.elements['nama_usaha'].value = data.nama_usaha || '';
-    form.elements['jenis_alat'].value = data.jenis_alat || '';
-    form.elements['nama_alat'].value = data.nama_alat || '';
-    form.elements['merk_type'].value = data.merk_type || '';
-    form.elements['nomor_seri'].value = data.nomor_seri || '';
-    form.elements['jumlah_alat'].value = data.jumlah_alat || '';
-    form.elements['alat_penguji'].value = data.alat_penguji || '';
-    form.elements['ctt'].value = data.ctt || '';
-    form.elements['spt_keperluan'].value = data.spt_keperluan || '';
-    form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
-    form.elements['terapan'].value = data.terapan || '';
-    form.elements['keterangan'].value = data.keterangan || '';
+        // Assign field manual
+        form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
+        form.elements['id_user'].value = data.id_user || '';
+        form.elements['no_registrasi'].value = data.no_registrasi || '';
+        form.elements['nama_usaha'].value = data.nama_usaha || '';
+        form.elements['jenis_alat'].value = data.jenis_alat || '';
+        form.elements['nama_alat'].value = data.nama_alat || '';
+        form.elements['merk_type'].value = data.merk_type || '';
+        form.elements['nomor_seri'].value = data.nomor_seri || '';
+        form.elements['alat_penguji'].value = data.alat_penguji || '';
+        form.elements['ctt'].value = data.ctt || '';
+        form.elements['spt_keperluan'].value = data.spt_keperluan || '';
+        form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
+        form.elements['terapan'].value = data.terapan || '';
+        form.elements['keterangan'].value = data.keterangan || '';
     }
+
+    // Script untuk membuka modal otomatis dan mengisi field
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoOpen = urlParams.get('auto_open');
+        const userId = urlParams.get('user_id');
+        const jenisPermohonan = urlParams.get('jenis_permohonan');
+
+        if (autoOpen === 'true') {
+            const modal = document.getElementById('modalTambahAlat');
+            modal.classList.remove('hidden');
+            
+            const form = document.getElementById('form-alat');
+            form.reset();
+            document.getElementById('formMethod').value = "POST";
+            
+            if (userId) {
+                form.elements['id_user'].value = userId;
+            }
+
+            if (jenisPermohonan) {
+                // Jika jenis permohonan mengandung kata "tera_ulang", set ke "Tera Ulang"
+                if (jenisPermohonan.toLowerCase().includes('tera_ulang')) {
+                    form.elements['keterangan'].value = 'Tera Ulang'; // Tera Ulang
+                } else {
+                    form.elements['keterangan'].value = 'Tera'; // Tera
+                }
+            }
+        }
+    });
 </script>
 
 

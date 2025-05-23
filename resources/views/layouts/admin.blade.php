@@ -22,9 +22,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
-<body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
+<body x-data="{ open: true }" class="overflow-hidden font-sans bg-white">
 
     @if ($user)
         @switch($user->role)
@@ -64,5 +65,6 @@
     </div>
     <script src="{{ asset('/assets/js/app.js') }}"></script>
     <script src="{{ asset('/assets/js/showDokumen.js') }}"></script>
+    @stack('scripts')
 </body>
 </html>

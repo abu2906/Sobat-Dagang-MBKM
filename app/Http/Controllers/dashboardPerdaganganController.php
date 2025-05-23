@@ -22,6 +22,8 @@ use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use App\Models\StokOpname;
+
 
 class DashboardPerdaganganController extends Controller{
     public function index(Request $request)
@@ -41,7 +43,8 @@ class DashboardPerdaganganController extends Controller{
                 'barang.nama_barang',
                 'index_kategori.nama_kategori as kategori_barang',
                 'index_harga.harga as harga_satuan',
-                'index_harga.updated_at'
+                'index_harga.updated_at',
+                'index_harga.tanggal'
             )
             ->orderBy('index_harga.updated_at', 'desc')
             ->get();
@@ -137,7 +140,6 @@ class DashboardPerdaganganController extends Controller{
             'lokasi' => $lokasi,
         ]);
     }
-
     private function getSuratPerdaganganData()
     {
         $jenis = [
@@ -295,10 +297,95 @@ class DashboardPerdaganganController extends Controller{
         return redirect()->back()->with('success', 'Barang berhasil dihapus.');
     }
 
-    public function laporanPupuk()
-    {
-        return view('admin.bidangPerdagangan.lihatLaporan');
+    public function laporanPupuk(Request $request)
+{
+    $bulan = $request->input('bulan');
+    $tahun = $request->input('tahun');
+
+    $data = [];
+    $pieData = [];
+    $lineChartLabels = [];
+    $lineChartData = [
+        'UREA' => [],
+        'NPK' => [],
+        'NPK-FK' => [],
+    ];
+
+    // Jika tidak memilih apapun, tampilkan data bulan dan tahun saat ini
+    if (empty($bulan) && empty($tahun)) {
+        $bulan = now()->month;
+        $tahun = now()->year;
     }
+
+    // Validasi: jika request berisi bulan dan tahun, tapi kosong, tampilkan pesan
+    if (!empty($bulan) && !empty($tahun) && $request->has('bulan') && $request->has('tahun')) {
+        return view('admin.bidangPerdagangan.lihatLaporan', [
+            'data' => [],
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+            'pieData' => [],
+            'lineChartLabels' => [],
+            'lineChartData' => [],
+            'message' => 'Silakan pilih salah satu: bulan atau tahun saja.'
+        ]);
+    }
+
+    // Ambil data stok_opname
+    $query = StokOpname::with('toko');
+
+    if (!empty($bulan) && empty($tahun)) {
+        $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', now()->year);
+    } elseif (!empty($tahun) && empty($bulan)) {
+        $query->whereYear('tanggal', $tahun);
+    } else {
+        $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+    }
+
+    $stokOpnames = $query->get();
+
+    foreach ($stokOpnames as $record) {
+        $toko = $record->toko->nama_toko ?? 'Tidak diketahui';
+        $barang = strtoupper($record->nama_barang);
+
+        // Data Tabel
+        if (!isset($data[$toko][$barang])) {
+            $data[$toko][$barang] = [
+                'stok_awal' => 0,
+                'penyaluran' => 0,
+                'stok_akhir' => 0,
+            ];
+        }
+
+        $data[$toko][$barang]['stok_awal'] += $record->stok_awal;
+        $data[$toko][$barang]['penyaluran'] += $record->penyaluran;
+        $data[$toko][$barang]['stok_akhir'] += $record->stok_akhir;
+
+        // Data Pie Chart
+        if (!isset($pieData[$barang])) {
+            $pieData[$barang] = 0;
+        }
+        $pieData[$barang] += $record->penyaluran;
+    }
+
+    // Data Line Chart
+    foreach ($data as $toko => $pupuk) {
+        $lineChartLabels[] = $toko;
+
+        foreach (['UREA', 'NPK', 'NPK-FK'] as $jenis) {
+            $lineChartData[$jenis][] = $pupuk[$jenis]['penyaluran'] ?? 0;
+        }
+    }
+
+    return view('admin.bidangPerdagangan.lihatLaporan', [
+        'data' => $data,
+        'bulan' => $bulan,
+        'tahun' => $tahun,
+        'pieData' => $pieData,
+        'lineChartLabels' => $lineChartLabels,
+        'lineChartData' => $lineChartData,
+        'message' => ''
+    ]);
+}
 
     public function formPermohonan()
     {
@@ -517,21 +604,51 @@ class DashboardPerdaganganController extends Controller{
         }
     }
 
+    
     public function ajukanPermohonan(Request $request)
     {
+        // Custom pesan error dalam Bahasa Indonesia
+        $messages = [
+            'jenis_surat.required' => 'Jenis surat wajib diisi.',
+            'jenis_surat.in' => 'Jenis surat tidak valid.',
+            'kecamatan.required' => 'Kecamatan wajib diisi.',
+            'kelurahan.required' => 'Kelurahan wajib diisi.',
+            'titik_koordinat.required' => 'Titik koordinat wajib diisi.',
+            'foto_usaha.required' => 'Foto usaha wajib diunggah.',
+            'foto_usaha.image' => 'Foto usaha harus berupa gambar.',
+            'foto_usaha.mimes' => 'Foto usaha harus berformat jpeg, png, atau jpg.',
+            'foto_usaha.max' => 'Ukuran foto usaha tidak boleh lebih dari 512 kilobyte.',
+            'foto_ktp.required' => 'Foto KTP wajib diunggah.',
+            'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
+            'foto_ktp.mimes' => 'Foto KTP harus berformat jpeg, png, atau jpg.',
+            'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 512 KILOBYTE.',
+            'dokumen_nib.required' => 'Dokumen NIB wajib diunggah.',
+            'dokumen_nib.mimes' => 'Dokumen NIB harus berformat PDF.',
+            'dokumen_nib.max' => 'Ukuran dokumen NIB tidak boleh lebih dari 512 KILOBYTE.',
+            'npwp.required' => 'Dokumen NPWP wajib diunggah.',
+            'npwp.mimes' => 'NPWP harus berformat PDF atau gambar.',
+            'npwp.max' => 'Ukuran dokumen NPWP tidak boleh lebih dari 512 KILOBYTE.',
+            'akta_perusahaan.required' => 'Akta perusahaan wajib diunggah.',
+            'akta_perusahaan.mimes' => 'Akta perusahaan harus berformat PDF.',
+            'akta_perusahaan.max' => 'Ukuran akta perusahaan tidak boleh lebih dari 512 KILOBYTE.',
+            'surat.required' => 'File surat wajib diunggah.',
+            'surat.mimes' => 'File surat harus berformat PDF, DOC, atau DOCX.',
+            'surat.max' => 'Ukuran file surat tidak boleh lebih dari 512 KILOBYTE.',
+        ];
+
         // Validasi input
         $validated = $request->validate([
             'jenis_surat' => 'required|in:surat_rekomendasi_perdagangan,surat_keterangan_perdagangan,dan_lainnya_perdagangan',
             'kecamatan' => 'required|string',
             'kelurahan' => 'required|string',
             'titik_koordinat' => 'required|string',
-            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'dokumen_nib' => 'required|mimes:pdf|max:10240',
-            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:10240',
-            'akta_perusahaan' => 'required|mimes:pdf|max:10240',
-            'surat' => 'required|file|mimes:pdf,doc,docx|max:10240',
-        ]);
+            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:512',
+            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:512',
+            'dokumen_nib' => 'required|mimes:pdf|max:512',
+            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:512',
+            'akta_perusahaan' => 'required|mimes:pdf|max:512',
+            'surat' => 'required|file|mimes:pdf,doc,docx|max:512',
+        ], $messages);
 
         try {
             // Simpan file satu per satu
@@ -550,8 +667,8 @@ class DashboardPerdaganganController extends Controller{
 
             // Simpan ke tabel form_permohonan
             DB::table('form_permohonan')->insert([
-                'id_permohonan' => $idPermohonan,  // Masukkan UUID yang baru dibuat
-                'id_user' => $idUser,  // Ambil id_user dari session
+                'id_permohonan' => $idPermohonan,
+                'id_user' => $idUser,
                 'kecamatan' => $request->kecamatan,
                 'kelurahan' => $request->kelurahan,
                 'tgl_pengajuan' => now()->toDateString(),
@@ -565,7 +682,7 @@ class DashboardPerdaganganController extends Controller{
 
             // Simpan ke tabel document_user
             DB::table('document_user')->insert([
-                'id_permohonan' => $idPermohonan,  // Masukkan id_permohonan yang sama ke document_user
+                'id_permohonan' => $idPermohonan,
                 'npwp' => $npwpPath,
                 'akta_perusahaan' => $aktaPerusahaanPath,
                 'foto_ktp' => $fotoKTPPath,
@@ -579,7 +696,7 @@ class DashboardPerdaganganController extends Controller{
                 ->with('success', 'Pengajuan surat berhasil diajukan.');
         } catch (Exception $e) {
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
