@@ -16,14 +16,14 @@ class CreateMesinProduksiTable extends Migration
             $table->unsignedBigInteger('id_ikm');
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->string('jenis_mesin');                      
-            $table->string('nama_mesin');                 
-            $table->string('merk_type');                  
-            $table->string('teknologi');                  
-            $table->string('negara_pembuat');             
-            $table->integer('tahun_perolehan');           
-            $table->integer('tahun_pembuatan');           
-            $table->integer('jumlah_unit')->default(1);     
+            $table->string('jenis_mesin');
+            $table->string('nama_mesin');
+            $table->string('merk_type');
+            $table->string('teknologi');
+            $table->string('negara_pembuat');
+            $table->integer('tahun_perolehan');
+            $table->integer('tahun_pembuatan');
+            $table->integer('jumlah_unit')->default(1);
 
             $table->timestamps();
         });

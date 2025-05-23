@@ -16,14 +16,20 @@ class CreateKaryawanTable extends Migration
             $table->unsignedBigInteger('id_ikm');
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->integer('jumlah_karyawan');
+            // Status & Gender
+            $table->integer('tenaga_kerja_tetap');
+            $table->integer('tenaga_kerja_tidak_tetap');
+            $table->integer('tenaga_kerja_laki_laki');
+            $table->integer('tenaga_kerja_perempuan');
+
+            // Pendidikan
             $table->integer('sd');
             $table->integer('smp');
             $table->integer('sma_smk');
+            $table->integer('d1_d3');
             $table->integer('s1_d4');
             $table->integer('s2');
             $table->integer('s3');
-            $table->string('status'); // tetap/tidak tetap
 
             $table->timestamps();
         });

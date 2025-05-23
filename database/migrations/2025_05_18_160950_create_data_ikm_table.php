@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,19 +11,21 @@ class CreateDataIkmTable extends Migration
         Schema::create('data_ikm', function (Blueprint $table) {
             $table->id('id_ikm');
 
-            $table->string('nama_pemilik');
             $table->string('nama_ikm');
-            $table->text('alamat');
-            $table->string('no_telp', 20);
             $table->string('luas');
-            $table->string('jenis_industri');
-            $table->string('komoditi');
+            $table->string('nama_pemilik');
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
 
-            $table->string('kecamatan');  
-            $table->string('kelurahan');  
-            $table->integer('jumlah_tenaga_kerja');
-            $table->bigInteger('nilai_investasi');
+            $table->string('kecamatan');
+            $table->string('kelurahan');
+
+            $table->string('komoditi');
+            $table->string('jenis_industri');
+
+            $table->text('alamat');
             $table->string('nib');
+            $table->string('no_telp', 20);
+            $table->integer('tenaga_kerja');
 
             $table->timestamps();
         });
@@ -33,4 +36,3 @@ class CreateDataIkmTable extends Migration
         Schema::dropIfExists('data_ikm');
     }
 }
-
