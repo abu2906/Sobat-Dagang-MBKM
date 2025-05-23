@@ -23,6 +23,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StokOpname;
+use App\Models\Berita;
+
 
 class DashboardPerdaganganController extends Controller{
     public function index(Request $request)
@@ -123,7 +125,7 @@ class DashboardPerdaganganController extends Controller{
             ')
             ->whereYear('tanggal', $tahunIni)
             ->first();
-
+        $beritaTerbaru = Berita::latest()->take(10)->get();
         // Kirim semua data ke view
         return view('admin.bidangPerdagangan.dashboardPerdagangan', [
             'dataSurat' => $dataSurat,
@@ -133,8 +135,7 @@ class DashboardPerdaganganController extends Controller{
             'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
             'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
             'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-
-            // Data grafik
+            'beritaTerbaru' => $beritaTerbaru,
             'labels' => $labels,
             'hargaSumpang' => $hargaSumpang,
             'hargaLakessi' => $hargaLakessi,
@@ -711,10 +712,9 @@ class DashboardPerdaganganController extends Controller{
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-
                 DB::commit();
-
                 return redirect()->route('bidangPerdagangan.riwayatSurat')->with('success', 'Pengajuan surat berhasil diajukan.');
+            
             } catch (Exception $e) {
                 DB::rollBack();
                 Log::error('Gagal membuat permohonan baru: ' . $e->getMessage());

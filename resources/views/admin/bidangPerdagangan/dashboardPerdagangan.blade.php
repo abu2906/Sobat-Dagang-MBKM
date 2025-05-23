@@ -74,24 +74,36 @@
         </div>
     </div>
     </div>
-
-        <!-- Pie Chart Informasi Pupuk -->
-        <div class="p-4 bg-white shadow-lg rounded-2xl">
-            <div class="mb-2 font-semibold text-center text-gray-800 y">
-                Penyaluran Pupuk
-            </div>
-            <canvas id="pupukChart" class="mx-auto w-50 h-50"></canvas>
-            <div class="flex justify-center gap-4 mt-2 text-sm">
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-900 rounded-full"></span> Urea</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-400 rounded-full"></span> NPK</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-200 rounded-full"></span> NPK-Fk</span>
-            </div>
+        <div class="overflow-x-auto rounded-xl shadow max-h-[500px] overflow-y-auto scrollbar-hide">
+            <table class="min-w-full text-sm text-left border-separate border-spacing-0">
+                <thead class="sticky top-0 z-10 text-black bg-blue-300">
+                    <tr>
+                        <th class="px-4 py-2 rounded-tl-xl">Nama Barang</th>
+                        <th class="px-4 py-2">Kategori Barang</th>
+                        <th class="px-4 py-2">Harga Satuan (kg)</th>
+                        <th class="px-4 py-2 rounded-tr-xl">Update Terakhir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($daftarHarga as $harga)
+                        <tr class="border-b odd:bg-white even:bg-gray-100">
+                            <td class="px-4 py-2 ">{{ $harga->nama_barang }}</td>
+                            <td class="px-4 py-2">{{ $harga->kategori_barang }}</td>
+                            <td class="px-4 py-2">Rp{{ number_format($harga->harga_satuan, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2">{{ \Carbon\Carbon::parse($harga->tanggal)->format('d M Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-4 text-center text-gray-500">Tidak ada data harga barang</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 <h2 class="mt-4 mb-4 text-lg font-semibold text-center text-black lg:text-left">Daftar Surat Masuk</h2>
     <div class="flex flex-col gap-6 mb-6 lg:flex-row lg:items-start ">
     <!-- Kiri: Tabel Surat -->
-
         <div class="w-full overflow-hidden border lg:w-3/4 rounded-xl">
             <div class="overflow-x-auto max-h-[500px] custom-scrollbar">
                 <table class="min-w-full text-sm text-left">
@@ -146,51 +158,32 @@
                     <p class="text-sm italic text-center lg:text-left">Perdagangan yang sehat, <br>ekonomi yang kuat</p>
                 </div>
             </div>
+              <div class="p-4 bg-white shadow-lg rounded-2xl">
+            <div class="mb-2 font-semibold text-center text-gray-800 y">
+                Penyaluran Pupuk
+            </div>
+            <canvas id="pupukChart" class="mx-auto w-20 h-20"></canvas>
+            <div class="flex justify-center gap-4 mt-2 text-sm">
+                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-900 rounded-full"></span> Urea</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-400 rounded-full"></span> NPK</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-200 rounded-full"></span> NPK-Fk</span>
+            </div>
+        </div>
         </div>
     </div>
-
-
-
-    <!-- Daftar Harga Barang dan Notifikasi -->
-    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div class="overflow-x-auto rounded-xl shadow max-h-[500px] overflow-y-auto scrollbar-hide">
-            <table class="min-w-full text-sm text-left border-separate border-spacing-0">
-                <thead class="sticky top-0 z-10 text-black bg-blue-300">
-                    <tr>
-                        <th class="px-4 py-2 rounded-tl-xl">Nama Barang</th>
-                        <th class="px-4 py-2">Kategori Barang</th>
-                        <th class="px-4 py-2">Harga Satuan (kg)</th>
-                        <th class="px-4 py-2 rounded-tr-xl">Update Terakhir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($daftarHarga as $harga)
-                        <tr class="border-b odd:bg-white even:bg-gray-100">
-                            <td class="px-4 py-2 ">{{ $harga->nama_barang }}</td>
-                            <td class="px-4 py-2">{{ $harga->kategori_barang }}</td>
-                            <td class="px-4 py-2">Rp{{ number_format($harga->harga_satuan, 0, ',', '.') }}</td>
-                            <td class="px-4 py-2">{{ \Carbon\Carbon::parse($harga->tanggal)->format('d M Y') }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="py-4 text-center text-gray-500">Tidak ada data harga barang</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <div class="p-6 bg-white shadow-md rounded-2xl">
-            <h2 class="mb-4 text-lg font-semibold text-black">Notifikasi Penting</h2>
-            <ul class="pl-5 pr-2 space-y-2 overflow-y-auto text-sm text-gray-700 list-disc max-h-64">
-                {{-- 
-                @foreach ($notifikasi as $item)
-                    <li>{{ $item->pesan }}</li>
+    <div class="p-6 bg-white shadow-md rounded-2xl">
+            <h2 class="mb-4 text-lg font-semibold text-black">Update Berita Terbaru</h2>
+            <ul class="space-y-3 text-sm text-gray-700 max-h-64 overflow-y-auto">
+                @foreach ($beritaTerbaru as $berita)
+                <li>
+                    <a href="{{ route('berita.utama', $berita->judul) }}" target="_blank" class="text-black font-semibold hover:text-blue-700 hover:underline">
+                        {{ $berita->judul }}
+                    </a>
+                    <div class="text-xs text-gray-500">{{ $berita->created_at->format('d M Y') }}</div>
+                </li>
                 @endforeach
-                --}}
             </ul>
         </div>
-    </div>
 </div>
 
 <script>
