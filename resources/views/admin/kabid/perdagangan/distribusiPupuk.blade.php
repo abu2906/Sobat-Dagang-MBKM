@@ -5,6 +5,58 @@
 <div class="p-6 bg-white">
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
+    <div class="space-y-6">
+
+            <div class="p-4 space-y-4 rounded-xl">
+
+                <div class="bg-[#083458] text-white px-4 py-2 rounded-md flex justify-between items-center">
+                    <span class="font-semibold">Analisis Pupuk</span>
+                </div>
+
+                <div class="relative p-4 space-y-3 bg-white shadow-md rounded-xl">
+                    <div class="flex items-center gap-1 font-semibold text-gray-800">
+                        <span class="text-base material-symbols-outlined">tune</span>
+                        <span>Filter</span>
+                    </div>
+
+                    <form method="GET" action="{{ route('distribusi.pupuk') }}">
+                        <div class="flex gap-3">
+                            <div class="relative w-full">
+                                <select name="kecamatan" onchange="this.form.submit()" class="bg-[#CDE4F7] text-black px-4 py-2 rounded-lg w-full cursor-pointer">
+                                    <option value="">-- Pilih Kecamatan --</option>
+                                    <option value="Soreang" {{ request('kecamatan') == 'Soreang' ? 'selected' : '' }}>Soreang</option>
+                                    <option value="Bacukiki" {{ request('kecamatan') == 'Bacukiki' ? 'selected' : '' }}>Bacukiki</option>
+                                    <option value="Bacukiki Barat" {{ request('kecamatan') == 'Bacukiki Barat' ? 'selected' : '' }}>Bacukiki Barat</option>
+                                    <option value="Ujung" {{ request('kecamatan') == 'Ujung' ? 'selected' : '' }}>Ujung</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
+                            <span>UREA</span>
+                            <span>{{ number_format($dataPupuk['UREA'] ?? 0) }}</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
+                            <span>NPK-FK</span>
+                            <span>{{ number_format($dataPupuk['NPK-FK'] ?? 0) }}</span>
+                        </div>
+                        <div class="col-span-2 flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
+                            <span>NPK</span>
+                            <span>{{ number_format($dataPupuk['NPK'] ?? 0) }}</span>
+                        </div>
+                    </div>
+
+                </div>
+    
+                <div class="p-4 space-y-2 bg-white shadow rounded-xl">
+                        <h2 class="mb-1 text-lg font-medium text-black">Informasi Penyaluran</h2>
+                        <canvas id="pieChart" height="180"></canvas>
+                </div>
+            </div>
+
+        </div>
         <div class="space-y-6">
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -15,16 +67,9 @@
                 </div>
 
                 <div class="flex flex-col justify-between h-32 p-4 bg-white shadow rounded-xl">
-                    <h2 class="text-base font-semibold text-black">Toko Penyaluran Terbanyak</h2>
-                    <div class="space-y-1 text-sm">
-                        @forelse ($tokoPenyaluranTerbanyak as $toko)
-                            <div class="flex justify-between">
-                                <span>{{ ucwords(strtolower($toko->nama_toko)) }} = {{ number_format($toko->total_penyaluran) }}</span>
-                            </div>
-                        @empty
-                            <div class="text-gray-500">Belum ada data</div>
-                        @endforelse
-                    </div>
+                        <p class="text-base font-semibold text-black">Jumlah Pupuk Terdistribusi</p>
+                        <h1 class="text-3xl font-extrabold text-black">{{ number_format($totalDistribusi) }}</h2>
+                        <p class="text-sm text-gray-500">Sak</p>
                 </div>
             </div>
 
@@ -32,7 +77,7 @@
                 <h2 class="mb-4 text-lg font-medium">Distribusi Pupuk</h2>
                 
                 <div class="overflow-x-auto">
-                    <div class="max-h-[750px] overflow-y-auto border border-gray-300 rounded-t-lg">
+                    <div class="max-h-[320px] overflow-y-auto border border-gray-300 rounded-t-lg">
                         <table class="w-full border-collapse table-auto">
                             <thead class="bg-[#083458] text-base sticky top-0 z-10">
                                 <tr>
@@ -67,73 +112,10 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="space-y-6">
-
-            <div class="p-4 space-y-4 rounded-xl">
-
-                <div class="bg-[#083458] text-white px-4 py-2 rounded-md flex justify-between items-center">
-                    <span class="font-semibold">Analisa Pupuk</span>
-                </div>
-
-                <div class="relative p-4 space-y-3 bg-white shadow-md rounded-xl">
-                    <div class="flex items-center gap-1 font-semibold text-gray-800">
-                        <span class="text-base material-symbols-outlined">tune</span>
-                        <span>Filter</span>
-                    </div>
-
-                    <form method="GET" action="{{ route('distribusi.pupuk') }}">
-                        <div class="flex gap-3">
-                            <div class="relative w-full">
-                                <select name="kecamatan" onchange="this.form.submit()" class="bg-[#CDE4F7] text-black px-4 py-2 rounded-lg w-full cursor-pointer">
-                                    <option value="">-- Pilih Kecamatan --</option>
-                                    <option value="Soreang" {{ request('kecamatan') == 'Soreang' ? 'selected' : '' }}>Soreang</option>
-                                    <option value="Bacukiki" {{ request('kecamatan') == 'Bacukiki' ? 'selected' : '' }}>Bacukiki</option>
-                                    <option value="Bacukiki Barat" {{ request('kecamatan') == 'Bacukiki Barat' ? 'selected' : '' }}>Bacukiki Barat</option>
-                                    <option value="Ujung" {{ request('kecamatan') == 'Ujung' ? 'selected' : '' }}>Ujung</option>
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
-                            <span>UREA</span>
-                            <span>{{ number_format($dataPupuk['UREA'] ?? 0) }}</span>
-                        </div>
-                        <div class="flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
-                            <span>NPK-FK</span>
-                            <span>{{ number_format($dataPupuk['NPK-FK'] ?? 0) }}</span>
-                        </div>
-                        <div class="col-span-2 flex justify-between items-center bg-[#CDE4F7] px-4 py-2 rounded-full text-black font-medium">
-                            <span>NPK</span>
-                            <span>{{ number_format($dataPupuk['NPK'] ?? 0) }}</span>
-                        </div>
-                    </div>
-
-                </div>
-    
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div class="flex flex-col justify-start p-4 bg-white shadow rounded-xl h-46">
-                        <p class="mb-1 text-lg font-medium text-black">Jumlah Pupuk Terdistribusi</p>
-                        <h2 class="text-4xl font-bold text-[#083458] text-center mt-6">{{ number_format($totalDistribusi) }}</h2>
-                        <p class="text-2xl font-bold text-[#083458] text-center mt-2">Sak</p>
-                    </div>
-
-                    <div class="p-4 space-y-2 bg-white shadow rounded-xl">
-                        <h2 class="mb-1 text-lg font-medium text-black">Informasi Tambahan</h2>
-                        <canvas id="pieChart" height="180"></canvas>
-                    </div>
-                </div>
-            </div>
-
             <div class="p-4 bg-white shadow rounded-xl">
                 <p class="mb-2 text-lg font-semibold">Grafik Perkembangan Pupuk</p>
                 <canvas id="lineChart" height="150"></canvas>
             </div>
-
         </div>
     </div>
 </div>
@@ -160,6 +142,7 @@
             }]
         },
         options: {
+            radius: '60%', // default biasanya '100%' atau penuh
             plugins: {
                 datalabels: {
                     color: '#000',

@@ -30,7 +30,7 @@
                     <div class="font-semibold text-black">Nama Lengkap</div>
                     <div>{{ $user->nama ?? 'Null' }}</div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 p-4">
+                <div class="grid grid-cols-1 p-4 md:grid-cols-2">
                     <div class="font-semibold text-black">Jenis Kelamin</div>
                     <div>{{ $user->jenis_kelamin ?? 'Null' }}</div>
                 </div>
@@ -38,7 +38,7 @@
                     <div class="font-semibold text-black">Nomor Telepon</div>
                     <div>{{ $user->telp ?? 'Null' }}</div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 p-4">
+                <div class="grid grid-cols-1 p-4 md:grid-cols-2">
                     <div class="font-semibold text-black">Email</div>
                     <div>{{ $user->email ?? 'Null' }}</div>
                 </div>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 p-4">
+                <div class="grid grid-cols-1 p-4 md:grid-cols-2">
                     <div class="font-semibold text-black">Jenis Surat</div>
                     @php
                     $jenisSuratMap = [
@@ -67,7 +67,7 @@
                     <div>{{ $data->titik_koordinat ?? 'Tidak tersedia' }}</div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 p-4">
+                <div class="grid grid-cols-1 p-4 md:grid-cols-2">
                     <div class="font-semibold text-black">Dokumen NPWP</div>
                     <div>
                         @if ($dokumen && $dokumen->npwp)
@@ -95,7 +95,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 p-4">
+                <div class="grid grid-cols-1 p-4 md:grid-cols-2">
                     <div class="font-semibold text-black">Dokumen NIB</div>
                     <div>
                         @if ($dokumen && $dokumen->dokument_nib)
@@ -123,7 +123,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 p-4">
+                <div class="grid grid-cols-1 p-4 md:grid-cols-2">
                     <div class="font-semibold text-black">Foto Usaha</div>
                     <div>
                         @if ($dokumen && $dokumen->foto_usaha)
@@ -187,7 +187,7 @@
                         <div class="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                             <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalRekomendasi')">&times;</button>
                             <h2 class="mb-4 text-lg font-bold text-center">FORMULIR SURAT REKOMENDASI</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                                 @csrf
                                 @method('PUT')
                                 <div>
@@ -250,11 +250,11 @@
                                 <input name="luas_ruangan" type="text" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div>
-                                <label class="block mb-1 text-sm font-semibold">Alamat Usaha</label>
+                                <label class="block mb-1 text-sm ">Alamat Usaha</label>
                                 <input name="alamat_usaha" type="text" class="w-full px-3 py-2 border rounded">
                             </div>
                             <div class="col-span-2">
-                                <label class="block mb-1 text-sm font-semibold">Keterangan Surat</label>
+                                <label class="block mb-1 text-sm ">Keterangan Surat</label>
                                 <textarea name="isi" id="summernote_rekomendasi" class="w-full px-3 py-2 border rounded " rows="3" required required></textarea>
                             </div>
                             </div>
@@ -270,11 +270,11 @@
                     <form action="{{ route('permohonan.keterangan', $data->id_permohonan) }}" method="POST" class="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                         @csrf
                         @method('PUT')
-                        <button type="button" class="absolute top-2 right-2 text-xl text-gray-600" onclick="closeModal('modalKeterangan')">&times;</button>
+                        <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modalKeterangan')">&times;</button>
 
                         <h2 class="mb-4 text-lg font-bold text-center">FORMULIR SURAT KETERANGAN</h2>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
 
                             <div>
                                 <label class="block mb-1 font-semibold">Tanggal Surat</label>
@@ -356,7 +356,7 @@
                         <button type="button" class="absolute text-xl text-gray-600 top-2 right-2" onclick="closeModal('modaltolak')">&times;</button>
                         <h2 class="mb-4 text-lg font-bold text-center">Formulir SURAT DI TOLAK</h2>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div class="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                             <div class="col-span-2">
                                 <label class="block mb-1 text-sm font-semibold">Nama Pemohon</label>
                                 <input name="nama_pengirim" type="text" class="w-full px-3 py-2 border rounded" value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}">
