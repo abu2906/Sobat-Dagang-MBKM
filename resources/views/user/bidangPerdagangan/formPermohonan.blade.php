@@ -159,7 +159,7 @@
                 <div class="flex items-center space-x-2">
                     <label for="dokumen_nib" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
                     <span id="file-dokumen_nib" class="text-gray-500 truncate max-w-[200px]">
-                        {{ isset($dokumen) && $dokumen->dokumen_nib ? basename($dokumen->dokumen_nib) : 'Tidak ada file yang dipilih' }}
+                        {{ isset($dokumen) && $dokumen->dokument_nib ? basename($dokumen->dokument_nib) : 'Tidak ada file yang dipilih' }}
                     </span>
                     <input type="file" id="dokumen_nib" name="dokumen_nib" class="hidden"
                         accept=".pdf"

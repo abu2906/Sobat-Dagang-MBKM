@@ -181,6 +181,7 @@
                     </ul>
                 </div>
                 @endif
+
                 <!-- Modal Surat Rekomendasi -->
                 <div id="modalRekomendasi" class="fixed inset-0 z-50 flex items-center justify-center hidden w-full px-4 bg-black bg-opacity-50 sm:pl-20">
                     <form action="{{ route('permohonan.rekomendasi', $data->id_permohonan) }}" method="POST">
@@ -265,8 +266,9 @@
                         </div>
                     </form>
                 </div>
+
                 <!-- Modal Surat Keterangan -->
-                <div id="modalKeterangan" class="fixed inset-0 z-50 flex items-center justify-center hidden w-full px-4 bg-black bg-opacity-50 sm:pl-20">
+                <div id="modalKeterangan" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 sm:ml-30">
                     <form action="{{ route('permohonan.keterangan', $data->id_permohonan) }}" method="POST" class="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                         @csrf
                         @method('PUT')
