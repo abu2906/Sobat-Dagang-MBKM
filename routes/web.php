@@ -22,6 +22,8 @@ use App\Http\Middleware\RoleCheckMiddleware;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\HalalController;
 use App\Http\Controllers\UserHalalController;
+use App\Http\Controllers\ForumDiskusiController;
+
 
 
 
@@ -63,6 +65,12 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
 
 
+    //pengaduan
+    Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
+    Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
+    Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat');
+
+    
     //pelaporan
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
     Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
@@ -73,7 +81,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::post('/input-data-toko', [PelaporanController::class, 'inputDataToko'])->name('pelaporan.inputDataToko');
     Route::get('/input-data-distribusi/{id_toko}', [PelaporanController::class, 'showDataDistribusi'])->name('pelaporan.showDataDistribusi');
     Route::post('/input-data-distribusi', [PelaporanController::class, 'inputDataDistribusi'])->name('pelaporan.inputDataDistribusi');
-
+    
     //perdagangan
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
     Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
@@ -87,9 +95,12 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
     Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
 
-    Route::get('/halal', function () {
-        return view('user.halal');
-    })->name('halal');
+    // Industri
+    Route::get('/bidang-industri/form-permohonan', [AdminIndustriController::class, 'formPermohonan'])->name('bidangIndustri.formPermohonan');
+    Route::get('/bidang-industri/riwayat-surat', [AdminIndustriController::class, 'riwayatSuratt'])->name('bidangIndustri.riwayatSurat');
+    Route::post('/bidang-industri/ajukan-permohonan', [AdminIndustriController::class, 'ajukanPermohonann'])->name('ajukan.Permohonan');
+    Route::get('/bidang-industri/data-sertifikat-halal', [UserHalalController::class, 'index'])->name('Halal');
+    Route::post('/bidang-industri/draft-permohonan', [AdminIndustriController::class, 'draftPermohonann'])->name('bidangIndustri.draftPermohonan');
 });
 
 
@@ -126,8 +137,7 @@ Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
 });
 
 //User Industri
-Route::get('/sertifikasi-halal', [UserHalalController::class, 'index'])->name('halal.user');
-Route::get('/form-surat-permohonan', [PersuratanController::class, 'showFormSurat'])->name('form.surat');
+
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
 
