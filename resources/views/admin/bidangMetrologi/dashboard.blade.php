@@ -8,15 +8,15 @@
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-white">Jumlah Surat Masuk</p>
-                <p class="text-2xl font-bold text-white">{{ $totalSuratMasuk }}</p>
+                <p class="text-2xl font-bold text-white">{{ $dataSuratAdmin['totalSuratMasuk'] }}</p>
             </div>
         </a>
 
         <a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
             <img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-12 h-12">
             <div>
-                <p class="text-base font-medium text-white">Jumlah Surat Terverifikasi</p>
-                <p class="text-2xl font-bold text-white">{{ $totalSuratDiterima }}</p>
+                <p class="text-base font-medium text-white">Jumlah Surat Disetujui</p>
+                <p class="text-2xl font-bold text-white">{{ $dataSuratAdmin['totalSuratMasukDisetujui'] }}</p>
             </div>
         </a>
 
@@ -24,7 +24,7 @@
             <img src="{{ asset('assets/img/icon/surat_ditolak.png') }}" alt="Ditolak" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-white">Jumlah Surat Ditolak</p>
-                <p class="text-2xl font-bold text-white">{{ $totalSuratDitolak }}</p>
+                <p class="text-2xl font-bold text-white">{{ $dataSuratAdmin['totalSuratDitolak'] }}</p>
             </div>
         </a>
 
@@ -32,7 +32,7 @@
             <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
             <div>
                 <p class="text-base font-medium text-white">Jumlah Surat Menunggu</p>
-                <p class="text-2xl font-bold text-white">{{ $totalSuratMenunggu }}</p>
+                <p class="text-2xl font-bold text-white">{{ $dataSuratAdmin['totalSuratMenunggu'] }}</p>
             </div>
         </a>
     </div>
@@ -59,17 +59,28 @@
                 <table class="min-w-full text-sm text-left">
                     <thead class="bg-blue-300 text-black">
                         <tr>
-                            <th class="text-center py-2 px-4">ID</th>
-                            <th class="text-center py-2 px-4">Nama Pemohon</th>
-                            <th class="text-center py-2 px-4">Status</th>
+                            <th class="text-center py-2 px-4 w-1/5">Nomor Surat</th>
+                            <th class="text-center py-2 px-4 w-2/5">Nama Pemohon</th>
+                            <th class="text-center py-2 px-4 w-2/5">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($suratTerbaru as $surat)
-                            <tr class="border-b">
-                                <td class="text-center py-2 px-4">{{ $surat->id_surat}}</td>
-                                <td class="text-center py-2 px-4">{{ $surat->user->nama }}</td>
-                                <td class="text-center py-2 px-4">{{ $surat->status_surat_masuk }}</td>
+                        @foreach($dataSuratAdmin['suratTerbaru'] as $surat)
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="text-center py-2 px-4 truncate max-w-[120px]" title="{{ $surat->id_surat }}">{{ $surat->id_surat }}</td>
+                                <td class="text-center py-2 px-4 truncate max-w-[200px]" title="{{ $surat->user->nama }}">{{ $surat->user->nama }}</td>
+                                <td class="text-center py-2 px-4">
+                                    <span class="text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap inline-block max-w-[200px] truncate" title="{{ $surat->status_admin }}"
+                                        {{ $surat->status_admin == 'Menunggu' ? 'text-yellow-700 bg-yellow-100' : '' }}
+                                        {{ $surat->status_admin == 'Diproses' ? 'text-blue-700 bg-blue-100' : '' }}
+                                        {{ $surat->status_admin == 'Ditolak' ? 'text-red-700 bg-red-100' : '' }}
+                                        {{ $surat->status_admin == 'Menunggu Persetujuan' ? 'text-indigo-700 bg-indigo-100' : '' }}
+                                        {{ $surat->status_admin == 'Diterima' ? 'text-cyan-700 bg-cyan-100' : '' }}
+                                        {{ $surat->status_admin == 'Selesai' ? 'text-green-700 bg-green-100' : '' }}
+                                        {{ $surat->status_admin == 'Butuh Revisi' ? 'text-orange-700 bg-orange-100' : '' }}>
+                                        {{ $surat->status_admin }}
+                                    </span>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -81,7 +92,7 @@
             <div class="flex flex-col gap-4">
                 <div class="flex flex-col items-center justify-center gap-2 bg-[#0c3252] text-white px-5 py-4 rounded-lg">
 					<p class="text-lg font-semibold">Surat Belum Terverifikasi</p>
-					<p class="text-3xl font-semibold">{{ $totalSuratMenunggu }}</p>
+					<p class="text-3xl font-semibold">{{ $dataSuratAdmin['totalSuratMenunggu'] }}</p>
                     <a href="{{ route('persuratan-metrologi') }}" class="bg-white text-[#0c3252] flex p-2 gap-2 items-center justify-center text-sm rounded-lg shadow w-1/2">
 						Tinjau Sekarang
 					</a>
@@ -91,11 +102,17 @@
                     <div class="h-[200px] w-full">
 					<canvas id="statusChart"></canvas>
                     </div>
-                    <div class="legend text-sm">
-						<span style="color: yellow;">&#11044;</span> Disetujui
-						<span style="color: purple;">&#11044;</span> Ditolak
-						<span style="color: pink;">&#11044;</span> Menunggu
-					</div>
+                    <div class="legend text-sm grid grid-cols-3 gap-2 mt-2">
+                        <div class="flex items-center gap-1">
+                            <span style="color: #f59e0b;">&#11044;</span> Menunggu
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span style="color: #22c55e;">&#11044;</span> Disetujui
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span style="color: #ef4444;">&#11044;</span> Ditolak
+                        </div>
+                    </div>
 				</div>
 			</div>
         </div>
@@ -188,23 +205,33 @@
     // Pie Chart for Status
     new Chart(document.getElementById('statusChart'), {
         type: 'pie',
-		data: {
-			labels: ['Disetujui', 'Ditolak', 'Menunggu'],
-			datasets: [{
-				data: [{{ $totalSuratDiterima }}, {{ $totalSuratDitolak }}, {{ $totalSuratMenunggu }}],
-                backgroundColor: ['yellow', 'purple', 'pink'],
-			}]
-		},
-		options: {
-			responsive: true,
+        data: {
+            labels: ['Menunggu', 'Disetujui', 'Ditolak'],
+            datasets: [{
+                data: [
+                    {{ $dataSuratAdmin['pieChartData']['menunggu'] }},
+                    {{ $dataSuratAdmin['pieChartData']['disetujui'] }},
+                    {{ $dataSuratAdmin['pieChartData']['ditolak'] }}
+                ],
+                backgroundColor: [
+                    '#f59e0b', // Menunggu - yellow
+                    '#22c55e', // Disetujui - green
+                    '#ef4444'  // Ditolak - red
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
             maintainAspectRatio: false,
-			plugins: {
-				legend: {
-					display: false
-				}
-			}
-		}
-	});
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
 
     new Chart(document.getElementById('barChart'), {
         type: 'bar',

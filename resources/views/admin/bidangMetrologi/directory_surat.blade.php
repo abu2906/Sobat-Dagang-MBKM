@@ -8,15 +8,15 @@
 				<img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
 				<div>
 					<p class="text-base font-medium text-white">Jumlah Surat Masuk</p>
-					<p class="text-2xl font-bold text-white">{{ $totalSuratMasuk }}</p>
+					<p class="text-2xl font-bold text-white">{{ $dataSuratAdmin['totalSuratMasuk'] }}</p>
 				</div>
 			</a>
 
 			<a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
-				<img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-12 h-12">
+				<img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Disetujui" class="w-12 h-12">
 				<div>
-					<p class="text-base font-medium text-white">Jumlah Surat Terverifikasi</p>
-					<p class="text-2xl font-bold text-white">{{ $totalSuratDiterima }}</p>
+					<p class="text-base font-medium text-white">Jumlah Surat Disetujui</p>
+					<p class="text-2xl font-bold text-white">{{ $dataSuratAdmin['totalSuratMasukDisetujui'] }}</p>
 				</div>
 			</a>
 
@@ -24,7 +24,7 @@
 				<img src="{{ asset('assets/img/icon/surat_ditolak.png') }}" alt="Ditolak" class="w-12 h-12">
 				<div>
 					<p class="text-base font-medium text-white">Jumlah Surat Ditolak</p>
-					<p class="text-2xl font-bold text-white">{{ $totalSuratDitolak }}</p>
+					<p class="text-2xl font-bold text-white">{{ $dataSuratAdmin['totalSuratDitolak'] }}</p>
 				</div>
 			</a>
 
@@ -32,7 +32,7 @@
 				<img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
 				<div>
 					<p class="text-base font-medium text-white">Jumlah Surat Menunggu</p>
-                	<p class="text-2xl font-bold text-white">{{ $totalSuratMenunggu }}</p>
+                	<p class="text-2xl font-bold text-white">{{ $dataSuratAdmin['totalSuratMenunggu'] }}</p>
 				</div>
 			</a>
 		</div>

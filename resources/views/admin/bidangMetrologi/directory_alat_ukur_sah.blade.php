@@ -9,14 +9,14 @@
         <div class="absolute bottom-[-30px] w-full px-8">
             <div class="flex flex-wrap items-center justify-between p-4 rounded-xl shadow-md">
                 <!-- Filter/Search Input -->
-                <div class="flex space-x-2 mb-2 md:mb-0">
+                <div class="flex space-x-4 mb-2 md:mb-0">
                     <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
                         <option value="">Semua</option>
                         <option value="Valid">Valid</option>
                         <option value="Kadaluarsa">Kadaluarsa</option>
                     </select>
                 </div>
-                <div class="relative flex-grow mt-2 md:mt-0">
+                <div class="relative flex-grow mt-2 md:mt-0 mx-4">
                     <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full shadow text-sm w-full">
                     <span class="absolute left-3 top-2 text-gray-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor"
@@ -27,12 +27,20 @@
                     </span>
                 </div>
                 <!-- Add Button -->
-                <button onclick="openModal()" class="mt-2 md:mt-0 text-white flex items-center gap-2 bg-[#0c3252] transition-colors duration-300 hover:bg-[#F49F1E] hover:text-black rounded-full px-8 py-2 ml-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Tambah UTTP
-                </button>
+                <div class="flex gap-4 mt-2 md:mt-0">
+                    <a href="{{ route('uttp.download') }}" class="text-white flex items-center gap-2 bg-[#0c3252] transition-colors duration-300 hover:bg-[#F49F1E] hover:text-black rounded-full px-6 py-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Download
+                    </a>
+                    <button onclick="openModal()" class="text-white flex items-center gap-2 bg-[#0c3252] transition-colors duration-300 hover:bg-[#F49F1E] hover:text-black rounded-full px-8 py-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Tambah UTTP
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -72,8 +80,9 @@
                             <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">ID User <span class="text-red-500">*</span></label>
-                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2" required>
+                            <label class="block text-sm font-medium">ID User</label>
+                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2">
+                            <p class="text-xs text-gray-500 mt-1">Kosongkan bila pemilik uttp tidak terdaftar pada sistem</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium">No Registrasi <span class="text-red-500">*</span></label>
@@ -86,6 +95,7 @@
                         <div>
                             <label class="block text-sm font-medium">Jenis Alat <span class="text-red-500">*</span></label>
                             <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2" required>
+                                <option value="" class="text-gray-400" selected>Pilih Jenis Alat</option>
 								<option value="UP-MK">UP-MK</option>
 								<option value="VOL-TK">VOLUME - TK</option>
 								<option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
@@ -120,6 +130,7 @@
                         <div>
                             <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
                             <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
+                                <option value="" class="text-gray-400" selected>Pilih Alat Penguji</option>
 								<option value="BUS">BUS</option>
 								<option value="AT">AT</option>
 								<option value="ATB">ATB</option>
@@ -128,6 +139,7 @@
                         <div>
                             <label class="block text-sm font-medium">Cap Tanda Tera <span class="text-red-500">*</span></label>
                             <select id="ctt" name="ctt" class="w-full border rounded px-3 py-2" required>
+                                <option value="" class="text-gray-400" selected>Pilih Cap Tanda Tera</option>
 								<option value="SL6">SL6</option>
 								<option value="SL4">SL4</option>
 								<option value="SL2">SL2</option>
@@ -148,11 +160,16 @@
                             <input type="text" name="spt_keperluan" class="w-full border rounded px-3 py-2">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
                             <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
-								<option value="Tera">Tera</option>
-								<option value="Tera Ulang">Tera Ulang</option>
-							</select>
+                                <option value="" class="text-gray-400" selected>Pilih Keterangan</option>
+                                <option value="Tera">Tera</option>
+                                <option value="Tera Ulang">Tera Ulang</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Sertifikat (PDF)</label>
+                            <input type="file" name="sertifikat" accept=".pdf" class="w-full border rounded px-3 py-2">
                         </div>
                         <div class="flex items-center space-x-2 mt-2">
                             <input type="checkbox" name="terapan" id="terapan" class="rounded border-gray-300">
@@ -237,6 +254,8 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     const statusFilter = document.getElementById("statusFilter");
     const searchInput = document.getElementById("searchInput");
@@ -303,13 +322,19 @@
                 <tr><td class="py-2 font-semibold">Tanggal Tera</td><td class="py-2">: ${new Date(data.tanggal_penginputan ?? '-').toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td></tr>
                 <tr><td class="py-2 font-semibold">Tanggal Selesai</td><td class="py-2">: ${new Date(data.tanggal_selesai ?? '-').toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td></tr>
                 <tr><td class="py-2 font-semibold">Keterangan</td><td class="py-2">: ${data.keterangan || '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Sertifikat</td><td class="py-2">: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
             `;
             
             togglePopup(true);
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Terjadi kesalahan saat memuat detail alat');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Terjadi kesalahan saat memuat detail alat',
+                confirmButtonText: 'OK'
+            });
         });
     }
 
@@ -317,26 +342,89 @@
         event.preventDefault();
         const form = event.target;
         
-        // Submit form menggunakan fetch
-        fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        // Validasi ukuran file sertifikat
+        const sertifikatInput = form.querySelector('[name="sertifikat"]');
+        if (sertifikatInput.files.length > 0) {
+            const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+            if (sertifikatInput.files[0].size > maxSize) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ukuran File Terlalu Besar',
+                    text: 'Ukuran file maksimal adalah 10MB. Silakan pilih file yang lebih kecil.',
+                    confirmButtonText: 'OK'
+                });
+                return;
             }
-        })
-        .then(response => {
-            if (response.ok) {
-                // Jika berhasil, redirect ke halaman management UTTP tanpa parameter
-                window.location.href = "{{ route('management-uttp-metrologi') }}";
-            } else {
-                // Jika gagal, tampilkan pesan error
-                alert('Terjadi kesalahan saat menyimpan data');
+        }
+
+        // Konfirmasi sebelum submit
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah Anda yakin ingin menyimpan data ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Simpan',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Hapus pesan error yang ada
+                const errorMessages = form.querySelectorAll('.error-message');
+                errorMessages.forEach(el => el.remove());
+                
+                // Submit form menggunakan fetch
+                fetch(form.action, {
+                    method: form.method,
+                    body: new FormData(form),
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Data berhasil disimpan',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.href = "{{ route('management-uttp-metrologi') }}";
+                        });
+                    } else {
+                        // Tampilkan pesan error untuk setiap field
+                        if (data.errors) {
+                            Object.keys(data.errors).forEach(field => {
+                                const input = form.querySelector(`[name="${field}"]`);
+                                if (input) {
+                                    const errorDiv = document.createElement('div');
+                                    errorDiv.className = 'error-message text-red-500 text-sm mt-1';
+                                    errorDiv.textContent = data.errors[field][0];
+                                    input.parentNode.appendChild(errorDiv);
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message || 'Terjadi kesalahan saat menyimpan data',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat menyimpan data',
+                        confirmButtonText: 'OK'
+                    });
+                });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Terjadi kesalahan saat menyimpan data');
         });
     }
 
@@ -354,7 +442,56 @@
     }
 
     function tutupModal() {
+        // Konfirmasi sebelum menutup modal jika ada perubahan
+        const form = document.getElementById('form-alat');
+        const formData = new FormData(form);
+        let hasChanges = false;
+
+        // Cek apakah ada perubahan pada form
+        for (let [key, value] of formData.entries()) {
+            if (key !== 'sertifikat' && value !== '') {
+                hasChanges = true;
+                break;
+            }
+        }
+
+        if (hasChanges) {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: 'Apakah Anda yakin ingin menutup form? Perubahan yang belum disimpan akan hilang.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Tutup',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    closeModalAndReset();
+                }
+            });
+        } else {
+            closeModalAndReset();
+        }
+    }
+
+    function closeModalAndReset() {
         document.getElementById('modalTambahAlat').classList.add('hidden');
+        
+        // Reset form
+        const form = document.getElementById('form-alat');
+        form.reset();
+        
+        // Hapus semua pesan error
+        const errorMessages = form.querySelectorAll('.error-message');
+        errorMessages.forEach(el => el.remove());
+        
+        // Hapus tampilan sertifikat yang ada
+        const sertifikatContainer = form.querySelector('[name="sertifikat"]').parentElement;
+        const existingFile = sertifikatContainer.querySelector('.mt-2');
+        if (existingFile) {
+            existingFile.remove();
+        }
     }
 
     function openEditModal(data, updateRoute) {
@@ -364,6 +501,17 @@
         // Ganti action dan method
         form.action = updateRoute;
         document.getElementById('formMethod').value = "PATCH";
+
+        // Hapus pesan error yang ada
+        const errorMessages = form.querySelectorAll('.error-message');
+        errorMessages.forEach(el => el.remove());
+
+        // Hapus tampilan sertifikat yang ada sebelum menambahkan yang baru
+        const sertifikatContainer = form.querySelector('[name="sertifikat"]').parentElement;
+        const existingFile = sertifikatContainer.querySelector('.mt-2');
+        if (existingFile) {
+            existingFile.remove();
+        }
 
         // Assign field manual
         form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
@@ -378,8 +526,19 @@
         form.elements['ctt'].value = data.ctt || '';
         form.elements['spt_keperluan'].value = data.spt_keperluan || '';
         form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
-        form.elements['terapan'].value = data.terapan || '';
+        form.elements['terapan'].checked = data.terapan || false;
         form.elements['keterangan'].value = data.keterangan || '';
+
+        // Tampilkan file sertifikat yang sudah ada
+        if (data.sertifikat_path) {
+            const existingFile = document.createElement('div');
+            existingFile.className = 'mt-2 text-sm text-gray-600';
+            existingFile.innerHTML = `
+                <p>File saat ini: <a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a></p>
+                <p class="text-xs text-gray-500 mt-1">Upload file baru untuk mengganti sertifikat</p>
+            `;
+            sertifikatContainer.appendChild(existingFile);
+        }
     }
 
     // Script untuk membuka modal otomatis dan mengisi field
@@ -411,6 +570,40 @@
             }
         }
     });
+
+    function getDetail(id) {
+        fetch(`/admin/metrologi/detail/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('detailTanggalMulai').textContent = data.tanggal_penginputan || '-';
+                document.getElementById('detailNoRegistrasi').textContent = data.no_registrasi || '-';
+                document.getElementById('detailNamaUsaha').textContent = data.nama_usaha || '-';
+                document.getElementById('detailJenisAlat').textContent = data.jenis_alat || '-';
+                document.getElementById('detailNamaAlat').textContent = data.nama_alat || '-';
+                document.getElementById('detailMerkType').textContent = data.merk_type || '-';
+                document.getElementById('detailNomorSeri').textContent = data.nomor_seri || '-';
+                document.getElementById('detailAlatPenguji').textContent = data.alat_penguji || '-';
+                document.getElementById('detailCtt').textContent = data.ctt || '-';
+                document.getElementById('detailSptKeperluan').textContent = data.spt_keperluan || '-';
+                document.getElementById('detailTanggalSelesai').textContent = data.tanggal_selesai || '-';
+                document.getElementById('detailTerapan').textContent = data.terapan ? 'Ya' : 'Tidak';
+                document.getElementById('detailKeterangan').textContent = data.keterangan || '-';
+                
+                // Update certificate display
+                const sertifikatElement = document.getElementById('detailSertifikat');
+                if (data.sertifikat_path) {
+                    sertifikatElement.innerHTML = `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>`;
+                } else {
+                    sertifikatElement.innerHTML = '<span class="text-gray-500">Belum di upload oleh admin</span>';
+                }
+
+                document.getElementById('modalDetail').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengambil data');
+            });
+    }
 </script>
 
 

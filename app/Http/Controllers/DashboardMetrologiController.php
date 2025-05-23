@@ -18,11 +18,18 @@ class DashboardMetrologiController extends Controller
     public function index()
     {
         $dataSurat = $this->getJumlahSurat();
+        $dataSuratAdmin = $this->getJumlahSuratAdmin();
         $chartData = $this->chartData();
         $chartBar = $this->chartBarJenisAlat();
         $donutChart = $this->getDonutChartData();
-        $data = array_merge($dataSurat, $chartData, $chartBar, $donutChart);
-
+        
+        $data = array_merge(
+            $dataSurat,
+            ['dataSuratAdmin' => $dataSuratAdmin],
+            $chartData,
+            $chartBar,
+            $donutChart
+        );
 
         return view('admin.bidangMetrologi.dashboard', $data);
     }
@@ -169,7 +176,7 @@ class DashboardMetrologiController extends Controller
         // Surat terbaru untuk ditampilkan di dashboard
         $suratTerbaru = suratMetrologi::with('user')
             ->orderBy('created_at', 'desc')
-            ->take(6)
+            ->take(10)
             ->get();
 
         // Statistik bulanan
@@ -245,8 +252,13 @@ class DashboardMetrologiController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         $dataJumlahSurat = $this->getJumlahSurat();
+        $dataSuratAdmin = $this->getJumlahSuratAdmin();
 
-        return view('admin.bidangMetrologi.directory_surat', $dataJumlahSurat, compact('suratList'));
+        return view('admin.bidangMetrologi.directory_surat', array_merge(
+            $dataJumlahSurat,
+            ['suratList' => $suratList],
+            ['dataSuratAdmin' => $dataSuratAdmin]
+        ));
     }
 
     public function showAdministrasiKabid()
@@ -305,5 +317,64 @@ class DashboardMetrologiController extends Controller
             'totalSuratDitolak',
             'totalSuratMenunggu'
         ));
+    }
+
+    public function getJumlahSuratAdmin()
+    {
+        // Total surat yang sudah diproses (Diterima + Ditolak + Menunggu)
+        $totalSuratMasuk = DB::table('surat_metrologi')
+            ->whereIn('status_admin', ['Diterima', 'Ditolak', 'Menunggu', 'Diproses', 'Menunggu Persetujuan', 'Selesai', 'Butuh Revisi'])
+            ->count();
+        
+        // Surat yang sudah diproses (diterima/ditolak)
+        $totalSuratDiterima = DB::table('surat_metrologi')
+            ->where('status_admin', 'Diterima')
+            ->count();
+            
+        $totalSuratDitolak = DB::table('surat_metrologi')
+            ->where('status_admin', 'Ditolak')
+            ->count();
+            
+        $totalSuratMenunggu = DB::table('surat_metrologi')
+            ->where('status_admin', 'Menunggu')
+            ->count();
+
+        // Data untuk pie chart (menggunakan status_surat_masuk)
+        $pieChartData = [
+            'menunggu' => DB::table('surat_metrologi')->where('status_surat_masuk', 'Menunggu')->count(),
+            'disetujui' => DB::table('surat_metrologi')->where('status_surat_masuk', 'Disetujui')->count(),
+            'ditolak' => DB::table('surat_metrologi')->where('status_surat_masuk', 'Ditolak')->count()
+        ];
+
+        // Data untuk box status surat masuk
+        $totalSuratMasukDisetujui = DB::table('surat_metrologi')
+            ->where('status_surat_masuk', 'Disetujui')
+            ->count();
+
+        // Surat terbaru untuk ditampilkan di dashboard
+        $suratTerbaru = suratMetrologi::with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(8)
+            ->get();
+
+        // Statistik bulanan
+        $bulanIni = Carbon::now()->month;
+        $tahunIni = Carbon::now()->year;
+
+        $totalSuratMasukBulanIni = DB::table('surat_metrologi')
+            ->whereMonth('created_at', $bulanIni)
+            ->whereYear('created_at', $tahunIni)
+            ->count();
+
+        return [
+            'totalSuratMasuk' => $totalSuratMasuk,
+            'totalSuratMasukBulanIni' => $totalSuratMasukBulanIni,
+            'totalSuratDiterima' => $totalSuratDiterima,
+            'totalSuratDitolak' => $totalSuratDitolak,
+            'totalSuratMenunggu' => $totalSuratMenunggu,
+            'suratTerbaru' => $suratTerbaru,
+            'pieChartData' => $pieChartData,
+            'totalSuratMasukDisetujui' => $totalSuratMasukDisetujui
+        ];
     }
 }
