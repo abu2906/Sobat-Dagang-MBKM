@@ -424,7 +424,9 @@ class DirectoryBookController extends Controller
         // Cari alat ukur yang tanggal_exp-nya sama dengan $targetDate
         $dataKedaluwarsa = DataAlatUkur::with('uttp.user')
             ->where('tanggal_exp', $targetDate)
-            ->where('notifikasi_terkirim', false)->get();
+            ->where('notifikasi_terkirim', false)
+            ->where('status', '!=', 'Kadaluarsa')  // Only check items that are not already expired
+            ->get();
 
         foreach ($dataKedaluwarsa as $data) {
             $user = $data->uttp->user;
@@ -432,13 +434,22 @@ class DirectoryBookController extends Controller
             if ($user) {
                 Mail::to($user->email)->send(new NotifikasiUttpKadaluarsa($data));
 
-                // Tandai bahwa notifikasi sudah dikirim
+                // Only mark notification as sent, don't change status yet
                 $data->update([
-                    'status' => 'Kadaluarsa',
                     'notifikasi_terkirim' => true,
                 ]);
             }
         }
+    }
+
+    public function updateExpiredStatus()
+    {
+        $today = Carbon::today();
+
+        // Update status to Kadaluarsa for items that have actually expired
+        DataAlatUkur::where('tanggal_exp', '<=', $today)
+            ->where('status', '!=', 'Kadaluarsa')
+            ->update(['status' => 'Kadaluarsa']);
     }
 
     public function downloadUttp()

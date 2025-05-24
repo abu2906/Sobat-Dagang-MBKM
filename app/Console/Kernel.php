@@ -20,6 +20,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('copy:yesterday-price')->dailyAt('00:00');
 
         $schedule->command('uttp:notify-expiry')->dailyAt('14:30');
+        
+        // Update expired status daily at midnight
+        $schedule->command('uttp:update-expired-status')->dailyAt('00:00');
     }
 
     protected function commands()
