@@ -29,7 +29,7 @@
         </div>
         <!-- Jumlah IKM Bersertifikasi HALAL -->
         <div class="sm:w-[370px] p-4 bg-white rounded-xl shadow-[0_0_15px_3px_rgba(0,54,94,0.25)]">
-          <div class="text-5xl text-emerald-600 mb-2">🥩</div>
+          <div class="text-5xl text-emerald-600 mb-2"><img src="{{ asset('assets/img/icon/halal.png') }}" alt="Ikon Halal" class="w-8 h-11"></div>
           <p class="font-semibold text-lg mb-1 mt-0">Jumlah IKM Bersertifikasi HALAL</p>
           <p class="font-extrabold text-3xl mb-1 mt-0">{{ $totalSuratTerverifikasi }}</p>
           <p class="text-base">IKM telah memiliki sertifikasi Halal</p>
