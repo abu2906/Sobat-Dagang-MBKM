@@ -1,16 +1,24 @@
 @auth('user')
-<nav class="navbar relative w-full px-4 py-2 text-white">
-    <div class="flex items-center justify-between w-full">
-        <div class="navbar-left">
+<nav class="navbar w-full px-4 py-2 text-white bg-[#083358]" style="font-family: 'Poppins', sans-serif;">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between w-full">
+        <div class="flex items-center justify-between w-full md:w-auto">
             <a href="{{ route('user.dashboard') }}">
                 <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="h-10">
             </a>
+
+            <button id="burger-btn" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
         </div>
 
-    <div id="nav-menu" class="navbar-center hidden md:flex flex-col md:flex-row md:items-center md:space-x-6 md:justify-center w-full">
+    <div id="nav-menu" class="navbar-center hidden md:flex flex-col md:flex-row md:items-center md:space-x-6">
         <ul class="nav-menu flex flex-col md:flex-row">
-            <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
-            <li><a href="{{ route('about') }}"><strong>ABOUT US</strong></a></li>
+                <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
+                <li><a href="{{ route('about') }}"><strong>ABOUT US</strong></a></li>
 
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle"><strong>PELAYANAN</strong> <span class="dropdown-icon">▼</span></a>
@@ -36,18 +44,18 @@
                         <a href="#"><strong>METROLOGI</strong></a>
                         <ul class="submenu">
                             <li><a href="{{ route('administrasi-metrologi') }}"><strong>Permohonan Tera/Teraulang</strong></a></li>
-                            <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Milik Saya</strong></a></li>
+                            <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Ukur Valid</strong></a></li>
                         </ul>
                     </li>
                 </ul>
             </li>
 
-            <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
-            <li><a href="#" id="open-chat"><strong>FAQ</strong></a></li>
-        </ul>
-    </div>
+                <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
+                <li><a href="#" id="open-chat"><strong>FAQ</strong></a></li>    
+            </ul>
+        </div>
 
-        <div class="flex items-center space-x-4">
+        <div class="hidden md:flex items-center space-x-4 mt-2 md:mt-0">
             <button aria-label="Notifikasi" class="focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-7 w-7 hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -58,7 +66,6 @@
                             11-6 0v-1m6 0H9" />
                 </svg>
             </button>
-
             <button aria-label="Profil" class="focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-7 w-7 hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -67,27 +74,18 @@
                             9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 </svg>
             </button>
-
-            <button id="burger-btn" class="md:hidden focus:outline-none">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
         </div>
     </div>
 </nav>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const burgerBtn = document.getElementById('burger-btn');
         const navMenu = document.getElementById('nav-menu');
 
-        if (burgerBtn && navMenu) {
-            burgerBtn.addEventListener('click', () => {
-                navMenu.classList.toggle('hidden');
-            });
-        }
+        burgerBtn?.addEventListener('click', () => {
+            navMenu?.classList.toggle('hidden');
+        });
     });
 </script>
 @endauth

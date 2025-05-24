@@ -11,6 +11,7 @@
         "intervention/image": "2.7",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
+        "maatwebsite/excel": "^1.1",
         "mpdf/mpdf": "^8.2"
     },
     "require-dev": {
@@ -28,7 +29,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/StatusHelper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

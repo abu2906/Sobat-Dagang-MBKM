@@ -222,29 +222,27 @@
 					</div>
 				</div>
 
-				<div class="mb-4">
-					<h2>Data Pemohon : </h2>
-				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Alamat Alat</label>
+					<label class="block font-semibold mb-1">Alamat Alat <span style="color:red">*</span></label>
 					<input type="text" name="alamat_alat" placeholder="Masukkan Alamat Alat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Nomor Surat</label>
+					<label class="block font-semibold mb-1">Nomor Surat <span style="color:red">*</span></label>
 					<input type="text" name="nomor_surat" placeholder="Masukkan Nomor Surat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Jenis Surat</label>
+					<label class="block font-semibold mb-1">Jenis Surat <span style="color:red">*</span></label>
 					<select name="jenis_surat" class="border px-4 py-2 w-full rounded-lg">
+						<option value="" disabled selected>-- Pilih Jenis Surat --</option>
 						<option value="tera">Tera</option>
 						<option value="tera_ulang">Tera Ulang</option>
 					</select>
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Upload Surat</label>
+					<label class="block font-semibold mb-1">Upload Surat <span style="color:red">*</span></label>
 					<input type="file" name="dokumen" class="mt-2">
 				</div>
 
@@ -257,4 +255,36 @@
 
 
     <script src="{{ asset('assets/js/switch.js') }}"></script>
+
+    <script>
+        function validateNomorSurat(input) {
+            const nomorSurat = input.value;
+            
+            // Kirim request ke server untuk cek nomor surat
+            fetch('/check-nomor-surat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ nomor_surat: nomorSurat })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const errorElement = document.getElementById('nomor-surat-error');
+                if (data.exists) {
+                    errorElement.textContent = 'Nomor surat ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.';
+                    errorElement.classList.remove('hidden');
+                    input.setCustomValidity('Nomor surat ini sudah digunakan');
+                } else {
+                    errorElement.textContent = '';
+                    errorElement.classList.add('hidden');
+                    input.setCustomValidity('');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
 @endsection

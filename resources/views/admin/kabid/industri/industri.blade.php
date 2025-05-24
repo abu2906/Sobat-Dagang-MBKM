@@ -268,7 +268,7 @@ function renderSummary(data) {
   const totalPerempuan = data.reduce((sum, item) => sum + (item.tk_p || 0), 0);
 
   // Update isi elemen summary di halaman
-  document.querySelector('.text-6xl.mb-1').innerText = `${totalUsaha}`;
+  document.querySelector('.text-6xl.mb-3').innerText = `${totalUsaha}`;
 
   const tenagaKerjaElement = document.getElementById('tenagaKerjaSummary');
   tenagaKerjaElement.innerHTML = `
