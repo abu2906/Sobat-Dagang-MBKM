@@ -13,11 +13,13 @@ class PermohonanSurat extends Model
     protected $table = 'form_permohonan';
     protected $primaryKey = 'id_permohonan';
     protected $fillable = [
-        'user_id',
+        'id_permohonan',    
+        'id_user',
         'kecamatan',
         'kelurahan',
         'jenis_surat',
         'status',
+        'tgl_pengajuan',
         'titik_koordinat',
         'file_balasan',
 

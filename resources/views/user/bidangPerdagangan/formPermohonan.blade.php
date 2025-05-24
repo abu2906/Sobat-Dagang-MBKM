@@ -29,6 +29,23 @@
 <div class="max-w-4xl p-6 mx-auto mb-16 bg-white shadow-lg rounded-4xl">
     <h2 class="mb-6 text-xl font-semibold text-center">Formulir Surat Permohonan</h2>
 
+    <form method="GET" action="{{ route('bidangPerdagangan.formPermohonan') }}">
+        <div class="mt-6 mb-4">
+            <label for="draftSelect" class="block mb-2 text-sm font-medium text-gray-700">
+                Pilih Draft yang Pernah Disimpan
+            </label>
+            <select id="draftSelect" name="draft_id"
+                class="block w-full px-4 py-2 text-gray-700 transition bg-white border border-gray-300 shadow-sm rounded-xl focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                onchange="this.form.submit()">
+                <option value="">-- Pilih Draft --</option>
+                @foreach($drafts as $d)
+                    <option value="{{ $d->id_permohonan }}" {{ request('draft_id') == $d->id_permohonan ? 'selected' : '' }}>
+                        Draft - {{ \Carbon\Carbon::parse($d->tgl_pengajuan)->format('d M Y') }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </form>
     @if (session('success'))
     <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 border border-green-200 rounded-lg" role="alert">
         {{ session('success') }}
@@ -53,28 +70,31 @@
     <form action="{{ route('ajukanPermohonan_perdagangan') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 font-roboto">
+            
+            {{-- Jenis Surat --}}
             <div>
-                <label for="jenis_surat">Jenis Surat
-                    <span class="text-red-500">*</span>
-                </label>
-                <select id="jenis_surat" name="jenis_surat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="surat_rekomendasi_perdagangan" {{ (isset($draft) && $draft->jenis_surat == 'surat_rekomendasi_perdagangan') ? 'selected' : '' }}>Surat Rekomendasi</option>
-                    <option value="surat_keterangan_perdagangan" {{ (isset($draft) && $draft->jenis_surat == 'surat_keterangan_perdagangan') ? 'selected' : '' }}>Surat Keterangan</option>
-            </select>
+                <label for="jenis_surat">Jenis Surat <span class="text-red-500">*</span></label>
+                <select id="jenis_surat" name="jenis_surat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="surat_rekomendasi_perdagangan" {{ (old('jenis_surat', $draft->jenis_surat ?? '') == 'surat_rekomendasi_perdagangan') ? 'selected' : '' }}>Surat Rekomendasi</option>
+                    <option value="surat_keterangan_perdagangan" {{ (old('jenis_surat', $draft->jenis_surat ?? '') == 'surat_keterangan_perdagangan') ? 'selected' : '' }}>Surat Keterangan</option>
+                </select>
+                @error('jenis_surat') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
-            <div class="mb-4">
-                <label for="kecamatan">Kecamatan
-                    <span class="text-red-500">*</span>
-                </label>
-                <select id="kecamatan" name="kecamatan"
-                    class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+            {{-- Kecamatan --}}
+            <div>
+                <label for="kecamatan">Kecamatan <span class="text-red-500">*</span></label>
+                <select id="kecamatan" name="kecamatan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     <option value="">Pilih Kecamatan</option>
-                    <option value="bacukiki" {{ (isset($draft) && $draft->kecamatan == 'bacukiki') ? 'selected' : '' }}>Bacukiki</option>
-                    <option value="bacukiki_barat" {{ (isset($draft) && $draft->kecamatan == 'bacukiki_barat') ? 'selected' : '' }}>Bacukiki Barat</option>
-                    <option value="soreang" {{ (isset($draft) && $draft->kecamatan == 'soreang') ? 'selected' : '' }}>Soreang</option>
-                    <option value="ujung" {{ (isset($draft) && $draft->kecamatan == 'ujung') ? 'selected' : '' }}>Ujung</option>
-            </select>
+                    <option value="bacukiki" {{ (old('kecamatan', $draft->kecamatan ?? '') == 'bacukiki') ? 'selected' : '' }}>Bacukiki</option>
+                    <option value="bacukiki_barat" {{ (old('kecamatan', $draft->kecamatan ?? '') == 'bacukiki_barat') ? 'selected' : '' }}>Bacukiki Barat</option>
+                    <option value="soreang" {{ (old('kecamatan', $draft->kecamatan ?? '') == 'soreang') ? 'selected' : '' }}>Soreang</option>
+                    <option value="ujung" {{ (old('kecamatan', $draft->kecamatan ?? '') == 'ujung') ? 'selected' : '' }}>Ujung</option>
+                </select>
+                @error('kecamatan') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
+
+            {{-- Titik Koordinat --}}
             <div x-data="{ showInfo: false }">
                 <label for="titik_koordinat" class="block mb-1">
                     Titik Koordinat <span class="text-red-500">*</span>
@@ -84,11 +104,13 @@
                         </svg>
                     </button>
                 </label>
+                <input id="titik_koordinat" type="text" name="titik_koordinat" required
+                    class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan Titik Koordinat Usaha Anda (ex. -4.028889, 119.633521)"
+                    value="{{ old('titik_koordinat', $draft->titik_koordinat ?? '') }}">
+                @error('titik_koordinat') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
 
-                <input id="titik_koordinat" type="text" name="titik_koordinat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                placeholder="Masukkan Titik Koordinat Usaha Anda (ex. -4.028889, 119.633521)" 
-                                value="{{ old('titik_koordinat', $draft->titik_koordinat ?? '') }}">
-                <!-- Pop-up / Modal Info -->
+                {{-- Info Pop-up --}}
                 <div x-show="showInfo" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" @click.away="showInfo = false" x-transition>
                     <div class="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-xl relative">
                         <h2 class="mb-3 text-lg font-semibold text-center">Cara Mengambil Titik Koordinat</h2>
@@ -105,112 +127,121 @@
                     </div>
                 </div>
             </div>
-            <div class="mb-4">
-                <label for="kelurahan">Kelurahan
-                    <span class="text-red-500">*</span>
-                </label>
-                <select id="kelurahan" name="kelurahan"
-                    class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+            {{-- Kelurahan --}}
+            <div>
+                <label for="kelurahan">Kelurahan <span class="text-red-500">*</span></label>
+                <select id="kelurahan" name="kelurahan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     <option value="">Pilih Kelurahan</option>
-                     @foreach ($listKelurahan as $kel)
-                        <option value="{{ $kel }}"
-                            {{ old('kelurahan', $draft->kelurahan ?? '') == $kel ? 'selected' : '' }}>
+                    @foreach($listKelurahan as $kel)
+                        <option value="{{ $kel }}" {{ (old('kelurahan', $draft->kelurahan ?? '') == $kel) ? 'selected' : '' }}>
                             {{ ucwords(str_replace('_', ' ', $kel)) }}
                         </option>
                     @endforeach
                 </select>
+                @error('kelurahan') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
+
+            {{-- Foto Usaha --}}
             <div>
-                <label for="foto_usaha">
-                    Foto Usaha <span class="text-red-500">*</span>
-                </label>
+                <label for="foto_usaha" class="block mb-1 font-medium">Foto Usaha <span class="text-red-500">*</span></label>
                 <div class="flex items-center space-x-2">
                     <label for="foto_usaha" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
                         Pilih File
                     </label>
                     <span id="file-foto_usaha" class="text-gray-500 truncate max-w-[200px]">
-                        {{ isset($dokumen) && $dokumen->foto_usaha ? basename($dokumen->foto_usaha) : 'Tidak ada file yang dipilih' }}
-                    </span>   
-                    <input type="file" id="foto_usaha" name="foto_usaha" class="hidden"
-                        accept="image/*"
+                        {{ old('foto_usaha') ? basename(old('foto_usaha')) : (isset($draft) && $draft->foto_usaha ? basename($draft->foto_usaha) : 'Tidak ada file yang dipilih') }}
+                    </span>
+                    <input type="file" id="foto_usaha" name="foto_usaha" class="hidden" accept="image/*"
                         onchange="document.getElementById('file-foto_usaha').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
                 <p class="mt-1 text-sm text-gray-500">Maksimal ukuran gambar 512KB (JPG, PNG, IMAGE).</p>
+                @error('foto_usaha') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
+
+            {{-- Foto KTP --}}
             <div>
-                <label for="foto_ktp">Foto KTP (Kartu Tanda Penduduk)
-                    <span class="text-red-500">*</span>
-                </label>
+                <label for="foto_ktp" class="block mb-1 font-medium">Foto KTP <span class="text-red-500">*</span></label>
                 <div class="flex items-center space-x-2">
-                    <label for="foto_ktp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <label for="foto_ktp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
+                        Pilih File
+                    </label>
                     <span id="file-foto_ktp" class="text-gray-500 truncate max-w-[200px]">
-                        {{ isset($dokumen) && $dokumen->foto_ktp ? basename($dokumen->foto_ktp) : 'Tidak ada file yang dipilih' }}
+                        {{ old('foto_ktp') ? basename(old('foto_ktp')) : (isset($draft) && $draft->foto_ktp ? basename($draft->foto_ktp) : 'Tidak ada file yang dipilih') }}
                     </span>
-                    <input type="file" id="foto_ktp" name="foto_ktp" class="hidden"
-                        accept="image/*"
+                    <input type="file" id="foto_ktp" name="foto_ktp" class="hidden" accept="image/*"
                         onchange="document.getElementById('file-foto_ktp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
                 <p class="mt-1 text-sm text-gray-500">Maksimal ukuran gambar 512KB (JPG, PNG, IMAGE).</p>
+                @error('foto_ktp') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
+
+            {{-- Dokumen NIB --}}
             <div>
-                <label for="dokumen_nib">Dokumen NIB (Nomor Induk Berusaha)
-                    <span class="text-red-500">*</span>
-                </label>
+                <label for="dokumen_nib" class="block mb-1 font-medium">Dokumen NIB <span class="text-red-500">*</span></label>
                 <div class="flex items-center space-x-2">
-                    <label for="dokumen_nib" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <label for="dokumen_nib" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
+                        Pilih File
+                    </label>
                     <span id="file-dokumen_nib" class="text-gray-500 truncate max-w-[200px]">
-                        {{ isset($dokumen) && $dokumen->dokument_nib ? basename($dokumen->dokument_nib) : 'Tidak ada file yang dipilih' }}
+                        {{ old('dokument_nib') ? basename(old('dokument_nib')) : (isset($draft) && $draft->dokument_nib ? basename($draft->dokument_nib) : 'Tidak ada file yang dipilih') }}
                     </span>
-                    <input type="file" id="dokumen_nib" name="dokumen_nib" class="hidden"
-                        accept=".pdf"
+                    <input type="file" id="dokumen_nib" name="dokument_nib" class="hidden" accept=".pdf,image/*"
                         onchange="document.getElementById('file-dokumen_nib').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
-                <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF).</p>
+                <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 1MB (PDF, JPG, PNG).</p>
+                @error('dokumen_nib') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
+
+            {{-- NPWP --}}
             <div>
-                <label for="file-npwp">NPWP
-                    <span class="text-red-500">*</span>
-                </label>
+                <label for="npwp" class="block mb-1 font-medium">NPWP <span class="text-red-500">*</span></label>
                 <div class="flex items-center space-x-2">
-                    <label for="npwp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <label for="npwp" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
+                        Pilih File
+                    </label>
                     <span id="file-npwp" class="text-gray-500 truncate max-w-[200px]">
-                        {{ isset($dokumen) && $dokumen->npwp ? basename($dokumen->npwp) : 'Tidak ada file yang dipilih' }}
-                    <input type="file" id="npwp" name="npwp" class="hidden"
-                        accept=".pdf,.jpg,.jpeg,.png"
+                        {{ old('npwp') ? basename(old('npwp')) : (isset($draft) && $draft->npwp ? basename($draft->npwp) : 'Tidak ada file yang dipilih') }}
+                    </span>
+                    <input type="file" id="npwp" name="npwp" class="hidden" accept=".pdf,.jpg,.jpeg,.png"
                         onchange="document.getElementById('file-npwp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
                 <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF).</p>
+                @error('npwp') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
+
+            {{-- Surat Permohonan --}}
             <div>
-                <label for="file-surat">File Surat Permohonan
-                    <span class="text-red-500">*</span>
-                </label>
+                <label for="surat" class="block mb-1 font-medium">File Surat Permohonan <span class="text-red-500">*</span></label>
                 <div class="flex items-center space-x-2">
                     <label for="surat" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
                         Pilih File
                     </label>
                     <span id="file-surat" class="text-gray-500 truncate max-w-[200px]">
-                        {{ isset($draft) && $draft->file_surat ? basename($draft->file_surat) : 'Tidak ada file yang dipilih' }}
+                        {{ old('surat') ? basename(old('surat')) : (isset($draft) && $draft->file_surat ? basename($draft->file_surat) : 'Tidak ada file yang dipilih') }}
                     </span>
-                    <input type="file" id="surat" name="surat" class="hidden"
-                        accept=".pdf,.doc,.docx"
+                    <input type="file" id="surat" name="surat" class="hidden" accept=".pdf,.doc,.docx"
                         onchange="document.getElementById('file-surat').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
                 <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF, WORD).</p>
+                @error('surat') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
+
+            {{-- Akta Perusahaan --}}
             <div>
-                <label for="file-akta_perusahaan">Akta Perusahaan
-                    <span class="text-red-500">*</span>
-                </label>
+                <label for="akta_perusahaan">Akta Perusahaan <span class="text-red-500">*</span></label>
                 <div class="flex items-center space-x-2">
-                    <label for="akta_perusahaan" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+                    <label for="akta_perusahaan" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">
+                        Pilih File
+                    </label>
                     <span id="file-akta_perusahaan" class="text-gray-500 truncate max-w-[200px]">
-                        {{ isset($dokumen) && $dokumen->akta_perusahaan ? basename($dokumen->akta_perusahaan) : 'Tidak ada file yang dipilih' }}
-                    <input type="file" id="akta_perusahaan" name="akta_perusahaan" class="hidden"
-                        accept=".pdf"
+                        {{ old('akta_perusahaan') ? basename(old('akta_perusahaan')) : (isset($draft) && $draft->akta_perusahaan ? basename($draft->akta_perusahaan) : 'Tidak ada file yang dipilih') }}
+                    </span>
+                    <input type="file" id="akta_perusahaan" name="akta_perusahaan" class="hidden" accept=".pdf"
                         onchange="document.getElementById('file-akta_perusahaan').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
                 <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF).</p>
+                @error('akta_perusahaan') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
         </div>
         <div class="flex justify-center mt-6 mb-4 space-x-4">
@@ -228,7 +259,7 @@
                         class="px-4 py-2 text-black transition-all bg-gray-200 rounded-full hover:bg-gray-300">
                         Batal
                     </button>
-                    <button type="submit"
+                    <button type="submit" name="submit_action" value="ajukan"
                         class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
                         Ya, Ajukan
                     </button>
@@ -244,7 +275,7 @@
                         class="px-4 py-2 text-black transition-all bg-gray-200 rounded-full hover:bg-gray-300">
                         Batal
                     </button>
-                    <button type="submit"
+                    <button type="submit" name="submit_action" value="simpan"
                         class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
                         Ya, Simpan
                     </button>
