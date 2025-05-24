@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-
+@section('title', 'Dashboard Kepala Dinas')
 @section('content')
 <div class="p-6 bg-gray-100 min-h-screen">
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">

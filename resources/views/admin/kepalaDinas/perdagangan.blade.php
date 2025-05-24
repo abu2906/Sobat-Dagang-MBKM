@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Analisis Pasar')
+@section('title', 'Data Analisis Pasar')
 
-@section('content')
+{{-- @section('content')
 <div class="min-h-screen p-4 space-y-4 bg-gray-50">
     <div class="flex flex-col gap-4 lg:flex-row">
         <!-- KIRI -->
@@ -275,4 +275,4 @@
         }
     });
 </script>
-@endsection
+@endsection --}}

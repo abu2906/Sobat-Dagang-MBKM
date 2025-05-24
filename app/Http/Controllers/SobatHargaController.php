@@ -81,4 +81,14 @@ class SobatHargaController extends Controller
             'semuaKategori' => $semuaKategori,
         ]);
     }
+
+    public function suratPerdagangan() {
+        return view('admin.kepalaDinas.suratPerdagangan');
+    }
+
+    public function perdagangan() {
+        return view('admin.kepalaDinas.perdagangan');
+    }
+
+
 }
