@@ -2,6 +2,10 @@
 
 @section('title', 'Dashboard')
 
+@php
+use App\Helpers\StatusHelper;
+@endphp
+
 @section('content')
 <div class="flex">
     <div class="flex-1 p-6 space-y-6 overflow-y-auto">
@@ -53,7 +57,7 @@
                                 {{ \Carbon\Carbon::parse($uttp->tanggal_penginputan)->translatedFormat('d F Y') }}
                             </td>
                             <td class="px-4 py-2 {{ $uttp->tanggal_exp >= now() ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $uttp->tanggal_exp >= now() ? 'VALID' : 'KADALUARSA' }}
+                                {{ $uttp->tanggal_exp >= now() ? 'Valid' : StatusHelper::formatStatus('Kadaluarsa') }}
                             </td>
                         </tr>
                         @endforeach

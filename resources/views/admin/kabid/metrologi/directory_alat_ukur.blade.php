@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
+@php
+use App\Helpers\StatusHelper;
+@endphp
 <div class="p-6 bg-gray-100 min-h-screen">
     <!-- Header Background -->
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
@@ -12,7 +15,7 @@
                     <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
                         <option value="">Semua</option>
                         <option value="Valid">Valid</option>
-                        <option value="Kadaluarsa">Kadaluarsa</option>
+                        <option value="Kadaluarsa">{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
                     </select>
                 </div>
                 <div class="relative flex-grow mt-2 md:mt-0 mx-4">
@@ -82,7 +85,7 @@
                         <span class="
                             font-semibold
                             {{ $data->status === 'Valid' ? 'text-green-600' : ($data->status === 'Kadaluarsa' ? 'text-red-600' : 'text-gray-500') }}">
-                            {{ $data->status ?? '-' }}
+                            {{ $data->status === 'Valid' ? 'Valid' : StatusHelper::formatStatus($data->status) }}
                         </span>
                     </td>
                     <td class="px-5 text-center py-3 border-b">
@@ -125,7 +128,10 @@
             const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
 
-            const matchStatus = !selectedStatus || status === selectedStatus;
+            // Handle Kadaluarsa, Kadaluwarsa, and Kedaluwarsa in the filter
+            const matchStatus = !selectedStatus || 
+                (selectedStatus === 'kadaluarsa' && (status === 'kadaluarsa' || status === 'kadaluwarsa' || status === 'kedaluwarsa')) ||
+                (selectedStatus === 'valid' && status === 'valid');
             const matchSearch = !keyword || rowText.includes(keyword);
 
             row.style.display = (matchStatus && matchSearch) ? '' : 'none';
