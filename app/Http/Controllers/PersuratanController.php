@@ -36,6 +36,14 @@ class PersuratanController extends Controller
             'jenis_surat' => 'required|string',
         ]);
 
+        // Cek apakah nomor surat sudah ada
+        $existingSurat = suratMetrologi::where('id_surat', $request->nomor_surat)->first();
+        if ($existingSurat) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['nomor_surat' => 'Nomor surat ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.']);
+        }
+
         $sanitizedNomorSurat = str_replace(['/', '\\', ' '], '_', $request->nomor_surat);
         $filename = $sanitizedNomorSurat . '_' . Auth::guard('user')->id(). '.' . $request->file('dokumen')->getClientOriginalExtension();
         $filePath = $request->file('dokumen')->storeAs('surat_masuk_metrologi', $filename, 'public');
@@ -89,6 +97,17 @@ class PersuratanController extends Controller
             'nama_yang_dituju' => 'required|string',
             'isi_surat' => 'required|string',
         ]);
+
+        // Cek apakah nomor surat balasan sudah ada dan bukan dalam status draft
+        $existingSuratBalasan = suratBalasan::where('id_surat_balasan', $validated['id_surat_balasan'])
+            ->where('status_surat_keluar', '!=', 'Draft')
+            ->first();
+            
+        if ($existingSuratBalasan) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['id_surat_balasan' => 'Nomor surat balasan ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.']);
+        }
 
         // Cek apakah ini adalah draft
         $isDraft = $request->input('action') === 'draft';
@@ -182,6 +201,17 @@ class PersuratanController extends Controller
             'isi_surat' => 'required|string',
         ]);
 
+        // Check if the new surat balasan ID already exists (excluding the current one)
+        $existingSuratBalasan = suratBalasan::where('id_surat_balasan', $validated['id_surat_balasan'])
+            ->where('id_surat', '!=', $id_surat)
+            ->first();
+            
+        if ($existingSuratBalasan) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['id_surat_balasan' => 'Nomor surat balasan ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.']);
+        }
+
         $suratBalasan = SuratBalasan::where('id_surat', $id_surat)->firstOrFail();
 
         // Hapus dokumen sebelumnya (opsional)
@@ -217,7 +247,30 @@ class PersuratanController extends Controller
         return redirect($request->redirect_to)->with('success', 'Surat berhasil direvisi dan disimpan.');
     }
 
+    public function checkNomorSurat(Request $request)
+    {
+        $request->validate([
+            'nomor_surat' => 'required|string'
+        ]);
 
+        $exists = suratMetrologi::where('id_surat', $request->nomor_surat)->exists();
+        
+        return response()->json(['exists' => $exists]);
+    }
+
+    public function checkNomorSuratBalasan(Request $request)
+    {
+        $request->validate([
+            'nomor_surat' => 'required|string'
+        ]);
+
+        // Cek apakah nomor surat sudah ada dan bukan dalam status draft
+        $exists = suratBalasan::where('id_surat_balasan', $request->nomor_surat)
+            ->where('status_surat_keluar', '!=', 'Draft')
+            ->exists();
+        
+        return response()->json(['exists' => $exists]);
+    }
 
     public function terimaSurat($id)
     {

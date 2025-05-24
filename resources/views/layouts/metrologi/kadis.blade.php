@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Dinas Perdagangan')</title>
+    <title>@yield('title', 'Kepala Dinas')</title>
     <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
     <link rel="icon" href="{{ asset('assets/img/icon/logoIcon.png') }}" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,20 +21,18 @@ use Illuminate\Support\Facades\Auth;
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
 
 <body x-data="{ open: true }" class="overflow-hidden font-sans bg-gray-100">
-
-    @include('component.navbar.admin_metrologi')
-    
-    <div class="relative z-0 flex-1 p-0 overflow-y-auto">
-        @yield('content')
+    <div class="flex h-screen">
+        @include('component.navbar.kepalaDinas')
+        
+        <div class="flex-1 overflow-y-auto">
+            @yield('content')
+        </div>
     </div>
 
-    </div>
     <script src="{{ asset('/assets/js/showDokumen.js') }}"></script>
 </body>
 
-</html>
+</html> 

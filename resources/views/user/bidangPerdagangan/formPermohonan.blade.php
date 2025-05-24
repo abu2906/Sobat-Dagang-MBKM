@@ -186,10 +186,10 @@
                     <span id="file-dokumen_nib" class="text-gray-500 truncate max-w-[200px]">
                         {{ old('dokument_nib') ? basename(old('dokument_nib')) : (isset($draft) && $draft->dokument_nib ? basename($draft->dokument_nib) : 'Tidak ada file yang dipilih') }}
                     </span>
-                    <input type="file" id="dokumen_nib" name="dokument_nib" class="hidden" accept=".pdf,image/*"
+                    <input type="file" id="dokumen_nib" name="dokument_nib" class="hidden" accept=".pdf"
                         onchange="document.getElementById('file-dokumen_nib').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
-                <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 1MB (PDF, JPG, PNG).</p>
+                <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 1MB (PDF).</p>
                 @error('dokumen_nib') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
 
