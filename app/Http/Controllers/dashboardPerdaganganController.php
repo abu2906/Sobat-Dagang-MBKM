@@ -34,6 +34,7 @@ class DashboardPerdaganganController extends Controller{
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']) // hanya status ini yang ditampilkan
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -169,6 +170,7 @@ class DashboardPerdaganganController extends Controller{
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima'])
             ->orderBy('created_at', 'desc')
             ->get();
 
