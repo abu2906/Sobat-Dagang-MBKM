@@ -30,7 +30,6 @@ Route::get('/', [homeController::class, 'index'])->name('Home');
 Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
 Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
-Route::get('/', [homeController::class, 'index'])->name('home');
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 
 // Controller untuk authentication
