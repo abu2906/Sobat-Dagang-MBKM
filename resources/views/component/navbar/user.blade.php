@@ -42,7 +42,7 @@
                 </ul>
             </li>
 
-            <li><a href="#"><strong>PELAPORAN</strong></a></li>
+            <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
             <li><a href="#" id="open-chat"><strong>FAQ</strong></a></li>
         </ul>
     </div>

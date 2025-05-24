@@ -52,7 +52,7 @@
 
             <!-- Tabel -->
             @if ($selectedLokasi == 'Pasar Sumpang' || $selectedLokasi == 'Pasar Lakessi')
-            <div class="flex-grow overflow-scroll overflow-x-auto bg-white shadow rounded-xl scrollbar-hide" style="max-height: 500px; overflow: auto;">
+            <div class="flex-grow overflow-scroll overflow-x-auto bg-white shadow rounded-xl scrollbar-hide" style="max-height: 604px; overflow: auto;">
                 <table class="min-w-full text-sm text-center whitespace-nowrap">
                     <thead class="bg-[#083458] text-white">
                         <tr>

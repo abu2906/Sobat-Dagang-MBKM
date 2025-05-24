@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateModalTabel extends Migration
+class CreateModalTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,10 +17,10 @@ class CreateModalTabel extends Migration
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
             $table->string('jenis_barang');
-            $table->bigInteger('pembelian_penambahan_perbaikan')->default(0); 
-            $table->bigInteger('pengurangan_barang_modal')->default(0);      
-            $table->bigInteger('penyusutan_barang')->default(0);             
-            $table->bigInteger('nilai_taksiran')->default(0);                
+            $table->bigInteger('pembelian_penambahan_perbaikan')->default(0);
+            $table->bigInteger('pengurangan_barang_modal')->default(0);
+            $table->bigInteger('penyusutan_barang')->default(0);
+            $table->bigInteger('nilai_taksiran')->default(0);
 
             $table->timestamps();
         });

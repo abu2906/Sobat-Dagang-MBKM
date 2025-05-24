@@ -15,21 +15,21 @@ class DataIkm extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'id_disdag',
-        'nama_pemilik',
         'nama_ikm',
-        'alamat',
-        'no_telp',
         'luas',
-        'jenis_industri',
+        'nama_pemilik',
+        'jenis_kelamin',
+        'kecamatan',
+        'kelurahan',
         'komoditi',
-        'jumlah_tenaga_kerja',
-        'nilai_investasi',
+        'jenis_industri',
+        'alamat',
         'nib',
+        'no_telp',
+        'tenaga_kerja',
     ];
 
     // === RELASI KE SEMUA TABEL CHILD ===
-
     public function karyawan()
     {
         return $this->hasMany(Karyawan::class, 'id_ikm', 'id_ikm');
@@ -85,11 +85,10 @@ class DataIkm extends Model
         return $this->hasMany(Pendapatan::class, 'id_ikm', 'id_ikm');
     }
 
-    public function pengelolaanLimbah()
+    public function bentukPengelolaan()
     {
-        return $this->hasMany(PengelolaanLimbah::class, 'id_ikm', 'id_ikm');
+        return $this->hasMany(BentukPengelolaanLimbah::class, 'id_ikm', 'id_ikm');
     }
-
 
     public function modal()
     {

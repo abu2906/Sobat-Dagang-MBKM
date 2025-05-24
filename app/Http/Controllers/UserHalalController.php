@@ -19,6 +19,6 @@ class UserHalalController extends Controller
         ->orderBy('tanggal_sah', 'desc')
         ->get();
 
-        return view('user.bidangIndustri.halal', compact('data'));
+        return view('user.halal', compact('data'));
     }
 }

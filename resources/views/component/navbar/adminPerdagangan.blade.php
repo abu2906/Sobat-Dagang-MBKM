@@ -30,7 +30,7 @@
                 ['href' => route('dashboard-perdagangan.form-tambah-barang'), 'icon' => 'add_barang.png', 'label' => 'Tambahkan Barang'],
                 ['href' => route('updateHarga.update'), 'icon' => 'tag.png', 'label' => 'Update Harga Barang'],
                 ['href' => route('dashboard-perdagangan.hapus-barang'), 'icon' => 'delete.png', 'label' => 'Hapus Data Barang'],
-                ['href' => route('lihat.laporan.distribusi'), 'icon' => 'report-filled.png', 'label' => 'Lihat Laporan'],
+                ['href' => route('lihat.laporan.distribusi'), 'icon' => 'report-filled.png', 'label' => 'Lihat Laporan Distribusi'],
                 ];
                 @endphp
 
@@ -49,7 +49,6 @@
             <div class="flex items-center">
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
-                    {{-- <p class="text-sm font-semibold">{{ Auth::user()->name }}</p> --}}
                     <p class="text-sm font-semibold">Bidang Perdagangan</p>
                     <p class="text-xs">Admin</p>
                 </div>

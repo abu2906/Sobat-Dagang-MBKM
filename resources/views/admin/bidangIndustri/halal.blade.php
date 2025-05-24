@@ -5,10 +5,12 @@
 
 <section 
   x-data="halalData()"
-  class="relative">
+  class="relative"
+>
+
   <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
 
-  <div class="flex items-center gap-4 px-6 py-6 mx-auto relative">
+  <div class="flex items-center gap-4 px-6 py-6 max-w-7xl mx-auto z-10 relative">
     <div class="relative flex-1">
       <input type="text" x-model="searchQuery" placeholder="Cari"
         class="w-full rounded-xl bg-blue-200/80 py-3 pl-12 pr-4 text-gray-600 placeholder-gray-600 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
@@ -62,7 +64,7 @@
                       </svg>
                     </button>
 
-                    <form :action="'/admin/industri/sertifikat-halal/' + item.id_halal" method="POST"
+                    <form :action="'/admin/industri/halal/' + item.id_halal" method="POST"
                       @submit.prevent="if(confirm('Yakin ingin menghapus data ini?')) $el.submit()">
                       <input type="hidden" name="_token" value="{{ csrf_token() }}">
                       <input type="hidden" name="_method" value="DELETE">
@@ -91,7 +93,7 @@
   </section>
 
   <!-- Overlay -->
-  <div x-show="openModal" x-cloak x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"> </div>
+  <div x-show="openModal" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"></div>
 
   <!-- Modal -->
   <div x-show="openModal" x-transition class="fixed inset-0 flex items-start justify-center z-50 p-4">
@@ -103,9 +105,9 @@
 
       <h2 class="mb-6 text-center text-lg font-bold md:text-xl" x-text="formData.id ? 'EDIT DATA SERTIFIKASI HALAL' : 'TAMBAH DATA SERTIFIKASI HALAL'"></h2>
       <form 
-        x-bind:action="formData.id 
-          ? '{{ url('/admin/industri/sertifikat-halal') }}/' + formData.id 
-          : '{{ route('sertifikat.halal.store') }}'"
+        :action="formData.id 
+            ? '{{ url('admin/industri/halal') }}/' + formData.id 
+            : '{{ route('admin.industri.halal.store') }}'"
         method="POST"
         enctype="multipart/form-data"
         class="space-y-6"
@@ -165,7 +167,7 @@
                 </label>
                 <select name="status" x-model="formData.status" required
                   class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                  <option value="" disabled :selected="!formData.status">Pilih Status</option>
+                  <option value="" disabled selected>Pilih Status</option>
                   <option value="Berlaku">Berlaku</option>
                   <option value="Perlu Pembaruan">Perlu Pembaruan</option>
                 </select>
@@ -190,11 +192,21 @@
     </div>
   </div>
 </section>
-
 <script>
 function halalData() {
+  function formatDateToYMD(dateStr) {
+    const d = new Date(dateStr);
+    if (isNaN(d)) return '';
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; 
+  }
+
   return {
     openModal: false,
+    searchQuery: '',
+    originalData: @json($data),
     formData: {
       id: null,
       nama_usaha: '',
@@ -204,16 +216,30 @@ function halalData() {
       alamat: '',
       status: '',
     },
-    items: @json($data), // asumsi dari controller
-    searchQuery: '',
-
     get filteredItems() {
-      if (!this.searchQuery) return this.items;
-      return this.items.filter(item =>
-        item.nama_usaha.toLowerCase().includes(this.searchQuery.toLowerCase())
+      if (!this.searchQuery.trim()) return this.originalData;
+
+      const q = this.searchQuery.toLowerCase();
+      return this.originalData.filter(item =>
+        (item.nama_usaha && item.nama_usaha.toLowerCase().includes(q)) ||
+        (item.no_sertifikasi_halal && item.no_sertifikasi_halal.toLowerCase().includes(q)) ||
+        (item.alamat && item.alamat.toLowerCase().includes(q))
       );
     },
+    openEdit(data) {
+      this.formData = {
+        id: data.id_halal,
+        nama_usaha: data.nama_usaha,
+        no_sertifikasi_halal: data.no_sertifikasi_halal,
+        tanggal_sah: formatDateToYMD(data.tanggal_sah),
+        tanggal_exp: formatDateToYMD(data.tanggal_exp),
+        alamat: data.alamat,
+        status: data.status,
+      };
+      this.openModal = true;
 
+      console.log('Edit Data:', JSON.parse(JSON.stringify(this.formData))); // opsional debug
+    },
     openTambah() {
       this.formData = {
         id: null,
@@ -226,106 +252,7 @@ function halalData() {
       };
       this.openModal = true;
     },
-
-    openEdit(item) {
-      this.formData = {
-        id: item.id_halal,
-        nama_usaha: item.nama_usaha,
-        no_sertifikasi_halal: item.no_sertifikasi_halal,
-        tanggal_sah: item.tanggal_sah,
-        tanggal_exp: item.tanggal_exp,
-        alamat: item.alamat,
-        status: item.status,
-      };
-      this.openModal = true;
-    },
-
-    deleteData(id) {
-      if (confirm('Yakin ingin menghapus data ini?')) {
-        fetch(`/admin/industri/sertifikat-halal/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => {
-          if (response.ok) {
-            this.items = this.items.filter(item => item.id_halal !== id);
-            alert('Data berhasil dihapus');
-          } else {
-            alert('Gagal menghapus data');
-          }
-        });
-      }
-    },
   }
 }
 </script>
-
-
-<!-- <script>
-  function halalData() {
-    function formatDateToYMD(dateStr) {
-      const d = new Date(dateStr);
-      if (isNaN(d)) return '';
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return ${year}-${month}-${day};
-    }
-
-    return {
-      openModal: false,
-      searchQuery: '',
-      originalData: @json($data),
-      formData: {
-        id: null,
-        nama_usaha: '',
-        no_sertifikasi_halal: '',
-        tanggal_sah: '',
-        tanggal_exp: '',
-        alamat: '',
-        status: '',
-      },
-      get filteredItems() {
-        if (!this.searchQuery.trim()) return this.originalData;
-
-        const q = this.searchQuery.toLowerCase();
-        return this.originalData.filter(item =>
-          (item.nama_usaha && item.nama_usaha.toLowerCase().includes(q)) ||
-          (item.no_sertifikasi_halal && item.no_sertifikasi_halal.toLowerCase().includes(q)) ||
-          (item.alamat && item.alamat.toLowerCase().includes(q))
-        );
-      },
-      openEdit(data) {
-        this.formData = {
-          id: data.id_halal,
-          nama_usaha: data.nama_usaha,
-          no_sertifikasi_halal: data.no_sertifikasi_halal,
-          tanggal_sah: formatDateToYMD(data.tanggal_sah),
-          tanggal_exp: formatDateToYMD(data.tanggal_exp),
-          alamat: data.alamat,
-          status: data.status,
-        };
-        this.openModal = true;
-
-        console.log('Edit Data:', JSON.parse(JSON.stringify(this.formData))); // opsional debug
-      },
-      openTambah() {
-        console.log('Tambah form dibuka');
-        this.formData = {
-          id: null,
-          nama_usaha: '',
-          no_sertifikasi_halal: '',
-          tanggal_sah: '',
-          tanggal_exp: '',
-          alamat: '',
-          status: '',
-        };
-        this.openModal = true;
-      },
-    }
-  }
-</script> -->
 @endsection

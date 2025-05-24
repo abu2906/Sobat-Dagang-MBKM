@@ -24,7 +24,6 @@ class Modal extends Model
         'nilai_taksiran',
     ];
 
-    // Relasi ke tabel data_ikm
     public function dataIkm(): BelongsTo
     {
         return $this->belongsTo(DataIkm::class, 'id_ikm', 'id_ikm');

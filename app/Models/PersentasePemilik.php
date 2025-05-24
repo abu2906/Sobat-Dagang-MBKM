@@ -12,7 +12,7 @@ class PersentasePemilik extends Model
     use HasFactory;
 
     protected $table = 'persentase_pemilik';
-    protected $primaryKey = 'id_pemilik';
+    protected $primaryKey = 'id_persentase'; // Sesuai dengan migration
 
     protected $fillable = [
         'id_ikm',
@@ -22,7 +22,6 @@ class PersentasePemilik extends Model
         'asing',
     ];
 
-    // Relasi ke DataIkm
     public function dataIkm(): BelongsTo
     {
         return $this->belongsTo(DataIkm::class, 'id_ikm', 'id_ikm');

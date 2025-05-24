@@ -46,9 +46,9 @@ class authController extends Controller
                 case 'admin_perdagangan':
                     return redirect()->intended(route('dashboard.perdagangan'));
                 case 'admin_industri':
-                    return redirect()->intended(route('dashboard.industri'));
+                    return redirect()->intended(route('admin.industri.dashboard'));
                 case 'admin_metrologi':
-                    return redirect()->intended(route('dashboard-administrasi-metrologi'));
+                    return redirect()->intended(route('dashboard-admin-metrologi'));
                 case 'kabid_perdagangan':
                     return redirect()->intended(route('kabid.perdagangan'));
                 case 'kabid_industri':
@@ -63,6 +63,7 @@ class authController extends Controller
         }
 
 
+    
         // 2. Jika tidak ditemukan di disdag, coba login sebagai user
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
 

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Kabid Metrologi')
 
 @section('content')
 <div class="flex">
@@ -28,7 +28,12 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 bg-white shadow-md rounded-xl p-4 max-h-[600px] overflow-y-auto">
-                <div class="mb-4 text-xl font-semibold text-gray-700">Daftar UTTP Terbaru</div>
+                <div class="flex justify-between items-center mb-4">
+                    <div class="text-xl font-semibold text-gray-700">Daftar UTTP Terbaru</div>
+                    <a href="{{ route('directory-uttp-kabid') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        Lihat Semua
+                    </a>
+                </div>
 
                 <table class="w-full text-left">
                     <thead class="bg-[#0c3252] text-white">

@@ -9,7 +9,11 @@ class ForumDiskusi extends Model
     protected $primaryKey = 'id_pengaduan';
 
     protected $fillable = [
-        'id_user', 'id_disdag', 'chat', 'waktu', 'status'
+        'id_user',
+        'id_disdag',
+        'chat',
+        'waktu',
+        'status',
     ];
 
     protected $casts = [
@@ -26,3 +30,4 @@ class ForumDiskusi extends Model
         return $this->belongsTo(Disdag::class, 'id_disdag', 'id_disdag');
     }
 }
+

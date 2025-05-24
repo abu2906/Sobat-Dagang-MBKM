@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePersediaanTabel extends Migration
+class CreatePersediaanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,9 +16,9 @@ class CreatePersediaanTabel extends Migration
             $table->unsignedBigInteger('id_ikm');
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->string('jenis_persediaan'); // misal: bahan baku, barang jadi, dll
-            $table->bigInteger('awal')->default(0);       // nilai awal dalam Rp
-            $table->bigInteger('akhir')->default(0);      // nilai akhir dalam Rp
+            $table->string('jenis_persediaan');
+            $table->bigInteger('awal')->default(0);
+            $table->bigInteger('akhir')->default(0);
 
             $table->timestamps();
         });

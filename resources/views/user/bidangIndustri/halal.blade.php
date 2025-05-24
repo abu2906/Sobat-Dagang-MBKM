@@ -13,9 +13,9 @@
       <button onclick="history.back()" class="text-2xl font-bold text-white">←</button>
     </div>
 
-   <!-- Search Bar di tengah -->
-    <div class="absolute w-1/2 transform -translate-x-1/2 top-32 left-1/2 md:w-3/4">
-      <form action="{{ route('Halal') }}" method="GET" class="relative">
+    <!-- Search Bar di tengah -->
+    <div class="absolute w-11/12 transform -translate-x-1/2 top-32 left-1/2 md:w-3/4">
+      <form action="{{ route('halal.user') }}" method="GET" class="relative">
         <input
           type="text"
           name="keyword"
@@ -31,7 +31,6 @@
         </svg>
       </form>
     </div>
-
 
 
   <main class="flex-1 px-6 py-10 max-w-7xl mx-auto">
@@ -61,13 +60,8 @@
               @else
                 <span class="text-gray-400">Tidak tersedia</span>
               @endif
-            </td>
-          </tr>
-        @empty
-          <tr>
-            <td colspan="7" class="text-center py-4 text-gray-500">Tidak ada data sertifikat halal.</td>
-          </tr>
-        @endforelse
+
+              @endforelse
       </tbody>
     </table>
   </div>

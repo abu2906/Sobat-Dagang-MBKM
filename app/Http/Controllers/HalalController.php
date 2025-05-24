@@ -62,7 +62,7 @@ class HalalController extends Controller
 
         SertifikasiHalal::create($validated);
 
-        return redirect()->route('sertifikat.halal')
+        return redirect()->route('admin.industri.halal.index')
             ->with('success', 'Data sertifikasi halal berhasil ditambahkan.');
     }
 
@@ -99,7 +99,7 @@ class HalalController extends Controller
 
         $item->update($validated);
 
-        return redirect()->route('sertifikat.halal')
+        return redirect()->route('admin.industri.halal.index')
             ->with('success', 'Data berhasil diupdate.');
     }
 
@@ -114,7 +114,7 @@ class HalalController extends Controller
 
         $item->delete();
 
-        return redirect()->route('sertifikat.halal')
+        return redirect()->route('admin.industri.halal.index')
             ->with('success', 'Data berhasil dihapus.');
     }
 }

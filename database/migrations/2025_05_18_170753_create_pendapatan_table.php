@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePendapatanTabel extends Migration
+class CreatePendapatanTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,8 +16,8 @@ class CreatePendapatanTabel extends Migration
             $table->unsignedBigInteger('id_ikm');
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->bigInteger('nilai')->default(0);   // nominal pendapatan dalam Rp
-            $table->string('sumber');                  // sumber pendapatan
+            $table->bigInteger('nilai')->default(0);   // nominal pendapatan
+            $table->string('sumber');                  // sumber pendapatan (misal: penjualan, jasa)
 
             $table->timestamps();
         });
