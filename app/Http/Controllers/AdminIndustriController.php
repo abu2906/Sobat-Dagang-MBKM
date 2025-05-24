@@ -1009,6 +1009,9 @@ class AdminIndustriController extends Controller
 
     public function ajukanPermohonann(Request $request)
     {
+        // Generate UUID untuk id_permohonan
+        $idPermohonan = Str::uuid()->toString();
+
         $idUser = session('id_user');
 
         // Ambil draft terakhir user
@@ -1018,7 +1021,7 @@ class AdminIndustriController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $dokumen = DB::table('document_user')->where('id_permohonan', $draft->id_permohonan)->first();
+        $dokumen = $draft ? DB::table('document_user')->where('id_permohonan', $draft->id_permohonan)->first() : null;
 
         // Validasi dinamis
         $rules = [
@@ -1072,26 +1075,55 @@ class AdminIndustriController extends Controller
             $aktaPerusahaanPath = $request->hasFile('akta_perusahaan') ? $request->file('akta_perusahaan')->store('DokumentUser', 'public') : $dokumen->akta_perusahaan;
             $fileSuratPath = $request->hasFile('surat') ? $request->file('surat')->store('DokumentUser', 'public') : $draft->file_surat;
 
-            // Update form_permohonan
-            DB::table('form_permohonan')->where('id_permohonan', $draft->id_permohonan)->update([
-                'jenis_surat' => $request->jenis_surat,
-                'kecamatan' => $request->kecamatan,
-                'kelurahan' => $request->kelurahan,
-                'titik_koordinat' => $request->titik_koordinat,
-                'file_surat' => $fileSuratPath,
-                'status' => 'menunggu',
-                'updated_at' => now(),
-            ]);
+            // Kalau tidak ada draft → insert baru
+            if (!$draft) {
+                DB::table('form_permohonan')->insert([
+                    'id_permohonan' => $idPermohonan,
+                    'id_user' => $idUser,
+                    'jenis_surat' => $request->jenis_surat,
+                    'kecamatan' => $request->kecamatan,
+                    'kelurahan' => $request->kelurahan,
+                    'titik_koordinat' => $request->titik_koordinat,
+                    'file_surat' => $fileSuratPath,
+                    'status' => 'menunggu',
+                    'tgl_pengajuan' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
 
-            // Update dokumen
-            DB::table('document_user')->where('id_permohonan', $draft->id_permohonan)->update([
-                'foto_usaha' => $fotoUsahaPath,
-                'foto_ktp' => $fotoKTPPath,
-                'dokument_nib' => $dokumenNibPath,
-                'npwp' => $npwpPath,
-                'akta_perusahaan' => $aktaPerusahaanPath,
-                'updated_at' => now(),
-            ]);
+                DB::table('document_user')->insert([
+                    'id_permohonan' => $idPermohonan,
+                    'foto_usaha' => $fotoUsahaPath,
+                    'foto_ktp' => $fotoKTPPath,
+                    'dokument_nib' => $dokumenNibPath,
+                    'npwp' => $npwpPath,
+                    'akta_perusahaan' => $aktaPerusahaanPath,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                // Update form_permohonan
+                DB::table('form_permohonan')->where('id_permohonan', $draft->id_permohonan)->update([
+                    'jenis_surat' => $request->jenis_surat,
+                    'kecamatan' => $request->kecamatan,
+                    'kelurahan' => $request->kelurahan,
+                    'titik_koordinat' => $request->titik_koordinat,
+                    'file_surat' => $fileSuratPath,
+                    'status' => 'menunggu',
+                    'tgl_pengajuan' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                // Update dokumen
+                DB::table('document_user')->where('id_permohonan', $draft->id_permohonan)->update([
+                    'foto_usaha' => $fotoUsahaPath,
+                    'foto_ktp' => $fotoKTPPath,
+                    'dokument_nib' => $dokumenNibPath,
+                    'npwp' => $npwpPath,
+                    'akta_perusahaan' => $aktaPerusahaanPath,
+                    'updated_at' => now(),
+                ]);
+            }
 
             return redirect()->route('bidangIndustri.riwayatSurat')->with('success', 'Pengajuan surat berhasil diajukan.');
         } catch (Exception $e) {
@@ -1130,12 +1162,12 @@ class AdminIndustriController extends Controller
             'kecamatan' => 'required|string',
             'kelurahan' => 'required|string',
             'titik_koordinat' => 'required|string',
-            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'dokumen_nib' => 'required|mimes:pdf|max:10240',
-            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:10240',
-            'akta_perusahaan' => 'required|mimes:pdf|max:10240',
-            'surat' => 'required|file|mimes:pdf,doc,docx|max:10240',
+            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:512',
+            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:512',
+            'dokumen_nib' => 'required|mimes:pdf|max:512',
+            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:512',
+            'akta_perusahaan' => 'required|mimes:pdf|max:512',
+            'surat' => 'required|file|mimes:pdf,doc,docx|max:512',
         ]);
 
         try {

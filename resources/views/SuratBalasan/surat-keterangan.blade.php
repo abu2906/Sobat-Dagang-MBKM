@@ -151,29 +151,29 @@
         </tr>
     </table>
     <p>Dengan ini Menerangkan Bahwa:</p>
-    <table style="width: 100%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 90%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
-            <td style="padding: 4px; width: 155px; ">Nama</td>
+            <td style="padding: 4px; width: 160px; ">Nama</td>
             <td style="padding: 4px;">: {{$nama_penerima}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px; width: 155px;">Tempat, tanggal lahir</td>
+            <td style="padding: 4px; width: 160px;">Tempat, tanggal lahir</td>
             <td style="padding: 4px;">: {{$tampat_lahir}},{{$tanggal_lahir}} </td>
         </tr>
         <tr>
-            <td style="padding: 4px; width: 155px;">Jenis Kelamin</td>
+            <td style="padding: 4px; width: 160px;">Jenis Kelamin</td>
             <td style="padding: 4px;">: {{$jenis_kelamin}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px; width: 155px;">Alamat</td>
+            <td style="padding: 4px; width: 160px;">Alamat</td>
             <td style="padding: 4px;">: {{$alamat_lengkap}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px; width: 155px;">Agama</td>
+            <td style="padding: 4px; width: 160px;">Agama</td>
             <td style="padding: 4px;">: {{$agama}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px; width: 155px;">Status</td>
+            <td style="padding: 4px; width: 160px;">Status</td>
             <td style="padding: 4px;">: {{$status_pernikahan}}</td>
         </tr>
     </table>

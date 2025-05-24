@@ -29,7 +29,7 @@
                         <a href="#"><strong>INDUSTRI</strong></a>
                         <ul class="submenu">
                             <li><a href="{{route('bidangIndustri.formPermohonan')}}"><strong>Permohonan IKM Binaan</strong></a></li>
-                            <li><a href="{{route('Halal')}}"><strong>Data Sertifikat Halal</strong></a></li>
+                            <li><a href="{{route('halal.user')}}"><strong>Data Sertifikat Halal</strong></a></li>
                         </ul>
                     </li>
                     <li class="dropdown-submenu">

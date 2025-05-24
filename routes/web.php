@@ -99,7 +99,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/bidang-industri/form-permohonan', [AdminIndustriController::class, 'formPermohonan'])->name('bidangIndustri.formPermohonan');
     Route::get('/bidang-industri/riwayat-surat', [AdminIndustriController::class, 'riwayatSuratt'])->name('bidangIndustri.riwayatSurat');
     Route::post('/bidang-industri/ajukan-permohonan', [AdminIndustriController::class, 'ajukanPermohonann'])->name('ajukan.Permohonan');
-    Route::get('/bidang-industri/data-sertifikat-halal', [UserHalalController::class, 'index'])->name('Halal');
+    Route::get('/bidang-industri/data-sertifikat-halal', [UserHalalController::class, 'index'])->name('halal.user');
     Route::post('/bidang-industri/draft-permohonan', [AdminIndustriController::class, 'draftPermohonann'])->name('bidangIndustri.draftPermohonan');
 });
 
