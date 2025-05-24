@@ -1,6 +1,9 @@
 @extends('layouts.metrologi.admin')
 
 @section('content')
+<!-- Tambahkan SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="p-6 bg-gray-100 min-h-screen">
 	<div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
 		<div class="absolute bottom-[-30px] w-full px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-2">
@@ -61,9 +64,10 @@
 		function openTolakModal(id) {
 			const modal = document.getElementById('tolakModal');
 			modal.classList.remove('hidden');
-			modal.style.display = 'flex'; // Supaya flexbox aktif untuk center
+			modal.style.display = 'flex';
 			document.getElementById('tolak_id_surat').value = id;
-			document.getElementById('formTolak').action = `/admin/surat/${btoa(id)}/tolak`;
+			const encodedId = btoa(id);
+			document.getElementById('formTolak').action = `/admin/surat/${encodedId}/tolak`;
 		}
 
 		function closeTolakModal() {
@@ -94,35 +98,6 @@
 		function closeKeteranganTolak() {
 			document.getElementById('modalKeteranganTolak').classList.add('hidden');
 			document.getElementById('modalKeteranganTolak').style.display = 'none';
-		}
-	</script>
-
-	<!-- Modal Konfirmasi Selesai -->
-	<div id="modalSelesai" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center">
-		<div class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
-			<h2 class="text-xl font-semibold mb-4">Konfirmasi</h2>
-			<p class="text-gray-700 mb-6">Apakah Anda yakin ingin menandai surat ini sebagai selesai?</p>
-			<form id="formSelesai" method="POST">
-				@csrf
-				@method('PUT')
-				<div class="flex justify-end gap-2">
-					<button type="button" onclick="closeModalSelesai()" class="px-4 py-2 bg-gray-300 rounded">Batal</button>
-					<button type="submit" class="px-4 py-2 bg-green-600 text-white rounded">Ya</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<script>
-		function openModalSelesai(url) {
-			document.getElementById('modalSelesai').classList.remove('hidden');
-			document.getElementById('modalSelesai').style.display = 'flex';
-			document.getElementById('formSelesai').action = url;
-		}
-
-		function closeModalSelesai() {
-			document.getElementById('modalSelesai').classList.add('hidden');
-			document.getElementById('modalSelesai').style.display = 'none';
 		}
 	</script>
 
@@ -316,16 +291,14 @@
 
 
 						@else
-							<form action="{{ route('surat.terima', str_replace(['/'], '_', $surat->id_surat)) }}" method="POST">
-								@csrf
-								@method('PUT')
-								<button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
-							</form>
-							<form action="{{ route('surat.tolak', str_replace(['/'], '_', $surat->id_surat)) }}" method="POST">
-								@csrf
-								@method('PUT')
-								<button type="button" onclick="openTolakModal('{{ $surat->id_surat }}')" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded"> Tolak </button>
-							</form>
+							<button onclick="confirmAction('terima', '{{ str_replace(['/'], '_', $surat->id_surat) }}')" 
+								class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">
+								Terima
+							</button>
+							<button onclick="confirmAction('tolak', '{{ $surat->id_surat }}')" 
+								class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">
+								Tolak
+							</button>
 							@if($surat->dokumen)
 							<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
 								class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
@@ -348,6 +321,9 @@
 				@endforelse
 			</tbody>
 		</table>
+	</div>
+	<div class="mt-4">
+		{{ $suratList->links('pagination::tailwind') }}
 	</div>
 </div>
 <script>
@@ -378,5 +354,158 @@ document.addEventListener("DOMContentLoaded", function () {
     searchInput.addEventListener("input", applyFilters);
     applyFilters();
 });
+</script>
+<script>
+    function confirmAction(action, id) {
+        let message = '';
+        let confirmButtonText = '';
+        let confirmButtonClass = '';
+
+        switch(action) {
+            case 'terima':
+                message = 'Apakah Anda yakin ingin menerima surat ini?';
+                confirmButtonText = 'Ya, Terima';
+                confirmButtonClass = '#10B981';
+                break;
+            case 'tolak':
+                message = 'Apakah Anda yakin ingin menolak surat ini?';
+                confirmButtonText = 'Ya, Tolak';
+                confirmButtonClass = '#EF4444';
+                break;
+            case 'selesai':
+                message = 'Apakah Anda yakin ingin menandai surat ini sebagai selesai?';
+                confirmButtonText = 'Ya, Tandai Selesai';
+                confirmButtonClass = '#3B82F6';
+                break;
+            default:
+                return;
+        }
+
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: confirmButtonText,
+            cancelButtonText: 'Batal',
+            confirmButtonColor: confirmButtonClass,
+            cancelButtonColor: '#6B7280',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (action === 'tolak') {
+                    // Tampilkan modal untuk input keterangan
+                    Swal.fire({
+                        title: 'Alasan Penolakan',
+                        input: 'textarea',
+                        inputPlaceholder: 'Masukkan alasan penolakan...',
+                        inputAttributes: {
+                            'aria-label': 'Masukkan alasan penolakan'
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Kirim',
+                        cancelButtonText: 'Batal',
+                        confirmButtonColor: '#EF4444',
+                        cancelButtonColor: '#6B7280',
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return 'Alasan penolakan harus diisi!';
+                            }
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit form dengan keterangan
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = `/admin/surat/${btoa(id)}/tolak`;
+                            
+                            const csrfToken = document.createElement('input');
+                            csrfToken.type = 'hidden';
+                            csrfToken.name = '_token';
+                            csrfToken.value = '{{ csrf_token() }}';
+                            
+                            const methodInput = document.createElement('input');
+                            methodInput.type = 'hidden';
+                            methodInput.name = '_method';
+                            methodInput.value = 'PUT';
+                            
+                            const keteranganInput = document.createElement('input');
+                            keteranganInput.type = 'hidden';
+                            keteranganInput.name = 'keterangan';
+                            keteranganInput.value = result.value;
+                            
+                            form.appendChild(csrfToken);
+                            form.appendChild(methodInput);
+                            form.appendChild(keteranganInput);
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    });
+                } else {
+                    // Untuk aksi terima dan selesai
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    let routeUrl = '';
+                    if (action === 'terima') {
+                        routeUrl = '{{ route("surat.terima", "") }}';
+                    } else if (action === 'selesai') {
+                        routeUrl = '{{ route("surat.selesai", "") }}';
+                    }
+                    form.action = `${routeUrl}/${id}`;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'PUT';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(methodInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            }
+        });
+    }
+</script>
+<script>
+    function openModalSelesai(url) {
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: 'Apakah Anda yakin ingin menandai surat ini sebagai selesai?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Tandai Selesai',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#10B981',
+            cancelButtonColor: '#6B7280',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = url;
+                
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'PUT';
+                
+                form.appendChild(csrfToken);
+                form.appendChild(methodInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
 </script>
 @endsection

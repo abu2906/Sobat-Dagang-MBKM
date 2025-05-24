@@ -250,7 +250,7 @@ class DashboardMetrologiController extends Controller
     {
         $suratList = SuratMetrologi::with('user', 'suratBalasan')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
         $dataJumlahSurat = $this->getJumlahSurat();
         $dataSuratAdmin = $this->getJumlahSuratAdmin();
 
@@ -268,7 +268,7 @@ class DashboardMetrologiController extends Controller
                 $query->whereIn('status_kepalaBidang', ['Disetujui', 'Ditolak', 'Menunggu']);
             })
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
             
         $dataJumlahSurat = $this->getJumlahSurat();
 
@@ -282,7 +282,7 @@ class DashboardMetrologiController extends Controller
     {
         $alatUkur = DataAlatUkur::with('uttp')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
     }
@@ -296,7 +296,7 @@ class DashboardMetrologiController extends Controller
         $suratList = suratBalasan::with('suratMetrologi.user')
             ->where('status_kepalaBidang', 'Disetujui')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         // Get statistics for letters visible to kepala dinas
         $totalSurat = suratBalasan::where('status_kepalaBidang', 'Disetujui')->count();

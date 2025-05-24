@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\UttpExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class DirectoryBookController extends Controller
 {
@@ -43,7 +44,7 @@ class DirectoryBookController extends Controller
     {
         $alatUkur = DataAlatUkur::with('uttp')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
 
         return view('admin.bidangMetrologi.directory_alat_ukur_sah', compact('alatUkur'));
     }
@@ -214,9 +215,33 @@ class DirectoryBookController extends Controller
                 return response()->json(['error' => 'Data UTTP tidak ditemukan'], 404);
             }
 
-            return response()->json($uttp);
+            // Format data untuk response
+            $response = [
+                'id_uttp' => $uttp->id_uttp,
+                'id_user' => $uttp->id_user,
+                'tanggal_penginputan' => $uttp->tanggal_penginputan,
+                'no_registrasi' => $uttp->no_registrasi,
+                'nama_usaha' => $uttp->nama_usaha,
+                'jenis_alat' => $uttp->jenis_alat,
+                'nama_alat' => $uttp->nama_alat,
+                'merk_type' => $uttp->merk_type,
+                'nomor_seri' => $uttp->nomor_seri,
+                'alat_penguji' => $uttp->alat_penguji,
+                'ctt' => $uttp->ctt,
+                'spt_keperluan' => $uttp->spt_keperluan,
+                'tanggal_selesai' => $uttp->tanggal_selesai,
+                'terapan' => $uttp->terapan,
+                'keterangan' => $uttp->keterangan,
+                'sertifikat_path' => $uttp->sertifikat_path,
+                'user' => $uttp->user ? [
+                    'id_user' => $uttp->user->id_user,
+                    'nama' => $uttp->user->nama
+                ] : null
+            ];
+
+            return response()->json($response);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Terjadi kesalahan saat mengambil data'], 500);
+            return response()->json(['error' => 'Terjadi kesalahan saat mengambil data: ' . $e->getMessage()], 500);
         }
     }
 
@@ -419,6 +444,25 @@ class DirectoryBookController extends Controller
     public function downloadUttp()
     {
         return Excel::download(new UttpExport, 'data_uttp.xlsx');
+    }
+
+    public function searchUsers(Request $request)
+    {
+        $search = $request->input('search');
+        
+        $users = User::where('nama', 'like', "%{$search}%")
+            ->orWhere('id_user', 'like', "%{$search}%")
+            ->select('id_user', 'nama')
+            ->limit(10)
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id_user,
+                    'text' => "({$user->id_user}) - {$user->nama}"
+                ];
+            });
+
+        return response()->json($users);
     }
 
 }
