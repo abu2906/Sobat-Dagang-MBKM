@@ -64,7 +64,7 @@
                         <span class="font-medium text-green-600">Disetujui</span>
                         @elseif ($item->status == 'ditolak')
                         <span class="font-medium text-red-600">Ditolak</span>
-                        @else
+                        @elseif ($item->status == 'menunggu')
                         <span class="font-medium text-yellow-400">Menunggu</span>
                         @endif
                     </td>
