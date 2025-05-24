@@ -1,9 +1,9 @@
-@extends('layouts.adminIndustri')
+@extends('layouts.admin')
 @section('title', 'Data IKM')
 
 @section('content')
-    <main class="flex-1 flex flex-col bg-gray-100 min-h-screen">
-        <header class="relative z-10">
+    <main class="flex-1 flex flex-col bg-gray-100 w-full">
+        <header class="relative">
             <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover"
                 alt="Header">
 
@@ -37,7 +37,7 @@
                     <i class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4"></i>
                 </div>
 
-                <a href="{{ route('admin.industri.formIKM') }}"
+                <a href="{{ route('form.dataIKM') }}"
                     class="bg-[#003366] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
                     TAMBAH DATA
                 </a>
@@ -114,9 +114,9 @@
                                 <td class="p-2 text-center">{{ $ikm->tenaga_kerja }}</td>
                                 <td class="p-2 text-center">
                                     <div class="flex justify-center gap-2">
-                                        <a href="{{ route('admin.industri.editIKM', $ikm->id_ikm) }}"
+                                        <a href="{{ route('editIKM', $ikm->id_ikm) }}"
                                             class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-lg">Edit</a>
-                                        <form action="{{ route('admin.industri.destroyIKM', $ikm->id_ikm) }}"
+                                        <form action="{{ route('destroyIKM', $ikm->id_ikm) }}"
                                             method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');"
                                             class="inline-block">
                                             @csrf

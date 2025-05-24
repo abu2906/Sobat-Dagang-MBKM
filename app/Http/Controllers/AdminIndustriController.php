@@ -285,7 +285,7 @@ class AdminIndustriController extends Controller
     }
 
 
-    public function showFormIKM()
+    public function formDataIKM()
     {
         $json = file_get_contents(public_path('assets/data/wilayah.json'));
         $wilayah = json_decode($json, true);

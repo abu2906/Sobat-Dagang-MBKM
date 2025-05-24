@@ -1,4 +1,4 @@
-@extends('layouts.adminIndustri')
+@extends('layouts.admin')
 @section('title', 'Form Data IKM')
 
 @section('content')
@@ -23,7 +23,7 @@
                     <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover"
                         alt="Header">
 
-                    <a href="{{ route('admin.industri.dataIKM') }}"
+                    <a href="{{ route('dataIKM') }}"
                         class="absolute top-6 right-6 inline-flex items-center gap-1.5 bg-white bg-opacity-90 backdrop-blur-md text-[#083458] font-semibold px-3 py-1.5 rounded-2xl shadow-md hover:bg-[#083458] hover:text-white transition duration-300 text-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 stroke-current" fill="none"
                             viewBox="0 0 24 24" stroke-width="2">
@@ -70,7 +70,7 @@
                         <div class="p-10 w-3/4 mx-auto flex justify-center">
                             <section id="tab-content"
                                 class="inline-block bg-[#d0e6ff] rounded-2xl p-10 min-h-[200px] text-center text-blue-900 text-xl font-normal shadow-inner">
-                                <form id="form-ikm" method="POST" action="{{ route('admin.industri.dataIKM.store') }}">
+                                <form id="form-ikm" method="POST" action="{{ route('dataIKM.store') }}">
                                     @csrf
                                     {{-- DATA IKM --}}
 

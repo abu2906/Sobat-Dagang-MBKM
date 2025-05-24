@@ -114,33 +114,6 @@ Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('p
 Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
-// Admin Industri
-Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
-    Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
-    Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
-    Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
-    Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
-    Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
-    Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
-    Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
-    Route::get('data-IKM/{id}/edit', [AdminIndustriController::class, 'editIKM'])->name('editIKM');
-    Route::delete('data-IKM/{id}', [AdminIndustriController::class, 'destroyIKM'])->name('destroyIKM');
-
-    // Hanya prefix 'halal', bukan 'admin/industri/halal'
-    Route::prefix('halal')->name('halal.')->group(function () {
-        Route::put('/{halal}', [HalalController::class, 'update'])->name('update');
-        Route::get('/', [HalalController::class, 'index'])->name('index');
-        Route::post('/', [HalalController::class, 'store'])->name('store');
-        Route::get('/{id}/edit', [HalalController::class, 'edit'])->name('edit');
-        Route::delete('/{id}', [HalalController::class, 'destroy'])->name('destroy');
-    });
-});
-
-//User Industri
-
-Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
-Route::get('/admin/kelola-berita', [homeController::class, 'kelolaBerita'])->name('kelola.berita');
-
 // Admin Perdagangan
 Route::middleware(['check.role:admin_perdagangan'])->group(function () {
     Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
@@ -171,8 +144,8 @@ Route::middleware(['check.role:admin_perdagangan'])->group(function () {
 //Admin Industri
 Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::get('/admin/industri', [AdminIndustriController::class, 'showDashboard'])->name('dashboard.industri');
-    Route::get('/data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
-    Route::get('/form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
+    // Route::get('/data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
+    // Route::get('/form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
     Route::get('/admin/surat-industri', [AdminIndustriController::class, 'kelolaSuratt'])->name('kelolaSurat.industri');
     Route::get('/admin/detail-surat/{id_permohonan}', [AdminIndustriController::class, 'detailSuratt'])
         ->where('id_permohonan', '[0-9a-fA-F\-]+')
@@ -184,19 +157,40 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
         ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
         ->name('dokumen.viewi');
     Route::put('/admin/industri/sertifikat-halal/{halal}', [HalalController::class, 'update'])->name('sertifikat.halal.update');
-    Route::get('/admin/industri/sertifikat-halal', [HalalController::class, 'index'])->name('sertifikat.halal');
-    Route::post('/admin/industri/sertifikat-halal/store', [HalalController::class, 'store'])->name('sertifikat.halal.store');
-    Route::put('/admin/industri/sertifikat-halal/{id}/edit', [HalalController::class, 'edit'])->name('sertifikat.halal.edit');
-    Route::delete('/admin/industri/sertifikat-halal/{id}', [HalalController::class, 'destroy'])->name('sertifikat.halal.destroy');
-
+    Route::get('/admin/industri/sertifikat-halal', [HalalController::class, 'index'])->name('admin.industri.halal');
+    Route::post('/admin/industri/sertifikat-halal/store', [HalalController::class, 'store'])->name('admin.industri.halal.store');
+    Route::put('/admin/industri/sertifikat-halal/{id}/edit', [HalalController::class, 'edit'])->name('admin.industri.halal.edit');
+    Route::delete('/admin/industri/sertifikat-halal/{id}', [HalalController::class, 'destroy'])->name('admin.industri.halal.destroy');
         
-    Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
-    Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
+    Route::get('/admin/industri/data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
+    Route::get('/admin/industri/form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
     Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
     Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
     Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
     Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
 });
+
+// Admin Industri
+// Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
+//     Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
+//     Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
+//     Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
+//     Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
+//     Route::get('sertifikasi-halal', [AdminIndustriController::class, 'Showhalal'])->name('halal');
+//     Route::get('surat-balasan', [AdminIndustriController::class, 'Showsurat'])->name('surat');
+//     Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
+//     Route::get('data-IKM/{id}/edit', [AdminIndustriController::class, 'editIKM'])->name('editIKM');
+//     Route::delete('data-IKM/{id}', [AdminIndustriController::class, 'destroyIKM'])->name('destroyIKM'); 
+
+//     // Hanya prefix 'halal', bukan 'admin/industri/halal'
+//     Route::prefix('halal')->name('halal.')->group(function () {
+//         Route::put('/{halal}', [HalalController::class, 'update'])->name('update');
+//         Route::get('/', [HalalController::class, 'index'])->name('index');
+//         Route::post('/', [HalalController::class, 'store'])->name('store');
+//         Route::get('/{id}/edit', [HalalController::class, 'edit'])->name('edit');
+//         Route::delete('/{id}', [HalalController::class, 'destroy'])->name('destroy');
+//     });
+// });
 
 //admin metrologi
 Route::middleware(['check.role:admin_metrologi'])->group(function () {
