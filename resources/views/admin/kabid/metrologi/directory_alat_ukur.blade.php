@@ -156,7 +156,7 @@ use App\Helpers\StatusHelper;
     function loadDetailAlat(id) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        fetch("{{ route('alat.detail.post') }}", {
+        fetch("{{ route('kabid.detail') }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

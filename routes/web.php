@@ -202,6 +202,7 @@ Route::middleware(['auth:disdag'])->group(function () {
     Route::get('/admin/surat/{id}/edit-balasan', [PersuratanController::class, 'editBalasan'])->name('edit-surat-balasan');
     Route::put('/admin/surat/{id}/update-balasan', [PersuratanController::class, 'updateBalasan'])->name('update-surat-balasan');
     Route::put('/admin/surat/{id}/selesai', [PersuratanController::class, 'tandaiSelesai'])->name('surat.selesai');
+    Route::post('/uttp/detail', [DirectoryBookController::class, 'getDetail'])->name('uttp.detail.post');
 
 });
 
@@ -211,8 +212,7 @@ Route::middleware(['check.role:disdag,kabid_metrologi'])->group(function () {
     Route::get('/kabid/uttp/metrologi', [DashboardMetrologiController::class, 'showUttp'])->name('informasi-uttp');
     Route::post('/surat/terima/{encoded_id}', [PersuratanController::class, 'terimaKabid'])->name('terimaKabid');
     Route::post('/surat/tolak/{encoded_id}', [PersuratanController::class, 'tolakKabid'])->name('tolakKabid');
-    Route::post('/uttp/detail', [DirectoryBookController::class, 'getDetail'])->name('uttp.detail.post');
-    Route::post('/kabid/metrologi/detail/{id}', [DirectoryBookController::class, 'getDetail'])->name('kabid.detail');
+    Route::post('/kabid/metrologi/detail', [DirectoryBookController::class, 'getDetail'])->name('kabid.detail');
 });
 
 // Kepala Dinas Routes
