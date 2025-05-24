@@ -201,6 +201,17 @@ class PersuratanController extends Controller
             'isi_surat' => 'required|string',
         ]);
 
+        // Check if the new surat balasan ID already exists (excluding the current one)
+        $existingSuratBalasan = suratBalasan::where('id_surat_balasan', $validated['id_surat_balasan'])
+            ->where('id_surat', '!=', $id_surat)
+            ->first();
+            
+        if ($existingSuratBalasan) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['id_surat_balasan' => 'Nomor surat balasan ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.']);
+        }
+
         $suratBalasan = SuratBalasan::where('id_surat', $id_surat)->firstOrFail();
 
         // Hapus dokumen sebelumnya (opsional)
