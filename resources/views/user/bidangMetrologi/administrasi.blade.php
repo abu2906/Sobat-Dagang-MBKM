@@ -224,24 +224,25 @@
 
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Alamat Alat</label>
+					<label class="block font-semibold mb-1">Alamat Alat <span style="color:red">*</span></label>
 					<input type="text" name="alamat_alat" placeholder="Masukkan Alamat Alat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Nomor Surat</label>
+					<label class="block font-semibold mb-1">Nomor Surat <span style="color:red">*</span></label>
 					<input type="text" name="nomor_surat" placeholder="Masukkan Nomor Surat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Jenis Surat</label>
+					<label class="block font-semibold mb-1">Jenis Surat <span style="color:red">*</span></label>
 					<select name="jenis_surat" class="border px-4 py-2 w-full rounded-lg">
+						<option value="" disabled selected>-- Pilih Jenis Surat --</option>
 						<option value="tera">Tera</option>
 						<option value="tera_ulang">Tera Ulang</option>
 					</select>
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Upload Surat</label>
+					<label class="block font-semibold mb-1">Upload Surat <span style="color:red">*</span></label>
 					<input type="file" name="dokumen" class="mt-2">
 				</div>
 
