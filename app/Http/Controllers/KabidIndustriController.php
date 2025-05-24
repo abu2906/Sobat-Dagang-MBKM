@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
+use App\Models\DataIkm;
+use App\Models\SertifikasiHalal;
 
 class KabidIndustriController extends Controller
 {
@@ -138,5 +140,40 @@ class KabidIndustriController extends Controller
         return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
     }
 
+    public function DataIKM()
+    {
+        $dataIkm = DataIkm::all();
+        return view('admin.kabid.industri.dataIKM', compact('dataIkm'));
+    }
+
+    public function sertifikatHalal()
+    {
+        $data = SertifikasiHalal::orderBy('tanggal_sah', 'desc')->get()->map(function ($item) {
+            return [
+                'id_halal' => $item->id_halal,
+                'nama_usaha' => $item->nama_usaha,
+                'no_sertifikasi_halal' => $item->no_sertifikasi_halal,
+                'tanggal_sah' => $item->tanggal_sah
+                    ? Carbon::parse($item->tanggal_sah)->format('Y-m-d')
+                    : null,
+                'tanggal_exp' => $item->tanggal_exp
+                    ? Carbon::parse($item->tanggal_exp)->format('Y-m-d')
+                    : null,
+
+                'tanggal_sah_formatted' => $item->tanggal_sah
+                    ? Carbon::parse($item->tanggal_sah)->translatedFormat('d F Y')
+                    : '-',
+                'tanggal_exp_formatted' => $item->tanggal_exp
+                    ? Carbon::parse($item->tanggal_exp)->translatedFormat('d F Y')
+                    : '-',
+
+                'alamat' => $item->alamat,
+                'status' => $item->status,
+                'sertifikat' => $item->sertifikat,
+            ];
+        });
+
+        return view('admin.kabid.industri.sertifikathalal', compact('data'));
+    }
 
 }
