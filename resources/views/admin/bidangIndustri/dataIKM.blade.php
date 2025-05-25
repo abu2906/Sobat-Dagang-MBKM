@@ -2,7 +2,7 @@
 @section('title', 'Data IKM')
 
 @section('content')
-    <main class="flex-1 flex flex-col bg-gray-100 w-full">
+    <main class="flex-1 flex flex-col w-full">
         <header class="relative">
             <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover"
                 alt="Header">
@@ -23,7 +23,9 @@
                         <option value="Ujung">Ujung</option>
                         <option value="Bacukiki">Bacukiki</option>
                     </select>
-                    <i class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4"></i>
+                    <i class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4">
+                        <span class="material-symbols-outlined text-sm text-gray-700">tune</span>
+                    </i>
                 </div>
 
                 <div class="relative w-48">
@@ -34,7 +36,9 @@
                         <option value="Menengah">Menengah</option>
                         <option value="Besar">Besar</option>
                     </select>
-                    <i class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4"></i>
+                    <i class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4">
+                        <span class="material-symbols-outlined text-sm text-gray-700">tune</span>
+                    </i>
                 </div>
 
                 <a href="{{ route('form.dataIKM') }}"

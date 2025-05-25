@@ -535,7 +535,7 @@ class AdminIndustriController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.industri.dataIKM')->with('success', 'Data berhasil disimpan.');
+            return redirect()->route('dataIKM')->with('success', 'Data berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
 
