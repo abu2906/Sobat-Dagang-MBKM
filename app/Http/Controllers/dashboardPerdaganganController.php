@@ -17,7 +17,7 @@ use App\Models\DocumentUser;
 use App\Models\IndexKategori;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\Models\IndexHarga;  
+use App\Models\IndexHarga;
 use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
@@ -34,6 +34,7 @@ class DashboardPerdaganganController extends Controller{
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']) // hanya status ini yang ditampilkan
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -168,6 +169,7 @@ class DashboardPerdaganganController extends Controller{
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima'])
             ->orderBy('created_at', 'desc')
             ->get();
 

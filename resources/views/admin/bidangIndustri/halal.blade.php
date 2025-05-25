@@ -107,7 +107,7 @@
       <form 
         :action="formData.id 
             ? '{{ url('admin/industri/halal') }}/' + formData.id 
-            : '{{ route('admin.industri.halal.store') }}'"
+            : '{{ route('halal.store') }}'"
         method="POST"
         enctype="multipart/form-data"
         class="space-y-6"
