@@ -16,11 +16,11 @@ class CreatePenggunaanBahanBakarTable extends Migration
             $table->unsignedBigInteger('id_ikm');
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->string('jenis_bahan_bakar');
-            $table->string('satuan_standar');
+            $table->string('jenis_bahan_bakar');                 // e.g. solar, bensin
+            $table->string('satuan_standar');                    // e.g. liter, kg
 
-            $table->float('banyaknya_proses_produksi')->default(0);     // jumlah bahan (misal: liter)
-            $table->bigInteger('nilai_proses_produksi')->default(0);   // nilai dalam Rp
+            $table->float('banyaknya_proses_produksi')->default(0);
+            $table->bigInteger('nilai_proses_produksi')->default(0);
 
             $table->float('banyaknya_pembangkit_tenaga_listrik')->default(0);
             $table->bigInteger('nilai_pembangkit_tenaga_listrik')->default(0);

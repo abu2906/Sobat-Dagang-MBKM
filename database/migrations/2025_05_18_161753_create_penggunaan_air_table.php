@@ -16,9 +16,9 @@ class CreatePenggunaanAirTable extends Migration
             $table->unsignedBigInteger('id_ikm');
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->string('sumber_air');
-            $table->float('banyaknya_penggunaan_m3')->default(0); // dalam meter kubik
-            $table->bigInteger('biaya')->default(0); // biaya penggunaan air (Rp)
+            $table->string('sumber_air'); 
+            $table->float('banyaknya_penggunaan_m3')->default(0);
+            $table->bigInteger('biaya')->default(0); 
 
             $table->timestamps();
         });

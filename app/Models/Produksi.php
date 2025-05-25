@@ -29,7 +29,6 @@ class Produksi extends Model
         'kapasitas_terpasang_per_tahun',
     ];
 
-    // Relasi ke DataIkm
     public function dataIkm(): BelongsTo
     {
         return $this->belongsTo(DataIkm::class, 'id_ikm', 'id_ikm');

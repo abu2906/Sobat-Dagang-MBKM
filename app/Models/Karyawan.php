@@ -16,17 +16,19 @@ class Karyawan extends Model
 
     protected $fillable = [
         'id_ikm',
-        'jumlah_karyawan',
+        'tenaga_kerja_tetap',
+        'tenaga_kerja_tidak_tetap',
+        'tenaga_kerja_laki_laki',
+        'tenaga_kerja_perempuan',
         'sd',
         'smp',
         'sma_smk',
+        'd1_d3',
         's1_d4',
         's2',
         's3',
-        'status',
     ];
 
-    // Import model DataIkm
     public function dataIkm(): BelongsTo
     {
         return $this->belongsTo(DataIkm::class, 'id_ikm', 'id_ikm');

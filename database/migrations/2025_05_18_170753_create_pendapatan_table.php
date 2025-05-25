@@ -16,8 +16,8 @@ class CreatePendapatanTable extends Migration
             $table->unsignedBigInteger('id_ikm');
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->bigInteger('nilai')->default(0);   // nominal pendapatan dalam Rp
-            $table->string('sumber');                  // sumber pendapatan
+            $table->bigInteger('nilai')->default(0);   // nominal pendapatan
+            $table->string('sumber');                  // sumber pendapatan (misal: penjualan, jasa)
 
             $table->timestamps();
         });

@@ -525,3 +525,13 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;                /* Chrome, Safari, Opera */
 }
+
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinner {
+  -moz-appearance: textfield; /* Firefox */
+}

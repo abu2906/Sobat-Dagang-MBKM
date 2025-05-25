@@ -16,16 +16,16 @@ class CreatePemakaianBahanTable extends Migration
             $table->unsignedBigInteger('id_ikm');
             $table->foreign('id_ikm')->references('id_ikm')->on('data_ikm')->onDelete('cascade');
 
-            $table->string('nama_bahan');
-            $table->string('jenis_bahan');
-            $table->string('spesifikasi');
-            $table->string('kode_hs');
-            $table->string('satuan_standar');
+            $table->string('nama_bahan');             // Contoh: Kapas
+            $table->string('jenis_bahan');            // Bahan Baku / Penolong
+            $table->string('spesifikasi');            // Misal: Kualitas A
+            $table->string('kode_hs');                // Kode Harmonized System
+            $table->string('satuan_standar');         // kg, liter, pcs, dll
 
-            $table->integer('jumlah_dalam_negeri');
-            $table->bigInteger('nilai_dalam_negeri');
+            $table->integer('jumlah_dalam_negeri');   // Jumlah dalam unit
+            $table->bigInteger('nilai_dalam_negeri'); // Nilai dalam rupiah
 
-            $table->integer('jumlah_impor');
+            $table->integer('jumlah_impor');          // Jumlah dalam unit
             $table->bigInteger('nilai_impor');
             $table->string('negara_asal_impor');
 

@@ -22,7 +22,6 @@ class PenggunaanAir extends Model
         'biaya',
     ];
 
-    // Relasi ke DataIkm
     public function dataIkm(): BelongsTo
     {
         return $this->belongsTo(DataIkm::class, 'id_ikm', 'id_ikm');

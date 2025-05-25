@@ -18,10 +18,14 @@ class Pengeluaran extends Model
     protected $fillable = [
         'id_ikm',
         'upah_gaji',
+        'pengeluaran_industri_distribusi',
+        'pengeluaran_rnd',
+        'pengeluaran_tanah',
+        'pengeluaran_gedung',
+        'pengeluaran_mesin',
         'lainnya',
     ];
 
-    // Relasi ke DataIkm
     public function dataIkm(): BelongsTo
     {
         return $this->belongsTo(DataIkm::class, 'id_ikm', 'id_ikm');
