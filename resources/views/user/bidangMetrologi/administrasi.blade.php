@@ -23,6 +23,30 @@
     <!-- Bungkus dengan div agar layout fleksibel -->
     <div class="space-y-10 pb-32 relative">
 
+		<!-- Modal Lihat Keterangan Penolakan -->
+		<div id="modalKeteranganTolak" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-center items-center">
+		<div class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
+			<h2 class="text-xl font-semibold mb-4">Alasan Penolakan</h2>
+			<p id="isiKeteranganTolak" class="text-gray-700 mb-6"></p>
+			<div class="text-right">
+				<button onclick="closeKeteranganTolak()" class="px-4 py-2 bg-gray-300 rounded">Tutup</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function openKeteranganTolak(keterangan) {
+			document.getElementById('isiKeteranganTolak').innerText = keterangan || 'Tidak ada keterangan tersedia.';
+			document.getElementById('modalKeteranganTolak').classList.remove('hidden');
+			document.getElementById('modalKeteranganTolak').style.display = 'flex';
+		}
+
+		function closeKeteranganTolak() {
+			document.getElementById('modalKeteranganTolak').classList.add('hidden');
+			document.getElementById('modalKeteranganTolak').style.display = 'none';
+		}
+	</script>
+
         <!-- RIWAYAT PERMOHONAN -->
         <div id="riwayatPermohonan" class="hidden relative">
             <div class="w-full">
@@ -85,7 +109,7 @@
 										<td class="text-center px-5 py-3 border-b">{{ $index + 1 }}</td>
 										<td class="text-center px-5 py-3 border-b">{{ $item->id_surat }}</td>
 										<td class="text-center px-5 py-3 border-b">
-											{{ \Carbon\Carbon::parse($item->created_at)->format('Y-m-d') }}
+											{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
 										</td>
 										<td class="text-center px-5 py-3 border-b">
 											<span class="text-xs font-medium px-3 py-1 rounded-full
@@ -95,12 +119,36 @@
 											</span>
 										</td>
 										<td class="text-center px-5 py-3 border-b">
+										{{-- Tombol Lihat Surat Permohonan (selalu ada) --}}
+										<button
+											onclick="toggleModal(true, '{{ asset('storage/' . $item->dokumen) }}', 'Surat Permohonan')"
+											class="px-4 py-1 text-sm text-[#1e3a8a] border border-[#1e3a8a] rounded-full hover:bg-[#1e3a8a] hover:text-white">
+											Lihat Surat
+										</button>
+
+										{{-- Jika statusnya Disetujui, tampilkan tombol Lihat Surat Balasan --}}
+										@if ($item->status_surat_masuk == 'Disetujui')
 											<button
-												onclick="toggleModal(true, '{{ asset('storage/' . $item->dokumen) }}', '{{ $item->status_surat_masuk }}')"
-												class="px-4 py-1 text-sm text-[#1e3a8a] border border-[#1e3a8a] rounded-full hover:bg-[#1e3a8a] hover:text-white">
-												Lihat Surat
+												onclick="toggleModal(true, '{{ asset('storage/' . $item->suratBalasan->path_dokumen) }}', 'Surat Balasan')"
+												class="ml-2 px-4 py-1 text-sm text-green-700 border border-green-700 rounded-full hover:bg-green-700 hover:text-white transition">
+												Lihat Balasan
 											</button>
-										</td>
+										@endif
+
+										{{-- Jika statusnya Ditolak, tampilkan tombol Lihat Alasan Penolakan --}}
+										@if ($item->status_surat_masuk == 'Ditolak')
+											<button
+												onclick="openKeteranganTolak(`{{ $item->keterangan }}`)"
+												class="ml-2 text-red-600 hover:scale-105 transition duration-200 inline-flex items-center justify-center"
+												title="Lihat Alasan Penolakan">
+												<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+														d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+												</svg>
+											</button>
+										@endif
+									</td>
+
 									</tr>
 								@endforeach
 							@endif
@@ -150,7 +198,7 @@
 		<div id="formPermohonan" class="relative flex justify-center">
 			<form class="bg-white p-6 rounded-xl shadow-lg w-full max-w-3xl" method="POST" action="{{ route('proses-surat-metrologi') }}" enctype="multipart/form-data">
 				@csrf
-				<h2 class="text-center font-bold text-xl mb-4">FORM PERMOHONAN</h2>
+				<h2 class="text-center font-bold text-xl mb-4">FORM PERMOHONAN TERA/TERA ULANG</h2>
 
 				<div class="mb-4">
 					<h3 class="font-semibold mb-2">Data Pemohon:</h3>
@@ -174,29 +222,27 @@
 					</div>
 				</div>
 
-				<div class="mb-4">
-					<h2>Data Pemohon : </h2>
-				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Alamat Alat</label>
+					<label class="block font-semibold mb-1">Alamat Alat <span style="color:red">*</span></label>
 					<input type="text" name="alamat_alat" placeholder="Masukkan Alamat Alat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Nomor Surat</label>
+					<label class="block font-semibold mb-1">Nomor Surat <span style="color:red">*</span></label>
 					<input type="text" name="nomor_surat" placeholder="Masukkan Nomor Surat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Jenis Surat</label>
+					<label class="block font-semibold mb-1">Jenis Surat <span style="color:red">*</span></label>
 					<select name="jenis_surat" class="border px-4 py-2 w-full rounded-lg">
+						<option value="" disabled selected>-- Pilih Jenis Surat --</option>
 						<option value="tera">Tera</option>
 						<option value="tera_ulang">Tera Ulang</option>
 					</select>
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Upload Dokumen</label>
+					<label class="block font-semibold mb-1">Upload Surat <span style="color:red">*</span></label>
 					<input type="file" name="dokumen" class="mt-2">
 				</div>
 
@@ -209,4 +255,36 @@
 
 
     <script src="{{ asset('assets/js/switch.js') }}"></script>
+
+    <script>
+        function validateNomorSurat(input) {
+            const nomorSurat = input.value;
+            
+            // Kirim request ke server untuk cek nomor surat
+            fetch('/check-nomor-surat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ nomor_surat: nomorSurat })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const errorElement = document.getElementById('nomor-surat-error');
+                if (data.exists) {
+                    errorElement.textContent = 'Nomor surat ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.';
+                    errorElement.classList.remove('hidden');
+                    input.setCustomValidity('Nomor surat ini sudah digunakan');
+                } else {
+                    errorElement.textContent = '';
+                    errorElement.classList.add('hidden');
+                    input.setCustomValidity('');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
 @endsection

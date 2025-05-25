@@ -2,10 +2,9 @@
 @section('title', 'Update Harga Barang')
 
 @section('content')
-<div class="w-full h-32">
-    <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}"
-        alt="Background"
-        class="object-cover w-full h-full">
+<div class="w-full h-36">
+    <img src="{{ asset('assets/img/background/dagang.jpg') }}"
+        alt="Background" class="object-cover w-full h-full">
 </div>
 
 <div class="flex justify-center items-start min-h-[calc(100vh-8rem)] bg-white py-4 px-4 md:px-0">

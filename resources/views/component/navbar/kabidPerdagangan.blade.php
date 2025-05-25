@@ -1,4 +1,4 @@
-<div class="flex h-screen relative z-[100]">
+<div x-data="sidebar()" x-init="checkScreen()" @resize.window="checkScreen" class="flex h-screen relative z-[100]">
 
     <div :class="open ? 'w-64' : 'w-20'"
         class="bg-[#0c3252] text-white flex flex-col justify-between rounded-r-xl transition-all duration-300 relative shadow-md z-10">
@@ -47,7 +47,6 @@
             <div class="flex items-center">
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
-                    {{-- <p class="text-sm font-semibold">{{ Auth::user()->name }}</p> --}}
                     <p class="text-sm font-semibold">Kabid Perdagangan</p>
                     <p class="text-xs">Admin</p>
                 </div>
@@ -66,3 +65,13 @@
 
         </div>
     </div>
+<script>
+    function sidebar() {
+        return {
+            open: window.innerWidth >= 768, // default: true jika layar lebar
+            checkScreen() {
+                this.open = window.innerWidth >= 768;
+            }
+        }
+    }
+</script>

@@ -2,18 +2,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ForumDiskusi extends Model
 {
-    use HasFactory;
-
     protected $table = 'forum_diskusi';
-    protected $primaryKey = 'id_diskusi';
-    public $timestamps = false;
+    protected $primaryKey = 'id_pengaduan';
 
     protected $fillable = [
-        'id_user', 'id_disdag', 'chat', 'waktu', 'status'
+        'id_user',
+        'id_disdag',
+        'chat',
+        'waktu',
+        'status',
+    ];
+
+    protected $casts = [
+        'waktu' => 'datetime',
     ];
 
     public function user()
@@ -26,3 +30,4 @@ class ForumDiskusi extends Model
         return $this->belongsTo(Disdag::class, 'id_disdag', 'id_disdag');
     }
 }
+

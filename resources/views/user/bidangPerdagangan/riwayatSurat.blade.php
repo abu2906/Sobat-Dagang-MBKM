@@ -5,9 +5,7 @@
 @section('content')
 
 <div class="relative w-full h-64">
-
-    <img src="{{ asset('assets\img\background\admin_perdagangan.png') }}" alt="Background" class="object-cover w-full h-full" />
-
+    <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
     <a href="{{ route('user.dashboard') }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">arrow_back</span>
@@ -20,7 +18,6 @@
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari"
                 class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </form>
-
     </div>
     <div class="flex justify-center mb-6">
 
@@ -35,7 +32,7 @@
             </button>
         </div>
     </div>
-    <div class="container px-4 pb-4 mx-auto">
+    <div class="w-full overflow-x-auto custom-scrollbar">
         <table class="min-w-full overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
@@ -50,7 +47,7 @@
                 @foreach ($riwayatSurat as $index => $item)
                 <tr class="border-b">
                     <td class="px-4 py-3 text-center">{{ $index + 1 }}</td>
-                    <td class="px-4 py-3 text-center">{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
+                    <td class="px-4 py-3 text-center">{{ \Carbon\Carbon::parse($item->tgl_pengajuan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                     <td class="px-4 py-3 text-center">
                         @if($item->jenis_surat == 'surat_rekomendasi_perdagangan')
                         Surat Rekomendasi
@@ -67,7 +64,7 @@
                         <span class="font-medium text-green-600">Disetujui</span>
                         @elseif ($item->status == 'ditolak')
                         <span class="font-medium text-red-600">Ditolak</span>
-                        @else
+                        @elseif ($item->status == 'menunggu')
                         <span class="font-medium text-yellow-400">Menunggu</span>
                         @endif
                     </td>
@@ -118,6 +115,17 @@
         </div>
     </div>
 </div>
+
+<style>
+.custom-scrollbar {
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+}
+.custom-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+</style>
+
 
 @endsection
 

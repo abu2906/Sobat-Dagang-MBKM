@@ -1,7 +1,8 @@
 @extends('layouts.admin')
-@section('title', 'Dashboard Kabid Bidang Perdagangan')
-@section('content')
 
+@section('title', 'Dashboard Kabid Perdagangan')
+
+@section('content')
 <div class="min-h-screen p-6 bg-white">
     <h1 class="mb-4 text-2xl font-bold text-black">Dashboard Bidang Perdagangan</h1>
 
@@ -86,14 +87,14 @@
                             @if ($surat->status !== 'menunggu')
                             <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
                             @else
-                            <form action="{{ route('surat.setujui', $surat->id_permohonan) }}" method="POST" class="inline">
+                            <form action="{{ route('suratPerdagangan.setujui', $surat->id_permohonan) }}" method="POST" class="inline">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>
                             </form>
                             @endif
                         </td>
-                    </tr>
+                </tr>
                     @endif
                     @endforeach
                 </tbody>
@@ -103,7 +104,6 @@
     </div>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <!-- Pie Chart -->
         <div class="flex flex-col p-4 bg-white shadow rounded-xl">
             <h2 class="mb-2 text-lg font-semibold">Jumlah Permohonan per Status</h2>
             <div class="w-full h-64">
@@ -111,7 +111,6 @@
             </div>
         </div>
 
-        <!-- Line Chart -->
         <div class="flex flex-col p-4 bg-white shadow rounded-xl">
             <div class="flex items-center justify-between mb-2">
                 <h2 class="text-lg font-semibold">Grafik Perkembangan Surat Masuk</h2>
@@ -178,10 +177,8 @@
         });
     }
 
-    // Render awal dari Blade
     renderCharts(@json($statusCounts), @json($dataBulanan));
 
-    // Handler ketika tahun diubah
     document.getElementById('filterTahun').addEventListener('change', function() {
         const selectedYear = this.value;
 
@@ -197,5 +194,4 @@
             .catch(error => console.error('Error:', error));
     });
 </script>
-
 @endsection

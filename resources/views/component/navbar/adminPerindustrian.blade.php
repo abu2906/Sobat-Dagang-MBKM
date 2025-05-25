@@ -1,4 +1,4 @@
-<div class="flex h-screen relative z-[100]">
+<div x-data="sidebar()" x-init="checkScreen()" @resize.window="checkScreen" class="flex h-screen relative z-[100]">
 
     <div :class="open ? 'w-64' : 'w-20'"
         class="bg-[#0c3252] text-white flex flex-col justify-between rounded-r-xl transition-all duration-300 relative shadow-md z-10">
@@ -26,10 +26,10 @@
             <ul class="space-y-2 text-sm">
                 @php
                 $menuItems = [
-                ['href' => '#', 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                ['href' => '#', 'icon' => 'folder.png', 'label' => 'Data IKM'],
-                ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
-                ['href' => '#', 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                ['href' => route('dashboard.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                ['href' => route('dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],
+                ['href' => route('admin.industri.halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Sertifikat Halal'],
+                ['href' => route('kelolaSurat.industri'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
 
@@ -49,7 +49,7 @@
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
                     {{-- <p class="text-sm font-semibold">{{ Auth::user()->name }}</p> --}}
-                    <p class="text-sm font-semibold">Andi Magfirah Maqbul</p>
+                    <p class="text-sm font-semibold">Bidang Industri</p>
                     <p class="text-xs">Admin</p>
                 </div>
             </div>
