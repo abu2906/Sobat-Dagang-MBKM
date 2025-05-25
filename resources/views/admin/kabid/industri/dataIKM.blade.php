@@ -9,7 +9,9 @@
     <div class="flex-1 flex flex-col w-full">
         <div class="w-11/12 bg-white rounded-xl shadow-lg px-6 py-4 flex flex-wrap justify-between gap-4 items-center mx-auto -mt-10 z-20">
             <div class="flex items-center bg-[#CAE2F6] rounded-lg px-4 py-2 flex-1 shadow-md">
-                <span class="material-symbols-outlined text-gray-500 mr-2"></span>
+                <span class="material-symbols-outlined text-gray-500 mr-2">search</span>
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                    <i class="fas fa-search"></i></span>
                 <input type="text" id="searchInput" placeholder="Cari"
                     class="bg-transparent w-full focus:outline-none">
             </div>

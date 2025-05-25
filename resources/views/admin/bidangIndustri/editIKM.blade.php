@@ -6,7 +6,7 @@
   <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6">
     <h1 class="text-2xl font-bold mb-6 text-center text-[#083458]">Edit Data IKM</h1>
 
-    <form action="{{ route('admin.industri.dataIKM.store') }}" method="POST">
+    <form action="{{ route('dataIKM.store') }}" method="POST">
       @csrf
       <input type="hidden" name="id" value="{{ $ikm->id }}">
 
