@@ -22,7 +22,7 @@
   </div>
 
   <section class="flex-1 px-6 pb-10 mt-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent z-10 relative">
-    <div class="overflow-hidden rounded-b-xl">
+    <div class="overflow-hidden rounded-xl">
       <table class="w-full text-sm table-auto">
         <thead class="bg-[#0d3b66] text-white">
           <tr>

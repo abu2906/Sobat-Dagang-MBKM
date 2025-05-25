@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SertifikasiHalal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
 
 class HalalController extends Controller
@@ -37,7 +38,12 @@ class HalalController extends Controller
             ];
         });
 
-        return view('admin.bidangIndustri.halal', compact('data'));
+        $items = SertifikasiHalal::all();
+
+        return view('admin.bidangIndustri.halal',[
+            'data' => $data,
+            'items' => $items
+        ]);
     }
 
 
@@ -50,7 +56,7 @@ class HalalController extends Controller
             'tanggal_exp'           => 'required|date|after_or_equal:tanggal_sah',
             'alamat'                => 'required|string',
             'status'                => 'required|string|in:Berlaku,Perlu Pembaruan',
-            'sertifikat'            => 'required|file|mimes:pdf|max:2048',
+            'sertifikat'            => 'required|file|mimes:pdf|max:512',
         ]);
 
         if ($request->hasFile('sertifikat')) {
@@ -66,12 +72,6 @@ class HalalController extends Controller
             ->with('success', 'Data sertifikasi halal berhasil ditambahkan.');
     }
 
-    public function edit($id)
-    {
-        $item = SertifikasiHalal::findOrFail($id);
-        return view('admin.bidangIndustri.halal', compact('item'));
-    }
-
     public function update(Request $request, $id)
     {
         $item = SertifikasiHalal::findOrFail($id);
@@ -83,7 +83,7 @@ class HalalController extends Controller
             'tanggal_exp'           => 'required|date|after_or_equal:tanggal_sah',
             'alamat'                => 'required|string',
             'status'                => 'required|string|in:Berlaku,Perlu Pembaruan',
-            'sertifikat'            => 'nullable|file|mimes:pdf|max:2048',
+            'sertifikat'            => 'nullable|file|mimes:pdf|max:512',
         ]);
 
         if ($request->hasFile('sertifikat')) {
@@ -99,12 +99,16 @@ class HalalController extends Controller
 
         $item->update($validated);
 
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Data berhasil diupdate.'], 200);
+        }
+
         return redirect()->route('admin.industri.halal')
             ->with('success', 'Data berhasil diupdate.');
     }
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $item = SertifikasiHalal::findOrFail($id);
 
@@ -113,6 +117,10 @@ class HalalController extends Controller
         }
 
         $item->delete();
+
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Data berhasil dihapus.'], 200);
+        }
 
         return redirect()->route('admin.industri.halal')
             ->with('success', 'Data berhasil dihapus.');
