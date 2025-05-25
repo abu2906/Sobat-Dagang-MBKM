@@ -285,5 +285,51 @@
                 console.error('Error:', error);
             });
         }
+
+        function showForm(event) {
+            event.preventDefault();
+            document.getElementById('formPermohonan').classList.remove('hidden');
+            document.getElementById('riwayatPermohonan').classList.add('hidden');
+            document.getElementById('btnForm').classList.add('bg-blue-600', 'text-white');
+            document.getElementById('btnForm').classList.remove('text-black', 'hover:bg-gray-100');
+            document.getElementById('btnRiwayat').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('btnRiwayat').classList.add('text-black', 'hover:bg-gray-100');
+        }
+
+        function showRiwayat(event) {
+            event.preventDefault();
+            document.getElementById('formPermohonan').classList.add('hidden');
+            document.getElementById('riwayatPermohonan').classList.remove('hidden');
+            document.getElementById('btnRiwayat').classList.add('bg-blue-600', 'text-white');
+            document.getElementById('btnRiwayat').classList.remove('text-black', 'hover:bg-gray-100');
+            document.getElementById('btnForm').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('btnForm').classList.add('text-black', 'hover:bg-gray-100');
+        }
+
+        // Implementasi filter status dan pencarian
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusFilter = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('searchInput');
+            const tableRows = document.querySelectorAll('tbody tr');
+
+            function applyFilters() {
+                const selectedStatus = statusFilter.value.toLowerCase();
+                const searchTerm = searchInput.value.toLowerCase();
+
+                tableRows.forEach(row => {
+                    const statusCell = row.querySelector('td:nth-child(4)');
+                    const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
+                    const rowText = row.textContent.toLowerCase();
+                    
+                    const statusMatch = !selectedStatus || status === selectedStatus;
+                    const searchMatch = !searchTerm || rowText.includes(searchTerm);
+
+                    row.style.display = statusMatch && searchMatch ? '' : 'none';
+                });
+            }
+
+            statusFilter.addEventListener('change', applyFilters);
+            searchInput.addEventListener('input', applyFilters);
+        });
     </script>
 @endsection
