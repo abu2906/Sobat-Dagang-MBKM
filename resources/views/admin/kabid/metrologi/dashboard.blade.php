@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Kabid Metrologi')
 
 @php
 use App\Helpers\StatusHelper;

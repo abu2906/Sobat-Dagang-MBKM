@@ -5,26 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\IndexHarga;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Surat;
-use App\Models\HargaBarang;
-use App\Models\Notifikasi;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-use Exception;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;  
 use App\Models\PermohonanSurat;
 use App\Models\Barang;
-use App\Models\DocumentUser;
-use App\Models\IndexKategori;
-use Illuminate\Support\Facades\Storage;
+use App\Models\StokOpname;
 use Carbon\Carbon;
-use App\Models\DistribusiPupuk;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Validation\ValidationException;
 
 class KabidPerdaganganController extends Controller
 {
-
     private function getSuratPerdaganganData()
     {
         $jenis = [
@@ -58,13 +46,13 @@ class KabidPerdaganganController extends Controller
             $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
         }
 
-        // Jika permintaan AJAX, kirim data JSON
         if ($request->ajax()) {
             return response()->json([
                 'statusCounts' => $statusCounts,
                 'dataBulanan' => $dataBulanan
             ]);
         }
+        
 
         return view('admin.kabid.perdagangan.perdagangan', [
             'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
@@ -87,31 +75,25 @@ class KabidPerdaganganController extends Controller
         return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
     }
 
-    public function distribusiPupuk()
-    {
-        return view('admin.kabid.perdagangan.distribusiPupuk');
-    }
-
     public function analisisPasar(Request $request)
     {
         // Menentukan lokasi pasar yang dipilih, defaultnya adalah 'Pasar Sumpang'
         $lokasi = $request->lokasi ?? 'Pasar Sumpang';
 
         // Menentukan periode tanggal yang digunakan untuk filter data
-        $startDate = $request->start_date ?? now()->subDays(6)->format('Y-m-d'); // 6 hari sebelumnya
-        $endDate = $request->end_date ?? now()->format('Y-m-d'); // Hari ini
+        $startDate = $request->start_date ?? now()->subDays(30)->format('Y-m-d');
+        $endDate = $request->end_date ?? now()->format('Y-m-d');
 
         // Inisialisasi variabel yang akan digunakan
-        $tanggalList = collect();  // Koleksi tanggal yang digunakan untuk tabel harga
-        $barangs = Barang::orderBy('nama_barang')->get();  // Mengambil semua barang dari tabel Barang
-        $dataHarga = [];  // Menyimpan harga barang per tanggal
-        $top10HargaTertinggi = [];  // Menyimpan 10 barang dengan harga tertinggi
-        $topHargaNaik = [];  // Menyimpan barang dengan harga naik tertinggi
-        $topHargaTurun = [];  // Menyimpan barang dengan harga turun tertinggi
+        $tanggalList = collect();
+        $barangs = Barang::orderBy('nama_barang')->get(); 
+        $dataHarga = [];  
+        $topHargaNaik = []; 
+        $topHargaTurun = [];  
         $barChartData = [
-            'labels' => [],  // Label untuk bar chart (nama barang)
-            'today' => [],  // Data harga hari ini
-            'yesterday' => []  // Data harga kemarin
+            'labels' => [], 
+            'today' => [],
+            'yesterday' => []
         ];
 
         // Cek jika lokasi yang dipilih adalah 'Pasar Sumpang' atau 'Pasar Lakessi'
@@ -136,24 +118,6 @@ class KabidPerdaganganController extends Controller
                     $dataHarga[$tanggal][$barang->id_barang] = $harga ?? '-';
                 }
             }
-
-            // Data untuk Pie Chart (Top 10 harga tertinggi berdasarkan harga terbaru)
-            $top10HargaTertinggi = $barangs->map(function ($barang) use ($lokasi) {
-                $harga = IndexHarga::where('id_barang', $barang->id_barang)
-                    ->where('lokasi', $lokasi)
-                    ->latest('tanggal')  // Mengambil harga terbaru
-                    ->value('harga');
-
-                return [
-                    'label' => $barang->nama_barang,
-                    'harga' => $harga ?? 0,  // Jika tidak ada harga, set ke 0
-                    'color' => sprintf('#%06X', mt_rand(0, 0xFFFFFF))  // Warna acak untuk pie chart
-                ];
-            })
-                ->sortByDesc('harga')  // Mengurutkan berdasarkan harga tertinggi
-                ->take(10)  // Mengambil 10 barang dengan harga tertinggi
-                ->values()
-                ->all();
 
             // Perbandingan harga hari ini dan kemarin
             $today = Carbon::parse($endDate);
@@ -192,23 +156,121 @@ class KabidPerdaganganController extends Controller
             });
 
             // Menyaring dan mengurutkan perubahan harga untuk mendapatkan top harga naik dan turun
-            $topHargaNaik = $perubahan->where('isNaik', true)->sortByDesc('price_change')->take(5)->values()->all();
-            $topHargaTurun = $perubahan->where('isNaik', false)->sortByDesc('price_change')->take(5)->values()->all();
+            $topHargaNaik = $perubahan->where('isNaik', true)
+                ->sortByDesc('price_change')
+                ->take(5)
+                ->map(function ($item) {
+                    $item['color'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // kasih warna random
+                    return $item;
+                })
+                ->values()
+                ->all();
+
+            $topHargaTurun = $perubahan->where('isNaik', false)
+                ->sortByDesc('price_change')
+                ->take(5)
+                ->map(function ($item) {
+                    $item['color'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF)); // kasih warna random
+                    return $item;
+                })
+                ->values()
+                ->all();
+
         }
 
         // Mengembalikan tampilan dengan data yang telah diproses
         return view('admin.kabid.perdagangan.analisisPasar', [
-            'lokasiOptions' => ['Pasar Sumpang', 'Pasar Lakessi'],  // Opsi lokasi pasar
-            'selectedLokasi' => $lokasi,  // Lokasi yang dipilih
-            'startDate' => $startDate,  // Tanggal mulai
-            'endDate' => $endDate,  // Tanggal akhir
-            'tanggalList' => $tanggalList,  // Daftar tanggal untuk tabel
-            'barangs' => $barangs,  // Daftar barang
-            'dataHarga' => $dataHarga,  // Data harga per barang per tanggal
-            'top10HargaTertinggi' => $top10HargaTertinggi,  // Top 10 harga tertinggi untuk Pie Chart
-            'topHargaNaik' => $topHargaNaik,  // Top harga naik
-            'topHargaTurun' => $topHargaTurun,  // Top harga turun
-            'barChartData' => $barChartData,  // Data untuk Bar Chart (perbandingan harga)
+            'lokasiOptions' => ['Pasar Sumpang', 'Pasar Lakessi'],
+            'selectedLokasi' => $lokasi, 
+            'startDate' => $startDate, 
+            'endDate' => $endDate,
+            'tanggalList' => $tanggalList,
+            'barangs' => $barangs,
+            'dataHarga' => $dataHarga,
+            'topHargaNaik' => $topHargaNaik,
+            'topHargaTurun' => $topHargaTurun,
+            'barChartData' => $barChartData,  
+        ]);
+    }
+    public function distribusiPupuk(Request $request)
+    {
+        $kecamatan = $request->input('kecamatan');
+
+        // Query data utama
+        $query = DB::table('stok_opname')
+            ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+            ->join('distributor', 'stok_opname.id_distributor', '=', 'distributor.id_distributor');
+
+        if ($kecamatan) {
+            $query->where('toko.kecamatan', $kecamatan);
+        }
+
+        $data = $query->select(
+                'toko.nama_toko',
+                'toko.no_register',
+                'stok_opname.nama_barang',
+                DB::raw('SUM(stok_opname.penyaluran) as total_penyaluran')
+            )
+            ->groupBy('toko.id_toko', 'stok_opname.nama_barang', 'toko.nama_toko', 'toko.no_register')
+            ->get()
+            ->groupBy('nama_toko');
+
+        $jumlahToko = $data->count();
+        
+        $tokoPenyaluranTerbanyak = DB::table('stok_opname')
+        ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+        ->select('toko.nama_toko', DB::raw('SUM(stok_opname.penyaluran) as total_penyaluran'))
+        ->groupBy('stok_opname.id_toko', 'toko.nama_toko')
+        ->orderByDesc('total_penyaluran')
+        ->limit(3)
+        ->get();
+
+        // Data pie chart (total pupuk per jenis)
+        $dataPupuk = DB::table('stok_opname')
+            ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+            ->when($kecamatan, function ($query) use ($kecamatan) {
+                $query->where('toko.kecamatan', $kecamatan);
+            })
+            ->select('stok_opname.nama_barang', DB::raw('SUM(stok_opname.penyaluran) as total'))
+            ->groupBy('stok_opname.nama_barang')
+            ->pluck('total', 'stok_opname.nama_barang');
+
+        $totalDistribusi = $dataPupuk->sum();
+
+        // Data line chart (perkembangan per tahun)
+        $dataPerTahun = DB::table('stok_opname')
+            ->join('toko', 'stok_opname.id_toko', '=', 'toko.id_toko')
+            ->when($kecamatan, function ($query) use ($kecamatan) {
+                $query->where('toko.kecamatan', $kecamatan);
+            })
+            ->select(DB::raw('YEAR(stok_opname.created_at) as tahun'), DB::raw('SUM(penyaluran) as total'))
+            ->groupBy(DB::raw('YEAR(stok_opname.created_at)'))
+            ->orderBy('tahun')
+            ->get();
+
+        $lineLabels = $dataPerTahun->pluck('tahun')->toArray();
+        $lineValues = $dataPerTahun->pluck('total')->toArray();
+
+        $lineDatasets = [
+            [
+                'label' => 'Total Penyaluran Pupuk per Tahun',
+                'data' => $lineValues,
+                'borderColor' => 'rgba(75, 192, 192, 1)',
+                'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
+                'fill' => true,
+                'tension' => 0.4,
+            ]
+        ];
+
+        return view('admin.kabid.perdagangan.distribusiPupuk', [
+            'data' => $data,
+            'jumlahToko' => $jumlahToko,
+            'dataPupuk' => $dataPupuk,
+            'totalDistribusi' => $totalDistribusi,
+            'tokoPenyaluranTerbanyak' => $tokoPenyaluranTerbanyak,
+            'selectedKecamatan' => $kecamatan,
+            'lineLabels' => $lineLabels,
+            'lineDatasets' => $lineDatasets,
         ]);
     }
 }

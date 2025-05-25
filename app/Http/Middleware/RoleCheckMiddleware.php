@@ -17,29 +17,19 @@ class RoleCheckMiddleware
      * @param  string  ...$roles
      * @return \Illuminate\Http\Response
      */
-    public function handle(Request $request, Closure $next, $guard, ...$roles)
+    public function handle(Request $request, Closure $next, $role)
     {
-        // Jika belum login sesuai guard
-        if (!Auth::guard($guard)->check()) {
-            return redirect()->route('login')->withErrors([
-                'auth' => 'Silakan login sebagai ' . $guard,
-            ]);
+        // Memeriksa apakah pengguna sudah login dengan guard 'disdag'
+        if (!Auth::guard('disdag')->check()) {
+            return redirect()->route('login')->withErrors(['auth' => 'Silakan login terlebih dahulu.']);
         }
 
-        $user = Auth::guard($guard)->user();
+        // Mendapatkan pengguna yang login
+        $user = Auth::guard('disdag')->user();
 
-        if ($guard === 'disdag') {
-            if (!in_array($user->role, $roles)) {
-                return redirect()->route('login')->withErrors([
-                    'auth' => 'Anda tidak memiliki akses ke halaman ini.',
-                ]);
-            }
-        } elseif ($guard === 'user') {
-            if (!$user) {
-                return redirect()->route('login')->withErrors([
-                    'auth' => 'Pengguna tidak ditemukan.',
-                ]);
-            }
+        // Memeriksa apakah role pengguna sesuai dengan yang dibutuhkan
+        if ($user->role !== $role) {
+            return redirect()->route('login')->withErrors(['auth' => 'Anda Tidak Memiliki Akses ke Halaman .']);
         }
 
         return $next($request);

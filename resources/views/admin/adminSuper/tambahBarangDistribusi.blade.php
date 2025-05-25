@@ -3,9 +3,9 @@
 
 @section('content')
 <div class="relative w-full h-60">
-    <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}" alt="Port Background" class="object-cover w-full h-full">
+    <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
-        <img src="{{ asset('assets/img/background/admin_perdagangan.png') }}"
+        <img src="{{ asset('assets/img/background/dagang.jpg') }}"
             alt="Background"
             class="object-cover w-full h-full -ml-16">
     </div>
