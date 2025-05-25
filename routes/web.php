@@ -25,6 +25,7 @@ use App\Http\Controllers\UserHalalController;
 use App\Http\Controllers\HalalController;
 use App\Http\Controllers\ForumDiskusiController;
 use Illuminate\Support\Facades\View;
+use App\Http\Controllers\KadisController;
 
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
@@ -240,12 +241,17 @@ Route::middleware(['check.role:kabid_metrologi'])->group(function () {
 // Kepala Dinas Routes
 Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kadis/dashboard', [DashboardMetrologiController::class, 'showKadis'])->name('dashboard-kadis');
+    Route::get('/dashboard', [KadisController::class, 'index'])->name('suratDashboard');
+
     Route::get('/kadis/persuratan', [DashboardMetrologiController::class, 'showPersuratanKadis'])->name('persuratan-kadis');
     Route::get('/kadis/persuratan/metrologi', [DashboardMetrologiController::class, 'showPersuratanMetrologiKadis'])->name('surat-metrologi-kadis');
     Route::post('/kadis/surat/{encoded_id}/setujui', [PersuratanController::class, 'setujuiKadis'])->name('setujuiKadis');
     Route::post('/kadis/surat/{encoded_id}/tolak', [PersuratanController::class, 'tolakKadis'])->name('tolakKadis');
 
     Route::get('/kepala-dinas/surat-perdagangan', [sobatHargaController::class, 'suratPerdagangan'])->name('kepalaDinas.suratPerdagangan');
+    Route::put('/kabid-perdagangan/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('suratPerdagangan.setujui');
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
+    Route::get('kepala-dinas/perdagangan/pupuk', [sobatHargaController::class, 'pupuk'])->name('kepalaDinas.pupuk');
+    Route::get('/data-pasar-distribusi', [SobatHargaController::class, 'apiDataPasarDistribusi']);
 
 });

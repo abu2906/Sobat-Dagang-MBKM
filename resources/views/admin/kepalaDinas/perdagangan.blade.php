@@ -1,278 +1,369 @@
-@extends('layouts.admin')
+@extends('layouts.metrologi.kadis')
 
-@section('title', 'Data Analisis Pasar')
+@section('title', 'Data Pasar dan Distribusi')
 
-{{-- @section('content')
-<div class="min-h-screen p-4 space-y-4 bg-gray-50">
-    <div class="flex flex-col gap-4 lg:flex-row">
-        <!-- KIRI -->
-        <div class="w-full lg:w-[67.5%] flex flex-col space-y-4">
-            <!-- Dropdown Pasar -->
-            <div x-data="{ open: false, selected: '{{ $selectedLokasi }}', options: @js($lokasiOptions) }" class="relative w-full">
-                <form method="GET" action="{{ route('analisis.pasar') }}" x-ref="form">
-                    <input type="hidden" name="start_date" :value="document.querySelector('[name=start_date]').value">
-                    <input type="hidden" name="end_date" :value="document.querySelector('[name=end_date]').value">
-                    <input type="hidden" name="lokasi" :value="selected">
-
-                    <button type="button" @click="open = !open" class="bg-[#083458] text-white rounded-xl px-6 py-2 w-full flex justify-between items-center mt-2">
-                        <span x-text="selected" class="font-bold"></span>
-                        <svg class="w-5 h-5 transition-transform transform" :class="{ 'rotate-180': open }" fill="white" viewBox="0 0 20 20">
-                            <path d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" />
-                        </svg>
-                    </button>
-
-                    <ul x-show="open" @click.away="open = false" x-transition class="absolute z-10 w-full mt-1 overflow-hidden text-gray-700 bg-white shadow-md rounded-xl">
-                        <template x-for="option in options" :key="option">
-                            <li>
-                                <button type="button" @click="selected = option; $nextTick(() => $refs.form.submit())" class="w-full px-6 py-2 text-left hover:bg-blue-100" x-text="option"></button>
-                            </li>
-                        </template>
-                    </ul>
-                </form>
-            </div>
-
-            <!-- Filter -->
-            <div class="p-4 space-y-2 bg-white shadow rounded-xl">
-                <div class="flex items-center space-x-2 font-semibold text-gray-700">
-                    <span class="material-symbols-outlined">discover_tune</span>
-                    <span>Filter</span>
-                </div>
-                <form method="GET" action="{{ route('analisis.pasar') }}" class="flex flex-col items-center gap-4 md:flex-row">
-                    <input type="hidden" name="lokasi" value="{{ $selectedLokasi }}">
-                    <div class="flex items-center w-full px-4 py-2 bg-blue-100 rounded-xl md:w-1/2">
-                        <label class="mr-2 font-semibold">Periode</label>
-                        <input type="date" name="start_date" class="w-full text-sm bg-transparent outline-none" value="{{ $startDate }}" onchange="this.form.submit()">
-                    </div>
-                    <div class="flex items-center w-full px-4 py-2 bg-blue-100 rounded-xl md:w-1/2">
-                        <label class="mr-2 font-semibold">Sampai</label>
-                        <input type="date" name="end_date" class="w-full text-sm bg-transparent outline-none" value="{{ $endDate }}" onchange="this.form.submit()">
-                    </div>
-                </form>
-            </div>
-
-            <!-- Tabel -->
-            @if ($selectedLokasi == 'Pasar Sumpang' || $selectedLokasi == 'Pasar Lakessi')
-            <div class="flex-grow overflow-scroll overflow-x-auto bg-white shadow rounded-xl" style="max-height: 604px; overflow: auto;">
-                <table class="min-w-full text-sm text-center whitespace-nowrap">
-                    <thead class="bg-[#083458] text-white">
-                        <tr>
-                            <th class="px-4 py-2 sticky top-0 left-0 z-20 bg-[#083458]">TANGGAL</th>
-                            @foreach ($barangs as $barang)
-                            <th class="px-4 py-2 sticky top-0 z-10 bg-[#083458]">{{ strtoupper($barang->nama_barang) }}</th>
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
-                        @foreach ($tanggalList as $tanggal)
-                        <tr class="border-b">
-                            <td class="sticky left-0 z-10 px-4 py-2 bg-white">
-                                {{ \Carbon\Carbon::parse($tanggal)->format('d-m-Y') }}
-                            </td>
-                            @foreach ($barangs as $barang)
-                            @php
-                            $harga = $dataHarga[$tanggal][$barang->id_barang] ?? '-';
-                            @endphp
-                            <td class="px-4">{{ is_numeric($harga) ? number_format($harga, 0, ',', '.') : $harga }}</td>
-                            @endforeach
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            @endif
-        </div>
-
-        <!-- KANAN -->
-        @if (in_array($selectedLokasi, ['Pasar Sumpang', 'Pasar Lakessi']))
-        <div class="w-full lg:w-[30%] flex flex-col space-y-4">
-            <!-- Tren Harga Naik -->
-            <div class="p-4 bg-white shadow rounded-xl">
-                <h3 class="text-center font-semibold text-black mb-3">Tren Harga Bahan Pokok Naik</h3>
-                <div class="flex items-start space-x-4">
-                    <!-- Chart -->
-                    <div class="w-1/2">
-                        <canvas id="topHargaNaikChart"></canvas>
-                    </div>
-                    <!-- Label Kanan -->
-                    <div class="w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
-                        @foreach ($topHargaNaik as $item)
-                        <div class="flex items-center text-sm text-gray-700">
-                            <span 
-                            class="inline-block w-3 h-3 rounded-full mr-2" 
-                            style="background-color: {{ $item['color'] }}; min-width: 12px; min-height: 12px;"
-                            ></span>
-                            <span class="truncate">{{ $item['label'] }}</span>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tren Harga Turun -->
-            <div class="p-4 bg-white shadow rounded-xl">
-                <h3 class="text-center font-semibold text-black mb-3">Tren Harga Bahan Pokok Turun</h3>
-                <div class="flex items-start space-x-4">
-                    <!-- Chart -->
-                    <div class="w-1/2">
-                        <canvas id="topHargaTurunChart"></canvas>
-                    </div>
-                    <!-- Label Kanan -->
-                    <div class="w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
-                        @foreach ($topHargaTurun as $item)
-                        <div class="flex items-center text-sm text-gray-700">
-                            <span 
-                            class="inline-block w-3 h-3 rounded-full mr-2" 
-                            style="background-color: {{ $item['color'] }}; min-width: 12px; min-height: 12px;"
-                            ></span>
-                            <span class="truncate">{{ $item['label'] }}</span>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <!-- Top 5 Naik & Turun -->
-            <div class="p-4 bg-white shadow rounded-xl text-sm">
-                <div class="mb-4">
-                    <div class="font-semibold text-gray-700 mb-2">Top 5 Harga Naik</div>
-                    <ul class="text-green-600 space-y-1">
-                        @foreach ($topHargaNaik as $item)
-                            <li>{{ $item['label'] }} (Naik: Rp{{ number_format($item['price_change']) }})</li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div>
-                    <div class="font-semibold text-gray-700 mb-2">Top 5 Harga Turun</div>
-                    <ul class="text-red-600 space-y-1">
-                        @foreach ($topHargaTurun as $item)
-                            <li>{{ $item['label'] }} (Turun: Rp{{ number_format($item['price_change']) }})</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-        @endif
+@section('content')
+<div class="relative w-full h-32">
+    <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
+    <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
+        <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Background" class="object-cover w-full h-full -ml-16">
     </div>
-
-    @if ($selectedLokasi == 'Pasar Sumpang' || $selectedLokasi == 'Pasar Lakessi')
-    <div class="p-4 bg-white rounded-lg shadow">
-        <h2 class="mb-4 font-semibold text-gray-700">Perbandingan Harga Kemarin dan Hari Ini</h2>
-        <div class="w-full overflow-x-auto">
-            <div class="min-w-[1000px] h-25">
-                <canvas id="barChart"></canvas>
-            </div>
-        </div>
-    </div>
-    @endif
+    <a href="{{ route('dashboard-kadis') }}"
+        class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:scale-110">
+        <span class="text-2xl material-symbols-outlined">
+            arrow_back
+        </span>
+    </a>
 </div>
 
+<div class="px-4 xl:px-8 py-6">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <!-- Kiri: Perkembangan Harga Pupuk dan Perbandingan Harga -->
+        <div class="space-y-6 xl:col-span-2">
+            <!-- Grafik Bar -->
+            <div class="p-4 bg-white rounded-xl shadow">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-semibold text-gray-700">Perbandingan Harga Kemarin dan Hari Ini</h2>
+                    <!-- Tambahkan id lokasiSelect agar JS bisa akses -->
+                    <select id="lokasiSelect" class="border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">
+                        <option value="Pasar Sumpang" {{ $selectedLokasi == 'Pasar Sumpang' ? 'selected' : '' }}>Pasar Sumpang</option>
+                        <option value="Pasar Lakessi" {{ $selectedLokasi == 'Pasar Lakessi' ? 'selected' : '' }}>Pasar Lakessi</option>
+                    </select>
+                </div>
+                <div class="w-full overflow-x-auto mt-2">
+                    <div class="min-w-[1000px] h-[300px]">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-4">
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Perkembangan Harga Pupuk</h2>
+                <div class="w-full h-[300px]">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanan: 2 Pie Chart dan 1 Donut Chart -->
+        <div class="space-y-6">
+            <div id="pieChartsContainer">
+                <!-- Pie Chart Naik -->
+                <div class="p-4 bg-white shadow rounded-xl mb-6">
+                    <h3 class="text-center font-semibold text-black mb-3">Tren Harga Naik</h3>
+                    <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <div class="w-full sm:w-1/2">
+                            <canvas id="topHargaNaikChart"></canvas>
+                        </div>
+                        <!-- Container list tren harga naik, harus ada id supaya JS bisa update -->
+                        <div id="topHargaNaikList" class="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
+                            <!-- Data akan diisi oleh JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pie Chart Turun -->
+                <div class="p-4 bg-white shadow rounded-xl mb-6">
+                    <h3 class="text-center font-semibold text-black mb-3">Tren Harga Turun</h3>
+                    <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <div class="w-full sm:w-1/2">
+                            <canvas id="topHargaTurunChart"></canvas>
+                        </div>
+                        <!-- Container list tren harga turun -->
+                        <div id="topHargaTurunList" class="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
+                            <!-- Data akan diisi oleh JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-4">
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Distribusi Pupuk</h2>
+                <div class="w-full h-[220px]">
+                    <canvas id="donutChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const naikCtx = document.getElementById('topHargaNaikChart');
-        const turunCtx = document.getElementById('topHargaTurunChart');
+document.addEventListener('DOMContentLoaded', () => {
+  // Chart.js instances
+  let barChart, lineChart, pieNaikChart, pieTurunChart;
 
-        if (naikCtx) {
-            const dataPieNaik = @json($topHargaNaik);
-            new Chart(naikCtx.getContext('2d'), {
-                type: 'pie',
-                data: {
-                    labels: dataPieNaik.map(i => i.label),
-                    datasets: [{
-                        data: dataPieNaik.map(i => i.price_change),
-                        backgroundColor: dataPieNaik.map(i => i.color),
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: { position: 'none' },
-                        datalabels: {
-                            formatter: (value, context) => {
-                                const dataset = context.chart.data.datasets[0];
-                                const total = dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = (value / total * 100).toFixed(1);
-                                return percentage + '%';
-                            },
-                            color: '#fff',
-                            font: { weight: 'bold', size: 12 }
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
+  // Fungsi buat chart Bar
+  function createBarChart(ctx, labels, todayData, yesterdayData) {
+    if (barChart) barChart.destroy();
+    barChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Harga Hari Ini',
+            data: todayData,
+            backgroundColor: '#3b82f6'
+          },
+          {
+            label: 'Harga Kemarin',
+            data: yesterdayData,
+            backgroundColor: '#f87171'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: false,
+            title: { display: true, text: 'Harga (Rp)' }
+          }
+        },
+        plugins: {
+          legend: { position: 'top' }
         }
+      }
+    });
+  }
 
-        if (turunCtx) {
-            const dataPieTurun = @json($topHargaTurun);
-            new Chart(turunCtx.getContext('2d'), {
-                type: 'pie',
-                data: {
-                    labels: dataPieTurun.map(i => i.label),
-                    datasets: [{
-                        data: dataPieTurun.map(i => i.price_change),
-                        backgroundColor: dataPieTurun.map(i => i.color),
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: { position: 'none' },
-                        datalabels: {
-                            formatter: (value, context) => {
-                                const dataset = context.chart.data.datasets[0];
-                                const total = dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = (value / total * 100).toFixed(1);
-                                return percentage + '%';
-                            },
-                            color: '#fff',
-                            font: { weight: 'bold', size: 12 }
-                        }
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
+  // Fungsi buat chart Line (penyaluran pupuk per tahun)
+  function createLineChart(ctx, labels, datasets) {
+    if (lineChart) lineChart.destroy();
+    lineChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'nearest', axis: 'x', intersect: false },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Total Penyaluran' }
+          },
+          x: {
+            title: { display: true, text: 'Tahun' }
+          }
+        },
+        plugins: {
+          legend: { position: 'bottom' }
         }
+      }
+    });
+  }
 
+  // Fungsi buat pie chart untuk harga naik dan turun
+  function createPieChart(ctx, labels, data, colors) {
+    return new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: colors,
+          borderColor: '#fff',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  }
 
-        const ctxBar = document.getElementById('barChart');
-        if (ctxBar) {
-            new Chart(ctxBar.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: @json($barChartData['labels']),
-                    datasets: [{
-                            label: 'Harga Hari Ini',
-                            data: @json($barChartData['today']),
-                            backgroundColor: '#3b82f6'
-                        },
-                        {
-                            label: 'Harga Kemarin',
-                            data: @json($barChartData['yesterday']),
-                            backgroundColor: '#f87171'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top'
-                        }
+  // Update daftar tren harga naik/turun di sidebar
+  function updateTrendList(containerId, items) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    items.forEach(item => {
+      if (item.label) {
+        const el = document.createElement('div');
+        el.className = 'flex items-center text-sm mb-1';
+        el.innerHTML = `
+          <span class="w-3 h-3 rounded-full mr-2" style="background-color:${item.color}"></span>
+          <span class="truncate">${item.label} (${item.price_change})</span>
+        `;
+        container.appendChild(el);
+      }
+    });
+  }
+
+  // Fetch data dari backend sesuai lokasi dan kecamatan yang dipilih
+  async function fetchData(lokasi, kecamatan) {
+    try {
+      const params = new URLSearchParams({ lokasi, kecamatan });
+      const response = await fetch(`/api/data-perdagangan?${params.toString()}`);
+      if (!response.ok) throw new Error('Gagal mengambil data.');
+      return await response.json();
+    } catch (error) {
+      alert(error.message);
+      return null;
+    }
+  }
+
+  // Render semua grafik dan data
+  async function renderAll() {
+    const lokasi = document.getElementById('lokasiSelect').value;
+    const kecamatan = document.getElementById('kecamatanSelect') ? document.getElementById('kecamatanSelect').value : '';
+
+    const data = await fetchData(lokasi, kecamatan);
+    if (!data) return;
+
+    // Bar Chart
+    createBarChart(
+      document.getElementById('barChart').getContext('2d'),
+      data.barChartData.labels,
+      data.barChartData.today,
+      data.barChartData.yesterday
+    );
+
+    // Line Chart
+    createLineChart(
+      document.getElementById('lineChart').getContext('2d'),
+      data.lineLabels,
+      data.lineDatasets
+    );
+
+    // Pie Chart Harga Naik
+    if (pieNaikChart) pieNaikChart.destroy();
+    pieNaikChart = createPieChart(
+      document.getElementById('topHargaNaikChart').getContext('2d'),
+      data.topHargaNaik.map(i => i.label),
+      data.topHargaNaik.map(i => i.price_change),
+      data.topHargaNaik.map(i => i.color)
+    );
+
+    // Pie Chart Harga Turun
+    if (pieTurunChart) pieTurunChart.destroy();
+    pieTurunChart = createPieChart(
+      document.getElementById('topHargaTurunChart').getContext('2d'),
+      data.topHargaTurun.map(i => i.label),
+      data.topHargaTurun.map(i => i.price_change),
+      data.topHargaTurun.map(i => i.color)
+    );
+
+    // Update list tren
+    updateTrendList('topHargaNaikList', data.topHargaNaik);
+    updateTrendList('topHargaTurunList', data.topHargaTurun);
+
+    // Update data distribusi pupuk jika ada elemen tabel/daftar, contoh sederhana
+    if (data.dataDistribusiHtml) {
+      document.getElementById('dataDistribusiContainer').innerHTML = data.dataDistribusiHtml;
+    }
+  }
+
+  // Event listener ketika lokasi atau kecamatan berubah
+  document.getElementById('lokasiSelect').addEventListener('change', renderAll);
+  if (document.getElementById('kecamatanSelect')) {
+    document.getElementById('kecamatanSelect').addEventListener('change', renderAll);
+  }
+
+  // Initial render saat halaman dimuat
+  renderAll();
+});
+</script>
+
+{{-- <script>
+    Chart.register(ChartDataLabels);
+
+    const pieLabels = @json($dataPupuk->keys());
+    const pieData = @json($dataPupuk->values());
+
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: pieLabels,
+            datasets: [{
+                data: pieData,
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56',
+                    '#4BC0C0', '#9966FF', '#FF9F40', '#E7E9ED'
+                ],
+                borderWidth: 4,
+                hoverOffset: 10,
+            }]
+        },
+        options: {
+            radius: '60%', // default biasanya '100%' atau penuh
+            plugins: {
+                datalabels: {
+                    color: '#000',
+                    font: {
+                        weight: 'bold',
+                        size: 16
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            title: {
-                                display: true,
-                                text: 'Harga (Rp)'
-                            }
+                    formatter: (value) => value  // Hanya tampilkan nilai saja, tanpa %
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#333',
+                        font: { size: 16 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.raw}`;
                         }
                     }
                 }
-            });
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+
+
+    // Line Chart
+    const lineLabels = @json($lineLabels);
+    const lineDatasets = @json($lineDatasets);
+
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineCtx, {
+        type: 'line',
+        data: {
+            labels: lineLabels,
+            datasets: lineDatasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Total Penyaluran'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tahun'
+                    }
+                }
+            }
         }
     });
-</script>
-@endsection --}}
+</script> --}}
+@endsection
