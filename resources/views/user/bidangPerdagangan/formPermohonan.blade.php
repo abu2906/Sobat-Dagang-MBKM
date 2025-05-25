@@ -206,7 +206,7 @@
                     <input type="file" id="npwp" name="npwp" class="hidden" accept=".pdf,.jpg,.jpeg,.png"
                         onchange="document.getElementById('file-npwp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
-                <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF).</p>
+                <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF, JPG, PNG, IMAGE).</p>
                 @error('npwp') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
             </div>
 

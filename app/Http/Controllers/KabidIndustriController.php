@@ -22,38 +22,6 @@ use App\Models\SertifikasiHalal;
 class KabidIndustriController extends Controller
 {
 
-    public function index(Request $request)
-    {
-        // Ambil data surat industri
-        $rekapSurat = $this->getSuratIndustriData();
-        $dataSurat = PermohonanSurat::with('user')
-            ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-
-        // Definisikan range tanggal sebulan terakhir
-        $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
-        $endDate = Carbon::now()->format('Y-m-d');
-
-
-        // Label untuk grafik (format tanggal user-friendly)
-        $labels = array_map(function ($tgl) {
-        return Carbon::parse($tgl)->translatedFormat('d M');
-        }, $allTanggal);
-
-        // Kirim semua data ke view
-        return view('admin.bidangIndustri.dashboardAdmin', [
-            'dataSurat' => $dataSurat,
-            'daftarHarga' => $daftarHarga,
-            'totalSuratIndustri' => $rekapSurat['totalSuratIndustri'],
-            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
-            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-
-        ]);
-    }
-
     private function getSuratIndustriData()
     {
         $jenis = [
@@ -69,8 +37,6 @@ class KabidIndustriController extends Controller
             'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
         ];
     }
-
-    
     
     public function dashboardKabid(Request $request)
     {
@@ -85,31 +51,68 @@ class KabidIndustriController extends Controller
             'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
         ];
 
-        $dataBulanan = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
-        }
+        // total investasi
+        $totalInvestasi = DataIkm::sum('nilai_investasi');
 
-        if ($request->ajax()) {
-            return response()->json([
-                'statusCounts' => $statusCounts,
-                'dataBulanan' => $dataBulanan
-            ]);
-        }
+        // akumulasi IKM
+        $bulanIni = Carbon::now()->month;
+        $tahunIni = Carbon::now()->year;
+
+        $akumulasiIKM = DataIkm::whereYear('created_at', $tahunIni)
+            ->whereMonth('created_at', '<=', $bulanIni)
+            ->count();
+
+        // IKM tahun ke Tahun
+        $pertumbuhanIkm = DataIkm::select(
+            DB::raw('YEAR(created_at) as tahun'),
+            DB::raw('COUNT(*) as jumlah')
+        )
+        ->groupBy(DB::raw('YEAR(created_at)'))
+        ->orderBy('tahun')
+        ->get();
+
+        // Total semua industri
+        $totalIndustri = DataIkm::count();
+
+        // Data jumlah per jenis industri
+        $sebaranJenisIndustri = DataIkm::select(
+                'jenis_industri',
+                DB::raw('COUNT(*) as jumlah')
+            )
+            ->groupBy('jenis_industri')
+            ->orderBy('jumlah', 'desc')
+            ->get();
+
+        // Jumlah total halal & grafik pertumbuhan halal
+        $totalHalal = SertifikasiHalal::count();
+
+        $pertumbuhanHalal = SertifikasiHalal::select(
+            DB::raw('YEAR(tanggal_sah) as tahun'),
+            DB::raw('COUNT(*) as jumlah')
+        )
+        ->groupBy(DB::raw('YEAR(tanggal_sah)'))
+        ->orderBy('tahun')
+        ->get();
+
+         // Jumlah IKM berdasarkan Investasi
+        $levelIKM = DataIkm::select('level', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('level')
+            ->get();
 
         return view('admin.kabid.industri.industri', [
             'totalSuratIndustri' => $rekapSurat['totalSuratIndustri'],
             'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
             'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
             'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-            'suratMasuk' => $suratMasuk,
-            'statusCounts' => $statusCounts,
-            'dataBulanan' => $dataBulanan
+            'totalHalal' => $totalHalal,
+            'pertumbuhanHalal' => $pertumbuhanHalal,
+            'totalInvestasi' => $totalInvestasi,
+            'akumulasiIKM' => $akumulasiIKM,
+            'pertumbuhanIkm' => $pertumbuhanIkm,
+            'totalIndustri' => $totalIndustri,
+            'sebaranJenisIndustri' => $sebaranJenisIndustri,
+            'levelIKM' => $levelIKM 
         ]);
-    }
-
-    public function dashboard (){
-        return view ('admin.kabid.industri.industri');
     }
 
     public function verifSurat ()

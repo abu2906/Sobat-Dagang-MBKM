@@ -97,7 +97,10 @@
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
             },
-            body: JSON.stringify({ nomor_surat: nomorSurat })
+            body: JSON.stringify({ 
+                nomor_surat: nomorSurat,
+                current_surat_id: '{{ $suratMasuk->id_surat }}'
+            })
         })
         .then(response => response.json())
         .then(data => {

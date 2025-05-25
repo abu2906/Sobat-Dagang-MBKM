@@ -2,7 +2,9 @@
 @section('title', 'Forum Diskusi')
 
 @section('content')
+
 <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+
     <div class="w-full max-w-sm bg-white shadow-xl rounded-lg overflow-hidden h-[500px] flex flex-col">
         <div class="flex justify-between items-center bg-[#083458] text-white p-3 rounded-t-lg">
             <h2 class="font-semibold text-base">Forum Diskusi</h2>

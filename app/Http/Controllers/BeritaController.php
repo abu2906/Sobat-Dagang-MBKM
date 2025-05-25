@@ -31,7 +31,11 @@ class BeritaController
             $lampiranPath = $request->file('lampiran')->store('lampiran', 'public');
         }
 
+        // Ambil id_disdag dari session
+        $id_disdag = session('id_disdag');
+
         Berita::create([
+            'id_disdag' => $id_disdag, // masukkan ke database
             'judul' => $request->judul,
             'isi' => $request->isi,
             'lampiran' => $lampiranPath,
@@ -40,6 +44,7 @@ class BeritaController
 
         return redirect()->back()->with('success', 'Berita berhasil ditambahkan.');
     }
+
     public function update(Request $request, $id_berita)
     {
         // Ambil berita berdasarkan ID
