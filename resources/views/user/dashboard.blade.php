@@ -92,9 +92,5 @@
 <a href="{{ route('forum.chat') }}" class="fixed bottom-5 right-5 bg-[#083458] rounded-full p-3 shadow-lg hover:scale-110 transition">
     <img src="{{ asset('assets/img/icon/pengaduan.png') }}" alt="Chat" class="w-8 h-8">
 </a>
-<<<<<<< HEAD
 @endsection
         
-=======
-@endsection
->>>>>>> d7c9d2691f012b8ab863cca50d60553d824e8f44

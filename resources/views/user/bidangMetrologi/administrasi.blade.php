@@ -60,7 +60,6 @@
 								<option value="Disetujui">Disetujui</option>
 								<option value="Ditolak">Ditolak</option>
 							</select>
-							<input type="date" id="dateFilter" class="px-4 py-2 rounded-full border shadow text-sm">
 						</div>
 						<div class="relative flex-grow mt-2 md:mt-0">
 							<input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">

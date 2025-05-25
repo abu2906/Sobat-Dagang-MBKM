@@ -87,7 +87,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/lihat-dokumen/{id}', [PersuratanController::class, 'showDokumenMetrologi'])->name('lihat-dokumen');
     Route::get('/directory-book-metrologi', [DirectoryBookController::class, 'showDirectoryUserMetrologi'])->name('directory-metrologi');
     Route::get('/alat-user/{id}', [DirectoryBookController::class, 'alatUser'])->name('alat.user');
-    Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
+    Route::post('/alat-ukur/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.user');
 
     // Industri
     Route::get('/bidang-industri/form-permohonan', [AdminIndustriController::class, 'formPermohonan'])->name('bidangIndustri.formPermohonan');
@@ -156,6 +156,10 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
 });
 
+Route::get('/tes-kirim-notifikasi', [DirectoryBookController::class, 'periksaKadaluarsa']);
+Route::get('/uttp/download', [DirectoryBookController::class, 'downloadUttp'])->name('uttp.download');
+
+
 //admin metrologi
 Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::get('/admin/metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
@@ -182,9 +186,9 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
 
 });
 
-Route::middleware(['check.role:disdag,kabid_metrologi'])->group(function () {
+// Kabid Metrologi Routes
+Route::middleware(['check.role:kabid_metrologi'])->group(function () {
     Route::get('/kabid/metrologi', [DashboardMetrologiController::class, 'showKabid'])->name('dashboard-kabid-metrologi');
-    Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasiKabid'])->name('administrasi-kabid-metrologi');
     Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasiKabid'])->name('administrasi-kabid-metrologi');
     Route::get('/kabid/uttp/metrologi', [DashboardMetrologiController::class, 'showUttp'])->name('informasi-uttp');
     Route::post('/surat/terima/{encoded_id}', [PersuratanController::class, 'terimaKabid'])->name('terimaKabid');
@@ -193,7 +197,7 @@ Route::middleware(['check.role:disdag,kabid_metrologi'])->group(function () {
 });
 
 // Kepala Dinas Routes
-Route::middleware(['check.role:disdag,kepala_dinas'])->group(function () {
+Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kadis/dashboard', [DashboardMetrologiController::class, 'showKadis'])->name('dashboard-kadis');
     Route::get('/kadis/persuratan', [DashboardMetrologiController::class, 'showPersuratanKadis'])->name('persuratan-kadis');
     Route::get('/kadis/persuratan/metrologi', [DashboardMetrologiController::class, 'showPersuratanMetrologiKadis'])->name('surat-metrologi-kadis');

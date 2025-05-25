@@ -159,7 +159,7 @@
         rows.forEach(row => {
             if (!row.querySelector('td')) return;
 
-            const statusCell = row.querySelector('td:nth-child(7)');
+            const statusCell = row.querySelector('td:nth-child(8)');
             const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
 
