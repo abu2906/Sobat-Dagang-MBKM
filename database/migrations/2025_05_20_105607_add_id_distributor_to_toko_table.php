@@ -12,9 +12,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_distributor')->after('id_rancangan');
 
             $table->foreign('id_distributor')
-                  ->references('id_distributor')
-                  ->on('distributor')
-                  ->onDelete('cascade');
+                ->references('id_distributor')
+                ->on('distributor')
+                ->onDelete('cascade');
         });
     }
 
