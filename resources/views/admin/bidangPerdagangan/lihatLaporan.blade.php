@@ -2,6 +2,11 @@
 @section('title', 'Lihat Laporan Distribusi Barang')
 
 @section('content')
+<style>
+    input[type="month"]::-webkit-calendar-picker-indicator {
+        filter: invert(1); /* Bikin ikon kalender jadi putih */
+    }
+</style>
 <div class="w-full h-36">
     <img src="{{ asset('assets/img/background/dagang.jpg') }}"
         alt="Background" class="object-cover w-full h-full">
@@ -10,13 +15,12 @@
     <h2 class="mt-6 text-center text-2xl font-bold mb-6 uppercase tracking-wide text-[#083358]">LAPORAN PENYALURAN PUPUK BERSUBSIDI</h2>
     <form id="filterForm" method="GET" action="{{ route('lihat.laporan.distribusi') }}">
         <div class="flex items-center justify-end gap-3 mb-4">
-
             {{-- Dropdown Bulan & Tahun --}}
             <div class="flex flex-col w-full md:w-1/2">
                 <label for="bulan_tahun" class="mb-2 font-semibold text-white">Pilih Bulan dan Tahun</label>
                 <input type="month" id="bulan_tahun" name="bulan_tahun"
                     value="{{ request('bulan_tahun') }}"
-                    class="bg-[#3687ce] text-white border border-gray-400 text-sm rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                    class="bg-[#083358] text-white border border-gray-400 text-sm rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                     onchange="clearTahunAndSubmit()">
             </div>
 
@@ -24,7 +28,7 @@
             <div class="flex flex-col w-full md:w-1/2">
                 <label for="tahun" class="mb-2 font-semibold text-white">Pilih Tahun Saja</label>
                 <select id="tahun" name="tahun"
-                    class="bg-[#3687ce] text-white border border-gray-400 text-sm rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                    class="bg-[#083358] text-white border border-gray-400 text-sm rounded-full py-2 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                     onchange="clearBulanTahunAndSubmit()">
                     <option value="">-- Pilih Tahun --</option>
                     @for ($year = now()->year; $year >= 2020; $year--)
