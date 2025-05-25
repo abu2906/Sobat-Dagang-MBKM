@@ -18,6 +18,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DataIkm;
+use App\Models\SertifikasiHalal;
+use App\Exports\DataIkmExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class AdminIndustriController extends Controller
 {
@@ -76,7 +80,7 @@ class AdminIndustriController extends Controller
         ]);
     }
 
-     public function viewDokumen($id, $type)
+    public function viewDokumen($id, $type)
     {
         $dokumen = DB::table('document_user')->where('id_permohonan', $id)->first();
 
@@ -281,7 +285,7 @@ class AdminIndustriController extends Controller
     public function destroyIKM($id)
     {
         \App\Models\DataIkm::destroy($id);
-        return redirect()->route('admin.industri.dataIKM')->with('success', 'Data berhasil dihapus.');
+        return redirect()->route('dataIKM')->with('success', 'Data berhasil dihapus.');
     }
 
 
@@ -291,6 +295,23 @@ class AdminIndustriController extends Controller
         $wilayah = json_decode($json, true);
 
         return view('admin.bidangIndustri.formIKM', compact('wilayah'));
+    }
+
+    public function exportIKM(Request $request)
+    {
+        $filtered = DataIKM::query();
+
+        if ($request->filled('kecamatan')) {
+            $filtered->where('kecamatan', $request->kecamatan);
+        }
+
+        if ($request->filled('jenis_industri')) {
+            $filtered->where('jenis_industri', $request->jenis_industri);
+        }
+
+        $data = $filtered->get();
+
+        return Excel::download(new DataIkmExport($data), 'data_ikm_terfilter.xlsx');
     }
 
     public function storeDataIKM(Request $request)
@@ -309,6 +330,17 @@ class AdminIndustriController extends Controller
             'no_telp' => 'required|string|max:20',
             'tenaga_kerja' => 'required|integer|min:0',
         ]);
+
+        // 🛠️ Jika ID dikirim, artinya edit — bukan tambah
+        if ($request->filled('id')) {
+            $ikm = \App\Models\DataIKM::find($request->id);
+            if ($ikm) {
+                $ikm->update($validatedDataIKM);
+            }
+        } else {
+            // Tambah data baru
+            \App\Models\DataIKM::create($validatedDataIKM);
+        }
 
         $validatedPersentasePemilik = $request->validate([
             'pemerintah_pusat' => 'required|numeric|min:0|max:100',
@@ -535,7 +567,7 @@ class AdminIndustriController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.industri.dataIKM')->with('success', 'Data berhasil disimpan.');
+            return redirect()->route('dataIKM')->with('success', 'Data berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -797,7 +829,8 @@ class AdminIndustriController extends Controller
 
     public function showHalal()
     {
-        return view('admin.bidangIndustri.halal');
+        $data = SertifikasiHalal::all();
+        return view('admin.bidangIndustri.Halal', compact('data'));
     }
 
     public function kelolaSurat()
@@ -860,7 +893,7 @@ class AdminIndustriController extends Controller
                     $q->where('jenis_surat', $matchedJenis);
                 } else {
                     $q->whereRaw('LOWER(status) LIKE ?', ["%$search%"])
-                    ->orWhereRaw('DATE_FORMAT(tgl_pengajuan, "%d-%m-%Y") LIKE ?', ["%$search%"]);
+                        ->orWhereRaw('DATE_FORMAT(tgl_pengajuan, "%d-%m-%Y") LIKE ?', ["%$search%"]);
                 }
             });
         }

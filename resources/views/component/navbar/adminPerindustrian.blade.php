@@ -24,14 +24,15 @@
             </div>
 
             <ul class="space-y-2 text-sm">
-                @php
+               @php
                 $menuItems = [
-                ['href' => route('dashboard.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                ['href' => '#', 'icon' => 'folder.png', 'label' => 'Data IKM'],
-                ['href' => '#', 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
-                ['href' => route('kelolaSurat.industri'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                    ['href' => route('dashboard'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                    ['href' => route('dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],
+                    ['href' => route('halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Sertifikasi Halal'],
+                    ['href' => route('surat'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
+
 
                 @foreach ($menuItems as $item)
                 <li>

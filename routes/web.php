@@ -70,7 +70,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
     Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat');
 
-    
+
     //pelaporan
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
     Route::get('/pelaporan-penyaluran', [PelaporanController::class, 'pelaporanPenyaluran'])->name('pelaporan-penyaluran');
@@ -81,7 +81,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::post('/input-data-toko', [PelaporanController::class, 'inputDataToko'])->name('pelaporan.inputDataToko');
     Route::get('/input-data-distribusi/{id_toko}', [PelaporanController::class, 'showDataDistribusi'])->name('pelaporan.showDataDistribusi');
     Route::post('/input-data-distribusi', [PelaporanController::class, 'inputDataDistribusi'])->name('pelaporan.inputDataDistribusi');
-    
+
     //perdagangan
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
     Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
@@ -115,7 +115,7 @@ Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name(
 Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 
 // Admin Industri
-Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
+Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::get('dashboard', [AdminIndustriController::class, 'showDashboard'])->name('dashboard');
     Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
     Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
@@ -125,6 +125,8 @@ Route::prefix('admin/industri')->name('admin.industri.')->group(function () {
     Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
     Route::get('data-IKM/{id}/edit', [AdminIndustriController::class, 'editIKM'])->name('editIKM');
     Route::delete('data-IKM/{id}', [AdminIndustriController::class, 'destroyIKM'])->name('destroyIKM');
+    Route::get('/data-IKM/export', [AdminIndustriController::class, 'exportIKM'])->name('exportIKM');
+
 
     // Hanya prefix 'halal', bukan 'admin/industri/halal'
     Route::prefix('halal')->name('halal.')->group(function () {
@@ -184,7 +186,7 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::get('/admin/detail-surat/{id}/view-{type}', [AdminIndustriController::class, 'viewDokumen'])
         ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
         ->name('dokumen.viewi');
-        
+
     Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
     Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
     Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
@@ -195,7 +197,7 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
 
 //admin metrologi
 Route::middleware(['check.role:admin_metrologi'])->group(function () {
-Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
+    Route::get('/admin/dashboard-metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
     Route::get('/admin/management-uttp-metrologi', [DirectoryBookController::class, 'showDirectoryAdminMetrologi'])->name('management-uttp-metrologi');
     Route::post('/uttp/store-alat', [DirectoryBookController::class, 'storeAlatUkur'])->name('store-uttp');
     Route::delete('/uttp/{id}', [DirectoryBookController::class, 'destroy'])->name('delete-uttp');
@@ -260,8 +262,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');    
-
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
 });
 
 //kabid Perdagangan
@@ -309,7 +310,6 @@ Route::middleware(['check.role:kabid_metrologi'])->group(function () {
     Route::get('/kabid/uttp/metrologi', [DashboardMetrologiController::class, 'showUttp'])->name('informasi-uttp');
     Route::post('/surat/terima/{encoded_id}', [PersuratanController::class, 'terimaKabid'])->name('terimaKabid');
     Route::post('/surat/tolak/{encoded_id}', [PersuratanController::class, 'tolakKabid'])->name('tolakKabid');
-
 });
 
 // Kepala Dinas Routes
