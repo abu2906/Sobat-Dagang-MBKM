@@ -38,10 +38,11 @@
 
 
 
-  <div class="flex-1 px-6 py-10 m-4">
+  <div class="flex-1 px-6 py-10
+   m-4">
     <h2 class="text-5xl text-center font-bold mb-5">Data Sertifikat Halal</h2>
     <div class="overflow-auto shadow rounded-xl border border-gray-200">
-      <table class="min-w-full text-sm">
+      <table class="min-w-full text-sm rounded-lg">
         <thead class="bg-[#0d3b66] text-white text-center">
           <tr>
             <th class="px-4 py-3">NOMOR</th>
