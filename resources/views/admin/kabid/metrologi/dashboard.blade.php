@@ -2,6 +2,10 @@
 
 @section('title', 'Dashboard Kabid Metrologi')
 
+@php
+use App\Helpers\StatusHelper;
+@endphp
+
 @section('content')
 <div class="flex">
     <div class="flex-1 p-6 space-y-6 overflow-y-auto">
@@ -14,13 +18,13 @@
 
             <div class="bg-white shadow-md rounded-xl p-4 text-center">
                 <p class="text-gray-500">Jumlah Surat Ditolak</p>
-                <h2 class="text-3xl font-bold">7</h2>
+                <h2 class="text-3xl font-bold">{{ $totalSuratDitolak }}</h2>
                 <p class="text-sm text-gray-400">Total Keseluruhan</p>
             </div>
 
             <div class="bg-white shadow-md rounded-xl p-4 text-center">
                 <p class="text-gray-500">Jumlah Surat Diterima</p>
-                <h2 class="text-3xl font-bold">0</h2>
+                <h2 class="text-3xl font-bold">{{ $totalSuratDiterima }}</h2>
                 <p class="text-sm text-gray-400">Total Keseluruhan</p>
             </div>
 
@@ -53,7 +57,7 @@
                                 {{ \Carbon\Carbon::parse($uttp->tanggal_penginputan)->translatedFormat('d F Y') }}
                             </td>
                             <td class="px-4 py-2 {{ $uttp->tanggal_exp >= now() ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $uttp->tanggal_exp >= now() ? 'VALID' : 'KADALUARSA' }}
+                                {{ $uttp->tanggal_exp >= now() ? 'Valid' : StatusHelper::formatStatus('Kadaluarsa') }}
                             </td>
                         </tr>
                         @endforeach
@@ -64,9 +68,9 @@
             <div class="flex flex-col gap-6">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white shadow-md rounded-xl p-4 text-center text-sm flex flex-col items-center justify-center h-full">
-                        <div class="text-3xl mb-2">⚖</div>
-                        <p class="text-gray-500 text-sm">Jumlah Alat Ukur Valid</p>
-                        <h2 class="text-2xl font-bold">{{ $jumlahValid }}</h2>
+                        <div class="text-5xl mb-4">⚖️</div>
+                        <p class="text-gray-500 text-base">Jumlah Alat Ukur Valid</p>
+                        <h2 class="text-4xl font-bold my-2">{{ $jumlahValid }}</h2>
                     </div>
 
                     <div class="bg-white shadow-md rounded-xl p-4">
@@ -102,15 +106,14 @@
         options: {
             plugins: {
                 legend: {
-                    display: false // ❌ sembunyikan legend di bawah chart
+                    display: false
                 },
                 tooltip: {
-                    enabled: true // ✅ aktifkan tooltip saat hover (default-nya sudah true, tapi aman ditulis eksplisit)
+                    enabled: true
                 }
             }
         }
     });
-
 
     const ctxLine = document.getElementById('chartLine');
     new Chart(ctxLine, {
@@ -119,16 +122,16 @@
             labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
             datasets: [
                 {
-                    label: 'Series1',
-                    data: [4, 6, 8, 5, 6, 7, 8, 5, 4, 6, 3, 4],
+                    label: 'Tahun {{ $currentYear }}',
+                    data: {!! $currentYearData !!},
                     borderColor: '#60a5fa',
                     backgroundColor: 'rgba(96, 165, 250, 0.2)',
                     tension: 0.4,
                     fill: true
                 },
                 {
-                    label: 'Series2',
-                    data: [3, 5, 6, 5, 8, 6, 9, 6, 5, 7, 4, 5],
+                    label: 'Tahun {{ $lastYear }}',
+                    data: {!! $lastYearData !!},
                     borderColor: '#0c3252',
                     backgroundColor: 'rgba(12, 50, 82, 0.2)',
                     tension: 0.4,
@@ -139,7 +142,21 @@
         options: {
             plugins: {
                 legend: {
-                    display: false,
+                    display: true,
+                    position: 'bottom'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah Tera'
+                    }
                 }
             }
         }

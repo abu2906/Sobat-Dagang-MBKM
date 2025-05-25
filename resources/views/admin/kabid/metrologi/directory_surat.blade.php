@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
+<!-- Tambahkan SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="p-6 bg-gray-100 min-h-screen">
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
         <div class="absolute bottom-[-30px] w-full px-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-2">
@@ -40,8 +43,28 @@
     
     @include('component.popup_surat')
 
+
+    <div class="flex flex-wrap items-center justify-between mt-10 px-4">
+        <div class="flex space-x-2 mb-2 md:mb-0">
+            <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
+                <option value="">Semua</option>
+                <option value="Menunggu">Menunggu</option>
+                <option value="Disetujui">Disetujui</option>
+                <option value="Ditolak">Ditolak</option>
+            </select>
+        </div>
+        <div class="relative flex-grow mt-2 md:mt-0">
+            <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
+            <span class="absolute left-3 top-2 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+                </svg>
+            </span>
+        </div>
+    </div>
+
     <!-- Tabel Riwayat -->
-    <div class="overflow-x-auto rounded-lg shadow-sm mt-8">
+    <div class="overflow-x-auto rounded-lg shadow-sm mt-5">
         <table class="min-w-full text-sm text-left text-gray-700 bg-white border border-gray-200">
             <thead class="bg-[#0c3252] text-white">
                 <tr>
@@ -54,7 +77,7 @@
             </thead>
             <tbody>
                 @forelse ($suratList->filter(fn($s) => $s->suratBalasan) as $index => $surat)
-				<tr class="hover:bg-blue-50 transition">
+				<tr class="hover:bg-blue-50 transition data-status='{{ $surat->suratBalasan->status_kepalaBidang }}'">
 					<td class="px-5 text-center py-3 border-b">{{ $index + 1 }}</td>
 					<td class="px-5 text-center py-3 border-b">{{ $surat->id_surat }}</td>
 					<td class="px-5 text-center py-3 border-b">{{ $surat->user->nama ?? '-' }}</td>
@@ -69,17 +92,14 @@
 					<td class="px-5 text-center py-3 border-b">
                         <div class="flex justify-center flex-wrap gap-2">
                             @if ($surat->suratBalasan->status_kepalaBidang === 'Menunggu')
-                                <!-- TOMBOL TERIMA -->
-                                <form action="{{ route('terimaKabid', ['encoded_id' => base64_encode($surat->suratBalasan->id_surat_balasan)]) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">Terima</button>
-                                </form>
-
-                                <!-- TOMBOL TOLAK -->
-                                <form action="{{ route('tolakKabid', ['encoded_id' => base64_encode($surat->suratBalasan->id_surat_balasan)]) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">Tolak</button>
-                                </form>
+                                <button onclick="confirmAction('terima', '{{ base64_encode($surat->suratBalasan->id_surat_balasan) }}')" 
+                                    class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">
+                                    Terima
+                                </button>
+                                <button onclick="confirmAction('tolak', '{{ base64_encode($surat->suratBalasan->id_surat_balasan) }}')" 
+                                    class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">
+                                    Tolak
+                                </button>
                             @endif
 
                             <!-- TOMBOL PREVIEW -->
@@ -106,5 +126,91 @@
             </tbody>
         </table>
     </div>
+    <div class="mt-4">
+        {{ $suratList->links('pagination::tailwind') }}
+    </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const statusFilter = document.getElementById("statusFilter");
+    const searchInput = document.getElementById("searchInput");
+    const rows = document.querySelectorAll("tbody tr");
+
+    function applyFilters() {
+        const selectedStatus = statusFilter.value.toLowerCase();
+        const keyword = searchInput.value.toLowerCase();
+
+        rows.forEach(row => {
+            if (!row.querySelector('td')) return;
+
+            const statusCell = row.querySelector('td:nth-child(4)');
+            const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
+            const rowText = row.textContent.toLowerCase();
+
+            const matchStatus = !selectedStatus || status === selectedStatus;
+            const matchSearch = !keyword || rowText.includes(keyword);
+
+            row.style.display = (matchStatus && matchSearch) ? '' : 'none';
+        });
+    }
+
+    statusFilter.addEventListener("change", applyFilters);
+    searchInput.addEventListener("input", applyFilters);
+    applyFilters();
+});
+
+function confirmAction(action, id) {
+    let message = '';
+    let confirmButtonText = '';
+    let confirmButtonClass = '';
+    let routeUrl = '';
+
+    switch(action) {
+        case 'terima':
+            message = 'Apakah Anda yakin ingin menerima surat ini?';
+            confirmButtonText = 'Ya, Terima';
+            confirmButtonClass = '#10B981';
+            routeUrl = '{{ route("terimaKabid", "") }}';
+            break;
+        case 'tolak':
+            message = 'Apakah Anda yakin ingin menolak surat ini?';
+            confirmButtonText = 'Ya, Tolak';
+            confirmButtonClass = '#EF4444';
+            routeUrl = '{{ route("tolakKabid", "") }}';
+            break;
+        default:
+            return;
+    }
+
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: 'Batal',
+        confirmButtonColor: confirmButtonClass,
+        cancelButtonColor: '#6B7280',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Untuk aksi terima dan tolak
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `${routeUrl}/${id}`;
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            
+            form.appendChild(csrfToken);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+</script>
+
 @endsection

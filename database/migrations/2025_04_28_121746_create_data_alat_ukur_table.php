@@ -16,6 +16,7 @@ class CreateDataAlatUkurTable extends Migration
             $table->unsignedBigInteger('id_uttp');
             $table->foreign('id_uttp')->references('id_uttp')->on('uttp')->onDelete('cascade');
             $table->date('tanggal_exp');
+            $table->boolean('notifikasi_terkirim')->default(false);
             $table->string('status');
             $table->timestamps();
         });

@@ -1,4 +1,4 @@
-<nav class="navbar">
+<nav class="navbar" style="font-family: 'Poppins', sans-serif;">
     <div class="flex items-center justify-between w-full md:w-auto">
     <div class="navbar-left">
         <a href="/">
@@ -38,7 +38,7 @@
                         <a href="#"><strong>INDUSTRI</strong></a>
                         <ul class="submenu">
                             <li><a href="{{route('bidangIndustri.formPermohonan')}}"><strong>Permohonan IKM Binaan</strong></a></li>
-                            <li><a href="{{route('halal.user')}}"><strong>Data Sertifikat Halal</strong></a></li>
+                            <li><a href="{{route('user.halal')}}"><strong>Data Sertifikat Halal</strong></a></li>
                         </ul>
                     </li>
                     <li class="dropdown-submenu">
@@ -51,8 +51,11 @@
                 </ul>
             </li>
 
-            <li><a href="#"><strong>PELAPORAN</strong></a></li>
+            <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
             <li><a href="#" id="open-chat"><strong>FAQ</strong></a></li>
+            <div class="navbar-right mt-4 md:mt-0 md:hidden">
+                <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
+            </div>
         </ul>
     </div>
 
