@@ -17,7 +17,7 @@ use App\Models\DocumentUser;
 use App\Models\IndexKategori;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\Models\IndexHarga;  
+use App\Models\IndexHarga;
 use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;

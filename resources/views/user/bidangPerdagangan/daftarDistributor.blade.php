@@ -53,10 +53,6 @@
             </div>
 
             <div class="flex justify-center space-x-4">
-                <button type="submit" name="action" value="draft"
-                    class="bg-[#083358] hover:bg-blue-300 text-white hover:text-black px-6 py-2 rounded-full shadow-md transition-all">
-                    Draft
-                </button>
                 <button type="submit" name="action" value="ajukan"
                     class="bg-[#083358] hover:bg-blue-300 text-white hover:text-black px-6 py-2 rounded-full shadow-md transition-all">
                     Ajukan
