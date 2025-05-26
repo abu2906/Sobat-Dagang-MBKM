@@ -91,7 +91,7 @@
                         <tbody>
 							@if ($permohonan->isEmpty())
 								<tr>
-									<td colspan="4" class="text-center px-6 py-10 text-gray-500">
+									<td colspan="6" class="text-center px-6 py-10 text-gray-500">
 										<div class="flex flex-col items-center space-y-4">
 											<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-400" fill="none"
 												viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">

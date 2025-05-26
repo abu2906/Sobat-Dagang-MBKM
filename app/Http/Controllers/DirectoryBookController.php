@@ -395,8 +395,6 @@ class DirectoryBookController extends Controller
     public function periksaKadaluarsa()
     {
         $targetDate = Carbon::now()->addDays(7)->toDateString();
-
-        // Cari alat ukur yang tanggal_exp-nya sama dengan $targetDate
         $dataKedaluwarsa = DataAlatUkur::with('uttp.user')
             ->where('tanggal_exp', $targetDate)
             ->where('notifikasi_terkirim', false)->get();
@@ -407,7 +405,6 @@ class DirectoryBookController extends Controller
             if ($user) {
                 Mail::to($user->email)->send(new NotifikasiUttpKadaluarsa($data));
 
-                // Tandai bahwa notifikasi sudah dikirim
                 $data->update([
                     'status' => 'Kadaluarsa',
                     'notifikasi_terkirim' => true,
