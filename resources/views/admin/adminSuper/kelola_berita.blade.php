@@ -29,7 +29,7 @@
     </div>
 </div>
 
-<div class="container px-4 pb-12 mx-auto">
+<div class="overflow-x-auto rounded-xl">
     @if(session('success'))
     <div class="mb-4 text-green-600">
         {{ session('success') }}
@@ -80,10 +80,12 @@
 
 </div>
 
-<div id="modalEdit" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+<div id="modalEdit" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">
     <div class="relative max-w-xl w-full max-h-[90vh] overflow-y-auto p-8 bg-white rounded-lg shadow-xl">
         <h3 class="mb-6 text-2xl font-semibold text-center">Edit Berita</h3>
-        <form method="POST" id="editForm" action="" enctype="multipart/form-data">
+        <form method="POST" id="editForm" action="" enctype="multipart/form-data" class="relative bg-white rounded-lg p-6 w-full max-w-full sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto
+                            scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                        style="scrollbar-width: thin;">
             @csrf
             @method('PUT')
 
@@ -135,11 +137,12 @@
     </div>
 </div>
 
-
-<div id="modalTambah" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+<div id="modalTambah" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">>
     <div class="relative max-w-xl w-full max-h-[90vh] overflow-y-auto p-8 bg-white rounded-lg shadow-xl">
         <h3 class="mb-6 text-2xl font-semibold text-center">Tambah Berita</h3>
-        <form action="{{ route('tambah.berita') }}" method="POST" id="tambahForm" enctype="multipart/form-data">
+        <form action="{{ route('tambah.berita') }}" method="POST" id="tambahForm" enctype="multipart/form-data" class="relative bg-white rounded-lg p-6 w-full max-w-full sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto
+                            scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                        style="scrollbar-width: thin;">
             @csrf
             <div class="mb-4">
                 <label for="judul_tambah" class="block text-sm font-medium text-gray-700">Judul Berita</label>
