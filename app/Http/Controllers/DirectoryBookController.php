@@ -53,6 +53,19 @@ class DirectoryBookController extends Controller
             }
         }
 
+        // Handle search
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->whereHas('uttp', function($q) use ($searchTerm) {
+                $q->where('no_registrasi', 'like', "%{$searchTerm}%")
+                  ->orWhere('nama_usaha', 'like', "%{$searchTerm}%")
+                  ->orWhere('jenis_alat', 'like', "%{$searchTerm}%")
+                  ->orWhere('nama_alat', 'like', "%{$searchTerm}%")
+                  ->orWhere('merk_type', 'like', "%{$searchTerm}%")
+                  ->orWhere('nomor_seri', 'like', "%{$searchTerm}%");
+            });
+        }
+
         $alatUkur = $query->orderBy('created_at', 'desc')
                          ->paginate(10)
                          ->withQueryString();
