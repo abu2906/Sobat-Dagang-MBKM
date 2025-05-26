@@ -16,12 +16,15 @@
 <div class="container px-4 mx-auto -mt-8">
     <div class="flex justify-center mb-6">
         <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
+            <form method="GET" action="{{ route('kelolaSurat.industri') }}">
             <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
-            <input type="text" placeholder="Cari"
-                class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input type="text" placeholder="Cari" name="search"
+                class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                value="{{ request('search') }}"/>
+            </form>
         </div>
     </div>
-    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-3 md:grid-cols-3">
         <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>
@@ -43,14 +46,6 @@
             <div>
                 <p class="text-base font-medium text-black">Jumlah Surat Ditolak</p>
                 <p class="text-2xl font-bold text-green-600">{{ $totalSuratDitolak }}</p>
-            </div>
-        </a>
-
-        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
-            <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
-            <div>
-                <p class="text-base font-medium text-black">Draft Surat Balasan</p>
-                <p class="text-2xl font-bold text-orange-500">{{ $totalSuratDraft }}</p>
             </div>
         </a>
     </div>

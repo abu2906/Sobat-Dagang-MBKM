@@ -23,6 +23,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
 </head>
 
 <body x-data="{ open: true }" class="overflow-hidden font-sans bg-white">

@@ -6,12 +6,13 @@ use App\Models\SertifikasiHalal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class HalalController extends Controller
 {
         
-    public function index()
+    public function index(Request $request)
     {
         $data = SertifikasiHalal::orderBy('tanggal_sah', 'desc')->get()->map(function ($item) {
             return [
@@ -33,16 +34,32 @@ class HalalController extends Controller
                     : '-',
 
                 'alamat' => $item->alamat,
-                'status' => $item->status,
+                'status' => $item->status,  
                 'sertifikat' => $item->sertifikat,
             ];
         });
 
-        $items = SertifikasiHalal::all();
+       
+        $query = SertifikasiHalal::query();
+
+        if ($searchTerm = request('search')) {
+            $search = strtolower(trim($searchTerm));
+
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw('LOWER(nama_usaha) LIKE ?', ["%$search%"])
+                    ->orWhereRaw('LOWER(no_sertifikasi_halal) LIKE ?', ["%$search%"])
+                    ->orWhereRaw('LOWER(alamat) LIKE ?', ["%$search%"])
+                    ->orWhereRaw('DATE_FORMAT(tanggal_sah, "%d-%m-%Y") LIKE ?', ["%$search%"])
+                    ->orWhereRaw('DATE_FORMAT(tanggal_exp, "%d-%m-%Y") LIKE ?', ["%$search%"]);
+            });
+        }
+
+        $items = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.bidangIndustri.halal',[
             'data' => $data,
-            'items' => $items
+            'items' => $items,
+           
         ]);
     }
 
@@ -82,7 +99,7 @@ class HalalController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Gagal menambahkan sertifikasi halal: " . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->with('openAdd', true);
         }
     }
     

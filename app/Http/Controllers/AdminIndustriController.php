@@ -18,32 +18,85 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DataIkm;
+use App\Models\SertifikasiHalal;
 
 class AdminIndustriController extends Controller
 {
-    public function showDashboard()
+    public function showDashboard(Request $request)
     {
 
-        // Ambil data surat industri
+        $tahun = $request->input('tahun', date('Y'));
+       
         $rekapSurat = $this->getSuratIndustriData();
-        $dataSurat = PermohonanSurat::with('user')
-            ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
-            ->orderBy('created_at', 'desc')
+        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
+
+        $statusCounts = [
+            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
+            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
+            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
+        ];
+
+        // total investasi
+        $totalInvestasi = DataIkm::sum('nilai_investasi');
+
+        // akumulasi IKM
+        $bulanIni = Carbon::now()->month;
+        $tahunIni = Carbon::now()->year;
+
+        $akumulasiIKM = DataIkm::whereYear('created_at', $tahunIni)
+            ->whereMonth('created_at', '<=', $bulanIni)
+            ->count();
+
+        // IKM tahun ke Tahun
+        $pertumbuhanIkm = DataIkm::select(
+            DB::raw('YEAR(created_at) as tahun'),
+            DB::raw('COUNT(*) as jumlah')
+        )
+        ->groupBy(DB::raw('YEAR(created_at)'))
+        ->orderBy('tahun')
+        ->get();
+
+        // Total semua industri
+        $totalIndustri = DataIkm::count();
+
+        // Data jumlah per jenis industri
+        $sebaranJenisIndustri = DataIkm::select(
+                'jenis_industri',
+                DB::raw('COUNT(*) as jumlah')
+            )
+            ->groupBy('jenis_industri')
+            ->orderBy('jumlah', 'desc')
             ->get();
 
+        // Jumlah total halal & grafik pertumbuhan halal
+        $totalHalal = SertifikasiHalal::count();
 
-        // Definisikan range tanggal sebulan terakhir
-        $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
-        $endDate = Carbon::now()->format('Y-m-d');
+        $pertumbuhanHalal = SertifikasiHalal::select(
+            DB::raw('YEAR(tanggal_sah) as tahun'),
+            DB::raw('COUNT(*) as jumlah')
+        )
+        ->groupBy(DB::raw('YEAR(tanggal_sah)'))
+        ->orderBy('tahun')
+        ->get();
 
-        // Kirim semua data ke view
-        return view('admin.bidangIndustri.dashboardAdmin', [
-            'dataSurat' => $dataSurat,
+         // Jumlah IKM berdasarkan Investasi
+        $levelIKM = DataIkm::select('level', DB::raw('COUNT(*) as jumlah'))
+            ->groupBy('level')
+            ->get();
+
+        return view('admin.kabid.industri.industri', [
             'totalSuratIndustri' => $rekapSurat['totalSuratIndustri'],
             'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
             'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
             'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-
+            'totalHalal' => $totalHalal,
+            'pertumbuhanHalal' => $pertumbuhanHalal,
+            'totalInvestasi' => $totalInvestasi,
+            'akumulasiIKM' => $akumulasiIKM,
+            'pertumbuhanIkm' => $pertumbuhanIkm,
+            'totalIndustri' => $totalIndustri,
+            'sebaranJenisIndustri' => $sebaranJenisIndustri,
+            'levelIKM' => $levelIKM 
         ]);
     }
 
@@ -805,14 +858,32 @@ class AdminIndustriController extends Controller
         return view('user.bidangIndustri.halal');
     }
 
-    public function kelolaSuratt()
+    public function user()
+    {
+        return $this->belongsTo(user::class, 'id_user', 'id_user');
+    }
+
+
+    public function kelolaSuratt(Request $request)
     {
         $rekapSurat = $this->getSuratIndustriData();
-        $dataSurat = PermohonanSurat::with('user')
+        $query = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
-            ->whereIn('status', ['menunggu', 'diterima', 'ditolak'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->whereIn('status', ['menunggu', 'diterima', 'ditolak']);
+
+        if ($request->filled('search')) {
+            $search = strtolower(trim($request->search));
+
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->whereRaw('LOWER(nama) LIKE ?', ["%$search%"]);
+                })
+                ->orWhereRaw('LOWER(jenis_surat) LIKE ?', ["%$search%"])
+                ->orWhereRaw('LOWER(status) LIKE ?', ["%$search%"]);
+            });
+        }
+
+        $dataSurat = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.bidangIndustri.kelolaSurat', [
             'dataSurat' => $dataSurat,

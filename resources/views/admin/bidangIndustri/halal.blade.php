@@ -3,20 +3,28 @@
 
 @section('content')
 
-<div class="container responsive">
-  <div x-data="{ openAdd: false , openEdit: false, selectedItem: null }">
-  <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
+<div class="w-full max-w-full">
+  <div x-data="{openAdd: {{ session('openAdd') ? 'true' : 'false' }} , openEdit: false, selectedItem: null }">
+  <div class="relative w-full h-64">
+    <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-64">
+      <a href="{{ route('dashboard.industri') }}"
+        class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+        <span class="text-2xl material-symbols-outlined">
+            arrow_back
+        </span>
+      </a>
+    </div>
 
   <div class="flex items-center gap-4 px-6 py-6 w-full mx-auto relative">
     <div class="relative flex-1">
-      <input type="text" x-model="searchQuery" placeholder="Cari"
-        class="w-full rounded-xl bg-blue-200/80 py-3 pl-12 pr-4 text-gray-600 placeholder-gray-600 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
-      <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-        <i class="fas fa-search"></i>
-      </span>
+      <form method="GET" action="{{ route('admin.industri.halal') }}">
+          <input type="text" name="search" x-model="searchQuery" placeholder="Cari"
+            class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}" />
+          <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
+      </form>
     </div>
-
-    <button @click="openAdd = true" class="bg-[#002B4E] text-white font-semibold rounded-xl px-6 py-3 shadow-md hover:brightness-110 transition" data-bs-toggle="modal" data-bs-target="#tambahModal">
+      
+    <button @click="openAdd = true" class="bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:brightness-110 transition" data-bs-toggle="modal" data-bs-target="#tambahModal">
       TAMBAH DATA
     </button>
   </div>
@@ -27,11 +35,31 @@
   <div x-show="openAdd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div class="bg-white p-6 rounded shadow w-full max-w-lg">
       <h2 class="text-xl text-center font-semibold mb-4">Tambah Data Sertifikat Halal</h2>
+      @if (session('success'))
+      <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 border border-green-200 rounded-lg" role="alert">
+          {{ session('success') }}
+      </div>
+      @endif
+      @if (session('error'))
+      <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg" role="alert">
+          {{ session('error') }}
+      </div>
+      @endif
+      @if ($errors->any())
+      <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg">
+          <strong>Terjadi kesalahan:</strong>
+          <ul class="mt-1 ml-4 list-disc list-inside">
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+          </ul>
+      </div>
+      @endif
       <form action="{{ route('admin.industri.halal.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
           <div class="grid md:grid-cols-2 gap-4 w-800px">
             <div>
-              <label class="block mb-1 font-semibold"><i class="fas fa-store mr-1 text-blue-600"></i>Nama Usaha</label>
+              <label class="block mb-1 font-semibold">Nama Usaha</label>
               <input type="text" name="nama_usaha" placeholder="Nama Usaha" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
             </div>
             <div>
@@ -53,10 +81,11 @@
                 <option value="Perlu Pembaruan">Perlu Pembaruan</option>
               </select>
             </div>
-            <div>
+            <div x-data="{ fileName: '' }">
               <p class="block mb-1 font-semibold">Sertifikat Halal</p>
               <label for="filesertifikat" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
-              <input type="file" id="filesertifikat" name="sertifikat" accept="application/pdf" class="hidden" accept=".pdf" required>
+              <input type="file" id="filesertifikat" name="sertifikat" accept="application/pdf" class="hidden" accept=".pdf" @change="fileName = $event.target.files[0].name" required>
+              <p x-text="fileName" class="mt-2 text-sm text-gray-600"></p>
               <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF).</p>
             </div>
             </div>
@@ -76,20 +105,21 @@
   </div>
 
   <!-- Tabel Data -->
-  <section class="flex-1 px-6 pb-10 mt-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent z-10 relative">
-    <div class="overflow-hidden rounded-xl">
-  <table class="w-full text-sm table-auto ">
-    <thead class="bg-[#0d3b66] text-white">
+  <div class="container px-4 pb-4 mx-auto">
+  <section class="overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
+  <div class="overflow-y-auto max-h-[350px]">
+  <table class="w-full text-sm table-auto text-left">
+    <thead class="bg-[#0d3b66] text-white sticky top-0 z-10">
       <tr>
-        <th class="px-4 py-3 font-semibold text-left">NO</th>
-        <th class="px-4 py-3 font-semibold text-left">Nama Usaha</th>
-        <th class="px-4 py-3 font-semibold text-left">No Sertifikat</th>
-        <th class="px-4 py-3 font-semibold text-left">Tanggal Diterbitkan</th>
-        <th class="px-4 py-3 font-semibold text-left">Berlaku Sampai</th>
-        <th class="px-4 py-3 font-semibold text-left">Alamat</th>
-        <th class="px-4 py-3 font-semibold text-left">Status</th>
-        <th class="px-4 py-3 font-semibold text-left">Sertifikat</th>
-        <th class="px-4 py-3 font-semibold text-left">Aksi</th>
+        <th class="px-4 py-3 font-semibold text-left sticky">NO</th>
+        <th class="px-4 py-3 font-semibold text-left sticky">Nama Usaha</th>
+        <th class="px-4 py-3 font-semibold text-left sticky">No Sertifikat</th>
+        <th class="px-4 py-3 font-semibold text-left sticky">Tanggal Diterbitkan</th>
+        <th class="px-4 py-3 font-semibold text-left sticky">Berlaku Sampai</th>
+        <th class="px-4 py-3 font-semibold text-left sticky">Alamat</th>
+        <th class="px-4 py-3 font-semibold text-left sticky">Status</th>
+        <th class="px-4 py-3 font-semibold text-left sticky">Sertifikat</th>
+        <th class="px-4 py-3 font-semibold text-left sticky rounded-tr-xl">Aksi</th>
       </tr>
     </thead>
     <tbody>
@@ -116,19 +146,23 @@
                 d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" />
             </svg>
           </button>
-          <button class="btn btn-sm btn-danger" onclick="deleteData({{ $item->id_halal }})class="text-red-600 hover:text-red-800" title="Hapus">
+          <button class="btn btn-sm btn-danger" onclick="deleteData({{ $item->id_halal }})" class=text-red-600 hover:text-red-800 title="Hapus">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600 hover:text-red-800 transition" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0H7m4-3h2a1 1 0 011 1v1H8V5a1 1 0 011-1z" />
             </svg>
           </button>
-
         </td>
       </tr>
       @endforeach
     </tbody>
-  </table>
+    </table>
+    </div>
+    </section>
+    </div>
+  </div>
+  
 
   <!-- Modal Edit -->
   <div id="modalEdit" style="display:none; background: rgba(0,0,0,0.5); position: fixed; inset: 0; z-index: 1000;" class= "overflow-x-auto">
@@ -157,10 +191,6 @@
             <input type="date" id="edit_tanggal_exp" name="tanggal_exp" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
           </div>
           <div>
-            <label class="block mb-1 font-semibold"><i class="fas fa-map-marker-alt mr-1 text-blue-600"></i>Alamat</label>
-            <input type="text" id="edit_alamat" name="alamat" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition"  required>
-          </div>
-          <div>
             <label class="block mb-1 font-semibold">Status</label>
             <select id="edit_status" name="status" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
               <option value="Berlaku">Berlaku</option>
@@ -168,8 +198,15 @@
             </select>
           </div>
           <div>
-            <label class="block mb-1 font-semibold">Sertifikat (PDF - kosongkan jika tidak berubah)</label>
-            <input type="file" name="sertifikat" accept="application/pdf" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition">
+            <label class="block mb-1 font-semibold">Alamat</label>
+            <textarea id="edit_alamat" name="alamat" placeholder="Alamat" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition"  required></textarea>
+          </div>
+          <div x-data="{ fileName: '' }">
+            <p class="block mb-1 font-semibold">Sertifikat (PDF - kosongkan jika tidak berubah)</p>
+            <label for="filesertifikat" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+            <input type="file" name="sertifikat" accept="application/pdf" class="hidden" accept=".pdf" @change="fileName = $event.target.files[0].name">
+            <p x-text="fileName" class="mt-2 text-sm text-gray-600"></p>
+            <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF).</p>
           </div>
           <div>
             <div class="mt-10 flex justify-center gap-4">
