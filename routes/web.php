@@ -205,6 +205,28 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::post('/kadis/surat/{encoded_id}/tolak', [PersuratanController::class, 'tolakKadis'])->name('tolakKadis');
 });
 
+// admin master
+Route::middleware(['check.role:master_admin'])->group(function () {
+    #dashboard nddpi isinya untuk tes2 ji
+    Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
+    #distribusi
+    Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
+    Route::post('/distributor/{id_distributor}/terima', [PelaporanController::class, 'setujui'])->name('distributor.setujui');
+    Route::post('/distributor/{id_distributor}/tolak', [PelaporanController::class, 'tolak'])->name('distributor.tolak');
+    Route::get('/lihat-laporan', [PelaporanController::class, 'lihatLaporan'])->name('lihat.laporan');
+    Route::get('/tambah-barang-distribusi', [PelaporanController::class, 'tambahBarangDistribusi'])->name('tambah.barang-distribusi');
+    Route::delete('/distributor/{id_distributor}/hapus', [PelaporanController::class, 'hapus'])->name('distributor.hapus');
+    #kelola berita
+    Route::get('/admin/kelola-pengguna', [DashboardController::class, 'kelolaAdmin'])->name('kelola.admin');
+    Route::post('/admin/kelola-pengguna', [DashboardController::class, 'tambahpengguna'])->name('tambah.pengguna');
+    Route::get('/admin/kelola-berita', [BeritaController::class, 'show'])->name('kelola.berita');
+    Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
+    Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
+    Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');    
+
+});
+
 // Route for test
 Route::get('/test/{viewPath}', function ($viewPath) {
     $bladePath = str_replace('-', '_', str_replace('/', '.', $viewPath));
