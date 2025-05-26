@@ -29,7 +29,7 @@
                 ['href' => route('kabid.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => route('kabid.dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],
                 ['href' => route('kabid.halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Sertifikat Halal'],
-                ['href' => route('kabid.surat'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                ['href' => route('kabid.suratI'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
 
