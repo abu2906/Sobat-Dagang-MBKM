@@ -18,14 +18,11 @@
 
 <div class="px-4 xl:px-8 py-6">
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <!-- Kiri: Perkembangan Harga Pupuk dan Perbandingan Harga -->
         <div class="space-y-6 xl:col-span-2">
-            <!-- Grafik Bar -->
             <div class="p-4 bg-white rounded-xl shadow">
                 <div class="flex items-center justify-between">
                     <h2 class="font-semibold text-gray-700">Perbandingan Harga Kemarin dan Hari Ini</h2>
-                    <!-- Tambahkan id lokasiSelect agar JS bisa akses -->
-                    <select id="lokasiSelect" class="border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">
+                    <select id="lokasiSelect" class="border-gray-300 bg-['#083858'] rounded-md shadow-sm focus:ring focus:ring-blue-200">
                         <option value="Pasar Sumpang" {{ $selectedLokasi == 'Pasar Sumpang' ? 'selected' : '' }}>Pasar Sumpang</option>
                         <option value="Pasar Lakessi" {{ $selectedLokasi == 'Pasar Lakessi' ? 'selected' : '' }}>Pasar Lakessi</option>
                     </select>
@@ -45,33 +42,26 @@
             </div>
         </div>
 
-        <!-- Kanan: 2 Pie Chart dan 1 Donut Chart -->
         <div class="space-y-6">
             <div id="pieChartsContainer">
-                <!-- Pie Chart Naik -->
                 <div class="p-4 bg-white shadow rounded-xl mb-6">
                     <h3 class="text-center font-semibold text-black mb-3">Tren Harga Naik</h3>
                     <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
                         <div class="w-full sm:w-1/2">
                             <canvas id="topHargaNaikChart"></canvas>
                         </div>
-                        <!-- Container list tren harga naik, harus ada id supaya JS bisa update -->
                         <div id="topHargaNaikList" class="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
-                            <!-- Data akan diisi oleh JS -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Pie Chart Turun -->
                 <div class="p-4 bg-white shadow rounded-xl mb-6">
                     <h3 class="text-center font-semibold text-black mb-3">Tren Harga Turun</h3>
                     <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
                         <div class="w-full sm:w-1/2">
                             <canvas id="topHargaTurunChart"></canvas>
                         </div>
-                        <!-- Container list tren harga turun -->
                         <div id="topHargaTurunList" class="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
-                            <!-- Data akan diisi oleh JS -->
                         </div>
                     </div>
                 </div>
@@ -86,195 +76,154 @@
         </div>
     </div>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Chart.js instances
-  let barChart, lineChart, pieNaikChart, pieTurunChart;
 
-  // Fungsi buat chart Bar
-  function createBarChart(ctx, labels, todayData, yesterdayData) {
-    if (barChart) barChart.destroy();
-    barChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Harga Hari Ini',
-            data: todayData,
-            backgroundColor: '#3b82f6'
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  const naikCtx = document.getElementById('topHargaNaikChart');
+  const turunCtx = document.getElementById('topHargaTurunChart');
+
+  if (naikCtx) {
+      const dataPieNaik = @json($topHargaNaik);
+      new Chart(naikCtx.getContext('2d'), {
+          type: 'pie',
+          data: {
+              labels: dataPieNaik.map(i => i.label),
+              datasets: [{
+                  data: dataPieNaik.map(i => i.price_change),
+                  backgroundColor: dataPieNaik.map(i => i.color),
+                  borderColor: '#fff',
+                  borderWidth: 2
+              }]
           },
-          {
-            label: 'Harga Kemarin',
-            data: yesterdayData,
-            backgroundColor: '#f87171'
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: false,
-            title: { display: true, text: 'Harga (Rp)' }
-          }
-        },
-        plugins: {
-          legend: { position: 'top' }
-        }
-      }
-    });
+          options: {
+              plugins: {
+                  legend: { position: 'none' },
+                  datalabels: {
+                      formatter: (value, context) => {
+                          const dataset = context.chart.data.datasets[0];
+                          const total = dataset.data.reduce((a, b) => a + b, 0);
+                          const percentage = (value / total * 100).toFixed(1);
+                          return percentage + '%';
+                      },
+                      color: '#fff',
+                      font: { weight: 'bold', size: 12 }
+                  }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
   }
 
-  // Fungsi buat chart Line (penyaluran pupuk per tahun)
-  function createLineChart(ctx, labels, datasets) {
-    if (lineChart) lineChart.destroy();
-    lineChart = new Chart(ctx, {
+  if (turunCtx) {
+      const dataPieTurun = @json($topHargaTurun);
+      new Chart(turunCtx.getContext('2d'), {
+          type: 'pie',
+          data: {
+              labels: dataPieTurun.map(i => i.label),
+              datasets: [{
+                  data: dataPieTurun.map(i => i.price_change),
+                  backgroundColor: dataPieTurun.map(i => i.color),
+                  borderColor: '#fff',
+                  borderWidth: 2
+              }]
+          },
+          options: {
+              plugins: {
+                  legend: { position: 'none' },
+                  datalabels: {
+                      formatter: (value, context) => {
+                          const dataset = context.chart.data.datasets[0];
+                          const total = dataset.data.reduce((a, b) => a + b, 0);
+                          const percentage = (value / total * 100).toFixed(1);
+                          return percentage + '%';
+                      },
+                      color: '#fff',
+                      font: { weight: 'bold', size: 12 }
+                  }
+              }
+          },
+          plugins: [ChartDataLabels]
+      });
+  }
+
+
+  const ctxBar = document.getElementById('barChart');
+  if (ctxBar) {
+      new Chart(ctxBar.getContext('2d'), {
+          type: 'bar',
+          data: {
+              labels: @json($barChartData['labels']),
+              datasets: [{
+                      label: 'Harga Hari Ini',
+                      data: @json($barChartData['today']),
+                      backgroundColor: '#3b82f6'
+                  },
+                  {
+                      label: 'Harga Kemarin',
+                      data: @json($barChartData['yesterday']),
+                      backgroundColor: '#f87171'
+                  }
+              ]
+          },
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'top'
+                  }
+              },
+              scales: {
+                  y: {
+                      beginAtZero: false,
+                      title: {
+                          display: true,
+                          text: 'Harga (Rp)'
+                      }
+                  }
+              }
+          }
+      });
+  }
+  // Data dari controller
+  const lineLabels = @json($lineLabels);
+  const lineDatasets = @json($lineDatasets);
+
+  const donutLabels = @json($dataPupuk->pluck('nama_barang'));
+  const donutData = @json($dataPupuk->pluck('total'));
+
+  // Line Chart - Perkembangan penyaluran per tahun
+  const ctxLine = document.getElementById('lineChart').getContext('2d');
+  const lineChart = new Chart(ctxLine, {
       type: 'line',
       data: {
-        labels: labels,
-        datasets: datasets
+          labels: lineLabels,
+          datasets: lineDatasets
       },
       options: {
-        responsive: true,
-        interaction: { mode: 'nearest', axis: 'x', intersect: false },
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: { display: true, text: 'Total Penyaluran' }
-          },
-          x: {
-            title: { display: true, text: 'Tahun' }
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  title: {
+                      display: true,
+                      text: 'Jumlah Penyaluran'
+                  }
+              },
+              x: {
+                  title: {
+                      display: true,
+                      text: 'Tahun'
+                  }
+              }
           }
-        },
-        plugins: {
-          legend: { position: 'bottom' }
-        }
       }
-    });
-  }
+  });
 
-  // Fungsi buat pie chart untuk harga naik dan turun
-  function createPieChart(ctx, labels, data, colors) {
-    return new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: labels,
-        datasets: [{
-          data: data,
-          backgroundColor: colors,
-          borderColor: '#fff',
-          borderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false }
-        }
-      }
-    });
-  }
-
-  // Update daftar tren harga naik/turun di sidebar
-  function updateTrendList(containerId, items) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '';
-    items.forEach(item => {
-      if (item.label) {
-        const el = document.createElement('div');
-        el.className = 'flex items-center text-sm mb-1';
-        el.innerHTML = `
-          <span class="w-3 h-3 rounded-full mr-2" style="background-color:${item.color}"></span>
-          <span class="truncate">${item.label} (${item.price_change})</span>
-        `;
-        container.appendChild(el);
-      }
-    });
-  }
-
-  // Fetch data dari backend sesuai lokasi dan kecamatan yang dipilih
-  async function fetchData(lokasi, kecamatan) {
-    try {
-      const params = new URLSearchParams({ lokasi, kecamatan });
-      const response = await fetch(`/api/data-perdagangan?${params.toString()}`);
-      if (!response.ok) throw new Error('Gagal mengambil data.');
-      return await response.json();
-    } catch (error) {
-      alert(error.message);
-      return null;
-    }
-  }
-
-  // Render semua grafik dan data
-  async function renderAll() {
-    const lokasi = document.getElementById('lokasiSelect').value;
-    const kecamatan = document.getElementById('kecamatanSelect') ? document.getElementById('kecamatanSelect').value : '';
-
-    const data = await fetchData(lokasi, kecamatan);
-    if (!data) return;
-
-    // Bar Chart
-    createBarChart(
-      document.getElementById('barChart').getContext('2d'),
-      data.barChartData.labels,
-      data.barChartData.today,
-      data.barChartData.yesterday
-    );
-
-    // Line Chart
-    createLineChart(
-      document.getElementById('lineChart').getContext('2d'),
-      data.lineLabels,
-      data.lineDatasets
-    );
-
-    // Pie Chart Harga Naik
-    if (pieNaikChart) pieNaikChart.destroy();
-    pieNaikChart = createPieChart(
-      document.getElementById('topHargaNaikChart').getContext('2d'),
-      data.topHargaNaik.map(i => i.label),
-      data.topHargaNaik.map(i => i.price_change),
-      data.topHargaNaik.map(i => i.color)
-    );
-
-    // Pie Chart Harga Turun
-    if (pieTurunChart) pieTurunChart.destroy();
-    pieTurunChart = createPieChart(
-      document.getElementById('topHargaTurunChart').getContext('2d'),
-      data.topHargaTurun.map(i => i.label),
-      data.topHargaTurun.map(i => i.price_change),
-      data.topHargaTurun.map(i => i.color)
-    );
-
-    // Update list tren
-    updateTrendList('topHargaNaikList', data.topHargaNaik);
-    updateTrendList('topHargaTurunList', data.topHargaTurun);
-
-    // Update data distribusi pupuk jika ada elemen tabel/daftar, contoh sederhana
-    if (data.dataDistribusiHtml) {
-      document.getElementById('dataDistribusiContainer').innerHTML = data.dataDistribusiHtml;
-    }
-  }
-
-  // Event listener ketika lokasi atau kecamatan berubah
-  document.getElementById('lokasiSelect').addEventListener('change', renderAll);
-  if (document.getElementById('kecamatanSelect')) {
-    document.getElementById('kecamatanSelect').addEventListener('change', renderAll);
-  }
-
-  // Initial render saat halaman dimuat
-  renderAll();
-});
-</script>
-
-{{-- <script>
-    Chart.register(ChartDataLabels);
-
-    const pieLabels = @json($dataPupuk->keys());
+  // Donut Chart - Distribusi total penyaluran pupuk per jenis
+     const pieLabels = @json($dataPupuk->keys());
     const pieData = @json($dataPupuk->values());
 
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    const pieCtx = document.getElementById('donutChart').getContext('2d');
 
     new Chart(pieCtx, {
         type: 'doughnut',
@@ -321,49 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // Line Chart
-    const lineLabels = @json($lineLabels);
-    const lineDatasets = @json($lineDatasets);
-
-    const lineCtx = document.getElementById('lineChart').getContext('2d');
-    new Chart(lineCtx, {
-        type: 'line',
-        data: {
-            labels: lineLabels,
-            datasets: lineDatasets
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false,
-                }
-            },
-            interaction: {
-                mode: 'nearest',
-                axis: 'x',
-                intersect: false
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Total Penyaluran'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Tahun'
-                    }
-                }
-            }
-        }
-    });
-</script> --}}
+  });
+</script>
 @endsection

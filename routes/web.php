@@ -251,7 +251,5 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kepala-dinas/surat-perdagangan', [sobatHargaController::class, 'suratPerdagangan'])->name('kepalaDinas.suratPerdagangan');
     Route::put('/kabid-perdagangan/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('suratPerdagangan.setujui');
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
-    Route::get('kepala-dinas/perdagangan/pupuk', [sobatHargaController::class, 'pupuk'])->name('kepalaDinas.pupuk');
-    Route::get('/data-pasar-distribusi', [SobatHargaController::class, 'apiDataPasarDistribusi']);
-
+    
 });
