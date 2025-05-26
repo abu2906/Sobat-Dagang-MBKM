@@ -106,16 +106,18 @@
 	<!-- Filter dan Pencarian -->
 	<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-10 px-4 gap-4">
 		<div class="w-full sm:w-auto">
-			<select id="statusFilter" class="w-full sm:w-auto px-4 py-2 rounded-full border shadow text-sm">
-				<option value="">Semua</option>
-				<option value="Menunggu">Menunggu</option>
-				<option value="Diproses">Diproses</option>
-				<option value="Diterima">Diterima</option>
-				<option value="Menunggu Persetujuan">Menunggu Persetujuan</option>
-				<option value="Butuh Revisi">Butuh Revisi</option>
-				<option value="Selesai">Selesai</option>
-				<option value="Ditolak">Ditolak</option>
-			</select>
+			<form id="filterForm" method="GET" class="flex items-center space-x-4">
+				<select name="status" id="statusFilter" class="w-full sm:w-auto px-4 py-2 rounded-full border shadow text-sm" onchange="this.form.submit()">
+					<option value="">Semua</option>
+					<option value="Menunggu" {{ request('status') === 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
+					<option value="Diproses" {{ request('status') === 'Diproses' ? 'selected' : '' }}>Diproses</option>
+					<option value="Diterima" {{ request('status') === 'Diterima' ? 'selected' : '' }}>Diterima</option>
+					<option value="Menunggu Persetujuan" {{ request('status') === 'Menunggu Persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+					<option value="Butuh Revisi" {{ request('status') === 'Butuh Revisi' ? 'selected' : '' }}>Butuh Revisi</option>
+					<option value="Selesai" {{ request('status') === 'Selesai' ? 'selected' : '' }}>Selesai</option>
+					<option value="Ditolak" {{ request('status') === 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+				</select>
+			</form>
 		</div>
 		<div class="relative w-full sm:w-auto sm:flex-grow">
 			<input type="text" id="searchInput" placeholder="Cari" class="w-full pl-10 pr-4 py-2 rounded-full border shadow text-sm">
@@ -245,6 +247,12 @@
 												class="bg-blue-900 hover:bg-blue-800 text-white text-sm px-4 py-1 rounded">
 												Buat Surat
 											</a>
+											<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
+												class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+												<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
+												</svg>
+											</button>
 										@endif
 
 									@elseif ($surat->status_admin === 'Butuh Revisi')
@@ -335,31 +343,21 @@
 </div>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const statusFilter = document.getElementById("statusFilter");
     const searchInput = document.getElementById("searchInput");
     const rows = document.querySelectorAll("tbody tr");
 
-    function applyFilters() {
-        const selectedStatus = statusFilter.value.toLowerCase();
+    function applySearch() {
         const keyword = searchInput.value.toLowerCase();
 
         rows.forEach(row => {
             if (!row.querySelector('td')) return;
-
-            const statusCell = row.querySelector('td:nth-child(7)');
-            const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
-
-            const matchStatus = !selectedStatus || status === selectedStatus;
-            const matchSearch = !keyword || rowText.includes(keyword);
-
-            row.style.display = (matchStatus && matchSearch) ? '' : 'none';
+            row.style.display = !keyword || rowText.includes(keyword) ? '' : 'none';
         });
     }
 
-    statusFilter.addEventListener("change", applyFilters);
-    searchInput.addEventListener("input", applyFilters);
-    applyFilters();
+    searchInput.addEventListener("input", applySearch);
+    applySearch();
 });
 </script>
 <script>

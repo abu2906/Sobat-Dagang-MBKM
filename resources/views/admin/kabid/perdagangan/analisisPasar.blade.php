@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Analisis Pasar Bidang Perdagangan')
+@section('title', 'Analisis Pasar')
 
 @section('content')
 <div class="min-h-screen p-4 space-y-4 bg-gray-50">

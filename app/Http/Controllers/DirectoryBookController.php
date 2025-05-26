@@ -40,20 +40,41 @@ class DirectoryBookController extends Controller
         return view('user.bidangMetrologi.directory', compact('alatUkur'));
     }       
 
-    public function showDirectoryAdminMetrologi()
+    public function showDirectoryAdminMetrologi(Request $request)
     {
-        $alatUkur = DataAlatUkur::with('uttp')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = DataAlatUkur::with('uttp');
+
+        // Handle status filter
+        if ($request->has('status')) {
+            if ($request->status === 'Valid') {
+                $query->whereDate('tanggal_exp', '>=', now());
+            } elseif ($request->status === 'Kadaluarsa') {
+                $query->whereDate('tanggal_exp', '<', now());
+            }
+        }
+
+        $alatUkur = $query->orderBy('created_at', 'desc')
+                         ->paginate(10)
+                         ->withQueryString();
 
         return view('admin.bidangMetrologi.directory_alat_ukur_sah', compact('alatUkur'));
     }
-
-    public function showDirectoryKabidMetrologi()
+    public function showUttp(Request $request)
     {
-        $alatUkur = DataAlatUkur::with('uttp')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = DataAlatUkur::with('uttp');
+
+        // Handle status filter
+        if ($request->has('status')) {
+            if ($request->status === 'Valid') {
+                $query->whereDate('tanggal_exp', '>=', now());
+            } elseif ($request->status === 'Kadaluarsa') {
+                $query->whereDate('tanggal_exp', '<', now());
+            }
+        }
+
+        $alatUkur = $query->orderBy('created_at', 'desc')
+                         ->paginate(10)
+                         ->withQueryString();
 
         return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
     }

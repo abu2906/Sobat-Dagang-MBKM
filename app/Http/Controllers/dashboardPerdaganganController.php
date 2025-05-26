@@ -145,7 +145,6 @@ class DashboardPerdaganganController extends Controller{
             'rata_rata' => $rata_rata,
             'tertinggi' => $tertinggi,
             'volatilitas' => $volatilitas,
-            // 'pupuk' => $pupuk,
             'daftar_lokasi' => $daftar_lokasi,
             'lokasi' => $lokasi,
         ]);
