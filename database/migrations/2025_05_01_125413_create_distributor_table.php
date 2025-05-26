@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id('id_distributor'); // Primary Key
             $table->unsignedBigInteger('id_user'); // Foreign Key
             $table->string('nib');
-            $table->enum('status', ['Menunggu', 'Ditolak', 'Diterima'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'ditolak', 'diterima'])->default('menunggu');
             $table->timestamps();
 
             // Foreign key constraint

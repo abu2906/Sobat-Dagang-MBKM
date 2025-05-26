@@ -22,7 +22,7 @@
             style="background-image: url('/assets/img/background/user_metrologi.png');">
 
             <!-- Tombol Kembali -->
-            <a href="{{ url()->previous() }}"
+            <a href="{{ url('/user/dashboard') }}"
                 class="absolute z-10 inline-flex items-center justify-center w-10 h-10 text-white top-4 left-4 hover:text-gray-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">

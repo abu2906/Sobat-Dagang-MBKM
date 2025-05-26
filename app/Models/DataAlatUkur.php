@@ -18,6 +18,7 @@ class DataAlatUkur extends Model
         'id_uttp',
         'tanggal_exp',
         'status',
+        'notifikasi_terkirim',
     ];
 
     /**

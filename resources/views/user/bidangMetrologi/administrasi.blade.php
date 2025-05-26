@@ -60,7 +60,6 @@
 								<option value="Disetujui">Disetujui</option>
 								<option value="Ditolak">Ditolak</option>
 							</select>
-							<input type="date" id="dateFilter" class="px-4 py-2 rounded-full border shadow text-sm">
 						</div>
 						<div class="relative flex-grow mt-2 md:mt-0">
 							<input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
@@ -222,29 +221,27 @@
 					</div>
 				</div>
 
-				<div class="mb-4">
-					<h2>Data Pemohon : </h2>
-				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Alamat Alat</label>
+					<label class="block font-semibold mb-1">Alamat Alat <span style="color:red">*</span></label>
 					<input type="text" name="alamat_alat" placeholder="Masukkan Alamat Alat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Nomor Surat</label>
+					<label class="block font-semibold mb-1">Nomor Surat <span style="color:red">*</span></label>
 					<input type="text" name="nomor_surat" placeholder="Masukkan Nomor Surat Anda" class="border px-4 py-2 w-full rounded-lg">
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Jenis Surat</label>
+					<label class="block font-semibold mb-1">Jenis Surat <span style="color:red">*</span></label>
 					<select name="jenis_surat" class="border px-4 py-2 w-full rounded-lg">
+						<option value="" disabled selected>-- Pilih Jenis Surat --</option>
 						<option value="tera">Tera</option>
 						<option value="tera_ulang">Tera Ulang</option>
 					</select>
 				</div>
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Upload Surat</label>
+					<label class="block font-semibold mb-1">Upload Surat <span style="color:red">*</span></label>
 					<input type="file" name="dokumen" class="mt-2">
 				</div>
 
@@ -257,4 +254,82 @@
 
 
     <script src="{{ asset('assets/js/switch.js') }}"></script>
+
+    <script>
+        function validateNomorSurat(input) {
+            const nomorSurat = input.value;
+            
+            // Kirim request ke server untuk cek nomor surat
+            fetch('/check-nomor-surat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ nomor_surat: nomorSurat })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const errorElement = document.getElementById('nomor-surat-error');
+                if (data.exists) {
+                    errorElement.textContent = 'Nomor surat ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.';
+                    errorElement.classList.remove('hidden');
+                    input.setCustomValidity('Nomor surat ini sudah digunakan');
+                } else {
+                    errorElement.textContent = '';
+                    errorElement.classList.add('hidden');
+                    input.setCustomValidity('');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function showForm(event) {
+            event.preventDefault();
+            document.getElementById('formPermohonan').classList.remove('hidden');
+            document.getElementById('riwayatPermohonan').classList.add('hidden');
+            document.getElementById('btnForm').classList.add('bg-blue-600', 'text-white');
+            document.getElementById('btnForm').classList.remove('text-black', 'hover:bg-gray-100');
+            document.getElementById('btnRiwayat').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('btnRiwayat').classList.add('text-black', 'hover:bg-gray-100');
+        }
+
+        function showRiwayat(event) {
+            event.preventDefault();
+            document.getElementById('formPermohonan').classList.add('hidden');
+            document.getElementById('riwayatPermohonan').classList.remove('hidden');
+            document.getElementById('btnRiwayat').classList.add('bg-blue-600', 'text-white');
+            document.getElementById('btnRiwayat').classList.remove('text-black', 'hover:bg-gray-100');
+            document.getElementById('btnForm').classList.remove('bg-blue-600', 'text-white');
+            document.getElementById('btnForm').classList.add('text-black', 'hover:bg-gray-100');
+        }
+
+        // Implementasi filter status dan pencarian
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusFilter = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('searchInput');
+            const tableRows = document.querySelectorAll('tbody tr');
+
+            function applyFilters() {
+                const selectedStatus = statusFilter.value.toLowerCase();
+                const searchTerm = searchInput.value.toLowerCase();
+
+                tableRows.forEach(row => {
+                    const statusCell = row.querySelector('td:nth-child(4)');
+                    const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
+                    const rowText = row.textContent.toLowerCase();
+                    
+                    const statusMatch = !selectedStatus || status === selectedStatus;
+                    const searchMatch = !searchTerm || rowText.includes(searchTerm);
+
+                    row.style.display = statusMatch && searchMatch ? '' : 'none';
+                });
+            }
+
+            statusFilter.addEventListener('change', applyFilters);
+            searchInput.addEventListener('input', applyFilters);
+        });
+    </script>
 @endsection

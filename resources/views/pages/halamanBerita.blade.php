@@ -6,7 +6,7 @@
     <div class="max-w-4xl p-8 mx-auto bg-white shadow-lg rounded-2xl">
 
         <!-- Tombol Kembali -->
-        <a href="{{ route('home') }}" class="inline-block mb-6 text-sm text-blue-500 hover:text-blue-700">
+        <a href="{{ url()->previous() }}" class="inline-block mb-6 text-sm text-blue-500 hover:text-blue-700">
             <i class="mr-2 fas fa-arrow-left"></i> Kembali ke Dashboard
         </a>
 

@@ -31,6 +31,7 @@ class Uttp extends Model
         'tanggal_selesai',
         'terapan',
         'keterangan',
+        'sertifikat_path',
     ];
 
     /**

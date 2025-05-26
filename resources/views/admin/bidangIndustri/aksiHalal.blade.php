@@ -1,4 +1,4 @@
-@extends('layouts.adminIndustri')
+@extends('layouts.admin')
 @section('title', isset($sertifikat) ? 'Edit Sertifikat Halal' : 'Tambah Sertifikat Halal')
 
 @section('content')

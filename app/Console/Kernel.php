@@ -20,6 +20,12 @@ class Kernel extends ConsoleKernel
         ->dailyAt('05:00') // jam 5 pagi server time
         ->timezone('Asia/Makassar'); // WITA (GMT+8)
         // $schedule->command('index-harga:perbarui')->everyMinute();
+        // Menjadwalkan command untuk jalan setiap pagi jam 00:00
+
+        $schedule->command('uttp:notify-expiry')->dailyAt('14:30');
+        
+        // Update expired status daily at midnight
+        $schedule->command('uttp:update-expired-status')->dailyAt('00:00');
     }
 
     protected function commands()

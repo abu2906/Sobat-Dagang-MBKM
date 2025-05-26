@@ -161,7 +161,7 @@
         </tr>
     </table>
     <p>Untuk Membuka Usaha:</p>
-    <table style="width: 65%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 55%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama Perusahaan</td>
             <td style="padding: 4px;">: {{$nama_usaha}}</td>

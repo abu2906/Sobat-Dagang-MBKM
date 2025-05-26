@@ -1,4 +1,4 @@
-<div class="flex h-screen relative z-[100]">
+<div x-data="sidebar()" x-init="checkScreen()" @resize.window="checkScreen" class="flex h-screen relative z-[100]">
 
     <div :class="open ? 'w-64' : 'w-20'"
         class="bg-[#0c3252] text-white flex flex-col justify-between rounded-r-xl transition-all duration-300 relative shadow-md z-10">
@@ -27,6 +27,8 @@
                 @php
                 $menuItems = [
                 ['href' => route('kabid.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                ['href' => route('kabid.dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],
+                ['href' => route('kabid.halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Sertifikat Halal'],
                 ['href' => route('kabid.surat'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
@@ -65,3 +67,13 @@
 
         </div>
     </div>
+<script>
+    function sidebar() {
+        return {
+            open: window.innerWidth >= 768, // default: true jika layar lebar
+            checkScreen() {
+                this.open = window.innerWidth >= 768;
+            }
+        }
+    }
+</script>
