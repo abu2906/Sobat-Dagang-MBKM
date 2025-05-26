@@ -36,11 +36,40 @@ class DashboardMetrologiController extends Controller
     
     public function showKabid() {
         $dataSurat = $this->getJumlahSurat();
-        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('COUNT(*) as total'))->groupBy('jenis_alat')->get();
+        
+        // Get all types and their counts
+        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('COUNT(*) as total'))
+            ->groupBy('jenis_alat')
+            ->orderBy('total', 'desc')
+            ->get();
+            
+        // Take top 5 and group the rest
+        $topFive = $jumlahPerJenis->take(5);
+        $others = $jumlahPerJenis->skip(5);
+        
+        // Calculate total for "Lainnya"
+        $othersTotal = $others->sum('total');
+        
+        // Create final collection with "Lainnya" if needed
+        $finalJumlahPerJenis = $topFive;
+        if ($othersTotal > 0) {
+            $finalJumlahPerJenis->push((object)[
+                'jenis_alat' => 'Lainnya',
+                'total' => $othersTotal
+            ]);
+        }
+        
+        // Get count of valid and expired measuring instruments
         $jumlahValid = DB::table('uttp')
             ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
-            ->where('data_alat_ukur.status', 'Valid')
+            ->where('data_alat_ukur.tanggal_exp', '>=', now())
             ->count();
+            
+        $jumlahKadaluarsa = DB::table('uttp')
+            ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
+            ->where('data_alat_ukur.tanggal_exp', '<', now())
+            ->count();
+            
         $uttps = DataAlatUkur::with('uttp')
             ->orderBy('created_at', 'desc')
             ->take(12)
@@ -50,8 +79,9 @@ class DashboardMetrologiController extends Controller
         
         return view('admin.kabid.metrologi.dashboard', array_merge(
             $dataSurat, 
-            ['jumlahPerJenis' => $jumlahPerJenis],
+            ['jumlahPerJenis' => $finalJumlahPerJenis],
             ['jumlahValid' => $jumlahValid],
+            ['jumlahKadaluarsa' => $jumlahKadaluarsa],
             ['uttps' => $uttps],
             $donutData,
             $calibrationData

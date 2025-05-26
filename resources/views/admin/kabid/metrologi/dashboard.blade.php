@@ -78,14 +78,13 @@ use App\Helpers\StatusHelper;
 
         <div class="flex flex-col gap-6">
             <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white shadow-md rounded-xl p-4 text-center text-sm flex flex-col items-center justify-center h-full">
-                    <div class="text-5xl mb-4">⚖️</div>
-                    <p class="text-gray-500 text-base">Jumlah Alat Ukur Valid</p>
-                    <h2 class="text-4xl font-bold my-2">{{ $jumlahValid }}</h2>
+                <div class="bg-white shadow-md rounded-xl p-4">
+                    <p class="text-sm font-semibold mb-2">Perbandingan Status Alat Ukur</p>
+                    <canvas id="statusPieChart" class="h-[150px]"></canvas>
                 </div>
 
                 <div class="bg-white shadow-md rounded-xl p-4">
-                    <p class="text-sm font-semibold mb-2">Jenis Alat Ukur</p>
+                    <p class="text-sm font-semibold mb-2">Jenis Alat Ukur Terdaftar</p>
                     <canvas id="chartPie" class="h-[150px]"></canvas>
                 </div>
             </div>
@@ -99,6 +98,42 @@ use App\Helpers\StatusHelper;
 </div>
 
 <script>
+    // Status Pie Chart (Valid vs Expired)
+    new Chart(document.getElementById('statusPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Valid', 'Kadaluarsa'],
+            datasets: [{
+                data: [{{ $jumlahValid }}, {{ $jumlahKadaluarsa }}],
+                backgroundColor: ['#10b981', '#ef4444'],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
     const chartJenisLabels = {!! json_encode($jumlahPerJenis->pluck('jenis_alat')) !!};
     const chartJenisData = {!! json_encode($jumlahPerJenis->pluck('total')) !!};
 
@@ -109,7 +144,14 @@ use App\Helpers\StatusHelper;
             datasets: [{
                 label: 'Jumlah Alat',
                 data: chartJenisData,
-                backgroundColor: ['#60a5fa', '#0c3252', '#f59e0b', '#10b981'],
+                backgroundColor: [
+                    '#60a5fa',  // Blue
+                    '#0c3252',  // Dark Blue
+                    '#f59e0b',  // Orange
+                    '#10b981',  // Green
+                    '#ef4444',  // Red
+                    '#6b7280'   // Gray for "Lainnya"
+                ],
                 hoverOffset: 4
             }]
         },
@@ -119,7 +161,15 @@ use App\Helpers\StatusHelper;
                     display: false
                 },
                 tooltip: {
-                    enabled: true
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
                 }
             }
         }
