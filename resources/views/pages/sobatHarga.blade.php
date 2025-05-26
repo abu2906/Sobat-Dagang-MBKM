@@ -12,7 +12,6 @@
 </a>
 </div>
 <div class="container px-4 py-6 mx-auto">
-
     <div class="flex justify-center mb-6">
         <div class="overflow-x-auto rounded-full shadow-md scrollbar-hide">
             <div class="inline-flex gap-2 p-2 bg-blue-100 rounded-full flex-nowrap">
