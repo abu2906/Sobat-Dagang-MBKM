@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -125,7 +126,13 @@ class DashboardController extends Controller
 
     public function dashboardMaster()
     {
-     return view('admin.adminSuper.dashboardMaster');
+        $totalDistributor = DB::table('distributor')->count();
+        $totalPengaduan = DB::table('forum_diskusi')
+        ->whereNotNull('id_user')
+        ->count();
+        $totalPengguna = DB::table('user')->count();
+        
+        return view('admin.adminSuper.dashboardMaster', compact('totalDistributor', 'totalPengaduan', 'totalPengguna'));
     }
 
 }

@@ -223,9 +223,36 @@
 
 
 				<div class="mb-4">
-					<label class="block font-semibold mb-1">Alamat Alat <span style="color:red">*</span></label>
-					<input type="text" name="alamat_alat" placeholder="Masukkan Alamat Alat Anda" class="border px-4 py-2 w-full rounded-lg">
+					<div x-data="{ showInfo: false }">
+						<label for="alamat_alat" class="block font-semibold mb-1">
+							Titik Koordinat <span style="color:red">*</span>
+							<button type="button" @click="showInfo = true" class="ml-1 text-blue-500 hover:text-blue-700 focus:outline-none">
+								<svg class="inline w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8 3a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm0-7a1 1 0 100 2 1 1 0 000-2zM9 9h2v5H9V9z" clip-rule="evenodd" />
+								</svg>
+							</button>
+						</label>
+						<input type="text" name="alamat_alat" id="alamat_alat" placeholder="Masukkan Titik Koordinat Alat Anda (ex. -4.028889, 119.633521)" class="border px-4 py-2 w-full rounded-lg">
+
+						<!-- Info Modal -->
+						<div x-show="showInfo" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" @click.away="showInfo = false" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+							<div class="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-xl relative">
+								<h2 class="mb-3 text-lg font-semibold text-center">Cara Mengambil Titik Koordinat</h2>
+								<p class="text-sm leading-relaxed text-gray-700">
+									1. Buka <strong>Google Maps</strong> di browser.<br>
+									2. Klik kanan pada lokasi alat Anda.<br>
+									3. Pilih "<em>What's here?</em>" atau "<em>Apa di sini?</em>".<br>
+									4. Koordinat (misalnya -4.028889, 119.633521) akan muncul di bawah.<br>
+									5. Salin dan tempelkan ke kolom ini.
+								</p>
+								<div class="flex justify-center mt-6">
+									<button type="button" @click="showInfo = false" class="px-5 py-2 text-white transition-all duration-200 bg-blue-600 rounded-full hover:bg-blue-700">Tutup</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
+
 				<div class="mb-4">
 					<label class="block font-semibold mb-1">Nomor Surat <span style="color:red">*</span></label>
 					<input type="text" name="nomor_surat" placeholder="Masukkan Nomor Surat Anda" class="border px-4 py-2 w-full rounded-lg">

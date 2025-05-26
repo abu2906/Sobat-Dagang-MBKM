@@ -105,9 +105,9 @@
 
 	<!-- Filter dan Pencarian -->
 	<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-10 px-4 gap-4">
-		<div class="w-full sm:w-auto">
-			<form id="filterForm" method="GET" class="flex items-center space-x-4">
-				<select name="status" id="statusFilter" class="w-full sm:w-auto px-4 py-2 rounded-full border shadow text-sm" onchange="this.form.submit()">
+		<div class="w-full">
+			<form id="filterForm" method="GET" class="flex items-center gap-4 w-full">
+				<select name="status" id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm" onchange="this.form.submit()">
 					<option value="">Semua</option>
 					<option value="Menunggu" {{ request('status') === 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
 					<option value="Diproses" {{ request('status') === 'Diproses' ? 'selected' : '' }}>Diproses</option>
@@ -117,15 +117,15 @@
 					<option value="Selesai" {{ request('status') === 'Selesai' ? 'selected' : '' }}>Selesai</option>
 					<option value="Ditolak" {{ request('status') === 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
 				</select>
+				<div class="relative flex-1">
+					<input type="text" name="search" placeholder="Cari" value="{{ request('search') }}" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
+					<button type="submit" class="absolute right-0 top-0 h-full px-4 text-gray-400 hover:text-gray-600">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+						</svg>
+					</button>
+				</div>
 			</form>
-		</div>
-		<div class="relative w-full sm:w-auto sm:flex-grow">
-			<input type="text" id="searchInput" placeholder="Cari" class="w-full pl-10 pr-4 py-2 rounded-full border shadow text-sm">
-			<span class="absolute left-3 top-2 text-gray-400">
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-				</svg>
-			</span>
 		</div>
 	</div>
 
@@ -248,11 +248,11 @@
 												Buat Surat
 											</a>
 											<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-												class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
-												<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
-												</svg>
-											</button>
+													class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+													<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+														<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
+													</svg>
+												</button>
 										@endif
 
 									@elseif ($surat->status_admin === 'Butuh Revisi')
@@ -341,25 +341,6 @@
 		{{ $suratList->links('pagination::tailwind') }}
 	</div>
 </div>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("searchInput");
-    const rows = document.querySelectorAll("tbody tr");
-
-    function applySearch() {
-        const keyword = searchInput.value.toLowerCase();
-
-        rows.forEach(row => {
-            if (!row.querySelector('td')) return;
-            const rowText = row.textContent.toLowerCase();
-            row.style.display = !keyword || rowText.includes(keyword) ? '' : 'none';
-        });
-    }
-
-    searchInput.addEventListener("input", applySearch);
-    applySearch();
-});
-</script>
 <script>
     function confirmAction(action, id) {
         let message = '';
