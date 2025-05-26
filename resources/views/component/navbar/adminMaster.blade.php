@@ -32,7 +32,7 @@
                 ['href' => '#', 'icon' => '', 'label' => 'Surat Permohonan'],
                 ['href' => '#', 'icon' => '', 'label' => 'User & Akun'],
                 ['href' => route('kelola.berita'), 'icon' => 'newspaper.png', 'label' => 'Kelola Berita'],
-                ['href' => '#', 'icon' => '', 'label' => 'Notifikasi'],
+                ['href' => route('faq-controller'), 'icon' => '', 'label' => 'FAQ'],
                 ];
                 @endphp
 

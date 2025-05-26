@@ -36,11 +36,40 @@ class DashboardMetrologiController extends Controller
     
     public function showKabid() {
         $dataSurat = $this->getJumlahSurat();
-        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('COUNT(*) as total'))->groupBy('jenis_alat')->get();
+        
+        // Get all types and their counts
+        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('COUNT(*) as total'))
+            ->groupBy('jenis_alat')
+            ->orderBy('total', 'desc')
+            ->get();
+            
+        // Take top 5 and group the rest
+        $topFive = $jumlahPerJenis->take(5);
+        $others = $jumlahPerJenis->skip(5);
+        
+        // Calculate total for "Lainnya"
+        $othersTotal = $others->sum('total');
+        
+        // Create final collection with "Lainnya" if needed
+        $finalJumlahPerJenis = $topFive;
+        if ($othersTotal > 0) {
+            $finalJumlahPerJenis->push((object)[
+                'jenis_alat' => 'Lainnya',
+                'total' => $othersTotal
+            ]);
+        }
+        
+        // Get count of valid and expired measuring instruments
         $jumlahValid = DB::table('uttp')
             ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
-            ->where('data_alat_ukur.status', 'Valid')
+            ->where('data_alat_ukur.tanggal_exp', '>=', now())
             ->count();
+            
+        $jumlahKadaluarsa = DB::table('uttp')
+            ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
+            ->where('data_alat_ukur.tanggal_exp', '<', now())
+            ->count();
+            
         $uttps = DataAlatUkur::with('uttp')
             ->orderBy('created_at', 'desc')
             ->take(12)
@@ -50,8 +79,9 @@ class DashboardMetrologiController extends Controller
         
         return view('admin.kabid.metrologi.dashboard', array_merge(
             $dataSurat, 
-            ['jumlahPerJenis' => $jumlahPerJenis],
+            ['jumlahPerJenis' => $finalJumlahPerJenis],
             ['jumlahValid' => $jumlahValid],
+            ['jumlahKadaluarsa' => $jumlahKadaluarsa],
             ['uttps' => $uttps],
             $donutData,
             $calibrationData
@@ -255,6 +285,20 @@ class DashboardMetrologiController extends Controller
             $query->where('status_admin', $request->status);
         }
 
+        // Handle search
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('id_surat', 'like', "%{$searchTerm}%")
+                  ->orWhere('alamat_alat', 'like', "%{$searchTerm}%")
+                  ->orWhere('jenis_surat', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('user', function($q) use ($searchTerm) {
+                      $q->where('nama', 'like', "%{$searchTerm}%")
+                        ->orWhere('id_user', 'like', "%{$searchTerm}%");
+                  });
+            });
+        }
+
         $suratList = $query->orderBy('created_at', 'desc')
                           ->paginate(10)
                           ->withQueryString();
@@ -280,6 +324,20 @@ class DashboardMetrologiController extends Controller
         if ($request->filled('status')) {
             $query->whereHas('suratBalasan', function($query) use ($request) {
                 $query->where('status_kepalaBidang', $request->status);
+            });
+        }
+
+        // Handle search
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('id_surat', 'like', "%{$searchTerm}%")
+                  ->orWhere('alamat_alat', 'like', "%{$searchTerm}%")
+                  ->orWhere('jenis_surat', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('user', function($q) use ($searchTerm) {
+                      $q->where('nama', 'like', "%{$searchTerm}%")
+                        ->orWhere('id_user', 'like', "%{$searchTerm}%");
+                  });
             });
         }
 
@@ -328,6 +386,19 @@ class DashboardMetrologiController extends Controller
             }
         }
 
+        // Handle search
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->whereHas('uttp', function($q) use ($searchTerm) {
+                $q->where('no_registrasi', 'like', "%{$searchTerm}%")
+                  ->orWhere('nama_usaha', 'like', "%{$searchTerm}%")
+                  ->orWhere('jenis_alat', 'like', "%{$searchTerm}%")
+                  ->orWhere('nama_alat', 'like', "%{$searchTerm}%")
+                  ->orWhere('merk_type', 'like', "%{$searchTerm}%")
+                  ->orWhere('nomor_seri', 'like', "%{$searchTerm}%");
+            });
+        }
+
         $alatUkur = $query->orderBy('created_at', 'desc')
                          ->paginate(10)
                          ->withQueryString();
@@ -347,6 +418,22 @@ class DashboardMetrologiController extends Controller
         // Handle status filter
         if ($request->filled('status')) {
             $query->where('status_kadis', $request->status);
+        }
+
+        // Handle search
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('surat_keluar_metrologi.id_surat_balasan', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('suratMetrologi', function($q) use ($searchTerm) {
+                      $q->where('alamat_alat', 'like', "%{$searchTerm}%")
+                        ->orWhere('jenis_surat', 'like', "%{$searchTerm}%")
+                        ->orWhereHas('user', function($q) use ($searchTerm) {
+                            $q->where('nama', 'like', "%{$searchTerm}%")
+                              ->orWhere('id_user', 'like', "%{$searchTerm}%");
+                        });
+                  });
+            });
         }
 
         $suratList = $query->orderBy('created_at', 'desc')
