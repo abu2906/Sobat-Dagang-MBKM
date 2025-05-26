@@ -34,6 +34,16 @@ use App\Helpers\StatusHelper;
                                 </svg>
                             </button>
                         </div>
+                        <div class="hidden relative flex-grow mt-2 md:mt-0 mx-4">
+                            <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full shadow text-sm w-full">
+                            <span class="absolute left-3 top-2 text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+                                </svg>
+                            </span>
+                        </div>
                     </form>
                 </div>
 
