@@ -39,7 +39,6 @@ class User extends Authenticatable
         'kabupaten',
         'kecamatan',
         'kelurahan',
-        'kelurahan',
         'role',
         'avatar'
     ];
