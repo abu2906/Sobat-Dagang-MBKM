@@ -161,5 +161,22 @@
     function closeEditModal() {
         document.getElementById('editFaqModal').classList.add('hidden');
     }
+    const searchInput = document.getElementById('searchInput');
+    const tableRows = document.querySelectorAll('tbody tr');
+
+    function applyFilters() {
+        const selectedStatus = statusFilter.value.toLowerCase();
+        const searchTerm = searchInput.value.toLowerCase();
+
+        tableRows.forEach(row => {
+            const searchMatch = !searchTerm || rowText.includes(searchTerm);
+
+            row.style.display = searchMatch ? '' : 'none';
+        });
+    }
+
+    statusFilter.addEventListener('change', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+    
 </script>
 @endsection
