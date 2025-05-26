@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\UttpExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class DirectoryBookController extends Controller
 {
@@ -39,20 +40,41 @@ class DirectoryBookController extends Controller
         return view('user.bidangMetrologi.directory', compact('alatUkur'));
     }       
 
-    public function showDirectoryAdminMetrologi()
+    public function showDirectoryAdminMetrologi(Request $request)
     {
-        $alatUkur = DataAlatUkur::with('uttp')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = DataAlatUkur::with('uttp');
+
+        // Handle status filter
+        if ($request->has('status')) {
+            if ($request->status === 'Valid') {
+                $query->whereDate('tanggal_exp', '>=', now());
+            } elseif ($request->status === 'Kadaluarsa') {
+                $query->whereDate('tanggal_exp', '<', now());
+            }
+        }
+
+        $alatUkur = $query->orderBy('created_at', 'desc')
+                         ->paginate(10)
+                         ->withQueryString();
 
         return view('admin.bidangMetrologi.directory_alat_ukur_sah', compact('alatUkur'));
     }
-
-    public function showDirectoryKabidMetrologi()
+    public function showUttp(Request $request)
     {
-        $alatUkur = DataAlatUkur::with('uttp')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = DataAlatUkur::with('uttp');
+
+        // Handle status filter
+        if ($request->has('status')) {
+            if ($request->status === 'Valid') {
+                $query->whereDate('tanggal_exp', '>=', now());
+            } elseif ($request->status === 'Kadaluarsa') {
+                $query->whereDate('tanggal_exp', '<', now());
+            }
+        }
+
+        $alatUkur = $query->orderBy('created_at', 'desc')
+                         ->paginate(10)
+                         ->withQueryString();
 
         return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
     }
@@ -214,9 +236,33 @@ class DirectoryBookController extends Controller
                 return response()->json(['error' => 'Data UTTP tidak ditemukan'], 404);
             }
 
-            return response()->json($uttp);
+            // Format data untuk response
+            $response = [
+                'id_uttp' => $uttp->id_uttp,
+                'id_user' => $uttp->id_user,
+                'tanggal_penginputan' => $uttp->tanggal_penginputan,
+                'no_registrasi' => $uttp->no_registrasi,
+                'nama_usaha' => $uttp->nama_usaha,
+                'jenis_alat' => $uttp->jenis_alat,
+                'nama_alat' => $uttp->nama_alat,
+                'merk_type' => $uttp->merk_type,
+                'nomor_seri' => $uttp->nomor_seri,
+                'alat_penguji' => $uttp->alat_penguji,
+                'ctt' => $uttp->ctt,
+                'spt_keperluan' => $uttp->spt_keperluan,
+                'tanggal_selesai' => $uttp->tanggal_selesai,
+                'terapan' => $uttp->terapan,
+                'keterangan' => $uttp->keterangan,
+                'sertifikat_path' => $uttp->sertifikat_path,
+                'user' => $uttp->user ? [
+                    'id_user' => $uttp->user->id_user,
+                    'nama' => $uttp->user->nama
+                ] : null
+            ];
+
+            return response()->json($response);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Terjadi kesalahan saat mengambil data'], 500);
+            return response()->json(['error' => 'Terjadi kesalahan saat mengambil data: ' . $e->getMessage()], 500);
         }
     }
 
@@ -397,7 +443,9 @@ class DirectoryBookController extends Controller
         $targetDate = Carbon::now()->addDays(7)->toDateString();
         $dataKedaluwarsa = DataAlatUkur::with('uttp.user')
             ->where('tanggal_exp', $targetDate)
-            ->where('notifikasi_terkirim', false)->get();
+            ->where('notifikasi_terkirim', false)
+            ->where('status', '!=', 'Kadaluarsa')  // Only check items that are not already expired
+            ->get();
 
         foreach ($dataKedaluwarsa as $data) {
             $user = $data->uttp->user;
@@ -405,17 +453,46 @@ class DirectoryBookController extends Controller
             if ($user) {
                 Mail::to($user->email)->send(new NotifikasiUttpKadaluarsa($data));
 
+                // Only mark notification as sent, don't change status yet
                 $data->update([
-                    'status' => 'Kadaluarsa',
                     'notifikasi_terkirim' => true,
                 ]);
             }
         }
     }
 
+    public function updateExpiredStatus()
+    {
+        $today = Carbon::today();
+
+        // Update status to Kadaluarsa for items that have actually expired
+        DataAlatUkur::where('tanggal_exp', '<=', $today)
+            ->where('status', '!=', 'Kadaluarsa')
+            ->update(['status' => 'Kadaluarsa']);
+    }
+
     public function downloadUttp()
     {
         return Excel::download(new UttpExport, 'data_uttp.xlsx');
+    }
+
+    public function searchUsers(Request $request)
+    {
+        $search = $request->input('search');
+        
+        $users = User::where('nama', 'like', "%{$search}%")
+            ->orWhere('id_user', 'like', "%{$search}%")
+            ->select('id_user', 'nama')
+            ->limit(10)
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id_user,
+                    'text' => "({$user->id_user}) - {$user->nama}"
+                ];
+            });
+
+        return response()->json($users);
     }
 
 }

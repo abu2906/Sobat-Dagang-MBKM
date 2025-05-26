@@ -39,7 +39,9 @@ class User extends Authenticatable
         'kabupaten',
         'kecamatan',
         'kelurahan',
-        'role'
+        'kelurahan',
+        'role',
+        'avatar'
     ];
 
     public function dataAlatUkurs()
@@ -55,5 +57,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Uttp::class, 'id_user', 'id_user');
     }
-
+     public function forumDiskusi()
+    {
+        return $this->hasMany(ForumDiskusi::class, 'id_user', 'id_user');
+    }
 }

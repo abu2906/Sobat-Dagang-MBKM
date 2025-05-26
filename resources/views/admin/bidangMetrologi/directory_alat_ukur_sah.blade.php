@@ -2,6 +2,10 @@
 
 @section('content')
 
+@php
+use App\Helpers\StatusHelper;
+@endphp
+
 <div class="p-6 bg-gray-100 min-h-screen">
     <!-- Header Background -->
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
@@ -10,11 +14,14 @@
             <div class="flex flex-wrap items-center justify-between p-4 rounded-xl shadow-md">
                 <!-- Filter/Search Input -->
                 <div class="flex space-x-4 mb-2 md:mb-0">
-                    <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
-                        <option value="">Semua</option>
-                        <option value="Valid">Valid</option>
-                        <option value="Kadaluarsa">Kadaluarsa</option>
-                    </select>
+                <form id="filterForm" class="flex items-center space-x-4" method="GET">
+                        <select name="status" id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm" onchange="this.form.submit()">
+                            <option value="">Semua</option>
+                            <option value="Valid" {{ request('status') === 'Valid' ? 'selected' : '' }}>Valid</option>
+                            <option value="Kadaluarsa" {{ request('status') === 'Kadaluarsa' ? 'selected' : '' }}>{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
+                        </select>
+                        
+                    </form>
                 </div>
                 <div class="relative flex-grow mt-2 md:mt-0 mx-4">
                     <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full shadow text-sm w-full">
@@ -60,130 +67,133 @@
     </div>
 
     <!-- Modal Tambah Alat Ukur -->
-    <div id="modalTambahAlat" class="absolute inset-0 z-40 hidden bg-black bg-opacity-30 flex items-center justify-center">
-            <div class="bg-white w-[90%] md:w-[70%] lg:w-[50%] rounded-lg shadow-lg p-6 max-h-[90vh] overflow-y-auto">
-                <div class="flex justify-between items-center border-b pb-3 mb-4">
-                    <h2 class="text-lg font-semibold">Tambah UTTP</h2>
-                    <button onclick="tutupModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
+    <div id="modalTambahAlat" class="fixed inset-0 z-40 hidden bg-black bg-opacity-30 flex items-center justify-center overflow-y-auto">
+        <div class="fixed inset-0 bg-black bg-opacity-30"></div>
+        <div class="relative bg-white w-[90%] md:w-[70%] lg:w-[50%] rounded-lg shadow-lg p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h2 class="text-lg font-semibold">Tambah UTTP</h2>
+                <button onclick="tutupModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
+            </div>
+
+            <form id="form-alat" method="POST" action="{{ route('store-uttp') }}" onsubmit="handleSubmit(event)">
+            @csrf
+            <input type="hidden" name="_method" id="formMethod" value="POST">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium">Tanggal Mulai <span class="text-red-500">*</span></label>
+                        <input type="date" name="tanggal_penginputan" class="w-full border rounded px-3 py-2" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Tanggal Selesai <span class="text-red-500">*</span></label>
+                        <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">ID User</label>
+                        <select name="id_user" id="userSelect" class="w-full border rounded px-3 py-2 text-sm" style="height: 38px;">
+                            <option value="">Pilih User</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Kosongkan bila pemilik uttp tidak terdaftar pada sistem</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">No Registrasi <span class="text-red-500">*</span></label>
+                        <input type="text" name="no_registrasi" class="w-full border rounded px-3 py-2" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Nama Usaha <span class="text-red-500">*</span></label>
+                        <input type="text" name="nama_usaha" class="w-full border rounded px-3 py-2" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Jenis Alat <span class="text-red-500">*</span></label>
+                        <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2" required>
+                            <option value="" class="text-gray-400" selected>Pilih Jenis Alat</option>
+							<option value="UP-MK">UP-MK</option>
+							<option value="VOL-TK">VOLUME - TK</option>
+							<option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
+							<option value="VOL-TUM">VOLUME - TUM</option>
+							<option value="VOL-PUBBM">VOLUME - PUBBM</option>
+							<option value="VOL-MA">VOLUME - MA</option>
+							<option value="VOL-DLL">VOLUME - Lainnya</option>
+							<option value="MAS-DL">MASSA - DL</option>
+							<option value="MAS-TP">MASSA - TP</option>
+							<option value="MAS-TM">MASSA - TM</option>
+							<option value="MAS-TS">MASSA - TS</option>
+							<option value="MAS-NE">MASSA - NE</option>
+							<option value="MAS-ATB">MASSA - ATB</option>
+							<option value="MAS-ATH">MASSA - ATH</option>
+							<option value="MAS-TE">MASSA - TE</option>
+							<option value="MAS-TJE">MASSA - TJE</option>
+							<option value="MAS-DLL">MASSA - Lainnya</option>
+						</select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Merk / Type</label>
+                        <input type="text" name="merk_type" class="w-full border rounded px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Kapasitas</label>
+                        <input type="text" name="nama_alat" class="w-full border rounded px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Nomor Seri</label>
+                        <input type="text" name="nomor_seri" class="w-full border rounded px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
+                        <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
+                            <option value="" class="text-gray-400" selected>Pilih Alat Penguji</option>
+							<option value="BUS">BUS</option>
+							<option value="AT">AT</option>
+							<option value="ATB">ATB</option>
+						</select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Cap Tanda Tera <span class="text-red-500">*</span></label>
+                        <select id="ctt" name="ctt" class="w-full border rounded px-3 py-2" required>
+                            <option value="" class="text-gray-400" selected>Pilih Cap Tanda Tera</option>
+							<option value="SL6">SL6</option>
+							<option value="SL4">SL4</option>
+							<option value="SL2">SL2</option>
+                            <option value="SK6">SK6</option>
+							<option value="SP6">SP6</option>
+							<option value="B4">B4</option>
+                            <option value="J8">J8</option>
+                            <option value="J5">J5</option>
+                            <option value="J4">J4</option>
+                            <option value="JP8">JP8</option>
+                            <option value="D4">D4</option>
+                            <option value="H">H</option>
+                            <option value="HP">HP</option>
+						</select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">No Surat Perintah Tugas</label>
+                        <input type="text" name="spt_keperluan" class="w-full border rounded px-3 py-2">
+                    </div>
+                    <div>
+                    <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
+                        <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
+                            <option value="" class="text-gray-400" selected>Pilih Keterangan</option>
+                            <option value="Tera">Tera</option>
+                            <option value="Tera Ulang">Tera Ulang</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Sertifikat (PDF)</label>
+                        <input type="file" name="sertifikat" accept=".pdf" class="w-full border rounded px-3 py-2">
+                    </div>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <input type="checkbox" name="terapan" id="terapan" class="rounded border-gray-300">
+                        <label for="terapan" class="text-sm font-medium">Cerapan</label>
+                    </div>
+
                 </div>
 
-                <form id="form-alat" method="POST" action="{{ route('store-uttp') }}" onsubmit="handleSubmit(event)">
-                @csrf
-                <input type="hidden" name="_method" id="formMethod" value="POST">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium">Tanggal Mulai <span class="text-red-500">*</span></label>
-                            <input type="date" name="tanggal_penginputan" class="w-full border rounded px-3 py-2" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Tanggal Selesai <span class="text-red-500">*</span></label>
-                            <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">ID User</label>
-                            <input type="number" name="id_user" class="w-full border rounded px-3 py-2">
-                            <p class="text-xs text-gray-500 mt-1">Kosongkan bila pemilik uttp tidak terdaftar pada sistem</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">No Registrasi <span class="text-red-500">*</span></label>
-                            <input type="text" name="no_registrasi" class="w-full border rounded px-3 py-2" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Nama Usaha <span class="text-red-500">*</span></label>
-                            <input type="text" name="nama_usaha" class="w-full border rounded px-3 py-2" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Jenis Alat <span class="text-red-500">*</span></label>
-                            <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2" required>
-                                <option value="" class="text-gray-400" selected>Pilih Jenis Alat</option>
-								<option value="UP-MK">UP-MK</option>
-								<option value="VOL-TK">VOLUME - TK</option>
-								<option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
-								<option value="VOL-TUM">VOLUME - TUM</option>
-								<option value="VOL-PUBBM">VOLUME - PUBBM</option>
-								<option value="VOL-MA">VOLUME - MA</option>
-								<option value="VOL-DLL">VOLUME - Lainnya</option>
-								<option value="MAS-DL">MASSA - DL</option>
-								<option value="MAS-TP">MASSA - TP</option>
-								<option value="MAS-TM">MASSA - TM</option>
-								<option value="MAS-TS">MASSA - TS</option>
-								<option value="MAS-NE">MASSA - NE</option>
-								<option value="MAS-ATB">MASSA - ATB</option>
-								<option value="MAS-ATH">MASSA - ATH</option>
-								<option value="MAS-TE">MASSA - TE</option>
-								<option value="MAS-TJE">MASSA - TJE</option>
-								<option value="MAS-DLL">MASSA - Lainnya</option>
-							</select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Merk / Type</label>
-                            <input type="text" name="merk_type" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Kapasitas</label>
-                            <input type="text" name="nama_alat" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Nomor Seri</label>
-                            <input type="text" name="nomor_seri" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
-                            <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
-                                <option value="" class="text-gray-400" selected>Pilih Alat Penguji</option>
-								<option value="BUS">BUS</option>
-								<option value="AT">AT</option>
-								<option value="ATB">ATB</option>
-							</select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Cap Tanda Tera <span class="text-red-500">*</span></label>
-                            <select id="ctt" name="ctt" class="w-full border rounded px-3 py-2" required>
-                                <option value="" class="text-gray-400" selected>Pilih Cap Tanda Tera</option>
-								<option value="SL6">SL6</option>
-								<option value="SL4">SL4</option>
-								<option value="SL2">SL2</option>
-                                <option value="SK6">SK6</option>
-								<option value="SP6">SP6</option>
-								<option value="B4">B4</option>
-                                <option value="J8">J8</option>
-                                <option value="J5">J5</option>
-                                <option value="J4">J4</option>
-                                <option value="JP8">JP8</option>
-                                <option value="D4">D4</option>
-                                <option value="H">H</option>
-                                <option value="HP">HP</option>
-							</select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">No Surat Perintah Tugas</label>
-                            <input type="text" name="spt_keperluan" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
-                        <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
-                            <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
-                                <option value="" class="text-gray-400" selected>Pilih Keterangan</option>
-                                <option value="Tera">Tera</option>
-                                <option value="Tera Ulang">Tera Ulang</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Sertifikat (PDF)</label>
-                            <input type="file" name="sertifikat" accept=".pdf" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div class="flex items-center space-x-2 mt-2">
-                            <input type="checkbox" name="terapan" id="terapan" class="rounded border-gray-300">
-                            <label for="terapan" class="text-sm font-medium">Cerapan</label>
-                        </div>
-
-                    </div>
-
-                    <div class="mt-4 flex justify-end gap-2">
-                        <button type="button" onclick="tutupModal()" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Batal</button>
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Simpan</button>
-                    </div>
-                </form>
-            </div>
+                <div class="mt-4 flex justify-end gap-2">
+                    <button type="button" onclick="tutupModal()" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Batal</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Simpan</button>
+                </div>
+            </form>
+        </div>
     </div>
     
     <!-- Tabel Alat Ukur Sah -->
@@ -203,7 +213,7 @@
             <tbody>
                 @foreach($alatUkur as $index => $data)
                 <tr class="hover:bg-blue-50 transition">
-                    <td class="px-5 text-center py-3 border-b">{{ $index + 1 }}</td>
+                    <td class="px-5 text-center py-3 border-b">{{ $alatUkur->firstItem() + $index }}</td>
                     <td class="px-5 text-center py-3 border-b">{{ $data->uttp->jenis_alat }}</td>
                     <td class="px-5 text-center py-3 border-b">{{ $data->uttp->no_registrasi }}</td>
                     <td class="px-5 text-center py-3 border-b">{{ \Carbon\Carbon::parse($data->uttp->tanggal_penginputan)->format('d F Y') }}</td>
@@ -214,7 +224,7 @@
                         <span class="
                             font-semibold
                             {{ $data->status === 'Valid' ? 'text-green-600' : ($data->status === 'Kadaluarsa' ? 'text-red-600' : 'text-gray-500') }}">
-                            {{ $data->status ?? '-' }}
+                            {{ $data->status === 'Valid' ? 'Valid' : StatusHelper::formatStatus($data->status) }}
                         </span>
                     </td>
                     <td class="px-5 text-center py-3 border-b">
@@ -236,15 +246,6 @@
                                 title="Edit">
                                 <span class="material-symbols-outlined">edit</span>
                             </button>
-
-                            <!-- Tombol hapus -->
-                            <!-- <form action="{{ route('delete-uttp', $data->uttp->id_uttp) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="p-2 rounded hover:bg-red-100 transition duration-200" title="Hapus">
-                                    <span class="material-symbols-outlined">delete</span>
-                                </button>
-                            </form> -->
                         </div>
                     </td>
                 </tr>
@@ -252,9 +253,19 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-center">
+        {{ $alatUkur->links('pagination::tailwind') }}
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Add Select2 CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
     const statusFilter = document.getElementById("statusFilter");
@@ -272,7 +283,10 @@
             const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
 
-            const matchStatus = !selectedStatus || status === selectedStatus;
+            // Handle Kadaluarsa, Kadaluwarsa, and Kedaluwarsa in the filter
+            const matchStatus = !selectedStatus || 
+                (selectedStatus === 'kadaluarsa' && (status === 'kadaluarsa' || status === 'kadaluwarsa' || status === 'kedaluwarsa')) ||
+                (selectedStatus === 'valid' && status === 'valid');
             const matchSearch = !keyword || rowText.includes(keyword);
 
             row.style.display = (matchStatus && matchSearch) ? '' : 'none';
@@ -297,16 +311,28 @@
     function loadDetailAlat(id) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
-        fetch(`/alat-ukur/detail`, {
+        fetch('{{ route("uttp.detail.post") }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({ id: id })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(text || 'Network response was not ok');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
             document.getElementById('popupNoReg').textContent = data.no_registrasi;
             
             const detailBody = document.getElementById('popupDetailBody');
@@ -319,8 +345,8 @@
                 <tr><td class="py-2 font-semibold">Alat Penguji</td><td class="py-2">: ${data.alat_penguji ?? '-'}</td></tr>
                 <tr><td class="py-2 font-semibold">Cap Tanda Tera</td><td class="py-2">: ${data.ctt ?? '-'}</td></tr>
                 <tr><td class="py-2 font-semibold">No Surat Perintah Tugas</td><td class="py-2">: ${data.spt_keperluan ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Tanggal Tera</td><td class="py-2">: ${new Date(data.tanggal_penginputan ?? '-').toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td></tr>
-                <tr><td class="py-2 font-semibold">Tanggal Selesai</td><td class="py-2">: ${new Date(data.tanggal_selesai ?? '-').toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}</td></tr>
+                <tr><td class="py-2 font-semibold">Tanggal Tera</td><td class="py-2">: ${data.tanggal_penginputan ? new Date(data.tanggal_penginputan).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '-'}</td></tr>
+                <tr><td class="py-2 font-semibold">Tanggal Selesai</td><td class="py-2">: ${data.tanggal_selesai ? new Date(data.tanggal_selesai).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '-'}</td></tr>
                 <tr><td class="py-2 font-semibold">Keterangan</td><td class="py-2">: ${data.keterangan || '-'}</td></tr>
                 <tr><td class="py-2 font-semibold">Sertifikat</td><td class="py-2">: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
             `;
@@ -332,7 +358,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Terjadi kesalahan saat memuat detail alat',
+                text: error.message || 'Terjadi kesalahan saat memuat detail alat',
                 confirmButtonText: 'OK'
             });
         });
@@ -436,9 +462,9 @@
         form.reset();
         form.action = "{{ route('store-uttp') }}";
         document.getElementById('formMethod').value = "POST";
-
-        // Ganti Judul
-        document.getElementById('modalTitle').innerText = 'Tambah UTTP';
+        
+        // Enable user select when opening manually
+        $('#userSelect').prop('disabled', false);
     }
 
     function tutupModal() {
@@ -515,7 +541,6 @@
 
         // Assign field manual
         form.elements['tanggal_penginputan'].value = data.tanggal_penginputan || '';
-        form.elements['id_user'].value = data.id_user || '';
         form.elements['no_registrasi'].value = data.no_registrasi || '';
         form.elements['nama_usaha'].value = data.nama_usaha || '';
         form.elements['jenis_alat'].value = data.jenis_alat || '';
@@ -528,6 +553,23 @@
         form.elements['tanggal_selesai'].value = data.tanggal_selesai || '';
         form.elements['terapan'].checked = data.terapan || false;
         form.elements['keterangan'].value = data.keterangan || '';
+
+        // Handle user selection
+        if (data.id_user) {
+            // Fetch user data and set it in Select2
+            fetch(`/admin/users/search?search=${data.id_user}`)
+                .then(response => response.json())
+                .then(users => {
+                    if (users.length > 0) {
+                        const user = users[0];
+                        const option = new Option(user.text, user.id, true, true);
+                        $('#userSelect').append(option).trigger('change');
+                    }
+                })
+                .catch(error => console.error('Error loading user:', error));
+        } else {
+            $('#userSelect').val(null).trigger('change');
+        }
 
         // Tampilkan file sertifikat yang sudah ada
         if (data.sertifikat_path) {
@@ -547,6 +589,7 @@
         const autoOpen = urlParams.get('auto_open');
         const userId = urlParams.get('user_id');
         const jenisPermohonan = urlParams.get('jenis_permohonan');
+        const fromPersuratan = urlParams.get('from_persuratan');
 
         if (autoOpen === 'true') {
             const modal = document.getElementById('modalTambahAlat');
@@ -557,15 +600,40 @@
             document.getElementById('formMethod').value = "POST";
             
             if (userId) {
-                form.elements['id_user'].value = userId;
+                // Jika dari persuratan, set user dan disable select
+                if (fromPersuratan === 'true') {
+                    fetch(`/admin/users/search?search=${userId}`)
+                        .then(response => response.json())
+                        .then(users => {
+                            if (users.length > 0) {
+                                const user = users[0];
+                                const option = new Option(user.text, user.id, true, true);
+                                $('#userSelect').append(option).trigger('change');
+                                $('#userSelect').prop('disabled', true);
+                            }
+                        })
+                        .catch(error => console.error('Error loading user:', error));
+                } else {
+                    // Jika bukan dari persuratan, set user tapi tetap bisa diubah
+                    fetch(`/admin/users/search?search=${userId}`)
+                        .then(response => response.json())
+                        .then(users => {
+                            if (users.length > 0) {
+                                const user = users[0];
+                                const option = new Option(user.text, user.id, true, true);
+                                $('#userSelect').append(option).trigger('change');
+                            }
+                        })
+                        .catch(error => console.error('Error loading user:', error));
+                }
             }
 
             if (jenisPermohonan) {
                 // Jika jenis permohonan mengandung kata "tera_ulang", set ke "Tera Ulang"
                 if (jenisPermohonan.toLowerCase().includes('tera_ulang')) {
-                    form.elements['keterangan'].value = 'Tera Ulang'; // Tera Ulang
+                    form.elements['keterangan'].value = 'Tera Ulang';
                 } else {
-                    form.elements['keterangan'].value = 'Tera'; // Tera
+                    form.elements['keterangan'].value = 'Tera';
                 }
             }
         }
@@ -604,7 +672,68 @@
                 alert('Terjadi kesalahan saat mengambil data');
             });
     }
+
+    $(document).ready(function() {
+        $('#userSelect').select2({
+            placeholder: 'Cari user...',
+            allowClear: true,
+            dropdownParent: $('#modalTambahAlat'),
+            width: '100%',
+            minimumResultsForSearch: 0,
+            language: {
+                inputTooShort: function() {
+                    return 'Ketik ID atau Nama User untuk mencari...';
+                },
+                searching: function() {
+                    return 'Mencari User...';
+                },
+                noResults: function() {
+                    return 'User tidak ditemukan';
+                }
+            },
+            ajax: {
+                url: '{{ route("search-users") }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 1
+        }).on('select2:open', function() {
+            // Adjust dropdown position
+            setTimeout(function() {
+                $('.select2-container--open').css('z-index', 9999);
+            }, 0);
+        });
+    });
 </script>
 
+<style>
+    /* Select2 Styling */
+    .select2-container--default .select2-selection--single {
+        height: 38px !important;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.375rem;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 38px !important;
+        padding-left: 12px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #6b7280;
+    }
+</style>
 
 @endsection

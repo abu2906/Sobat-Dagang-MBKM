@@ -23,43 +23,58 @@ class SobatHargaController extends Controller
 
         $daftarHarga = [];
 
-        // Ambil histori harga untuk tiap barang dan lokasi
+        // Range tanggal 6 hari terakhir (termasuk hari ini)
+        $endDate = Carbon::today();
+        $startDate = Carbon::today()->subDays(5);
+
+        $rangeTanggal = collect();
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $rangeTanggal->push($date->copy());
+        }
+
         foreach ($barangs as $barang) {
             $namaBarang = $barang->nama_barang;
             $daftarHarga[$namaBarang] = [];
 
             foreach ($lokasiList as $lokasi) {
+                // Ambil histori harga dalam rentang tanggal dan cocokkan berdasarkan tanggal string
                 $histori = IndexHarga::where('id_barang', $barang->id_barang)
                     ->where('lokasi', $lokasi)
-                    ->orderBy('tanggal', 'desc')
-                    ->take(6)
+                    ->whereBetween('tanggal', [
+                        $startDate->format('Y-m-d'),
+                        $endDate->format('Y-m-d')
+                    ])
                     ->get()
-                    ->sortBy('tanggal');
+                    ->keyBy(fn($item) => Carbon::parse($item->tanggal)->toDateString());
 
-                // Mengambil data tanggal dan harga
-                $labels = $histori->pluck('tanggal')->map(fn($tgl) => \Carbon\Carbon::parse($tgl)->translatedFormat('l'));
-                $dataHarga = $histori->pluck('harga');
+                $labels = [];
+                $dataHarga = [];
 
-                $hariIni = $histori->last()->harga ?? 0;
-                $kemarin = $histori->count() > 1 ? $histori->slice(-2)->first()->harga : $hariIni;
+                foreach ($rangeTanggal as $tanggal) {
+                    $tanggalStr = $tanggal->toDateString();
+                    $labels[] = $tanggal->translatedFormat('l, d M');
+                    $dataHarga[] = $histori[$tanggalStr]->harga ?? null;
+                }
 
-                $selisih = $kemarin != 0 ? round((($hariIni - $kemarin) / $kemarin) * 100, 2) : 0;
+                // Harga hari ini dan kemarin
+                $hariIni = end($dataHarga) ?? 0;
+                $kemarin = count($dataHarga) >= 2 ? $dataHarga[count($dataHarga) - 2] : $hariIni;
 
-                // Menambahkan data harga ke daftar
+                $selisih = ($kemarin && $kemarin != 0) ? round((($hariIni - $kemarin) / $kemarin) * 100, 2) : 0;
+
                 $daftarHarga[$namaBarang][$lokasi] = [
                     'hari_ini' => $hariIni,
                     'kemarin' => $kemarin,
                     'selisih' => $selisih,
-                    'labels' => $labels->toArray(),
-                    'data' => $dataHarga->toArray(),
+                    'labels' => $labels,
+                    'data' => $dataHarga,
                 ];
             }
         }
 
-        // Ambil semua kategori yang sudah diurutkan berdasarkan id
+        // Ambil semua kategori
         $semuaKategori = IndexKategori::orderBy('id_index_kategori')->get();
 
-        // Mengirim data ke view
         return view('pages.sobatHarga', [
             'judul' => ucfirst($kategori),
             'daftarHarga' => $daftarHarga,

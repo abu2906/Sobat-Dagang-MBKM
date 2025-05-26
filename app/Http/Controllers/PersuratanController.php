@@ -201,6 +201,17 @@ class PersuratanController extends Controller
             'isi_surat' => 'required|string',
         ]);
 
+        // Check if the new surat balasan ID already exists (excluding the current one)
+        $existingSuratBalasan = suratBalasan::where('id_surat_balasan', $validated['id_surat_balasan'])
+            ->where('id_surat', '!=', $id_surat)
+            ->first();
+            
+        if ($existingSuratBalasan) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['id_surat_balasan' => 'Nomor surat balasan ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.']);
+        }
+
         $suratBalasan = SuratBalasan::where('id_surat', $id_surat)->firstOrFail();
 
         // Hapus dokumen sebelumnya (opsional)
@@ -250,13 +261,20 @@ class PersuratanController extends Controller
     public function checkNomorSuratBalasan(Request $request)
     {
         $request->validate([
-            'nomor_surat' => 'required|string'
+            'nomor_surat' => 'required|string',
+            'current_surat_id' => 'nullable|string'
         ]);
 
         // Cek apakah nomor surat sudah ada dan bukan dalam status draft
-        $exists = suratBalasan::where('id_surat_balasan', $request->nomor_surat)
-            ->where('status_surat_keluar', '!=', 'Draft')
-            ->exists();
+        // Exclude the current surat being revised if provided
+        $query = suratBalasan::where('id_surat_balasan', $request->nomor_surat)
+            ->where('status_surat_keluar', '!=', 'Draft');
+            
+        if ($request->filled('current_surat_id')) {
+            $query->where('id_surat', '!=', $request->current_surat_id);
+        }
+        
+        $exists = $query->exists();
         
         return response()->json(['exists' => $exists]);
     }

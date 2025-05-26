@@ -19,8 +19,8 @@ class IndexHarga extends Model
         'harga',
         'tanggal',
         'lokasi',
-        'created_at',
-        'updated_at',
+        // 'created_at',
+        // 'updated_at',
     ];
 
     public function barang()

@@ -1,4 +1,5 @@
 import Echo from 'laravel-echo';
+import '../../public/assets/js/chat';
 
 document.addEventListener('DOMContentLoaded', () => {
     //hanya memanggil menu dropdown kelurahan jika kecamatan dipilih
@@ -27,19 +28,30 @@ document.addEventListener('DOMContentLoaded', () => {
             kelurahanSelect.disabled = false;
         }
     });
-
-    //tombol batal di form permohonan
     const btnAjukan = document.getElementById('btn-ajukan');
-    const modal = document.getElementById('modal-verifikasi');
+    const btnDraft = document.getElementById('draftPerdagangan'); // tombol draft baru
+    const modalVerifikasi = document.getElementById('modal-verifikasi');
+    const modalDraft = document.getElementById('modal-draft');
 
-    if (btnAjukan && modal) {
+    // Buka modal Ajukan
+    if (btnAjukan && modalVerifikasi) {
         btnAjukan.addEventListener('click', function () {
-            modal.classList.remove('hidden');
+            modalVerifikasi.classList.remove('hidden');
         });
     }
-    window.closeModal = function () {
-        document.getElementById('modal-verifikasi').classList.add('hidden');
+
+    // Buka modal Draft
+    if (btnDraft && modalDraft) {
+        btnDraft.addEventListener('click', function () {
+            modalDraft.classList.remove('hidden');
+        });
     }
+
+    // Fungsi untuk tutup semua modal (verifikasi + draft)
+    window.closeModal = function () {
+        modalVerifikasi.classList.add('hidden');
+        modalDraft.classList.add('hidden');
+    };
 
     // Modal untuk Balasan (Lihat / Unduh PDF) pada riwayat surat
     function openModal(url) {
@@ -56,25 +68,25 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.remove('hidden');
     }
 
-    // Tutup modal saat tombol close diklik
+    // Tutup modal saat tombol close diklik (modal PDF)
     document.getElementById('closeModal').addEventListener('click', function() {
         const modal = document.getElementById('modal');
         modal.classList.add('hidden');
     });
-    // Tutup modal jika pengguna mengklik di luar modal
+
+    // Tutup modal jika pengguna mengklik di luar modal (modal PDF)
     document.getElementById('modal').addEventListener('click', function(e) {
         if (e.target === this) {
             this.classList.add('hidden');
         }
     });
-    
-    window.Pusher = require('pusher-js');
+
+    window.io = require('socket.io-client');
 
     window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: import.meta.env.VITE_PUSHER_APP_KEY,
-        cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-        forceTLS: true
+        broadcaster: 'socket.io',
+        host: window.location.hostname + ':6001',
     });
+
 
 });

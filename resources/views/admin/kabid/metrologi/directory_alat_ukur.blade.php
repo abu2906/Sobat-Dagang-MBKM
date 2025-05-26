@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
+@php
+use App\Helpers\StatusHelper;
+@endphp
 <div class="p-6 bg-gray-100 min-h-screen">
     <!-- Header Background -->
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
@@ -8,13 +11,17 @@
         <div class="absolute bottom-[-30px] w-full px-8">
             <div class="flex flex-wrap items-center justify-between p-4 rounded-xl shadow-md">
                 <!-- Filter/Search Input -->
+
                 <div class="flex space-x-4 mb-2 md:mb-0">
-                    <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
-                        <option value="">Semua</option>
-                        <option value="Valid">Valid</option>
-                        <option value="Kadaluarsa">Kadaluarsa</option>
-                    </select>
+                    <form id="filterForm" class="flex items-center space-x-4" method="GET">
+                        <select name="status" id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm" onchange="this.form.submit()">
+                            <option value="">Semua</option>
+                            <option value="Valid" {{ request('status') === 'Valid' ? 'selected' : '' }}>Valid</option>
+                            <option value="Kadaluarsa" {{ request('status') === 'Kadaluarsa' ? 'selected' : '' }}>{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
+                        </select>
+                    </form>
                 </div>
+
                 <div class="relative flex-grow mt-2 md:mt-0 mx-4">
                     <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full shadow text-sm w-full">
                     <span class="absolute left-3 top-2 text-gray-400">
@@ -82,7 +89,7 @@
                         <span class="
                             font-semibold
                             {{ $data->status === 'Valid' ? 'text-green-600' : ($data->status === 'Kadaluarsa' ? 'text-red-600' : 'text-gray-500') }}">
-                            {{ $data->status ?? '-' }}
+                            {{ $data->status === 'Valid' ? 'Valid' : StatusHelper::formatStatus($data->status) }}
                         </span>
                     </td>
                     <td class="px-5 text-center py-3 border-b">
@@ -104,6 +111,9 @@
             </tbody>
         </table>
     </div>
+    <div class="mt-4">
+        {{ $alatUkur->links('pagination::tailwind') }}
+    </div>
 </div>
 
 <script>
@@ -122,7 +132,10 @@
             const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
 
-            const matchStatus = !selectedStatus || status === selectedStatus;
+            // Handle Kadaluarsa, Kadaluwarsa, and Kedaluwarsa in the filter
+            const matchStatus = !selectedStatus || 
+                (selectedStatus === 'kadaluarsa' && (status === 'kadaluarsa' || status === 'kadaluwarsa' || status === 'kedaluwarsa')) ||
+                (selectedStatus === 'valid' && status === 'valid');
             const matchSearch = !keyword || rowText.includes(keyword);
 
             row.style.display = (matchStatus && matchSearch) ? '' : 'none';
@@ -147,7 +160,7 @@
     function loadDetailAlat(id) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-        fetch("{{ route('alat.detail.post') }}", {
+        fetch("{{ route('kabid.detail') }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

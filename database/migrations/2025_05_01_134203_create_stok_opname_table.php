@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('penyaluran');
             $table->integer('stok_akhir');
             $table->date('tanggal');
-            $table->text('keterangan')->nullable();
+            $table->text('nama_barang');
 
             $table->timestamps();
         });

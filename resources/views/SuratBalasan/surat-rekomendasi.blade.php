@@ -12,7 +12,6 @@
             color: #333;
         }
 
-
         .bold-underline {
             font-weight: bold;
             text-decoration: underline;
@@ -115,14 +114,16 @@
         .judul p {
             margin-top: -10px;
         }
+        .penutup p {
+            text-align: justify;
+        }
     </style>
 </head>
 
 <body>
-
     <div class="kop">
         <div class="logo">
-            <img src="{{ asset('assets/img/logoparepare.png') }}" alt="Logo">
+            <img src="{{ public_path('assets/img/logoparepare.png') }}" alt="Logo">
         </div>
         <div class="text">
             <h1>Pemerintah Kota Parepare</h1>
@@ -137,7 +138,7 @@
         <p>Nomor: {{$nomor_surat}}</p>
     </div>
     <p>Yang Bertanda tangan dibawah ini. Kepala Dinas Parepare Menerangkan Bahwa :</p>
-    <table style="width: 60%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 72%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama</td>
             <td style="padding: 4px;">: {{ $nama_pengirim }}</td>
@@ -160,7 +161,7 @@
         </tr>
     </table>
     <p>Untuk Membuka Usaha:</p>
-    <table style="width: 50%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 55%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama Perusahaan</td>
             <td style="padding: 4px;">: {{$nama_usaha}}</td>
@@ -179,32 +180,28 @@
         </tr>
         <tr>
             <td style="padding: 4px;">Luas Ruangan</td>
-            <td style="padding: 4px;">: {{$luas_ruangan}}</td>
+            <td style="padding: 4px;">: {{$luas_ruangan}} m<sup>2</sup></td>
         </tr>
     </table>
     <p>
-        Berdasarkan Hasil pemeriksaan Permohonan dan Persyaratan
-        <span class="bold-underline">SERTIFIKAT STANDAR (SS)</span>
+        {!! $isi !!}
     </p>
+    <div class="penutup">
+        <p>
+            Demikian Surat Rekomendasi ini dibuat untuk menjadi salah satu persyaratan izin usaha dan bukan merupakan surat perizinan.
+        </p>
+    </div>
 
-    <p>
-        Dinyatakan <span class="bold-underline">MEMENUHI PERSYARATAN.</span>
-    </p>
-
-    <p>
-        Maka Bersama ini kami memberikan Rekomendasi
-        <span class="italic-underline">Sertifikat Standart (SS)</span>
-    </p>
     <div class="ttd">
-        <p>Dikeluarkan di : Pareparae</p>
-        <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d - F - Y') }}</p>
+        <p>Dikeluarkan di : Parepare</p>
+        <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d F Y') }}</p>
         <div></div>
         <p>KEPADA DINAS PERDAGANGAN</p>
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">
-            <img src="{{ asset('assets/ttd/contohstempel.png') }}" alt="">
-            <img src="{{ asset('assets/ttd/qr.png') }}" alt="">
+            <img src="{{ public_path('assets/ttd/contohstempel.png') }}" alt="Contoh Stempel">
+            <img src="{{ public_path('assets/ttd/qr.png') }}" alt="QR Code">
         </div>
         <div></div>
         <p class="nama_kadis">HJ A WISNAH T SE MSI</p>

@@ -1,16 +1,18 @@
 @extends('layouts.metrologi.pengguna')
-@php use Illuminate\Support\Facades\Auth; @endphp
+@php use Illuminate\Support\Facades\Auth; use App\Helpers\StatusHelper; @endphp
 
 @section('content')
 	<!-- Filter -->
     <div class="absolute left-1/2 transform -translate-x-1/2 top-[-20px] z-10 w-full">
         <div class="flex flex-wrap px-8 items-center justify-between ">
             <div class="flex space-x-2">
-                <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
-                    <option value="">Semua</option>
-                    <option value="kadaluarsa">Kadaluarsa</option>
-                    <option value="valid">Valid</option>
-                </select>
+                @if(request()->routeIs('alat.user'))
+                    <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
+                        <option value="">Semua</option>
+                        <option value="kadaluarsa">{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
+                        <option value="valid">Valid</option>
+                    </select>
+                @endif
             </div>
             <div class="relative flex-grow mt-2 md:mt-0">
                 <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
@@ -30,7 +32,7 @@
                 <a href="{{ route('alat.user', Auth::guard('user')->id()) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full">
                     Alat Ukur Saya
                 </a>
-            @endif
+            @endif
         </div>
     </div>
 
@@ -71,6 +73,7 @@
                 <tr>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">No</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Jenis Alat</th>
+                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Merk/Type</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nomor Registrasi</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nama Usaha</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Tanggal Tera</th>
@@ -106,6 +109,7 @@
                         <tr class="hover:bg-blue-50 transition">
                             <td class="px-5 text-center py-3 border-b">{{ $loop->iteration }}</td>
                             <td class="px-5 text-center py-3 border-b">{{ $alat->uttp->jenis_alat ?? '-' }}</td>
+                            <td class="px-5 text-center py-3 border-b">{{ $alat->uttp->merk_type ?? '-' }}</td>
                             <td class="px-5 text-center py-3 border-b">{{ $alat->uttp->no_registrasi ?? '-' }}</td>
                             <td class="px-5 text-center py-3 border-b">{{ $alat->uttp->nama_usaha ?? '-' }}</td>
                             <td class="px-5 text-center py-3 border-b">
@@ -116,7 +120,7 @@
                             </td>
                             <td class="px-5 text-center py-3 border-b">
                                 @php
-                                    $status = \Carbon\Carbon::parse($alat->tanggal_exp)->isPast() ? 'Kadaluarsa' : 'Valid';
+                                    $status = \Carbon\Carbon::parse($alat->tanggal_exp)->isPast() ? StatusHelper::formatStatus('Kadaluarsa') : 'Valid';
                                     $statusClass = $status === 'Valid' ? 'bg-green-700' : 'bg-red-600';
                                 @endphp
                                 <span class="text-xs font-medium text-white px-8 py-1 {{ $statusClass }} rounded-full">{{ $status }}</span>
@@ -149,24 +153,29 @@
     const rows = document.querySelectorAll("tbody tr");
 
     function applyFilters() {
-        const selectedStatus = statusFilter.value.toLowerCase();
+        const selectedStatus = statusFilter ? statusFilter.value.toLowerCase() : '';
         const keyword = searchInput.value.toLowerCase();
 
         rows.forEach(row => {
             if (!row.querySelector('td')) return;
 
-            const statusCell = row.querySelector('td:nth-child(7)');
+            const statusCell = row.querySelector('td:nth-child(8)');
             const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
 
-            const matchStatus = !selectedStatus || status === selectedStatus;
+            // Handle Kadaluarsa, Kadaluwarsa, and Kedaluwarsa in the filter
+            const matchStatus = !selectedStatus || 
+                (selectedStatus === 'kadaluarsa' && (status === 'kadaluarsa' || status === 'kadaluwarsa' || status === 'kedaluwarsa')) ||
+                (selectedStatus === 'valid' && status === 'valid');
             const matchSearch = !keyword || rowText.includes(keyword);
 
             row.style.display = (matchStatus && matchSearch) ? '' : 'none';
         });
     }
 
-    statusFilter.addEventListener("change", applyFilters);
+    if (statusFilter) {
+        statusFilter.addEventListener("change", applyFilters);
+    }
     searchInput.addEventListener("input", applyFilters);
     applyFilters();
 

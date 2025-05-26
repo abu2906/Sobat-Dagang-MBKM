@@ -115,6 +115,10 @@
         .judul p {
             margin-top: -10px;
         }
+
+        .penutup p {
+            text-align: justify;
+        }
     </style>
 </head>
 
@@ -122,7 +126,7 @@
 
     <div class="kop">
         <div class="logo">
-            <img src="{{ asset('assets/img/logoparepare.png') }}" alt="Logo">
+            <img src="{{ public_path('assets/img/logoparepare.png') }}" alt="Logo">
         </div>
         <div class="text">
             <h1>Pemerintah Kota Parepare</h1>
@@ -136,7 +140,7 @@
         <h1>SURAT KETERANGAN</h1>
     </div>
     <p>Yang Bertanda tangan dibawah ini:</p>
-    <table style="width: 100%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 97%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama</td>
             <td style="padding: 4px;">: {{ $nama_pengirim }}</td>
@@ -147,45 +151,50 @@
         </tr>
     </table>
     <p>Dengan ini Menerangkan Bahwa:</p>
-    <table style="width: 80%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 90%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
-            <td style="padding: 4px;">Nama</td>
+            <td style="padding: 4px; width: 160px; ">Nama</td>
             <td style="padding: 4px;">: {{$nama_penerima}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Tempat, tanggal Lahir</td>
+            <td style="padding: 4px; width: 160px;">Tempat, tanggal lahir</td>
             <td style="padding: 4px;">: {{$tampat_lahir}},{{$tanggal_lahir}} </td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Jenis Kelamin</td>
+            <td style="padding: 4px; width: 160px;">Jenis Kelamin</td>
             <td style="padding: 4px;">: {{$jenis_kelamin}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Alamat</td>
+            <td style="padding: 4px; width: 160px;">Alamat</td>
             <td style="padding: 4px;">: {{$alamat_lengkap}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Agama</td>
+            <td style="padding: 4px; width: 160px;">Agama</td>
             <td style="padding: 4px;">: {{$agama}}</td>
         </tr>
         <tr>
-            <td style="padding: 4px;">Status</td>
+            <td style="padding: 4px; width: 160px;">Status</td>
             <td style="padding: 4px;">: {{$status_pernikahan}}</td>
         </tr>
     </table>
     <p>
         {!! $isi !!}
     </p>
+    <div class="penutup">
+        <p>
+            Demikian Surat Keterangan ini dibuat untuk menjadi salah satu persyaratan izin usaha dan bukan merupakan surat perizinan.
+        </p>
+    </div>
     <div class="ttd">
-        <p>Dikeluarkan di : Pareparae</p>
-        <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d - F - Y') }}</p>
+        <p>Dikeluarkan di : Parepare</p>
+        <p>Pada Tanggal : {{ \Carbon\Carbon::parse($tanggal_surat)->translatedFormat('d F Y') }}</p>
         <div></div>
         <p>KEPADA DINAS PERDAGANGAN</p>
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">
-            <img src="{{ asset('assets/ttd/contohstempel.png') }}" alt="">
-            <img src="{{ asset('assets/ttd/qr.png') }}" alt="">
+            <img src="{{ public_path('assets/ttd/contohstempel.png') }}" alt="Contoh Stempel">
+            <img src="{{ public_path('assets/ttd/qr.png') }}" alt="QR Code">
         </div>
         <div></div>
         <p class="nama_kadis">HJ A WISNAH T SE MSI</p>

@@ -1,6 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Kabid Metrologi')
+
+@php
+use App\Helpers\StatusHelper;
+@endphp
 
 @section('content')
 <div class="flex">
@@ -53,7 +57,7 @@
                                 {{ \Carbon\Carbon::parse($uttp->tanggal_penginputan)->translatedFormat('d F Y') }}
                             </td>
                             <td class="px-4 py-2 {{ $uttp->tanggal_exp >= now() ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $uttp->tanggal_exp >= now() ? 'VALID' : 'KADALUARSA' }}
+                                {{ $uttp->tanggal_exp >= now() ? 'Valid' : StatusHelper::formatStatus('Kadaluarsa') }}
                             </td>
                         </tr>
                         @endforeach

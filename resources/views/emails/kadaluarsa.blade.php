@@ -2,7 +2,7 @@
 
 <p>Halo {{ $dataAlatUkur->uttp->user->nama }},</p>
 
-<p>UTTP Anda dengan rincian berikut telah kadaluarsa:</p>
+<p>Masa aktif status valid UTTP Anda dengan rincian berikut akan segera berakhir:</p>
 
 <ul>
     <li>Nama Usaha: <strong>{{ $dataAlatUkur->uttp->nama_usaha }}</strong></li>

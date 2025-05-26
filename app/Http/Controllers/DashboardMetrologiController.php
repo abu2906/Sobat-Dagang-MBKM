@@ -43,7 +43,7 @@ class DashboardMetrologiController extends Controller
             ->count();
         $uttps = DataAlatUkur::with('uttp')
             ->orderBy('created_at', 'desc')
-            ->take(10)
+            ->take(12)
             ->get();
         $donutData = $this->getDonutChartData();
         $calibrationData = $this->getCalibrationComparisonData();
@@ -246,11 +246,19 @@ class DashboardMetrologiController extends Controller
         return view('admin.bidangMetrologi.directory_alat_ukur_sah');
     }
 
-    public function showAdministrasi()
+    public function showAdministrasi(Request $request)
     {
-        $suratList = SuratMetrologi::with('user', 'suratBalasan')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = SuratMetrologi::with('user', 'suratBalasan');
+
+        // Handle status filter
+        if ($request->filled('status')) {
+            $query->where('status_admin', $request->status);
+        }
+
+        $suratList = $query->orderBy('created_at', 'desc')
+                          ->paginate(10)
+                          ->withQueryString();
+
         $dataJumlahSurat = $this->getJumlahSurat();
         $dataSuratAdmin = $this->getJumlahSuratAdmin();
 
@@ -261,14 +269,23 @@ class DashboardMetrologiController extends Controller
         ));
     }
 
-    public function showAdministrasiKabid()
+    public function showAdministrasiKabid(Request $request)
     {
-        $suratList = SuratMetrologi::with(['user', 'suratBalasan'])
+        $query = SuratMetrologi::with(['user', 'suratBalasan'])
             ->whereHas('suratBalasan', function($query) {
                 $query->whereIn('status_kepalaBidang', ['Disetujui', 'Ditolak', 'Menunggu']);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+            });
+
+        // Handle status filter
+        if ($request->filled('status')) {
+            $query->whereHas('suratBalasan', function($query) use ($request) {
+                $query->where('status_kepalaBidang', $request->status);
+            });
+        }
+
+        $suratList = $query->orderBy('created_at', 'desc')
+                          ->paginate(10)
+                          ->withQueryString();
             
         $dataJumlahSurat = $this->getJumlahSurat();
 
@@ -278,11 +295,42 @@ class DashboardMetrologiController extends Controller
         ));
     }
 
-    public function showUttp()
+    public function showKadis()
     {
-        $alatUkur = DataAlatUkur::with('uttp')
+        $suratList = suratBalasan::with('suratMetrologi.user')
+            ->where('status_kepalaBidang', 'Disetujui')
             ->orderBy('created_at', 'desc')
             ->get();
+
+        $totalSurat = suratBalasan::count();
+        $totalSuratDisetujui = suratBalasan::where('status_kadis', 'Disetujui')->count();
+        $totalSuratDitolak = suratBalasan::where('status_kadis', 'Ditolak')->count();
+        $totalSuratMenunggu = suratBalasan::where('status_kadis', 'Menunggu')->count();
+
+        return view('admin.kepalaDinas.dashboard', compact(
+            'suratList',
+            'totalSurat',
+            'totalSuratDisetujui',
+            'totalSuratDitolak',
+            'totalSuratMenunggu'
+        ));
+    }
+    public function showUttp(Request $request)
+    {
+        $query = DataAlatUkur::with('uttp');
+
+        // Handle status filter
+        if ($request->has('status')) {
+            if ($request->status === 'Valid') {
+                $query->whereDate('tanggal_exp', '>=', now());
+            } elseif ($request->status === 'Kadaluarsa') {
+                $query->whereDate('tanggal_exp', '<', now());
+            }
+        }
+
+        $alatUkur = $query->orderBy('created_at', 'desc')
+                         ->paginate(10)
+                         ->withQueryString();
 
         return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
     }
@@ -291,12 +339,19 @@ class DashboardMetrologiController extends Controller
     {
         return view('admin.kepalaDinas.persuratan');
     }
-    public function showPersuratanMetrologiKadis()
+    public function showPersuratanMetrologiKadis(Request $request)
     {
-        $suratList = suratBalasan::with('suratMetrologi.user')
-            ->where('status_kepalaBidang', 'Disetujui')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query = suratBalasan::with('suratMetrologi.user')
+            ->where('status_kepalaBidang', 'Disetujui');
+
+        // Handle status filter
+        if ($request->filled('status')) {
+            $query->where('status_kadis', $request->status);
+        }
+
+        $suratList = $query->orderBy('created_at', 'desc')
+                          ->paginate(10)
+                          ->withQueryString();
 
         // Get statistics for letters visible to kepala dinas
         $totalSurat = suratBalasan::where('status_kepalaBidang', 'Disetujui')->count();

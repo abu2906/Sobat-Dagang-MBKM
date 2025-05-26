@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\User;
 
-
 class DashboardController extends Controller
 {
     public function index()
@@ -23,44 +22,7 @@ class DashboardController extends Controller
         return view('component.profile');
     }
 
-    // Proses update data profil
-    public function updateProfile(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'kabupaten' => 'required|string',
-            'kecamatan' => 'nullable|string',
-            'kelurahan' => 'nullable|string',
-            'alamat_lengkap' => 'nullable|string',
-            'email' => 'required|email',
-            'telp' => 'nullable|string|max:20',
-            'nib' => 'nullable|string|max:30',
-            'nik' => 'nullable|string|max:16',
-            'jenis_kelamin' => 'nullable|string|in:Laki-laki,Perempuan',
-        ]);
-
-        $user = Auth::user();
-        $user->fill([
-            'nama' => $request->input('nama'),
-            'kabupaten' => $request->input('kabupaten'),
-            'kecamatan' => $request->input('kecamatan'),
-            'kelurahan' => $request->input('kelurahan'),
-            'alamat_lengkap' => $request->input('alamat_lengkap'),
-            'email' => $request->input('email'),
-            'telp' => $request->input('telp'),
-            'nib' => $request->input('nib'),
-            'nik' => $request->input('nik'),
-            'jenis_kelamin' => $request->input('jenis_kelamin'),
-        ]);
-        
-        if ($user->save()) {
-            return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui.');
-        } else {
-            return redirect()->route('profile')->with('error', 'Gagal memperbarui profil.');
-        }
-    }        
-
-    public function showMetrologi() 
+    public function kelolaAdmin()
     {
         // Mendapatkan semua data pengguna
         $users = User::all();
@@ -69,6 +31,43 @@ class DashboardController extends Controller
         return view('admin.adminSuper.kelolaAdmin', compact('users'));
     }
 
+
+    // Proses update data profil
+    // public function updateProfile(Request $request)
+    // {
+    //     $request->validate([
+    //         'nama' => 'required|string|max:255',
+    //         'kabupaten' => 'required|string',
+    //         'kecamatan' => 'nullable|string',
+    //         'kelurahan' => 'nullable|string',
+    //         'alamat_lengkap' => 'nullable|string',
+    //         'email' => 'required|email',
+    //         'telp' => 'nullable|string|max:20',
+    //         'nib' => 'nullable|string|max:30',
+    //         'nik' => 'nullable|string|max:16',
+    //         'jenis_kelamin' => 'nullable|string|in:Laki-laki,Perempuan',
+    //     ]);
+
+    //     $user = Auth::user();
+    //     $user->fill([
+    //         'nama' => $request->input('nama'),
+    //         'kabupaten' => $request->input('kabupaten'),
+    //         'kecamatan' => $request->input('kecamatan'),
+    //         'kelurahan' => $request->input('kelurahan'),
+    //         'alamat_lengkap' => $request->input('alamat_lengkap'),
+    //         'email' => $request->input('email'),
+    //         'telp' => $request->input('telp'),
+    //         'nib' => $request->input('nib'),
+    //         'nik' => $request->input('nik'),
+    //         'jenis_kelamin' => $request->input('jenis_kelamin'),
+    //     ]);
+        
+    //     if ($user->save()) {
+    //         return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui.');
+    //     } else {
+    //         return redirect()->route('profile')->with('error', 'Gagal memperbarui profil.');
+    //     }
+    // }  
     
     // Menambah pengguna baru
     public function tambahPengguna(Request $request)
@@ -123,4 +122,10 @@ class DashboardController extends Controller
 
         return redirect()->route('kelola.pengguna')->with('success', 'Pengguna berhasil dihapus');
     }
+
+    public function dashboardMaster()
+    {
+     return view('admin.adminSuper.dashboardMaster');
+    }
+
 }

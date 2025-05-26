@@ -36,34 +36,34 @@ class authController extends Controller
 
         // 1. Coba login disdag via NIP
         $disdag = Disdag::where('nip', $identifier)->first();
-
         if ($disdag && Hash::check($request->password, $disdag->password)) {
             Auth::guard('disdag')->login($disdag);
             session(['id_disdag' => $disdag->id_disdag]); // Simpan ID ke session
-
+            
             switch ($disdag->role) {
                 case 'master_admin':
-                    return redirect()->intended(route('user.dashboard'));
+                    return redirect()->intended('/dashboard-master');
                 case 'admin_perdagangan':
                     return redirect()->intended(route('dashboard.perdagangan'));
                 case 'admin_industri':
-                    return redirect()->intended('/admin/industri');
+                    return redirect()->intended(route('admin.industri.dashboard'));
                 case 'admin_metrologi':
-                    return redirect()->intended('/admin/dashboard-metrologi');
+                    return redirect()->intended(route('dashboard-admin-metrologi'));
                 case 'kabid_perdagangan':
                     return redirect()->intended(route('kabid.perdagangan'));
                 case 'kabid_industri':
-                    return redirect()->intended('/kabid/industri');
+                    return redirect()->intended(route('kabid.industri'));
                 case 'kabid_metrologi':
-                    return redirect()->intended('/kabid/metrologi');
+                    return redirect()->intended(route('dashboard-kabid-metrologi'));
                 case 'kepala_dinas':
-                    return redirect()->intended('/kadis/dashboard');
+                    return redirect()->intended('/kepaladinas');
                 default:
                     return redirect('/dashboard');
             }
         }
 
 
+    
         // 2. Jika tidak ditemukan di disdag, coba login sebagai user
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
 
@@ -76,8 +76,6 @@ class authController extends Controller
 
         return redirect()->route('login')->withErrors(['login_error' => 'Username atau password salah']);
     }
-
-
 
     public function submitRegister(Request $request)
     {
@@ -97,9 +95,7 @@ class authController extends Controller
                 'nik' => 'required|string|unique:user',
                 'nib' => 'nullable|string',
             ]);
-
-            
-            
+ 
             Log::info('Validasi berhasil, data valid:', $validated);
 
             $user = new User;

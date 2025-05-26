@@ -22,44 +22,135 @@ use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use App\Models\StokOpname;
+use App\Models\Berita;
 
-class DashboardPerdaganganController extends Controller
-{
-    public function index()
-{
-    // Ambil data surat perdagangan
-    $rekapSurat = $this->getSuratPerdaganganData();
-    $dataSurat = PermohonanSurat::with('user')
-        ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
-        ->orderBy('created_at', 'desc')
-        ->get();
 
-    // Ambil data harga barang
-    $daftarHarga = DB::table('index_harga')
-        ->join('barang', 'index_harga.id_barang', '=', 'barang.id_barang')
-        ->join('index_kategori', 'index_harga.id_index_kategori', '=', 'index_kategori.id_index_kategori')
-        ->select(
-            'barang.nama_barang',
-            'index_kategori.nama_kategori as kategori_barang',
-            'index_harga.harga as harga_satuan',
-            'index_harga.updated_at'
-        )
-        ->orderBy('index_harga.updated_at', 'desc')
-        ->get();
 
-    // Kirim semua data ke view
-    return view('admin.bidangPerdagangan.dashboardPerdagangan', [
-        'dataSurat' => $dataSurat,
-        'daftarHarga' => $daftarHarga,
-        'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
-        'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
-        'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-        'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-    ]);
-}
-
-    private function getSuratPerdaganganData()
+class DashboardPerdaganganController extends Controller{
+    public function index(Request $request)
     {
+        // Ambil data surat perdagangan
+        $rekapSurat = $this->getSuratPerdaganganData();
+        $dataSurat = PermohonanSurat::with('user')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil daftar harga barang terbaru (tanpa filter waktu)
+        $daftarHarga = DB::table('index_harga')
+            ->join('barang', 'index_harga.id_barang', '=', 'barang.id_barang')
+            ->join('index_kategori', 'index_harga.id_index_kategori', '=', 'index_kategori.id_index_kategori')
+            ->select(
+                'barang.nama_barang',
+                'index_kategori.nama_kategori as kategori_barang',
+                'index_harga.harga as harga_satuan',
+                'index_harga.updated_at',
+                'index_harga.tanggal'
+            )
+            ->orderBy('index_harga.updated_at', 'desc')
+            ->get();
+
+        // Ambil daftar lokasi unik untuk dropdown
+        $daftar_lokasi = DB::table('index_harga')->select('lokasi')->distinct()->pluck('lokasi');
+        $lokasi = $request->input('lokasi', 'Pasar Sumpang');
+
+        // Definisikan range tanggal sebulan terakhir
+        $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
+        $endDate = Carbon::now()->format('Y-m-d');
+
+        // Ambil data harga per pasar sebulan terakhir
+        $dataSumpang = DB::table('index_harga')
+            ->where('lokasi', 'Pasar Sumpang')
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->orderBy('tanggal')
+            ->get(['tanggal', 'harga']);
+
+        $dataLakessi = DB::table('index_harga')
+            ->where('lokasi', 'Pasar Lakessi')
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->orderBy('tanggal')
+            ->get(['tanggal', 'harga']);
+
+        // Gabungkan semua tanggal unik dari kedua pasar
+        $tanggalSumpang = $dataSumpang->pluck('tanggal')->toArray();
+        $tanggalLakessi = $dataLakessi->pluck('tanggal')->toArray();
+        $allTanggal = array_unique(array_merge($tanggalSumpang, $tanggalLakessi));
+        sort($allTanggal);
+
+        // Label untuk grafik (format tanggal user-friendly)
+        $labels = array_map(function ($tgl) {
+        return Carbon::parse($tgl)->translatedFormat('d M');
+        }, $allTanggal);
+
+        // Buat array harga sesuai label, isi null jika tidak ada data di tanggal tersebut
+        $hargaSumpang = [];
+        foreach ($allTanggal as $tgl) {
+            $item = $dataSumpang->firstWhere('tanggal', $tgl);
+            $hargaSumpang[] = $item ? (int) $item->harga : null;
+        }
+
+        $hargaLakessi = [];
+        foreach ($allTanggal as $tgl) {
+            $item = $dataLakessi->firstWhere('tanggal', $tgl);
+            $hargaLakessi[] = $item ? (int) $item->harga : null;
+        }
+
+        // Hitung data ringkasan dari gabungan harga kedua pasar (exclude null)
+        $hargaGabungan = array_filter(array_merge($hargaSumpang, $hargaLakessi));
+
+        if (count($hargaGabungan) > 0) {
+            $minHarga = min($hargaGabungan);
+            $maxHarga = max($hargaGabungan);
+            $avgHarga = array_sum($hargaGabungan) / count($hargaGabungan);
+
+            $terendah = number_format($minHarga, 0, ',', '.');
+            $tertinggi = number_format($maxHarga, 0, ',', '.');
+            $rata_rata = number_format($avgHarga, 0, ',', '.');
+            $volatilitas = round((($maxHarga - $minHarga) / ($avgHarga ?: 1)) * 100, 1) . '%';
+        } else {
+            $terendah = '0';
+            $rata_rata = '0';
+            $tertinggi = '0';
+            $volatilitas = '0%';
+        }
+
+        // Tambahkan ini di awal sebelum return view
+        $tahunIni = Carbon::now()->year;
+
+        $pupukTahunan = DB::table('stok_opname')
+            ->selectRaw('
+                SUM(CASE WHEN UPPER(nama_barang) = "UREA" THEN penyaluran ELSE 0 END) as urea,
+                SUM(CASE WHEN UPPER(nama_barang) = "NPK" THEN penyaluran ELSE 0 END) as npk,
+                SUM(CASE WHEN UPPER(nama_barang) = "NPK-FK" THEN penyaluran ELSE 0 END) as npk_fk
+            ')
+            ->whereYear('tanggal', $tahunIni)
+            ->first();
+        $beritaTerbaru = Berita::latest()->take(10)->get();
+        // Kirim semua data ke view
+        return view('admin.bidangPerdagangan.dashboardPerdagangan', [
+            'dataSurat' => $dataSurat,
+            'pupukTahunan' => $pupukTahunan,
+            'daftarHarga' => $daftarHarga,
+            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+            'beritaTerbaru' => $beritaTerbaru,
+            'labels' => $labels,
+            'hargaSumpang' => $hargaSumpang,
+            'hargaLakessi' => $hargaLakessi,
+            'terendah' => $terendah,
+            'rata_rata' => $rata_rata,
+            'tertinggi' => $tertinggi,
+            'volatilitas' => $volatilitas,
+            // 'pupuk' => $pupuk,
+            'daftar_lokasi' => $daftar_lokasi,
+            'lokasi' => $lokasi,
+        ]);
+    }
+
+    private function getSuratPerdaganganData(){
         $jenis = [
             'surat_rekomendasi_perdagangan',
             'surat_keterangan_perdagangan',
@@ -74,8 +165,7 @@ class DashboardPerdaganganController extends Controller
         ];
     }
 
-    public function kelolaSurat()
-    {
+    public function kelolaSurat(){
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
@@ -90,6 +180,7 @@ class DashboardPerdaganganController extends Controller
             'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
         ]);
     }
+
     public function detailSurat($id)
     {
         $data = PermohonanSurat::where('id_permohonan', $id)->first();
@@ -127,6 +218,7 @@ class DashboardPerdaganganController extends Controller
 
         return response()->file(storage_path("app/public/{$filePath}"));
     }
+
     public function formTambahBarang()
     {
         $kategori = IndexKategori::all();
@@ -202,11 +294,13 @@ class DashboardPerdaganganController extends Controller
         $barangs = Barang::where('id_index_kategori', $id)->get(['id_barang', 'nama_barang']);
         return response()->json($barangs);
     }
+
     public function deleteBarang()
     {
         $barangs = Barang::with('kategori')->get(); // eager load kategori
         return view('admin.bidangPerdagangan.hapusBarang', compact('barangs'));
     }
+
     public function destroy($id)
     {
         $barang = Barang::findOrFail($id);
@@ -215,29 +309,155 @@ class DashboardPerdaganganController extends Controller
         return redirect()->back()->with('success', 'Barang berhasil dihapus.');
     }
 
-    public function laporanPupuk()
+    public function laporanPupuk(Request $request)
     {
-        return view('admin.bidangPerdagangan.lihatLaporan');
+        $bulan = $request->input('bulan');
+        $tahun = $request->input('tahun');
+
+        $data = [];
+        $pieData = [];
+        $lineChartLabels = [];
+        $lineChartData = [
+            'UREA' => [],
+            'NPK' => [],
+            'NPK-FK' => [],
+        ];
+
+        // Jika tidak memilih apapun, tampilkan data bulan dan tahun saat ini
+        if (empty($bulan) && empty($tahun)) {
+            $bulan = now()->month;
+            $tahun = now()->year;
+        }
+
+        // Validasi: jika request berisi bulan dan tahun, tapi kosong, tampilkan pesan
+        if (!empty($bulan) && !empty($tahun) && $request->has('bulan') && $request->has('tahun')) {
+            return view('admin.bidangPerdagangan.lihatLaporan', [
+                'data' => [],
+                'bulan' => $bulan,
+                'tahun' => $tahun,
+                'pieData' => [],
+                'lineChartLabels' => [],
+                'lineChartData' => [],
+                'message' => 'Silakan pilih salah satu: bulan atau tahun saja.'
+            ]);
+        }
+
+        // Ambil data stok_opname
+        $query = StokOpname::with('toko');
+
+        if (!empty($bulan) && empty($tahun)) {
+            $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', now()->year);
+        } elseif (!empty($tahun) && empty($bulan)) {
+            $query->whereYear('tanggal', $tahun);
+        } else {
+            $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
+        }
+
+        $stokOpnames = $query->get();
+
+        foreach ($stokOpnames as $record) {
+            $toko = $record->toko->nama_toko ?? 'Tidak diketahui';
+            $barang = strtoupper($record->nama_barang);
+
+            // Data Tabel
+            if (!isset($data[$toko][$barang])) {
+                $data[$toko][$barang] = [
+                    'stok_awal' => 0,
+                    'penyaluran' => 0,
+                    'stok_akhir' => 0,
+                ];
+            }
+
+            $data[$toko][$barang]['stok_awal'] += $record->stok_awal;
+            $data[$toko][$barang]['penyaluran'] += $record->penyaluran;
+            $data[$toko][$barang]['stok_akhir'] += $record->stok_akhir;
+
+            // Data Pie Chart
+            if (!isset($pieData[$barang])) {
+                $pieData[$barang] = 0;
+            }
+            $pieData[$barang] += $record->penyaluran;
+        }
+
+        // Data Line Chart
+        foreach ($data as $toko => $pupuk) {
+            $lineChartLabels[] = $toko;
+
+            foreach (['UREA', 'NPK', 'NPK-FK'] as $jenis) {
+                $lineChartData[$jenis][] = $pupuk[$jenis]['penyaluran'] ?? 0;
+            }
+        }
+
+        return view('admin.bidangPerdagangan.lihatLaporan', [
+            'data' => $data,
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+            'pieData' => $pieData,
+            'lineChartLabels' => $lineChartLabels,
+            'lineChartData' => $lineChartData,
+            'message' => ''
+        ]);
     }
 
-    public function formPermohonan()
+    public function formPermohonan(Request $request)
     {
-        return view('user.bidangPerdagangan.formPermohonan');
+        $idUser = auth()->guard('user')->id();
+        $draftId = $request->query('draft_id'); // Ambil draft_id dari query string
+
+        // Ambil semua draft user (list untuk dropdown)
+        $drafts = DB::table('form_permohonan')
+            ->where('id_user', $idUser)
+            ->where('status', 'disimpan')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $draft = null;
+
+        // Ambil data lengkap jika draft dipilih
+        if ($draftId) {
+            $draft = DB::table('form_permohonan as f')
+                ->leftJoin('document_user as d', 'f.id_permohonan', '=', 'd.id_permohonan')
+                ->where('f.id_user', $idUser)
+                ->where('f.id_permohonan', $draftId)
+                ->where('f.status', 'disimpan')
+                ->select('f.*', 'd.npwp', 'd.akta_perusahaan', 'd.foto_ktp', 'd.foto_usaha', 'd.dokument_nib')
+                ->first();
+        }
+
+        // Ambil list kelurahan unik (jika masih dibutuhkan)
+        $listKelurahan = DB::table('form_permohonan')
+            ->select('kelurahan')
+            ->distinct()
+            ->whereNotNull('kelurahan')
+            ->orderBy('kelurahan')
+            ->pluck('kelurahan');
+
+        return view('user.bidangPerdagangan.formPermohonan', compact('drafts', 'draft', 'listKelurahan'));
     }
+
+
+
 
     public function riwayatSurat()
     {
-        // $query = PermohonanSurat::where('user_id', auth()->id()); 
-        $query = PermohonanSurat::query();
-        if (request('search')) {
-            $search = strtolower(trim(request('search'))); // lowercase & trim input
+        if (!auth()->guard('user')->check()) {
+            return redirect()->route('login')->with('error', 'Harap login terlebih dahulu');
+        }
+        $userId = Auth::guard('user')->id();
+
+        $query = PermohonanSurat::where('id_user', $userId)
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']); // hanya status ini yang ditampilkan
+
+        if ($searchTerm = request('search')) {
+            $search = strtolower(trim($searchTerm));
 
             $mapping = [
                 'surat rekomendasi' => 'surat_rekomendasi_perdagangan',
                 'rekomendasi' => 'surat_rekomendasi_perdagangan',
+                'rek' => 'surat_rekomendasi_perdagangan',
                 'surat keterangan' => 'surat_keterangan_perdagangan',
                 'keterangan' => 'surat_keterangan_perdagangan',
-                'lainnya' => 'dan_lainnya_perdagangan',
+                'ket' => 'surat_keterangan_perdagangan',
             ];
 
             $matchedJenis = null;
@@ -253,13 +473,16 @@ class DashboardPerdaganganController extends Controller
                     $q->where('jenis_surat', $matchedJenis);
                 } else {
                     $q->whereRaw('LOWER(status) LIKE ?', ["%$search%"])
-                        ->orWhereRaw('DATE_FORMAT(tanggal_pengajuan, "%d-%m-%Y") LIKE ?', ["%$search%"]);
+                    ->orWhereRaw('DATE_FORMAT(tgl_pengajuan, "%d-%m-%Y") LIKE ?', ["%$search%"]);
                 }
             });
         }
+
         $riwayatSurat = $query->latest()->get();
+
         return view('user.bidangPerdagangan.riwayatSurat', compact('riwayatSurat'));
     }
+
 
     public function tolak(Request $request, $id)
     {
@@ -278,12 +501,15 @@ class DashboardPerdaganganController extends Controller
 
         // Generate PDF
         try {
-            // Buat PDF dari view blade
+            // Buat PDF dari view blade// Tambahkan ini sebelum generate PDF
+            ini_set('max_execution_time', 300); // 300 detik = 5 menit
+
             $pdf = Pdf::loadView('SuratBalasan.surat-penolakan', [
                 'nama_pengirim' => $request->nama_pengirim,
                 'alasan' => $request->alasan,
                 'tanggal' => $request->tanggal
-            ]);
+            ]);;
+
 
             // Nama file unik
             $filename = 'penolakan-' . Str::uuid() . '.pdf';
@@ -300,8 +526,7 @@ class DashboardPerdaganganController extends Controller
             return response()->file(storage_path("app/public/surat/{$filename}"));
         } catch (\Exception $e) {
             // Log error jika terjadi masalah
-            Log::error('PDF creation error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat surat. Silakan coba lagi.');
+            dd($e->getMessage());
         }
     }
 
@@ -324,6 +549,7 @@ class DashboardPerdaganganController extends Controller
             'bentuk_usaha'      => 'required|string',
             'jenis_perusahaan'  => 'required|string',
             'luas_ruangan'      => 'required|string',
+            'isi'      => 'required|string',
             'alamat_usaha'      => 'required|string',
         ]);
 
@@ -346,6 +572,7 @@ class DashboardPerdaganganController extends Controller
                 'jenis_perusahaan' => $request->jenis_perusahaan,
                 'luas_ruangan' => $request->luas_ruangan,
                 'alamat_usaha' => $request->alamat_usaha,
+                'isi' => $request->isi,
                 'status' => $permohonan->status, // Kirim status ke view
             ]);
 
@@ -425,115 +652,118 @@ class DashboardPerdaganganController extends Controller
 
     public function ajukanPermohonan(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'jenis_surat' => 'required|in:surat_rekomendasi_perdagangan,surat_keterangan_perdagangan,dan_lainnya_perdagangan',
+        $idUser = session('id_user');
+        $status = $request->input('submit_action'); // 'ajukan' atau 'simpan'
+
+        // Ambil draft yang ada dengan status 'disimpan'
+        $draft = PermohonanSurat::where('id_user', $idUser)->where('status', 'disimpan')->first();
+
+        // Validasi form - untuk status 'ajukan' wajib isi semua file, untuk 'disimpan' boleh kosong
+        $rules = [
             'kecamatan' => 'required|string',
             'kelurahan' => 'required|string',
-            'titik_koordinat' => 'required|string',
-            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-            'dokumen_nib' => 'required|mimes:pdf|max:10240',
-            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:10240',
-            'akta_perusahaan' => 'required|mimes:pdf|max:10240',
-            'surat' => 'required|file|mimes:pdf,doc,docx|max:10240',
-        ]);
-
-        try {
-            // Simpan file satu per satu
-            $fotoUsahaPath = $request->file('foto_usaha')->store('DokumentUser', 'public');
-            $fotoKTPPath = $request->file('foto_ktp')->store('DokumentUser', 'public');
-            $dokumenNibPath = $request->file('dokumen_nib')->store('DokumentUser', 'public');
-            $npwpPath = $request->file('npwp')->store('DokumentUser', 'public');
-            $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('DokumentUser', 'public');
-            $fileSuratPath = $request->file('surat')->store('DokumentUser', 'public');
-
-            // Buat id_permohonan unik
-            $idPermohonan = Str::uuid()->toString();
-
-            // Ambil id_user dari session
-            $idUser = session('id_user');
-
-            // Simpan ke tabel form_permohonan
-            DB::table('form_permohonan')->insert([
-                'id_permohonan' => $idPermohonan,  // Masukkan UUID yang baru dibuat
-                'id_user' => $idUser,  // Ambil id_user dari session
-                'kecamatan' => $request->kecamatan,
-                'kelurahan' => $request->kelurahan,
-                'tgl_pengajuan' => now()->toDateString(),
-                'jenis_surat' => $request->jenis_surat,
-                'titik_koordinat' => $request->titik_koordinat,
-                'file_surat' => $fileSuratPath,
-                'status' => 'menunggu',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // Simpan ke tabel document_user
-            DB::table('document_user')->insert([
-                'id_permohonan' => $idPermohonan,  // Masukkan id_permohonan yang sama ke document_user
-                'npwp' => $npwpPath,
-                'akta_perusahaan' => $aktaPerusahaanPath,
-                'foto_ktp' => $fotoKTPPath,
-                'foto_usaha' => $fotoUsahaPath,
-                'dokument_nib' => $dokumenNibPath,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            return redirect()->route('bidangPerdagangan.riwayatSurat')
-                ->with('success', 'Pengajuan surat berhasil diajukan.');
-        } catch (Exception $e) {
-            Log::error('Gagal mengajukan surat: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
-        }
-    }
-
-    public function dashboardKabid(Request $request)
-    {
-        $tahun = $request->input('tahun', date('Y'));
-
-        $rekapSurat = $this->getSuratPerdaganganData();
-        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
-
-        $statusCounts = [
-            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
-            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
-            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
+            'jenis_surat' => 'required|string',
+            'titik_koordinat' => 'nullable|string',
         ];
 
-        $dataBulanan = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
+        if ($status === 'ajukan') {
+            // Jika tidak ada file baru, tapi file lama juga kosong => error
+            $rules['foto_usaha'] = ($draft && optional($draft->document)->foto_usaha) ? 'nullable|image|mimes:jpeg,png,jpg|max:512' : 'required|image|mimes:jpeg,png,jpg|max:512';
+            $rules['foto_ktp'] = ($draft && optional($draft->document)->foto_ktp) ? 'nullable|image|mimes:jpeg,png,jpg|max:512' : 'required|image|mimes:jpeg,png,jpg|max:512';
+            $rules['dokument_nib'] = ($draft && optional($draft->document)->dokument_nib) ? 'nullable|mimes:pdf|max:512' : 'required|mimes:pdf|max:512';
+            $rules['npwp'] = ($draft && optional($draft->document)->npwp) ? 'nullable|mimes:pdf,jpg,jpeg,png|max:512' : 'required|mimes:pdf,jpg,jpeg,png|max:512';
+            $rules['akta_perusahaan'] = ($draft && optional($draft->document)->akta_perusahaan) ? 'nullable|mimes:pdf|max:512' : 'required|mimes:pdf|max:512';
+            $rules['surat'] = ($draft && $draft->file_surat) ? 'nullable|file|mimes:pdf,doc,docx|max:512' : 'required|file|mimes:pdf,doc,docx|max:512';
+        } else {
+            // Jika simpan draft, file boleh tidak ada
+            $rules['foto_usaha'] = 'nullable|image|mimes:jpeg,png,jpg|max:512';
+            $rules['foto_ktp'] = 'nullable|image|mimes:jpeg,png,jpg|max:512';
+            $rules['dokument_nib'] = 'nullable|mimes:pdf|max:512';
+            $rules['npwp'] = 'nullable|mimes:pdf,jpg,jpeg,png|max:512';
+            $rules['akta_perusahaan'] = 'nullable|mimes:pdf|max:512';
+            $rules['surat'] = 'nullable|file|mimes:pdf,doc,docx|max:512';
         }
 
-        // Jika permintaan AJAX, kirim data JSON
-        if ($request->ajax()) {
-            return response()->json([
-                'statusCounts' => $statusCounts,
-                'dataBulanan' => $dataBulanan
-            ]);
+        $request->validate($rules);
+
+        // Fungsi upload file (replace file lama jika ada)
+        $uploadFile = function ($field, $oldPath = null) use ($request) {
+            if ($request->hasFile($field)) {
+                if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                return $request->file($field)->store('DokumentUser', 'public');
+            }
+            return $oldPath;
+        };
+
+
+        DB::beginTransaction();
+
+        try {
+            if ($draft) {
+                // Update draft yang sudah ada
+                $draft->update([
+                    'kecamatan' => $request->kecamatan,
+                    'kelurahan' => $request->kelurahan,
+                    'jenis_surat' => $request->jenis_surat,
+                    'tgl_pengajuan' => now()->toDateString(),
+                    'titik_koordinat' => $request->titik_koordinat,
+                    'status' => $status === 'ajukan' ? 'menunggu' : 'disimpan',
+                    'file_surat' => $uploadFile('surat', $draft->file_surat),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                // Buat baru
+                $draft = PermohonanSurat::create([
+                    'id_permohonan' => (string) Str::uuid(),
+                    'id_user' => $idUser,
+                    'kecamatan' => $request->kecamatan,
+                    'kelurahan' => $request->kelurahan,
+                    'jenis_surat' => $request->jenis_surat,
+                    'titik_koordinat' => $request->titik_koordinat,
+                    'status' => $status === 'ajukan' ? 'menunggu' : 'disimpan',
+                    'file_surat' => $uploadFile('surat'),
+                    'tgl_pengajuan' => now()->toDateString(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Handle DocumentUser (dokumen tambahan)
+            $document = $draft->document;
+
+            if ($document) {
+                $document->update([
+                    'foto_usaha' => $uploadFile('foto_usaha', $document->foto_usaha),
+                    'foto_ktp' => $uploadFile('foto_ktp', $document->foto_ktp),
+                    'dokument_nib' => $uploadFile('dokument_nib', $document->dokument_nib),
+                    'npwp' => $uploadFile('npwp', $document->npwp),
+                    'akta_perusahaan' => $uploadFile('akta_perusahaan', $document->akta_perusahaan),
+                ]);
+            } else {
+                DocumentUser::create([
+                    'id_permohonan' => $draft->id_permohonan,
+                    'foto_usaha' => $uploadFile('foto_usaha'),
+                    'foto_ktp' => $uploadFile('foto_ktp'),
+                    'dokument_nib' => $uploadFile('dokument_nib'),
+                    'npwp' => $uploadFile('npwp'),
+                    'akta_perusahaan' => $uploadFile('akta_perusahaan'),
+                ]);
+            }
+
+            DB::commit();
+
+            $pesan = $status === 'ajukan' ? 'Permohonan berhasil diajukan.' : 'Draft berhasil disimpan.';
+
+            // Tentukan rute berdasarkan status
+            $route = $status === 'ajukan' ? 'bidangPerdagangan.riwayatSurat' : 'bidangPerdagangan.formPermohonan';
+
+            return redirect()->route($route)->with('success', $pesan);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['msg' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
-
-        return view('admin.kabid.perdagangan.perdagangan', [
-            'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
-            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
-            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-            'suratMasuk' => $suratMasuk,
-            'statusCounts' => $statusCounts,
-            'dataBulanan' => $dataBulanan
-        ]);
-    }
-
-    public function setujui($id)
-    {
-        $permohonan = PermohonanSurat::findOrFail($id);
-
-        // Ubah status menjadi 'diterima'
-        $permohonan->status = 'diterima';
-        $permohonan->save();
-
-        return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
     }
 }
