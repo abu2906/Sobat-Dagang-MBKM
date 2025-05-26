@@ -4,10 +4,7 @@
 <div class="p-6  min-h-screen">
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/kepalaDinas_SuperAdmin.jpg');">
         <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-            <h1 class="text-5xl font-extrabold tracking-wide drop-shadow-lg text-[#FAA31E]" 
-                style="-webkit-text-stroke: 1px ;">
-                KELOLA FAQ
-            </h1>
+            <h1 class="text-5xl font-bold text-[#FAA31E]">Kelola FAQ</h1>
         </div>
         <div class="absolute bottom-[-30px] w-full px-8">
             <div class="flex flex-wrap items-center justify-between p-4 rounded-xl shadow-md">
