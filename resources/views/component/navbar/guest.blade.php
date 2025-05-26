@@ -52,7 +52,7 @@
             </li>
 
             <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
-            <li><a href="#" id="open-chat"><strong>FAQ</strong></a></li>
+            <li><a href="{{ route('faq') }}" id="open-chat"><strong>FAQ</strong></a></li>
             <div class="navbar-right mt-4 md:mt-0 md:hidden">
                 <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
             </div>

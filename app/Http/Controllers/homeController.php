@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Berita;
+use App\Models\Faq;
 
 class HomeController extends Controller
 {
@@ -25,6 +26,12 @@ class HomeController extends Controller
     public function showAboutPage()
     {
         return view('pages.aboutUs');
+    }
+
+    public function showFaqPage()
+    {
+        $faqs = Faq::all(); 
+        return view('pages.faq', compact('faqs'));
     }
 
     public function showHalal()

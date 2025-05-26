@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\View;
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
 Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
+Route::get('/faq', [homeController::class, 'showFaqPage'])->name('faq');
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
 Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
@@ -227,6 +228,9 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');    
     #Kelola FAQ
     Route::get('/admin/kelola-faq', [FAQController::class, 'index'])->name('faq-controller');
+    Route::post('/admin/faq/store', [FAQController::class, 'store'])->name('faq-store');
+    Route::put('/admin/faq/{faq}', [FAQController::class, 'update'])->name('faq.update');
+    Route::delete('/admin/faq/{id}', [FAQController::class, 'destroy'])->name('faq-destroy');
 });
 
 // Route for test
