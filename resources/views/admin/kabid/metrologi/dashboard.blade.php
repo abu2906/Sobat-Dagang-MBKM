@@ -102,7 +102,7 @@ use App\Helpers\StatusHelper;
     new Chart(document.getElementById('statusPieChart'), {
         type: 'pie',
         data: {
-            labels: ['Valid', 'Kadaluarsa'],
+            labels: ['Valid', '{{ StatusHelper::formatStatus('Kadaluarsa') }}'],
             datasets: [{
                 data: [{{ $jumlahValid }}, {{ $jumlahKadaluarsa }}],
                 backgroundColor: ['#10b981', '#ef4444'],
