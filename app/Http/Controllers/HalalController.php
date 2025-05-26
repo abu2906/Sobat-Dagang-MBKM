@@ -49,28 +49,43 @@ class HalalController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama_usaha'            => 'required|string|max:255',
-            'no_sertifikasi_halal'  => 'nullable|string|max:255',
-            'tanggal_sah'           => 'required|date',
-            'tanggal_exp'           => 'required|date|after_or_equal:tanggal_sah',
-            'alamat'                => 'required|string',
-            'status'                => 'required|string|in:Berlaku,Perlu Pembaruan',
-            'sertifikat'            => 'required|file|mimes:pdf|max:512',
-        ]);
+        try {
+            $rules =[
+                'nama_usaha'            => 'required|string|max:255',
+                'no_sertifikasi_halal'  => 'nullable|string|max:255',
+                'tanggal_sah'           => 'required|date',
+                'tanggal_exp'           => 'required|date|after_or_equal:tanggal_sah',
+                'alamat'                => 'required|string',
+                'status'                => 'required|string|in:Berlaku,Perlu Pembaruan',
+                'sertifikat'            => 'required|file|mimes:pdf|max:512',
+            ];
 
-        if ($request->hasFile('sertifikat')) {
-            $file = $request->file('sertifikat');
-            $fileName = time() . '' . preg_replace('/\s+/', '', $file->getClientOriginalName());
-            $filePath = $file->storeAs('sertifikat_halal', $fileName, 'public');
-            $validated['sertifikat'] = $filePath;
+            $messages = [ 'status' => 'Status sertifikat wajib diisi.',
+                    'sertifikat.required' => 'File sertifikat wajib diunggah.',
+                    'sertifikat.mimes' => 'File sertifikat harus berformat pdf.',
+                    'sertifikat.max' => 'File sertifikat tidak boleh lebih dari 512 kilobyte.',
+                ];
+
+            $validated = $request->validate($rules, $messages);
+
+        
+            if ($request->hasFile('sertifikat')) {
+                $file = $request->file('sertifikat');
+                $fileName = time() . '' . preg_replace('/\s+/', '', $file->getClientOriginalName());
+                $filePath = $file->storeAs('sertifikat_halal', $fileName, 'public');
+                $validated['sertifikat'] = $filePath;
+            }
+
+            SertifikasiHalal::create($validated);
+
+            return redirect()->route('admin.industri.halal')->with('success', 'Data sertifikasi halal berhasil ditambahkan.');
+
+        } catch (\Exception $e) {
+            Log::error("Gagal menambahkan sertifikasi halal: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        SertifikasiHalal::create($validated);
-
-        return redirect()->route('admin.industri.halal')
-            ->with('success', 'Data sertifikasi halal berhasil ditambahkan.');
     }
+    
 
     public function update(Request $request, $id)
     {

@@ -3,10 +3,11 @@
 
 @section('content')
 
-<div class="container">
+<div class="container responsive">
+  <div x-data="{ openAdd: false , openEdit: false, selectedItem: null }">
   <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
 
-  <div class="flex items-center gap-4 px-6 py-6 max-w-7xl mx-auto z-10 relative">
+  <div class="flex items-center gap-4 px-6 py-6 w-full mx-auto relative">
     <div class="relative flex-1">
       <input type="text" x-model="searchQuery" placeholder="Cari"
         class="w-full rounded-xl bg-blue-200/80 py-3 pl-12 pr-4 text-gray-600 placeholder-gray-600 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
@@ -22,30 +23,55 @@
 
 
   <!-- Form Tambah Data -->
-  <div x-data="{ open: false , openEdit: false, selectedItem: null }">
+  
   <div x-show="openAdd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div class="bg-white p-6 rounded shadow w-full max-w-lg">
-      <h2 class="text-xl font-semibold mb-4">Tambah Sertifikat Halal</h2>
+      <h2 class="text-xl text-center font-semibold mb-4">Tambah Data Sertifikat Halal</h2>
       <form action="{{ route('admin.industri.halal.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-          <div class="space-y-4">
-            <input type="text" name="nama_usaha" placeholder="Nama Usaha" required>
-            <input type="text" name="no_sertifikasi_halal" placeholder="No Sertifikat Halal">
-            <input type="date" name="tanggal_sah" required>
-            <input type="date" name="tanggal_exp" required>
-            <input type="text" name="alamat" placeholder="Alamat" required>
-            <select name="status" required>
-              <option value="Berlaku">Berlaku</option>
-              <option value="Perlu Pembaruan">Perlu Pembaruan</option>
-            </select>
-            <input type="file" name="sertifikat" accept="application/pdf" required>
+          <div class="grid md:grid-cols-2 gap-4 w-800px">
+            <div>
+              <label class="block mb-1 font-semibold"><i class="fas fa-store mr-1 text-blue-600"></i>Nama Usaha</label>
+              <input type="text" name="nama_usaha" placeholder="Nama Usaha" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold">Nomor Sertifikat Halal</label>
+              <input type="text" name="no_sertifikasi_halal" placeholder="No Sertifikat Halal" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition">
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold">Tanggal Diterbitkan</label>
+              <input type="date" name="tanggal_sah" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold">Berlaku Sampai</label>
+              <input type="date" name="tanggal_exp" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold">Status</label>
+              <select name="status" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+                <option value="Berlaku">Berlaku</option>
+                <option value="Perlu Pembaruan">Perlu Pembaruan</option>
+              </select>
+            </div>
+            <div>
+              <p class="block mb-1 font-semibold">Sertifikat Halal</p>
+              <label for="filesertifikat" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white w-max sm:w-auto md:w-max">Pilih File</label>
+              <input type="file" id="filesertifikat" name="sertifikat" accept="application/pdf" class="hidden" accept=".pdf" required>
+              <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF).</p>
+            </div>
+            </div>
+            <div>
+              <label class="block mb-1 font-semibold"><i class="fas fa-map-marker-alt mr-1 text-blue-600"></i>Alamat</label>
+              <textarea name="alamat" placeholder="Alamat" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition"  required></textarea>
+            </div>
+          <div class="flex justify-center mt-4 space-x-2">
+            <button type="button" @click="openAdd = false" class="px-4 py-2 bg-gray-300 rounded-full">Batal</button>
+            <button type="submit" class="bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:bg-blue-300 hover:text-black transition">Simpan</button>
           </div>
-          <div class="flex justify-end mt-4 space-x-2">
-            <button type="button" @click="open = false" class="px-4 py-2 bg-gray-300 rounded">Batal</button>
-            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Simpan</button>
-          </div>
+
         </form>
       </div>
+    </div>
     </div>
   </div>
 
@@ -85,12 +111,13 @@
         </td>
         <td>
           <button class="btn btn-sm " onclick="openEditModal({{ json_encode($item) }})" class="text-green-600 hover:text-green-800" title="Edit">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600 hover:text-green-800 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" />
             </svg>
+          </button>
           <button class="btn btn-sm btn-danger" onclick="deleteData({{ $item->id_halal }})class="text-red-600 hover:text-red-800" title="Hapus">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600 hover:text-red-800 transition" fill="none" viewBox="0 0 24 24"
               stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0H7m4-3h2a1 1 0 011 1v1H8V5a1 1 0 011-1z" />
@@ -104,43 +131,54 @@
   </table>
 
   <!-- Modal Edit -->
-  <div id="modalEdit" style="display:none; background: rgba(0,0,0,0.5); position: fixed; inset: 0; z-index: 1000;">
-    <div style="background: white; max-width: 600px; margin: 50px auto; padding: 20px; border-radius: 8px; position: relative;">
-      <h3 class="text-2xl font-bold mb-6 text-center">Edit Sertifikasi Halal</h3>
+  <div id="modalEdit" style="display:none; background: rgba(0,0,0,0.5); position: fixed; inset: 0; z-index: 1000;" class= "overflow-x-auto">
+    <div style="background: white; max-width: 700px; margin: 50px auto; padding: 20px; border-radius: 8px; position: center;">
+      <h3 class="text-xl font-bold mb-6 text-center">Edit Sertifikat Halal</h3>
+      
       <form id="formEdit" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <input type="hidden" id="edit_id" name="id_halal">
-
-        <label class="block mb-1 font-semibold">Nama Usaha</label>
-        <input type="text" id="edit_nama_usaha" name="nama_usaha" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-
-        <label class="block mb-1 font-semibold">Nomor Sertifikat Halal</label>
-        <input type="text" id="edit_no_sertifikasi_halal" name="no_sertifikasi_halal" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-
-        <label class="block mb-1 font-semibold">Tanggal Sah</label>
-        <input type="date" id="edit_tanggal_sah" name="tanggal_sah" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-
-        <label class="block mb-1 font-semibold">Tanggal Exp</label>
-        <input type="date" id="edit_tanggal_exp" name="tanggal_exp" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-
-        <label class="block mb-1 font-semibold">Alamat</label>
-        <input type="text" id="edit_alamat" name="alamat" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"  required>
-
-        <label class="block mb-1 font-semibold">Status</label>
-        <select id="edit_status" name="status" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-          <option value="Berlaku">Berlaku</option>
-          <option value="Perlu Pembaruan">Perlu Pembaruan</option>
-        </select>
-
-        <label class="block mb-1 font-semibold">Sertifikat (PDF, optional - biarkan kosong jika tidak ingin ganti)</label>
-        <input type="file" name="sertifikat" accept="application/pdf" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-
-        <div class="mt-4 flex justify-center gap-4">
-          <button type="button" onclick="closeEditModal()" class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transitio">Batal</button>
-          <button type="button" onclick="submitEdit()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Simpan Perubahan</button>
-        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-1 font-semibold"><i class="fas fa-store mr-1 text-blue-600"></i>Nama Usaha</label>
+            <input type="text" id="edit_nama_usaha" name="nama_usaha" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Nomor Sertifikat Halal</label>
+            <input type="text" id="edit_no_sertifikasi_halal" name="no_sertifikasi_halal" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition">
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Tanggal Sah</label>
+            <input type="date" id="edit_tanggal_sah" name="tanggal_sah" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Tanggal Exp</label>
+            <input type="date" id="edit_tanggal_exp" name="tanggal_exp" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold"><i class="fas fa-map-marker-alt mr-1 text-blue-600"></i>Alamat</label>
+            <input type="text" id="edit_alamat" name="alamat" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition"  required>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Status</label>
+            <select id="edit_status" name="status" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+              <option value="Berlaku">Berlaku</option>
+              <option value="Perlu Pembaruan">Perlu Pembaruan</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Sertifikat (PDF - kosongkan jika tidak berubah)</label>
+            <input type="file" name="sertifikat" accept="application/pdf" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition">
+          </div>
+          <div>
+            <div class="mt-10 flex justify-center gap-4">
+              <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 rounded-xl">Batal</button>
+              <button type="button" onclick="submitEdit()" class="bg-[#002B4E] text-white font-semibold rounded-xl px-6 py-3 shadow-md hover:brightness-110 transition">Simpan Perubahan</button>
+            </div>
+          </div>
       </form>
+      </div>
     </div>
   </div>
 

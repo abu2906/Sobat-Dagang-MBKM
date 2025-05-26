@@ -1130,7 +1130,7 @@ class AdminIndustriController extends Controller
             Log::error("Gagal mengajukan permohonan: " . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-    }
+    }   
 
     public function viewSuratBalasan($id)
     {

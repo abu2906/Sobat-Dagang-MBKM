@@ -216,7 +216,7 @@
         <div class="flex justify-center mt-6 mb-4 space-x-4">
             <button type="button" id="btn-draft" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Draft</button>
             <button type="button" id="btn-modal-ajukan" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
-                Ajukan
+                Ajukan  
             </button>
         </div>
         <div id="modal-verifikasi" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
