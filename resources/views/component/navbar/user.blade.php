@@ -49,7 +49,6 @@
                     </li>
                 </ul>
             </li>
-
                 <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
                 <li><a href="{{ route('faq') }}" id="open-chat"><strong>FAQ</strong></a></li>    
             </ul>

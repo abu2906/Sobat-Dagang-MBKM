@@ -161,22 +161,20 @@
     function closeEditModal() {
         document.getElementById('editFaqModal').classList.add('hidden');
     }
-    const searchInput = document.getElementById('searchInput');
-    const tableRows = document.querySelectorAll('tbody tr');
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const keyword = this.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
 
-    function applyFilters() {
-        const selectedStatus = statusFilter.value.toLowerCase();
-        const searchTerm = searchInput.value.toLowerCase();
+        rows.forEach(row => {
+            const pertanyaan = row.children[1].textContent.toLowerCase();
+            const jawaban = row.children[2].textContent.toLowerCase();
 
-        tableRows.forEach(row => {
-            const searchMatch = !searchTerm || rowText.includes(searchTerm);
-
-            row.style.display = searchMatch ? '' : 'none';
+            if (pertanyaan.includes(keyword) || jawaban.includes(keyword)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
         });
-    }
-
-    statusFilter.addEventListener('change', applyFilters);
-    searchInput.addEventListener('input', applyFilters);
-    
+    });
 </script>
 @endsection
