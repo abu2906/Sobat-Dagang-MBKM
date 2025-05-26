@@ -16,10 +16,10 @@
     </a>
 </div>
 
-<div class="px-4 xl:px-8 py-6">
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<div class="px-4 py-6 xl:px-8">
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <div class="space-y-6 xl:col-span-2">
-            <div class="p-4 bg-white rounded-xl shadow">
+            <div class="p-4 bg-white shadow rounded-xl">
                 <div class="flex items-center justify-between">
                     <h2 class="font-semibold text-gray-700">Perbandingan Harga Kemarin dan Hari Ini</h2>
                     <select id="lokasiSelect" class="border-gray-300 bg-['#083858'] rounded-md shadow-sm focus:ring focus:ring-blue-200">
@@ -27,15 +27,15 @@
                         <option value="Pasar Lakessi" {{ $selectedLokasi == 'Pasar Lakessi' ? 'selected' : '' }}>Pasar Lakessi</option>
                     </select>
                 </div>
-                <div class="w-full overflow-x-auto mt-2">
+                <div class="w-full mt-2 overflow-x-auto">
                     <div class="min-w-[1000px] h-[300px]">
                         <canvas id="barChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-4">
-                <h2 class="text-lg font-semibold text-gray-700 mb-2">Perkembangan Harga Pupuk</h2>
+            <div class="p-4 bg-white shadow rounded-xl">
+                <h2 class="mb-2 text-lg font-semibold text-gray-700">Perkembangan Harga Pupuk</h2>
                 <div class="w-full h-[300px]">
                     <canvas id="lineChart"></canvas>
                 </div>
@@ -44,33 +44,55 @@
 
         <div class="space-y-6">
             <div id="pieChartsContainer">
-                <div class="p-4 bg-white shadow rounded-xl mb-6">
-                    <h3 class="text-center font-semibold text-black mb-3">Tren Harga Naik</h3>
-                    <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                <div class="p-4 mb-6 bg-white shadow rounded-xl">
+                    <h3 class="mb-3 font-semibold text-center text-black">Tren Harga Naik</h3>
+                    <div class="flex flex-col items-start space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
                         <div class="w-full sm:w-1/2">
                             <canvas id="topHargaNaikChart"></canvas>
                         </div>
-                        <div id="topHargaNaikList" class="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
+                        <!-- Label Kanan -->
+                        <div class="w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
+                            @foreach ($topHargaNaik as $item)
+                            <div class="flex items-center text-sm text-gray-700">
+                                <span 
+                                class="inline-block w-3 h-3 mr-2 rounded-full" 
+                                style="background-color: {{ $item['color'] }}; min-width: 12px; min-height: 12px;"
+                                ></span>
+                                <span class="truncate">{{ $item['label'] }}</span>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
 
-                <div class="p-4 bg-white shadow rounded-xl mb-6">
-                    <h3 class="text-center font-semibold text-black mb-3">Tren Harga Turun</h3>
-                    <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+                <div class="p-4 mb-6 bg-white shadow rounded-xl">
+                    <h3 class="mb-3 font-semibold text-center text-black">Tren Harga Turun</h3>
+                    <div class="flex flex-col items-start space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
                         <div class="w-full sm:w-1/2">
                             <canvas id="topHargaTurunChart"></canvas>
                         </div>
-                        <div id="topHargaTurunList" class="w-full sm:w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
+                        <div class="w-1/2 space-y-2 overflow-y-auto max-h-48 hide-scrollbar">
+                        @foreach ($topHargaTurun as $item)
+                        <div class="flex items-center text-sm text-gray-700">
+                            <span 
+                            class="inline-block w-3 h-3 mr-2 rounded-full" 
+                            style="background-color: {{ $item['color'] }}; min-width: 12px; min-height: 12px;"
+                            ></span>
+                            <span class="truncate">{{ $item['label'] }}</span>
                         </div>
+                        @endforeach
+                    </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-4">
-                <h2 class="text-lg font-semibold text-gray-700 mb-2">Distribusi Pupuk</h2>
-                <div class="w-full h-[220px]">
-                    <canvas id="donutChart"></canvas>
+            <div class="p-4 bg-white shadow rounded-xl">
+                <h2 class="mb-2 text-lg font-semibold text-gray-700">Distribusi Pupuk</h2>
+
+                <div class="w-full h-[220px] flex justify-center items-center">
+                    <div class="w-[180px] aspect-square">
+                        <canvas id="donutChart" class="w-full h-full"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -240,7 +262,7 @@
             }]
         },
         options: {
-            radius: '60%', // default biasanya '100%' atau penuh
+            radius: '100%', // default biasanya '100%' atau penuh
             plugins: {
                 datalabels: {
                     color: '#000',
@@ -271,5 +293,13 @@
 
 
   });
+</script>
+<script>
+    document.getElementById('lokasiSelect').addEventListener('change', function () {
+        const selectedLokasi = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('lokasi', selectedLokasi); // tambahkan atau ubah param lokasi
+        window.location.href = url.toString(); // reload halaman dengan parameter baru
+    });
 </script>
 @endsection
