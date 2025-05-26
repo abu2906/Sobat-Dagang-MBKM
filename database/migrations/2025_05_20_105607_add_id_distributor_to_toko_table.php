@@ -9,14 +9,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('toko', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_distributor')->after('id_rancangan');
+            if (!Schema::hasColumn('toko', 'id_distributor')) {
+                $table->unsignedBigInteger('id_distributor')->after('id_rancangan');
 
-            $table->foreign('id_distributor')
-                  ->references('id_distributor')
-                  ->on('distributor')
-                  ->onDelete('cascade');
+                $table->foreign('id_distributor')
+                    ->references('id_distributor')
+                    ->on('distributor')
+                    ->onDelete('cascade');
+            }
         });
     }
+
 
     public function down(): void
     {

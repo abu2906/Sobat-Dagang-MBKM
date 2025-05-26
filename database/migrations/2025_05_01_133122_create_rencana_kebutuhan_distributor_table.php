@@ -9,14 +9,16 @@ return new class extends Migration {
     {
         Schema::create('rencana_kebutuhan_distributor', function (Blueprint $table) {
             $table->id('id_rancangan'); // Primary Key
-            $table->unsignedBigInteger('id_barang
-            _pelaporan')->nullable(); // Foreign Key
+            $table->unsignedBigInteger('id_barang_pelaporan')->nullable(); // Foreign Key
             $table->year('tahun');
             $table->integer('jumlah');
             $table->timestamps();
 
             // Foreign key constraint
-            $table->foreign('id_barang_pelaporan')->references('id_barang_pelaporan')->on('barang_pelaporan')->onDelete('cascade');
+            $table->foreign('id_barang_pelaporan')
+                ->references('id_barang_pelaporan')
+                ->on('barang_pelaporan')
+                ->onDelete('cascade');
         });
     }
 

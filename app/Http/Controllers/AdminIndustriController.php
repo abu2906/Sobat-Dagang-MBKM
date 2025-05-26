@@ -20,7 +20,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\DataIkm;
 use App\Models\SertifikasiHalal;
 use App\Exports\DataIkmExport;
-use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Facades\Excel;;
+
 
 
 class AdminIndustriController extends Controller
@@ -299,20 +300,12 @@ class AdminIndustriController extends Controller
 
     public function exportIKM(Request $request)
     {
-        $filtered = DataIKM::query();
+        $jenis = $request->input('jenis', []);
+        $kecamatan = $request->input('kecamatan');
 
-        if ($request->filled('kecamatan')) {
-            $filtered->where('kecamatan', $request->kecamatan);
-        }
-
-        if ($request->filled('jenis_industri')) {
-            $filtered->where('jenis_industri', $request->jenis_industri);
-        }
-
-        $data = $filtered->get();
-
-        return Excel::download(new DataIkmExport($data), 'data_ikm_terfilter.xlsx');
+        return Excel::download(new DataIkmExport($jenis, $kecamatan), 'data_ikm.xlsx');
     }
+
 
     public function storeDataIKM(Request $request)
     {
@@ -967,6 +960,11 @@ class AdminIndustriController extends Controller
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
+    }
+
+    public function showSurat()
+    {
+        return view('admin.bidangIndustri.suratBalasan');
     }
 
     public function viewSuratBalasan($id)

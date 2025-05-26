@@ -32,8 +32,9 @@ class DataIkm extends Model
     // === RELASI KE SEMUA TABEL CHILD ===
     public function karyawan()
     {
-        return $this->hasMany(Karyawan::class, 'id_ikm', 'id_ikm');
+        return $this->hasOne(Karyawan::class, 'id_ikm');
     }
+
 
     public function persentasePemilik()
     {
@@ -47,8 +48,9 @@ class DataIkm extends Model
 
     public function penggunaanAir()
     {
-        return $this->hasOne(PenggunaanAir::class, 'id_ikm', 'id_ikm');
+        return $this->hasOne(PenggunaanAir::class, 'id_ikm');
     }
+
 
     public function pengeluaran()
     {
@@ -62,8 +64,9 @@ class DataIkm extends Model
 
     public function listrik()
     {
-        return $this->hasOne(Listrik::class, 'id_ikm', 'id_ikm');
+        return $this->hasMany(Listrik::class, 'id_ikm');
     }
+
 
     public function mesinProduksi()
     {
@@ -85,13 +88,14 @@ class DataIkm extends Model
         return $this->hasMany(Pendapatan::class, 'id_ikm', 'id_ikm');
     }
 
-    public function bentukPengelolaan()
-    {
-        return $this->hasMany(BentukPengelolaanLimbah::class, 'id_ikm', 'id_ikm');
-    }
-
     public function modal()
     {
-        return $this->hasOne(Modal::class, 'id_ikm', 'id_ikm');
+        return $this->hasMany(Modal::class, 'id_ikm', 'id_ikm');
+    }
+
+
+    public function bentukPengelolaanLimbah()
+    {
+        return $this->hasOne(BentukPengelolaanLimbah::class, 'id_ikm', 'id_ikm');
     }
 }

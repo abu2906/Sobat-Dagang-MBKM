@@ -45,14 +45,16 @@
                         TAMBAH DATA
                     </a>
 
-                    <form method="GET" action="{{ route('exportIKM') }}">
+                    <form method="GET" action="{{ route('exportIKM') }}" id="exportForm">
                         <input type="hidden" name="kecamatan" id="inputKecamatan">
-                        <input type="hidden" name="jenis_industri" id="inputIndustri">
+                        <input type="hidden" name="search" id="inputSearch">
+                        <div id="inputJenisContainer"></div>
                         <button type="submit"
                             class="bg-[#0A4D68] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#0A4D68] border border-transparent hover:border-[#0A4D68] transition duration-300">
                             UNDUH DATA
                         </button>
                     </form>
+
 
 
                 </div>
@@ -76,6 +78,7 @@
                 @endphp
 
                 @foreach ($kategoriList as $kategori)
+                    `
                     <div onclick="selectKategori(this)"
                         class="kategori-card cursor-pointer flex flex-col items-center bg-white p-3 rounded-xl shadow-lg w-44 border-2 border-transparent transition transform hover:scale-105 text-center">
                         <img src="{{ asset('assets/img/kategori/' . $kategori['ikon']) }}"
@@ -153,7 +156,8 @@
             </section>
 
             <!-- Overlay -->
-            <div x-show="openModal" x-transition.opacity class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40">
+            <div x-show="openModal" x-transition.opacity
+                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40">
             </div>
 
             <!-- Modal -->
@@ -196,16 +200,25 @@
 
     @section('scripts')
         <script>
-            let kategoriDipilih = '';
+            let kategoriDipilih = [];
+
 
             function selectKategori(el) {
-                const allCards = document.querySelectorAll('.kategori-card');
-                allCards.forEach(card => {
-                    card.classList.remove('bg-[#CAE2F6]', 'border-[#003366]', 'border-2');
-                });
+                const selectedText = el.querySelector('.font-semibold').textContent.trim();
 
-                el.classList.add('bg-[#CAE2F6]', 'border-[#003366]', 'border-2');
-                kategoriDipilih = el.querySelector('.font-semibold').textContent.trim();
+                const index = kategoriDipilih.indexOf(selectedText);
+                if (index > -1) {
+                    // Sudah dipilih → hapus dari array
+                    kategoriDipilih.splice(index, 1);
+                    el.classList.remove('bg-blue-100', 'border-blue-900', 'border-2');
+                    el.classList.add('bg-white', 'border-transparent');
+                } else {
+                    // Belum dipilih → tambahkan ke array
+                    kategoriDipilih.push(selectedText);
+                    el.classList.remove('bg-white', 'border-transparent');
+                    el.classList.add('bg-blue-100', 'border-blue-900', 'border-2');
+                }
+
                 filterTabel();
             }
 
@@ -222,7 +235,8 @@
                     const rowText = row.textContent.toLowerCase();
 
                     const cocokKecamatan = !selectedKecamatan || rowKecamatan === selectedKecamatan;
-                    const cocokIndustri = !kategoriDipilih || rowIndustri === kategoriDipilih.toLowerCase();
+                    const cocokIndustri = kategoriDipilih.length === 0 || kategoriDipilih.map(k => k.toLowerCase())
+                        .includes(rowIndustri);
                     const cocokCari = !searchKeyword || rowText.includes(searchKeyword);
 
                     const show = cocokKecamatan && cocokIndustri && cocokCari;
@@ -237,10 +251,24 @@
                 }
             }
 
+
             function syncExportFilter() {
                 document.getElementById('inputKecamatan').value = document.getElementById('filterKecamatan').value;
-                document.getElementById('inputIndustri').value = kategoriDipilih;
+                document.getElementById('inputSearch').value = document.getElementById('searchInput').value;
+
+                const container = document.getElementById('inputJenisContainer');
+                container.innerHTML = '';
+
+                kategoriDipilih.forEach(jenis => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'jenis[]';
+                    input.value = jenis;
+                    container.appendChild(input);
+                });
             }
+
+
 
             document.addEventListener('DOMContentLoaded', () => {
                 filterTabel();
