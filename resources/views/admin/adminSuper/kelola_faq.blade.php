@@ -26,8 +26,8 @@
         </div>
     </div>
     <div class="overflow-x-auto rounded-lg shadow-sm mt-4">
-		<div class="min-w-full inline-block align-middle">
-			<div class="overflow-hidden">
+		<div class="min-w-full inline-block align-middle px-4 sm:px-8">
+			<div class="overflow-hidden rounded-xl">
                 <table class="min-w-full text-sm text-left text-gray-700 bg-white border border-gray-200 pb-12">
 					<thead class="bg-[#0c3252] text-white">
                         <tr>
