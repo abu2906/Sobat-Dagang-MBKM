@@ -72,7 +72,7 @@
                     </td>
                     <td class="px-4 py-2">
                         <div class="flex items-center justify-center space-x-2">
-                            <a href="{{ route('admin.detailPermohonan', ['id' => $p->id, 'bidang' => strtolower($p->bidang_terkait)]) }}" 
+                            <a href="{{ route('admin.detailPermohonan', ['id' => base64_encode($p->id), 'bidang' => strtolower($p->bidang_terkait)]) }}" 
                                 class="text-[#083358] hover:text-black">
                                 <span class="material-symbols-outlined">visibility</span>
                             </a>

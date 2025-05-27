@@ -244,11 +244,14 @@ class DashboardController extends Controller
 
     public function detailPermohonan($id, $bidang)
     {
+        // Decode the ID parameter
+        $decodedId = base64_decode($id);
+        
         if ($bidang === 'metrologi') {
             $permohonan = DB::table('surat_metrologi')
                 ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
                 ->leftJoin('surat_keluar_metrologi', 'surat_metrologi.id_surat', '=', 'surat_keluar_metrologi.id_surat')
-                ->where('surat_metrologi.id_surat', $id)
+                ->where('surat_metrologi.id_surat', $decodedId)
                 ->select(
                     'surat_metrologi.*',
                     'user.nama as nama_pengirim',
@@ -259,7 +262,7 @@ class DashboardController extends Controller
         } else {
             $permohonan = DB::table('form_permohonan')
                 ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
-                ->where('form_permohonan.id_permohonan', $id)
+                ->where('form_permohonan.id_permohonan', $decodedId)
                 ->select('form_permohonan.*', 'user.nama as nama_pengirim')
                 ->first();
         }
