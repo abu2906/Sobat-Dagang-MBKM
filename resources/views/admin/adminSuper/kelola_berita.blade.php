@@ -60,6 +60,7 @@
                         data-judul="{{ $item->judul }}"
                         data-tanggal="{{ $item->tanggal }}"
                         data-isi="{{ htmlentities($item->isi) }}"
+                        data-lampiran="{{ $item->lampiran ? asset('storage/' . $item->lampiran) : '' }}"
                         class="text-[#083358] hover:text-black">
                         <span class="material-symbols-outlined">edit</span>
                     </button>
@@ -108,12 +109,19 @@
                     <span id="file-name-edit" class="text-gray-500">Tidak ada file yang dipilih</span>
                     <input type="file" id="gambar_edit" name="lampiran" class="hidden" onchange="document.getElementById('file-name-edit').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
+
+                <!-- Preview gambar lama -->
+                <div id="preview-lama" class="hidden mt-3">
+                    <p class="text-sm text-gray-600">Lampiran saat ini:</p>
+                    <img id="preview-lama-img" src="" alt="Gambar lama" class="w-32 h-auto rounded shadow">
+                </div>
             </div>
 
             <div class="flex justify-end mt-6 space-x-3">
                 <button type="button" onclick="closeModal('edit')" class="px-4 py-2 text-black bg-gray-300 rounded-full hover:bg-gray-400">Batal</button>
                 <button type="submit" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition">Simpan</button>
             </div>
+
             @if ($errors->any())
             <div class="p-4 mb-4 text-red-700 bg-red-100 border border-red-400 rounded">
                 <ul class="pl-5 list-disc">
@@ -126,6 +134,7 @@
         </form>
     </div>
 </div>
+
 
 <div id="modalTambah" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
     <div class="relative max-w-xl w-full max-h-[90vh] overflow-y-auto p-8 bg-white rounded-lg shadow-xl">
@@ -154,6 +163,11 @@
                     <span id="file-name-tambah" class="text-gray-500">Tidak ada file yang dipilih</span>
                     <input type="file" id="gambar_tambah" name="lampiran" class="hidden" accept="image/*"
                         onchange="document.getElementById('file-name-tambah').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
+                </div>
+                
+                <div id="preview-tambah" class="hidden mt-3">
+                    <p class="text-sm text-gray-600">Preview Gambar:</p>
+                    <img id="preview-tambah-img" src="" alt="Preview Gambar" class="w-32 h-auto rounded shadow">
                 </div>
             </div>
 
@@ -207,37 +221,47 @@
     // Fungsi untuk membuka modal
     function openModal(type, button) {
         if (type === 'edit') {
-            // Ambil data dari atribut data-xxx
             const beritaId = button.getAttribute('data-id');
             const judul = button.getAttribute('data-judul');
             const isi = button.getAttribute('data-isi');
             const tanggal = button.getAttribute('data-tanggal');
+            const lampiran = button.getAttribute('data-lampiran');
 
-            // Menghapus tag HTML dengan menggunakan elemen dummy
             const dummy = document.createElement("div");
-            dummy.innerHTML = isi; // Memasukkan konten HTML
-            const plainText = dummy.innerText; // Mengambil teks polos tanpa tag HTML
+            dummy.innerHTML = isi;
+            const plainText = dummy.innerText;
 
-            // Isi field judul dan isi berita di form
             document.getElementById('judul_edit').value = judul;
-            document.getElementById('tanggal_edit').value = tanggal; // Kosongkan atau isi dengan tanggal yang sesuai
-            $('#summernote_edit').summernote('code', plainText); // Isi Summernote dengan teks polos
-
-            // Set action form untuk edit data
+            document.getElementById('tanggal_edit').value = tanggal;
+            $('#summernote_edit').summernote('code', plainText);
             document.getElementById('editForm').action = `/admin/${beritaId}`;
 
-            $(document).ready(function() {
-                $("#summernote_edit").summernote({
+            // Reset input file dan label
+            document.getElementById('gambar_edit').value = '';
+            document.getElementById('file-name-edit').innerText = 'Tidak ada file yang dipilih';
+
+            // Preview gambar lama
+            if (lampiran && lampiran !== 'null' && lampiran !== '') {
+                document.getElementById('preview-lama').classList.remove('hidden');
+                document.getElementById('preview-lama-img').src = lampiran;
+            } else {
+                document.getElementById('preview-lama').classList.add('hidden');
+                document.getElementById('preview-lama-img').src = '';
+            }
+
+            $(document).ready(function () {
+                $('#summernote_edit').summernote({
                     tabsize: 2,
                     height: 150,
                     toolbar: [
-                        ["style", ["bold", "italic", "underline", "clear"]],
-                        ["fontsize", ["fontsize"]],
-                        ["color", ["color"]],
-                        ["para", ["ul", "ol", "paragraph"]],
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
                     ],
                 });
             });
+
             document.getElementById('modalEdit').classList.remove('hidden');
         } else if (type === 'delete') {
             const beritaId = button.getAttribute('data-id');
@@ -245,9 +269,9 @@
             form.action = `/admin/${beritaId}`;
             document.getElementById('modalDelete').classList.remove('hidden');
         } else if (type === 'tambah') {
-            // Tampilkan modal Tambah dan sembunyikan yang lain
             document.getElementById('modalTambah').classList.remove('hidden');
-            $(document).ready(function() {
+
+            $(document).ready(function () {
                 $("#summernote").summernote({
                     tabsize: 2,
                     height: 150,
@@ -257,6 +281,31 @@
                         ["color", ["color"]],
                         ["para", ["ul", "ol", "paragraph"]],
                     ],
+                });
+
+                // Tambahkan preview file setelah summernote siap
+                const fileInput = document.getElementById('gambar_tambah');
+                const fileNameSpan = document.getElementById('file-name-tambah');
+
+                fileInput.addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (file) {
+                        fileNameSpan.innerText = file.name;
+
+                        // Tampilkan preview
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            let preview = document.getElementById('preview-tambah');
+                            let img = document.getElementById('preview-tambah-img');
+                            preview.classList.remove('hidden');
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        fileNameSpan.innerText = 'Tidak ada file yang dipilih';
+                        document.getElementById('preview-tambah').classList.add('hidden');
+                        document.getElementById('preview-tambah-img').src = '';
+                    }
                 });
             });
         }
@@ -272,4 +321,5 @@
             document.getElementById('modalTambah').classList.add('hidden');
         }
     }
+
 </script>

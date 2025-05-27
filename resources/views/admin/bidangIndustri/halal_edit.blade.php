@@ -4,7 +4,7 @@
 <div class="p-6 max-w-3xl mx-auto">
     <h2 class="text-2xl font-bold mb-6 text-center">Edit Sertifikat Halal</h2>
 
-    <form action="{{ route('admin.industri.halal.update', $item->id_halal) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('halal.update', $item->id_halal) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
 

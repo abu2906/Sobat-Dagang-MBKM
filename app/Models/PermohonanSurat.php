@@ -22,6 +22,7 @@ class PermohonanSurat extends Model
         'tgl_pengajuan',
         'titik_koordinat',
         'file_balasan',
+        'file_surat',
 
     ];
     public function document()

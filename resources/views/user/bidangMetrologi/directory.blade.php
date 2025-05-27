@@ -73,6 +73,7 @@
                 <tr>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">No</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Jenis Alat</th>
+                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Merk/Type</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nomor Registrasi</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nama Usaha</th>
                     <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Tanggal Tera</th>
@@ -108,6 +109,7 @@
                         <tr class="hover:bg-blue-50 transition">
                             <td class="px-5 text-center py-3 border-b">{{ $loop->iteration }}</td>
                             <td class="px-5 text-center py-3 border-b">{{ $alat->uttp->jenis_alat ?? '-' }}</td>
+                            <td class="px-5 text-center py-3 border-b">{{ $alat->uttp->merk_type ?? '-' }}</td>
                             <td class="px-5 text-center py-3 border-b">{{ $alat->uttp->no_registrasi ?? '-' }}</td>
                             <td class="px-5 text-center py-3 border-b">{{ $alat->uttp->nama_usaha ?? '-' }}</td>
                             <td class="px-5 text-center py-3 border-b">
@@ -157,7 +159,7 @@
         rows.forEach(row => {
             if (!row.querySelector('td')) return;
 
-            const statusCell = row.querySelector('td:nth-child(7)');
+            const statusCell = row.querySelector('td:nth-child(8)');
             const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
 

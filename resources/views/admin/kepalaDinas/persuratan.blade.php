@@ -1,5 +1,5 @@
 @extends('layouts.metrologi.kadis')
-
+@section('title', 'Data Persuratan')
 @section('content')
 <section class="px-4 py-12 bg-white">
     <div class="grid items-center gap-8 mx-auto max-w-7xl md:grid-cols-2">
@@ -25,7 +25,7 @@
 
         <!-- Submenu -->
         <div class="absolute left-0 w-full hidden group-hover:block bg-[#CAE2F6] shadow-lg rounded overflow-hidden">
-            <a href="#" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9] rounded-t">Permohonan perizinan/
+            <a href="{{ route('kepalaDinas.suratPerdagangan') }}" class="block px-6 py-2 font-semibold text-[#083458] text-center hover:bg-[#98c4e9] rounded-t">Permohonan perizinan/
                 non perizinan</a>
         </div>
     </div>

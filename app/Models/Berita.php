@@ -11,6 +11,7 @@ class Berita extends Model
 
     // Kolom yang bisa diisi mass-assignment
     protected $fillable = [
+        'id_disdag',
         'judul',
         'isi',
         'lampiran',

@@ -29,7 +29,6 @@
     </button>
   </div>
 
-
   <!-- Form Tambah Data -->
   
   <div x-show="openAdd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

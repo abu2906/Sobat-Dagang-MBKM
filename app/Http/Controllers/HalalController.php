@@ -135,7 +135,7 @@ class HalalController extends Controller
             return response()->json(['message' => 'Data berhasil diupdate.'], 200);
         }
 
-        return redirect()->route('admin.industri.halal')
+        return redirect()->route('halal')
             ->with('success', 'Data berhasil diupdate.');
     }
 
@@ -154,7 +154,7 @@ class HalalController extends Controller
             return response()->json(['message' => 'Data berhasil dihapus.'], 200);
         }
 
-        return redirect()->route('admin.industri.halal')
+        return redirect()->route('halal')
             ->with('success', 'Data berhasil dihapus.');
     }
 }
