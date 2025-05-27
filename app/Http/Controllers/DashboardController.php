@@ -133,7 +133,7 @@ class DashboardController extends Controller
             ->whereNotNull('id_user')
             ->count();
         $totalPengguna = DB::table('user')->count();
-        $totalKomoditas = DB::table('barang')->count();
+        $totalKomoditas = DB::table('data_ikm')->count();
 
         // Get total permohonan from both tables
         $totalPermohonan = DB::table('form_permohonan')->count() + DB::table('surat_metrologi')->count();
