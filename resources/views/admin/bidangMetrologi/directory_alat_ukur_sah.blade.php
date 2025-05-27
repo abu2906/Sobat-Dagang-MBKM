@@ -98,7 +98,7 @@ use App\Helpers\StatusHelper;
                         <input type="date" name="tanggal_selesai" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                     </div>
                     <div>
-                        <label class="block text-xs sm:text-sm font-medium mb-1">ID User</label>
+                        <label class="block text-xs sm:text-sm font-medium mb-1">NIB User</label>
                         <select name="id_user" id="userSelect" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" style="height: 38px;">
                             <option value="">Pilih User</option>
                         </select>
@@ -613,7 +613,7 @@ use App\Helpers\StatusHelper;
             minimumResultsForSearch: 0,
             language: {
                 inputTooShort: function() {
-                    return 'Ketik ID atau Nama User untuk mencari...';
+                    return 'Ketik NIB atau Nama User untuk mencari...';
                 },
                 searching: function() {
                     return 'Mencari User...';

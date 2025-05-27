@@ -58,6 +58,11 @@ class PersuratanController extends Controller
             'status_admin' => 'Menunggu',
         ]);
 
+        // Check if redirect parameter is present
+        if ($request->has('redirect') && $request->redirect === 'riwayat') {
+            return redirect()->route('administrasi-metrologi')->with('success', 'Permohonan berhasil diajukan.')->with('show_riwayat', true);
+        }
+
         return redirect()->back()->with('success', 'Permohonan berhasil diajukan.');
     }
 
