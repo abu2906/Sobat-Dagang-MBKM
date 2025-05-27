@@ -207,6 +207,15 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
     Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');    
+    //pelaporan
+    Route::get('/admin/forum-pengaduan', [ForumDiskusiController::class, 'index'])->name('forum.admin');
+    Route::get('/forum/load', [ForumDiskusiController::class, 'load']);
+    Route::post('/kirim-pesan', [ForumDiskusiController::class, 'send']);
+    Route::delete('/forum-diskusi/{id}', [ForumDiskusiController::class, 'destroy'])->name('forum-diskusi.destroy');
+
+    // Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
+    // Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
+    // Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat');
 
 });
 

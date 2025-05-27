@@ -27,7 +27,7 @@
                 @php
                 $menuItems = [
                 ['href' => route('dashboard.master'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                ['href' => '#', 'icon' => '', 'label' => 'Pengaduan'],
+                ['href' => route('forum.admin'), 'icon' => 'forum.png', 'label' => 'Pengaduan'],
                 ['href' => route('review.pengajuan'), 'icon' => 'data.png', 'label' => 'Pelaporan Distributor'],
                 ['href' => '#', 'icon' => '', 'label' => 'Surat Permohonan'],
                 ['href' => '#', 'icon' => '', 'label' => 'User & Akun'],
