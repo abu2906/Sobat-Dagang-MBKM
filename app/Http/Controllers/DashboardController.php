@@ -14,9 +14,26 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('user.dashboard');
+            // Ambil id_user dari session
+        $idUser = $request->session()->get('id_user');
+
+        if (!$idUser) {
+            // Jika tidak ada id_user di session, redirect ke halaman login atau halaman lain
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // Ambil data user dari database berdasarkan id_user
+        $user = User::find($idUser);
+
+        if (!$user) {
+            // Jika user tidak ditemukan, redirect ke login juga atau bisa tampilkan halaman error
+            return redirect()->route('login')->with('error', 'User tidak ditemukan.');
+        }
+
+        // Kirim data user ke view 'user.dashboard'
+        return view('user.dashboard', ['user' => $user]);
     }
 
     public function profile()

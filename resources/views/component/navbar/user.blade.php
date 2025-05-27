@@ -20,31 +20,27 @@
                 <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
                 <li><a href="{{ route('about') }}"><strong>ABOUT US</strong></a></li>
 
-                <li class="dropdown">
+                <li class="relative dropdown group">
                     <a href="#" class="dropdown-toggle"><strong>PELAYANAN</strong> <span class="dropdown-icon">▼</span></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-submenu">
-                            <a href="#"><strong>PERDAGANGAN</strong></a>
-                            <ul class="submenu">
-                                <li>
-                                    <a href="{{ route('bidangPerdagangan.formPermohonan') }}">
-                                        <strong>Permohonan Perizinan/Non Perizinan</strong>
-                                    </a>
-                                </li>
+                    <ul class="absolute left-0 hidden mt-2 text-black bg-white rounded shadow-lg dropdown-menu group-hover:block">
+                        <li class="relative dropdown-submenu group">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-200"><strong>PERDAGANGAN</strong></a>
+                            <ul class="absolute top-0 hidden mt-0 ml-1 text-black bg-white rounded shadow-lg submenu left-full group-hover:block">
+                                <li><a href="{{ route('bidangPerdagangan.formPermohonan') }}" class="block px-4 py-2 hover:bg-gray-200"><strong>Permohonan Perizinan/Non Perizinan</strong></a></li>
                             </ul>
                         </li>
-                        <li class="dropdown-submenu">
-                            <a href="#"><strong>INDUSTRI</strong></a>
-                            <ul class="submenu">
-                                <li><a href="{{ route('bidangIndustri.formPermohonan') }}"><strong>Permohonan IKM Binaan</strong></a></li>
-                                <li><a href="{{ route('halal.user') }}"><strong>Data Sertifikat Halal</strong></a></li>
+                        <li class="relative dropdown-submenu group">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-200"><strong>INDUSTRI</strong></a>
+                            <ul class="absolute top-0 hidden mt-0 ml-1 text-black bg-white rounded shadow-lg submenu left-full group-hover:block">
+                                <li><a href="{{ route('bidangIndustri.formPermohonan') }}" class="block px-4 py-2 hover:bg-gray-200"><strong>Permohonan IKM Binaan</strong></a></li>
+                                <li><a href="{{ route('halal.user') }}" class="block px-4 py-2 hover:bg-gray-200"><strong>Data Sertifikat Halal</strong></a></li>
                             </ul>
                         </li>
-                        <li class="dropdown-submenu">
-                            <a href="#"><strong>METROLOGI</strong></a>
-                            <ul class="submenu">
-                                <li><a href="{{ route('administrasi-metrologi') }}"><strong>Permohonan Tera baru/Tera ulang</strong></a></li>
-                                <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Ukur Valid</strong></a></li>
+                        <li class="relative dropdown-submenu group">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-200"><strong>METROLOGI</strong></a>
+                            <ul class="absolute top-0 hidden mt-0 ml-1 text-black bg-white rounded shadow-lg submenu left-full group-hover:block">
+                                <li><a href="{{ route('administrasi-metrologi') }}" class="block px-4 py-2 hover:bg-gray-200"><strong>Permohonan Tera baru/Tera ulang</strong></a></li>
+                                <li><a href="{{ route('directory-metrologi') }}" class="block px-4 py-2 hover:bg-gray-200"><strong>Alat Ukur Valid</strong></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -54,7 +50,7 @@
             </ul>
         </div>
 
-        <div class="items-center hidden mt-2 space-x-4 md:flex md:mt-0">
+        <div class="flex items-center justify-end mt-2 space-x-4 md:mt-0" x-data="{ showProfile: false }">
             <button aria-label="Notifikasi" class="focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-7 w-7 hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -73,76 +69,75 @@
                             9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 </svg>
             </button>
+
+            <!-- Modal Profil -->
+            <!-- Modal Profil -->
+            <div
+                x-show="showProfile"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-90"
+                x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-90"
+                @click.outside="showProfile = false"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
+                style="display: none;">
+                <div class="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto p-6 relative mx-4">
+                    <button @click="showProfile = false"
+                        class="absolute text-2xl font-bold text-gray-600 top-3 right-3 hover:text-gray-900 focus:outline-none">
+                        &times;
+                    </button>
+
+                    <h2 class="mb-4 text-lg font-semibold text-center text-black">Profile Anda</h2>
+
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user->nama) }}&background=0D8ABC&color=fff" alt="Foto Profil"
+                        class="object-cover w-24 h-24 mx-auto mb-4 rounded-full">
+
+                    <!-- Nama & Detail Profil -->
+                    <div class="max-w-md px-6 py-4 mx-auto mt-4 text-left bg-white rounded-lg shadow-md">
+                        <h3 class="mb-4 text-3xl font-bold text-gray-900">{{ $user->nama ?? '-' }}</h3>
+                        <div class="space-y-2 text-gray-700">
+                            <p><span class="font-semibold text-gray-800">NIK:</span> {{ $user->nik ?? '-' }}</p>
+                            <p><span class="font-semibold text-gray-800">Alamat Lengkap:</span> {{ $user->alamat_lengkap ?? '-' }}</p>
+                            <p><span class="font-semibold text-gray-800">Jenis Kelamin:</span> {{ $user->jenis_kelamin ?? '-' }}</p>
+                            <p><span class="font-semibold text-gray-800">Email:</span> {{ $user->email ?? '-' }}</p>
+                            <p><span class="font-semibold text-gray-800">Telepon:</span> {{ $user->telp ?? '-' }}</p>
+                        </div>
+                    </div>
+
+
+                    <!-- Link Ubah Password -->
+                    <div class="px-4 mt-6 space-y-4 text-left">
+                        <a href="{{ route('change.password') }}"
+                        class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🔑</span>
+                                <span class="text-sm font-medium text-black">Ubah Kata Sandi</span>
+                            </div>
+                            <span class="text-xl text-black">›</span>
+                        </a>
+                    </div>
+
+                    <div class="pt-4 mt-6 text-center border-t">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full py-2 text-white bg-red-600 rounded hover:bg-red-700">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
 
-<!-- Panel Profil
-<div x-data="{ showProfileMenu: false }"
-     x-show="showProfile"
-     x-transition:enter="transition ease-out duration-300"
-     x-transition:enter-start="opacity-0 translate-x-full"
-     x-transition:enter-end="opacity-100 translate-x-0"
-     x-transition:leave="transition ease-in duration-200"
-     x-transition:leave-start="opacity-100 translate-x-0"
-     x-transition:leave-end="opacity-0 translate-x-full"
-     @click.outside="showProfile = false"
-     class="fixed top-[70px] right-0 w-[350px] h-[700px] bg-white shadow-2xl z-50 rounded-l-2xl overflow-hidden flex flex-col">
-
-    <div class="flex justify-end bg-blue-100 rounded-tl-2xl">
-        <button @click="showProfile = false"
-            class="flex items-center justify-center w-10 h-10 text-gray-600 hover:bg-blue-200">
-            &times;
-        </button>
-    </div>
-
-    <div class="flex-1 p-6 overflow-y-auto text-center">
-        <h2 class="p-2 text-base text-lg font-semibold text-black">Profile Anda</h2>
-
-        <img src=""
-             class="w-24 h-24 mx-auto rounded-full" alt="Foto Profil">
-
-        <h3 class="mt-4 text-lg font-bold text-black">Robert</h3>
-        <p class="text-sm text-gray-600">Robert</p>
-
-        <div class="mt-6 space-y-4 text-left">
-            <a href="{{ route('profile') }}"
-               class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-black">●</span>
-                    <span class="text-sm text-black">Data Pribadi</span>
-                </div>
-                <span>›</span>
-            </a>
-            <a href="{{ route('change.password') }}"
-               class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100">
-                <div class="flex items-center gap-2">
-                    <span>🔑</span>
-                    <span class="text-sm text-black">Ubah Kata Sandi</span>
-                </div>
-                <span>›</span>
-            </a>
-        </div>
-    </div>
-
-    <div class="p-4 text-center border-t">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit"
-                class="px-4 py-1 font-medium text-black transition border border-black rounded-full hover:bg-gray-100">
-                Keluar →
-            </button>
-        </form>
-    </div>
-</div> -->
-
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const burgerBtn = document.getElementById('burger-btn');
+<script>
+    // Toggle menu burger
+    document.getElementById('burger-btn').addEventListener('click', function() {
         const navMenu = document.getElementById('nav-menu');
-        burgerBtn?.addEventListener('click', () => {
-            navMenu?.classList.toggle('hidden');
-        });
+        navMenu.classList.toggle('hidden');
     });
-</script> -->
+</script>
 @endauth
