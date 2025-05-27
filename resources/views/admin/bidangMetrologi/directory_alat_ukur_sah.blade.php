@@ -14,18 +14,12 @@ use App\Helpers\StatusHelper;
             <div class="flex flex-wrap items-center justify-between gap-4 p-4 shadow-md rounded-xl">
                 <!-- Filter/Search Input -->
                 <div class="flex flex-wrap items-center flex-1 gap-4">
-                    <form id="filterForm" class="flex items-center" method="GET">
+                    <form action="{{ route('management-uttp-metrologi') }}" method="GET" class="flex items-center flex-1 gap-4">
                         <select name="status" id="statusFilter" class="px-4 py-2 text-sm border rounded-full shadow" onchange="this.form.submit()">
                             <option value="">Semua</option>
                             <option value="Valid" {{ request('status') === 'Valid' ? 'selected' : '' }}>Valid</option>
                             <option value="Kadaluarsa" {{ request('status') === 'Kadaluarsa' ? 'selected' : '' }}>{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
                         </select>
-                    </form>
-                    
-                    <form action="{{ route('management-uttp-metrologi') }}" method="GET" class="flex items-center flex-1">
-                        @if(request('status'))
-                            <input type="hidden" name="status" value="{{ request('status') }}">
-                        @endif
                         <div class="relative flex-1">
                             <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}" class="w-full py-2 pl-10 pr-4 text-sm border rounded-full shadow">
                             <button type="submit" class="absolute top-0 right-0 h-full px-4 text-gray-400 hover:text-gray-600">
@@ -284,35 +278,6 @@ use App\Helpers\StatusHelper;
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-    const statusFilter = document.getElementById("statusFilter");
-    const searchInput = document.getElementById("searchInput");
-    const rows = document.querySelectorAll("tbody tr");
-
-    function applyFilters() {
-        const selectedStatus = statusFilter.value.toLowerCase();
-        const keyword = searchInput.value.toLowerCase();
-
-        rows.forEach(row => {
-            if (!row.querySelector('td')) return;
-
-            const statusCell = row.querySelector('td:nth-child(6)');
-            const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
-            const rowText = row.textContent.toLowerCase();
-
-            // Handle Kadaluarsa, Kadaluwarsa, and Kedaluwarsa in the filter
-            const matchStatus = !selectedStatus || 
-                (selectedStatus === 'kadaluarsa' && (status === 'kadaluarsa' || status === 'kadaluwarsa' || status === 'kedaluwarsa')) ||
-                (selectedStatus === 'valid' && status === 'valid');
-            const matchSearch = !keyword || rowText.includes(keyword);
-
-            row.style.display = (matchStatus && matchSearch) ? '' : 'none';
-        });
-    }
-
-    statusFilter.addEventListener("change", applyFilters);
-    searchInput.addEventListener("input", applyFilters);
-    applyFilters();
-
     function togglePopup(show) {
         const modal = document.getElementById('popupDetailAlat');
         if (show) {
@@ -326,57 +291,40 @@ use App\Helpers\StatusHelper;
 
     function loadDetailAlat(id) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
-        fetch('{{ route("uttp.detail.post") }}', {
+
+        fetch("{{ route('kabid.detail') }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
                 'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({ id: id })
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => {
-                    throw new Error(text || 'Network response was not ok');
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            
-            document.getElementById('popupNoReg').textContent = data.no_registrasi;
-            
-            const detailBody = document.getElementById('popupDetailBody');
-            detailBody.innerHTML = `
-                <tr><td class="py-2 font-semibold">Jenis Alat</td><td class="py-2">: ${data.jenis_alat ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Nama Usaha</td><td class="py-2">: ${data.nama_usaha ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Merk/Type</td><td class="py-2">: ${data.merk_type ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Kapasitas</td><td class="py-2">: ${data.nama_alat ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Nomor Seri</td><td class="py-2">: ${data.nomor_seri ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Alat Penguji</td><td class="py-2">: ${data.alat_penguji ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Cap Tanda Tera</td><td class="py-2">: ${data.ctt ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">No Surat Perintah Tugas</td><td class="py-2">: ${data.spt_keperluan ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Tanggal Tera</td><td class="py-2">: ${data.tanggal_penginputan ? new Date(data.tanggal_penginputan).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Tanggal Selesai</td><td class="py-2">: ${data.tanggal_selesai ? new Date(data.tanggal_selesai).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Keterangan</td><td class="py-2">: ${data.keterangan || '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Sertifikat</td><td class="py-2">: ${data.sertifikat_path ? <a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a> : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
+            document.getElementById('popupNoReg').textContent = data.no_registrasi ?? '-';
+
+            const body = document.getElementById('popupDetailBody');
+            body.innerHTML = `
+                <tr><td class="py-1 font-semibold">Nama Usaha</td><td>: ${data.nama_usaha ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Jenis Alat</td><td>: ${data.jenis_alat ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Merk / Tipe</td><td>: ${data.merk_type ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Kapasitas</td><td>: ${data.nama_alat ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Nomor Seri</td><td>: ${data.nomor_seri ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Alat Penguji</td><td>: ${data.alat_penguji ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Cap Tanda Tera</td><td>: ${data.ctt ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">No Surat Perintah Tugas</td><td>: ${data.spt_keperluan ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Tanggal Mulai</td><td>: ${data.tanggal_penginputan ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Tanggal Selesai</td><td>: ${data.tanggal_selesai ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Keterangan</td><td>: ${data.keterangan ?? '-'}</td></tr>
+                <tr><td class="py-1 font-semibold">Sertifikat</td><td>: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
             `;
-            
+
             togglePopup(true);
         })
         .catch(error => {
             console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'Terjadi kesalahan saat memuat detail alat',
-                confirmButtonText: 'OK'
-            });
+            alert('Terjadi kesalahan saat memuat detail alat');
         });
     }
 
@@ -439,7 +387,7 @@ use App\Helpers\StatusHelper;
                         // Tampilkan pesan error untuk setiap field
                         if (data.errors) {
                             Object.keys(data.errors).forEach(field => {
-                                const input = form.querySelector([name="${field}"]);
+                                const input = form.querySelector(`[name="${field}"]`);
                                 if (input) {
                                     const errorDiv = document.createElement('div');
                                     errorDiv.className = 'error-message text-red-500 text-sm mt-1';
@@ -573,7 +521,7 @@ use App\Helpers\StatusHelper;
         // Handle user selection
         if (data.id_user) {
             // Fetch user data and set it in Select2
-            fetch(/admin/users/search?search=${data.id_user})
+            fetch(`/admin/users/search?search=${data.id_user}`)
                 .then(response => response.json())
                 .then(users => {
                     if (users.length > 0) {
@@ -618,7 +566,7 @@ use App\Helpers\StatusHelper;
             if (userId) {
                 // Jika dari persuratan, set user dan disable select
                 if (fromPersuratan === 'true') {
-                    fetch(/admin/users/search?search=${userId})
+                    fetch(`/admin/users/search?search=${userId}`)
                         .then(response => response.json())
                         .then(users => {
                             if (users.length > 0) {
@@ -631,7 +579,7 @@ use App\Helpers\StatusHelper;
                         .catch(error => console.error('Error loading user:', error));
                 } else {
                     // Jika bukan dari persuratan, set user tapi tetap bisa diubah
-                    fetch(/admin/users/search?search=${userId})
+                    fetch(`/admin/users/search?search=${userId}`)
                         .then(response => response.json())
                         .then(users => {
                             if (users.length > 0) {
@@ -654,40 +602,6 @@ use App\Helpers\StatusHelper;
             }
         }
     });
-
-    function getDetail(id) {
-        fetch(/admin/metrologi/detail/${id})
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('detailTanggalMulai').textContent = data.tanggal_penginputan || '-';
-                document.getElementById('detailNoRegistrasi').textContent = data.no_registrasi || '-';
-                document.getElementById('detailNamaUsaha').textContent = data.nama_usaha || '-';
-                document.getElementById('detailJenisAlat').textContent = data.jenis_alat || '-';
-                document.getElementById('detailNamaAlat').textContent = data.nama_alat || '-';
-                document.getElementById('detailMerkType').textContent = data.merk_type || '-';
-                document.getElementById('detailNomorSeri').textContent = data.nomor_seri || '-';
-                document.getElementById('detailAlatPenguji').textContent = data.alat_penguji || '-';
-                document.getElementById('detailCtt').textContent = data.ctt || '-';
-                document.getElementById('detailSptKeperluan').textContent = data.spt_keperluan || '-';
-                document.getElementById('detailTanggalSelesai').textContent = data.tanggal_selesai || '-';
-                document.getElementById('detailTerapan').textContent = data.terapan ? 'Ya' : 'Tidak';
-                document.getElementById('detailKeterangan').textContent = data.keterangan || '-';
-                
-                // Update certificate display
-                const sertifikatElement = document.getElementById('detailSertifikat');
-                if (data.sertifikat_path) {
-                    sertifikatElement.innerHTML = <a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>;
-                } else {
-                    sertifikatElement.innerHTML = '<span class="text-gray-500">Belum di upload oleh admin</span>';
-                }
-
-                document.getElementById('modalDetail').classList.remove('hidden');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengambil data');
-            });
-    }
 
     $(document).ready(function() {
         $('#userSelect').select2({
