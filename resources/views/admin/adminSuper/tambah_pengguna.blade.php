@@ -48,9 +48,9 @@
                 <div class="form-group">
                     <label class="block mb-1 font-semibold">Kabupaten/Kota</label>
                     <select id="kabupaten" name="kabupaten" class="w-full px-4 py-2 border border-gray-300 rounded-full shadow-sm form-control focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                        <option value="">-- Pilih Kabupaten --</option>
+                        <option value="">Pilih Kabupaten</option>
                         @foreach ($wilayah['kabupaten'] as $kab)
-                        <option value="{{ $kab['name'] }}" {{ old('kabupaten') == $kab['name'] ? 'selected' : '' }}>{{ $kab['name'] }}</option>
+                        <option value="{{ $kab['name'] }}">{{ $kab['name'] }}</option>
                         @endforeach
                     </select>
                     @error('kabupaten')
@@ -74,7 +74,7 @@
                     <select id="kecamatan" name="kecamatan" class="w-full px-4 py-2 border border-gray-300 rounded-full shadow-sm form-control focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         <option value="">--Pilih Kecamatan--</option>
                     </select>
-                    @error('kecamatan')
+                     @error('kecamatan')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -95,7 +95,7 @@
                     <select id="kelurahan" name="kelurahan" class="w-full px-4 py-2 border border-gray-300 rounded-full shadow-sm form-control focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         <option value="">-- Pilih Kelurahan --</option>
                     </select>
-                    @error('kelurahan')
+                     @error('kelurahan')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -164,38 +164,20 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
     const dataWilayah = @json($wilayah['kabupaten']);
-    let selectedKabupaten = null;
 
     const kabupatenSelect = document.getElementById('kabupaten');
     const kecamatanSelect = document.getElementById('kecamatan');
     const kelurahanSelect = document.getElementById('kelurahan');
 
-    // Check if elements exist before proceeding
-    if (!kabupatenSelect || !kecamatanSelect || !kelurahanSelect) {
-        console.error('Required select elements not found');
-        return;
-    }
-
-    // Debug: Log initial data
-    console.log('Initial dataWilayah:', dataWilayah);
-
-    // Inisialisasi dropdowns
-    kecamatanSelect.disabled = true;
-    kelurahanSelect.disabled = true;
-
     kabupatenSelect.addEventListener('change', function() {
-        console.log('Kabupaten changed to:', this.value);
-        selectedKabupaten = dataWilayah.find(kab => kab.name === this.value);
-        console.log('Selected kabupaten data:', selectedKabupaten);
-        
+        const selectedKab = dataWilayah.find(kab => kab.name === this.value);
         kecamatanSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
         kelurahanSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
         kelurahanSelect.disabled = true;
 
-        if (selectedKabupaten) {
-            selectedKabupaten.kecamatan.forEach(kec => {
+        if (selectedKab) {
+            selectedKab.kecamatan.forEach(kec => {
                 const opt = document.createElement('option');
                 opt.value = kec.name;
                 opt.textContent = kec.name;
@@ -208,62 +190,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     kecamatanSelect.addEventListener('change', function() {
-        console.log('Kecamatan changed to:', this.value);
-        console.log('Current selectedKabupaten:', selectedKabupaten);
-        
-        if (!selectedKabupaten) {
-            console.log('No kabupaten selected');
-            return;
-        }
+        const selectedKab = dataWilayah.find(kab => kab.name === kabupatenSelect.value);
+        const selectedKec = selectedKab?.kecamatan.find(kec => kec.name === this.value);
 
-        const selectedKec = selectedKabupaten.kecamatan.find(kec => kec.name === this.value);
-        console.log('Selected kecamatan data:', selectedKec);
-        console.log('Kecamatan structure:', JSON.stringify(selectedKec, null, 2));
+        kelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
 
-        kelurahanSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
-
-        if (selectedKec && Array.isArray(selectedKec.kelurahan)) {
-            console.log('Found kelurahan data:', selectedKec.kelurahan);
-            console.log('Kelurahan data type:', typeof selectedKec.kelurahan);
-            console.log('Kelurahan data structure:', JSON.stringify(selectedKec.kelurahan, null, 2));
-            
+        if (selectedKec) {
             selectedKec.kelurahan.forEach(kel => {
                 const opt = document.createElement('option');
                 opt.value = kel;
                 opt.textContent = kel;
                 kelurahanSelect.appendChild(opt);
+                console.log(" ->", opt);
             });
             kelurahanSelect.disabled = false;
         } else {
-            console.log('No kelurahan data found or invalid structure');
             kelurahanSelect.disabled = true;
         }
     });
-
-    // Set nilai awal jika ada data old
-    const oldKabupaten = '{{ old('kabupaten') }}';
-    const oldKecamatan = '{{ old('kecamatan') }}';
-    const oldKelurahan = '{{ old('kelurahan') }}';
-
-    if (oldKabupaten) {
-        kabupatenSelect.value = oldKabupaten;
-        kabupatenSelect.dispatchEvent(new Event('change'));
-        
-        if (oldKecamatan) {
-            // Tunggu sebentar untuk memastikan event change kabupaten selesai
-            setTimeout(() => {
-                kecamatanSelect.value = oldKecamatan;
-                kecamatanSelect.dispatchEvent(new Event('change'));
-                
-                if (oldKelurahan) {
-                    // Tunggu sebentar untuk memastikan event change kecamatan selesai
-                    setTimeout(() => {
-                        kelurahanSelect.value = oldKelurahan;
-                    }, 100);
-                }
-            }, 100);
-        }
-    }
-});
 </script>
 @endsection 
