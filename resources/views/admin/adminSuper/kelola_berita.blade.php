@@ -29,7 +29,7 @@
     </div>
 </div>
 
-<div class="overflow-x-auto rounded-xl">
+<div class="overflow-x-auto rounded-xl container px-4 pb-12 mx-auto">
     @if(session('success'))
     <div class="mb-4 text-green-600">
         {{ session('success') }}

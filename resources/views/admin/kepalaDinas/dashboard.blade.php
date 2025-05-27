@@ -1,5 +1,5 @@
 @extends('layouts.metrologi.kadis')
-@section('title', 'Dashboard Kepala Bidang')
+@section('title', 'Dashboard Kepala Dinas')
 @section('content')
 
 <div class="min-h-screen p-4 bg-gray-100">
@@ -14,7 +14,7 @@
         <div class="flex items-center p-4 space-x-4 bg-white shadow-md rounded-xl">
             <img src="{{ asset('assets/img/icon/Verif.png') }}" class="w-10 h-10">
             <div>
-                <p class="text-sm text-gray-500">Jumlah Surat Terverifikasi</p>
+                <p class="text-sm text-gray-500">Jumlah Surat Disetujui</p>
                 <p class="text-xl font-bold text-yellow-500">{{ $totalSuratSmuaBidang['totalSuratTerverifikasiKeseluruhan'] }}</p>
             </div>
         </div>
@@ -30,9 +30,12 @@
     <!-- Grafik Metrologi -->
     <div class="p-4 mb-6 bg-white shadow-md rounded-xl">
         <h3 class="mb-2 text-sm font-semibold text-gray-700">Bidang Metrologi</h3>
-        <canvas id="chartMetrologi" class="max-w-full max-h-[200px]"></canvas>
+        <p class="text-lg font-semibold mb-4">Grafik Perbandingan Jumlah Tera</p>
+        <div class="h-[280px]">
+            <canvas id="chartLine"></canvas>
+        </div>
         <div class="mt-4 text-right">
-            <a href="#" class="mt-auto block w-full bg-[#083458] text-white px-4 py-2 rounded-md text-center text-sm hover:bg-blue-300 hover:text-black">Lihat Detail</a>
+            <a href="{{ route('kadis-metro') }}" class="mt-auto block w-full bg-[#083458] text-white px-4 py-2 rounded-md text-center text-sm hover:bg-blue-300 hover:text-black">Lihat Detail</a>
         </div>
     </div>
 
@@ -154,7 +157,55 @@
         });
     }
 
-
+    // Bidang Metrologi (linechart)
+    const ctxLine = document.getElementById('chartLine');
+    new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+            datasets: [
+                {
+                    label: 'Tahun {{ $calibrationData['currentYear'] }}',
+                    data: {{ $calibrationData['currentYearData'] }},
+                    borderColor: '#60a5fa',
+                    backgroundColor: 'rgba(96, 165, 250, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Tahun {{ $calibrationData['lastYear'] }}',
+                    data: {{ $calibrationData['lastYearData'] }},
+                    borderColor: '#0c3252',
+                    backgroundColor: 'rgba(12, 50, 82, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah Tera'
+                    }
+                }
+            },
+            maintainAspectRatio: false,
+            responsive: true
+        }
+    });
 
     // Bidang Industri (Bar)
     new Chart(document.getElementById('chartIndustri'), {
@@ -173,31 +224,6 @@
                     data: [10, 14]
                 }
             ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' }
-            },
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
-
-    // Bidang Metrologi (Line)
-    new Chart(document.getElementById('chartMetrologi'), {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-                label: 'Metrologi',
-                data: [5, 6, 7, 4, 6, 8, 6, 9, 10, 5, 4, 7],
-                borderColor: '#3B82F6',
-                backgroundColor: 'rgba(59,130,246,0.1)',
-                tension: 0.4,
-                fill: true
-            }]
         },
         options: {
             responsive: true,

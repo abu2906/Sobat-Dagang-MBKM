@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Pengguna')
+@section('title', 'Daftar Permohonan')
 
 @section('content')
 <div class="relative w-full h-64">
     <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        <h1 class="text-5xl font-bold text-[#FAA31E]">Manajemen Pengguna</h1>
+        <h1 class="text-5xl font-bold text-[#FAA31E]">Daftar Permohonan</h1>
     </div>
 </div>
 
@@ -19,10 +19,6 @@
             <input type="text" id="searchInput" placeholder="Cari"
                 class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-        <a href="{{ route('manajemen.pengguna.create') }}" 
-            class="px-6 py-3 text-[#083358] font-semibold bg-white rounded-full shadow-xl shadow-gray-400/40 hover:text-white hover:bg-[#083358] transition-all duration-300">
-            + Tambah Pengguna
-        </a>
     </div>
 </div>
 
@@ -38,12 +34,11 @@
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
                     <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                    <th class="px-4 py-3 border-b">Nama Lengkap</th>
-                    <th class="px-4 py-3 border-b">Email</th>
-                    <th class="px-4 py-3 border-b">No. Telepon</th>
-                    <th class="px-4 py-3 border-b">NIP</th>
-                    <th class="px-4 py-3 border-b">NIK</th>
-                    <th class="px-4 py-3 border-b">NIB</th>
+                    <th class="px-4 py-3 border-b">Tanggal</th>
+                    <th class="px-4 py-3 border-b">Nama Pengirim</th>
+                    <th class="px-4 py-3 border-b">Jenis Surat</th>
+                    <th class="px-4 py-3 border-b">Bidang Terkait</th>
+                    <th class="px-4 py-3 border-b">Status</th>
                     <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
                 </tr>
             </thead>
@@ -51,33 +46,45 @@
                 @php
                     $counter = 1;
                 @endphp
-                
-                {{-- Regular Users --}}
-                @foreach($users as $user)
+                @foreach($permohonan as $p)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-2 text-center">{{ $counter++ }}</td>
-                    <td class="px-4 py-2">{{ $user->nama }}</td>
-                    <td class="px-4 py-2">{{ $user->email }}</td>
-                    <td class="px-4 py-2">{{ $user->telp }}</td>
-                    <td class="px-4 py-2">-</td>
-                    <td class="px-4 py-2">{{ $user->nik }}</td>
-                    <td class="px-4 py-2">{{ $user->nib ?? '-' }}</td>
+                    <td class="px-4 py-2 text-center">{{ $p->tanggal }}</td>
+                    <td class="px-4 py-2 text-center">{{ $p->nama_pengirim }}</td>
+                    @php
+                        $jenisSuratMap = [
+                        'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                        'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                        'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                        ];
+                        @endphp
+                    <td class="px-4 py-2 text-center">
+                            {{ $jenisSuratMap[$p->jenis_surat] ?? $p->jenis_surat }}
+                    </td>
+                    <td class="px-4 py-2 text-center">{{ $p->bidang_terkait }}</td>
+                    <td class="px-4 py-2 text-center">
+                        @php
+                            $status = $p->status;
+                            $color = match($status) {
+                                'Menunggu' => 'bg-yellow-100 text-yellow-800',
+                                'Disetujui' => 'bg-green-100 text-green-800',
+                                'Ditolak' => 'bg-red-100 text-red-800',
+                                'Diproses' => 'bg-blue-100 text-blue-800',
+                                'Butuh Revisi' => 'bg-orange-100 text-orange-800',
+                                'Selesai' => 'bg-green-100 text-green-800',
+                                default => 'bg-gray-100 text-gray-800',
+                            };
+                        @endphp
+                        <span class="px-3 py-1 text-xs rounded-full font-semibold {{ $color }}">
+                            {{ $status }}
+                        </span>
+                    </td>
                     <td class="px-4 py-2">
                         <div class="flex items-center justify-center space-x-2">
-                            <a href="{{ route('manajemen.pengguna.edit', $user->id_user) }}" 
+                            <a href="{{ route('admin.detailPermohonan', ['id' => $p->id, 'bidang' => strtolower($p->bidang_terkait)]) }}" 
                                 class="text-[#083358] hover:text-black">
-                                <span class="material-symbols-outlined">edit</span>
+                                <span class="material-symbols-outlined">visibility</span>
                             </a>
-                            @if($user->role !== 'disdag')
-                            <form action="{{ route('manajemen.pengguna.destroy', $user->id_user) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-[#083358] hover:text-black" 
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">
-                                    <span class="material-symbols-outlined">delete</span>
-                                </button>
-                            </form>
-                            @endif
                         </div>
                     </td>
                 </tr>
@@ -100,4 +107,4 @@
     });
 </script>
 @endpush
-@endsection
+@endsection 

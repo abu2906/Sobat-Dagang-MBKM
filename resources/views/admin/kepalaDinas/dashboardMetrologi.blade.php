@@ -1,6 +1,6 @@
-@extends('layouts.admin')
-
-@section('title', 'Dashboard Kabid Metrologi')
+@extends('layouts.metrologi.kadis')
+@section('title', 'Dashboard Kepala Dinas')
+@section('content')
 
 @php
 use App\Helpers\StatusHelper;
@@ -10,7 +10,7 @@ use App\Helpers\StatusHelper;
 <div class="p-6 bg-gray-100 min-h-screen">
     <!-- Card Box Section -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-4 flex items-center space-x-3">
+        <a href="{{ route('surat-metrologi-kadis') }}" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-4 flex items-center space-x-3">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
             <div class="min-w-0 flex-1">
                 <p class="text-sm sm:text-base font-medium text-white truncate">Jumlah Surat Masuk</p>
@@ -18,7 +18,7 @@ use App\Helpers\StatusHelper;
             </div>
         </a>
 
-        <a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-4 flex items-center space-x-3">
+        <a href="{{ route('surat-metrologi-kadis') }}?status=Disetujui" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-4 flex items-center space-x-3">
             <img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
             <div class="min-w-0 flex-1">
                 <p class="text-sm sm:text-base font-medium text-white truncate">Jumlah Surat Disetujui</p>
@@ -26,7 +26,7 @@ use App\Helpers\StatusHelper;
             </div>
         </a>
 
-        <a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-4 flex items-center space-x-3">
+        <a href="{{ route('surat-metrologi-kadis') }}?status=Ditolak" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-4 flex items-center space-x-3">
             <img src="{{ asset('assets/img/icon/surat_ditolak.png') }}" alt="Ditolak" class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
             <div class="min-w-0 flex-1">
                 <p class="text-sm sm:text-base font-medium text-white truncate">Jumlah Surat Ditolak</p>
@@ -34,7 +34,7 @@ use App\Helpers\StatusHelper;
             </div>
         </a>
 
-        <a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-4 flex items-center space-x-3">
+        <a href="{{ route('surat-metrologi-kadis') }}?status=Menunggu" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-4 flex items-center space-x-3">
             <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
             <div class="min-w-0 flex-1">
                 <p class="text-sm sm:text-base font-medium text-white truncate">Jumlah Surat Menunggu</p>

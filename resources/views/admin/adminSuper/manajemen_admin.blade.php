@@ -38,7 +38,7 @@
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
                     <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                                        <th class="px-4 py-3 border-b">NIP</th>
+                    <th class="px-4 py-3 border-b">NIP</th>
                     <th class="px-4 py-3 border-b">Email</th>
                     <th class="px-4 py-3 border-b">No. Telepon</th>
                     <th class="px-4 py-3 border-b">Role</th>
@@ -49,14 +49,29 @@
                 @php
                     $counter = 1;
                 @endphp
-                {{-- Disdag Users --}}
                 @foreach($disdagUsers as $user)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-2 text-center">{{ $counter++ }}</td>
                     <td class="px-4 py-2">{{ $user->nip }}</td>
                     <td class="px-4 py-2">{{ $user->email }}</td>
                     <td class="px-4 py-2">{{ $user->telp }}</td>
-                    <td class="px-4 py-2">{{ $user->role }}</td>
+                    @php
+                        $roleLabels = [
+                            'master_admin' => 'Master Admin',
+                            'admin_perdagangan' => 'Admin Perdagangan',
+                            'admin_industri' => 'Admin Industri',
+                            'admin_metrologi' => 'Admin Metrologi',
+                            'kabid_perdagangan' => 'Kabid Perdagangan',
+                            'kabid_industri' => 'Kabid Industri',
+                            'kabid_metrologi' => 'Kabid Metrologi',
+                            'kepala_dinas' => 'Kepala Dinas',
+                        ];
+                    @endphp
+
+                    <td class="px-4 py-2">
+                        {{ $roleLabels[$user->role] ?? $user->role }}
+                    </td>
+
                     <td class="px-4 py-2">
                         <div class="flex items-center justify-center space-x-2">
                             <a href="{{ route('manajemen.admin.edit', $user->id_disdag) }}"

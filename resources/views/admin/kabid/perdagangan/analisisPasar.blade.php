@@ -87,7 +87,7 @@
         <div class="w-full lg:w-[30%] flex flex-col space-y-4">
             <!-- Tren Harga Naik -->
             <div class="p-4 bg-white shadow rounded-xl">
-                <h3 class="text-center font-semibold text-black mb-3">Tren Harga Bahan Pokok Naik</h3>
+                <h3 class="mb-3 font-semibold text-center text-black">Tren Harga Bahan Pokok Naik</h3>
                 <div class="flex items-start space-x-4">
                     <!-- Chart -->
                     <div class="w-1/2">
@@ -98,7 +98,7 @@
                         @foreach ($topHargaNaik as $item)
                         <div class="flex items-center text-sm text-gray-700">
                             <span 
-                            class="inline-block w-3 h-3 rounded-full mr-2" 
+                            class="inline-block w-3 h-3 mr-2 rounded-full" 
                             style="background-color: {{ $item['color'] }}; min-width: 12px; min-height: 12px;"
                             ></span>
                             <span class="truncate">{{ $item['label'] }}</span>
@@ -110,7 +110,7 @@
 
             <!-- Tren Harga Turun -->
             <div class="p-4 bg-white shadow rounded-xl">
-                <h3 class="text-center font-semibold text-black mb-3">Tren Harga Bahan Pokok Turun</h3>
+                <h3 class="mb-3 font-semibold text-center text-black">Tren Harga Bahan Pokok Turun</h3>
                 <div class="flex items-start space-x-4">
                     <!-- Chart -->
                     <div class="w-1/2">
@@ -121,7 +121,7 @@
                         @foreach ($topHargaTurun as $item)
                         <div class="flex items-center text-sm text-gray-700">
                             <span 
-                            class="inline-block w-3 h-3 rounded-full mr-2" 
+                            class="inline-block w-3 h-3 mr-2 rounded-full" 
                             style="background-color: {{ $item['color'] }}; min-width: 12px; min-height: 12px;"
                             ></span>
                             <span class="truncate">{{ $item['label'] }}</span>
@@ -132,18 +132,18 @@
             </div>
 
             <!-- Top 5 Naik & Turun -->
-            <div class="p-4 bg-white shadow rounded-xl text-sm">
+            <div class="p-4 text-sm bg-white shadow rounded-xl">
                 <div class="mb-4">
-                    <div class="font-semibold text-gray-700 mb-2">Top 5 Harga Naik</div>
-                    <ul class="text-green-600 space-y-1">
+                    <div class="mb-2 font-semibold text-gray-700">Top 5 Harga Naik</div>
+                    <ul class="space-y-1 text-green-600">
                         @foreach ($topHargaNaik as $item)
                             <li>{{ $item['label'] }} (Naik: Rp{{ number_format($item['price_change']) }})</li>
                         @endforeach
                     </ul>
                 </div>
                 <div>
-                    <div class="font-semibold text-gray-700 mb-2">Top 5 Harga Turun</div>
-                    <ul class="text-red-600 space-y-1">
+                    <div class="mb-2 font-semibold text-gray-700">Top 5 Harga Turun</div>
+                    <ul class="space-y-1 text-red-600">
                         @foreach ($topHargaTurun as $item)
                             <li>{{ $item['label'] }} (Turun: Rp{{ number_format($item['price_change']) }})</li>
                         @endforeach

@@ -4,7 +4,7 @@ import '../../public/assets/js/chat';
 document.addEventListener('DOMContentLoaded', () => {
     //hanya memanggil menu dropdown kelurahan jika kecamatan dipilih
     const kelurahanList = {
-        bacukiki: ["Galung Maloang", "Lemoe", "Lompoe", "Watang Bacukiki"],
+        bacukiki: ["Galung Maloang", "Lem   oe", "Lompoe", "Watang Bacukiki"],
         bacukiki_barat: ["Bumi Harapan", "Cappa Galung", "Kampung Baru", "Lumpue", "Sumpang Minangae", "Tiro Sompe"],
         soreang: ["Bukit Harapan", "Bukit Indah", "Kampung Pisang", "Lakessi", "Ujung Baru", "Ujung Lare", "Watang Soreang"],
         ujung: ["Labukkang", "Lapadde", "Mallusetasi", "Ujung Bulu", "Ujung Sabbang"]

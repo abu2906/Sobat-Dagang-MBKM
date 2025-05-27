@@ -194,8 +194,6 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
 
 // admin master
 Route::middleware(['check.role:master_admin'])->group(function () {
-    #dashboard nddpi isinya untuk tes2 ji
-    Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
     #distribusi
     Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
     Route::post('/distributor/{id_distributor}/terima', [PelaporanController::class, 'setujui'])->name('distributor.setujui');
@@ -224,6 +222,11 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::put('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'update'])->name('manajemen.pengguna.update');
     Route::delete('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'destroy'])->name('manajemen.pengguna.destroy'); 
 
+    Route::get('/admin/master', [DashboardController::class, 'dashboardMaster'])->name('dashboard-master');
+    Route::get('/admin/permohonan', [DashboardController::class, 'daftarPermohonan'])->name('admin.daftarPermohonan');
+    Route::get('/admin/permohonan/{id}/{bidang}', [DashboardController::class, 'detailPermohonan'])->name('admin.detailPermohonan');
+    Route::get('/admin/permohonan/{id}/{bidang}/balasan', [DashboardController::class, 'downloadBalasan'])->name('admin.downloadBalasan');
+    
     // Manajement admin
     Route::get('/admin/manajemen-admin', [AdminManagementController::class, 'index'])->name('manajemen.admin');
     Route::get('/admin/manajemen-admin/tambah', [AdminManagementController::class, 'create'])->name('manajemen.admin.create');
@@ -233,7 +236,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::put('/admin/manajemen-pengguna/disdag/{id}', [AdminManagementController::class, 'updateDisdag'])->name('manajemen.admin.update');
     
     // Kelola Pengaduan
-    Route::get('/admin/forum-pengaduan', [ForumDiskusiController::class, 'index'])->name('forum.admin');
+    Route::get('/admin/forum-pengaduan', [ForumDiskusiController::class, 'adminForm'])->name('forum.admin');
     Route::get('/forum/load', [ForumDiskusiController::class, 'load']);
     Route::post('/kirim-pesan', [ForumDiskusiController::class, 'send']);
     Route::delete('/forum-diskusi/{id}', [ForumDiskusiController::class, 'destroy'])->name('forum-diskusi.destroy');
