@@ -81,7 +81,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
     Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
     Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan_perdagangan');
-    
+
     // Metrologi
     Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
     Route::post('/store-surat', [PersuratanController::class, 'storeSuratMetrologi'])->name('proses-surat-metrologi');
@@ -119,9 +119,7 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
     // Data IKM
     Route::get('/data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
     Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
-    Route::get('form-data-IKM', [AdminIndustriController::class, 'formDataIKM'])->name('form.dataIKM');
-    Route::get('/form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
-    Route::get('form-IKM', [AdminIndustriController::class, 'showformIKM'])->name('formIKM');
+    Route::get('/form-IKM', [AdminIndustriController::class, 'ShowformIKM'])->name('formIKM');
     Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
     Route::get('data-IKM/{id}/edit', [AdminIndustriController::class, 'editIKM'])->name('editIKM');
     Route::delete('data-IKM/{id}', [AdminIndustriController::class, 'destroyIKM'])->name('destroyIKM');
@@ -258,8 +256,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');    
-
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
 });
 
 //kabid Perdagangan
@@ -305,5 +302,4 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
     Route::get('kepala-dinas/perdagangan/pupuk', [sobatHargaController::class, 'pupuk'])->name('kepalaDinas.pupuk');
     Route::get('/data-pasar-distribusi', [SobatHargaController::class, 'apiDataPasarDistribusi']);
-
 });

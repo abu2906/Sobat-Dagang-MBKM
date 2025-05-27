@@ -25,7 +25,7 @@
   <div x-show="openAdd" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div class="bg-white p-6 rounded shadow w-full max-w-lg">
       <h2 class="text-xl font-semibold mb-4">Tambah Sertifikat Halal</h2>
-      <form action="{{ route('admin.industri.halal.store') }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('halal.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
           <div class="space-y-4">
             <input type="text" name="nama_usaha" placeholder="Nama Usaha" required>

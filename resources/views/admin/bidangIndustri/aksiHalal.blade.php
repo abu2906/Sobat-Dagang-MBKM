@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <form action="{{ isset($sertifikat) ? route('admin.industri.halal.update', $sertifikat->id_halal) : route('admin.industri.halal.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ isset($sertifikat) ? route('halal.update', $sertifikat->id_halal) : route('halal.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @if(isset($sertifikat))
             @method('PUT')
@@ -63,7 +63,7 @@
             {{ isset($sertifikat) ? 'Update' : 'Simpan' }}
         </button>
 
-        <a href="{{ route('admin.industri.halal') }}" class="ml-4 text-gray-600 hover:underline">Batal</a>
+        <a href="{{ route('halal') }}" class="ml-4 text-gray-600 hover:underline">Batal</a>
     </form>
 </section>
 

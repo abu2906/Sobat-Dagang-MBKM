@@ -1410,9 +1410,12 @@
                     if (!section || !tab) return;
 
                     const isActive = key === idToShow;
+
+                    // Tampilkan sembunyikan form
                     section.classList.toggle('hidden', !isActive);
                     section.classList.toggle('grid', isActive);
 
+                    // Update style tab
                     tab.classList.remove(
                         'bg-white', 'text-[#083458]', 'font-bold', 'border-b-4', 'border-[#083458]',
                         'bg-[#083458]', 'text-white', 'hover:bg-blue-200', 'hover:text-[#083458]',
@@ -1428,6 +1431,7 @@
                     }
                 });
             }
+
 
             showForm('btn-data-ikm');
 
@@ -1486,33 +1490,35 @@
             // FORM NAVIGATION (NEXT/PREV)
             // ================================
             function initFormNavigation() {
-                // Next buttons
                 document.querySelectorAll('button[id^="next-"]').forEach(button => {
                     button.addEventListener('click', e => {
                         e.preventDefault();
-                        const currentFormId = button.id.replace('next-', 'form-');
-                        const currentIndex = formIds.indexOf(currentFormId);
-                        if (currentIndex !== -1 && currentIndex + 1 < formIds.length) {
-                            showForm(formIds[currentIndex + 1]);
+                        const currentBtnId = button.id.replace('next-',
+                        'btn-'); // ubah ke id tombol
+                        const btnIds = Object.keys(contents);
+                        const currentIndex = btnIds.indexOf(currentBtnId);
+                        if (currentIndex !== -1 && currentIndex + 1 < btnIds.length) {
+                            showForm(btnIds[currentIndex + 1]);
                         }
                     });
                 });
 
-                // Previous buttons
-                formIds.forEach(id => {
-                    const section = document.getElementById(id);
+                Object.keys(contents).forEach(btnId => {
+                    const section = contents[btnId];
                     const prevBtn = section?.querySelector('button.prev');
                     if (prevBtn) {
                         prevBtn.addEventListener('click', e => {
                             e.preventDefault();
-                            const currentIndex = formIds.indexOf(id);
+                            const btnIds = Object.keys(contents);
+                            const currentIndex = btnIds.indexOf(btnId);
                             if (currentIndex > 0) {
-                                showForm(formIds[currentIndex - 1]);
+                                showForm(btnIds[currentIndex - 1]);
                             }
                         });
                     }
                 });
             }
+
 
             // ================================
             // DYNAMIC FORM MANAGEMENT

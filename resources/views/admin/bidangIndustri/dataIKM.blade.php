@@ -1,4 +1,4 @@
-    @extends('layouts.adminIndustri')
+    @extends('layouts.admin')
     @section('title', 'Data IKM')
 
     @section('content')
@@ -22,7 +22,7 @@
                             <option value="Soreang">Soreang</option>
                             <option value="Ujung">Ujung</option>
                             <option value="Bacukiki">Bacukiki</option>
-                            <option value="BacukikiBarat">BacukikiBarat</option>
+                            <option value="BacukikiBarat">Bacukiki Barat</option>
                         </select>
                         <i
                             class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4"></i>
@@ -49,6 +49,7 @@
                         <input type="hidden" name="kecamatan" id="inputKecamatan">
                         <input type="hidden" name="search" id="inputSearch">
                         <div id="inputJenisContainer"></div>
+                        <input type="hidden" name="investasi[]" id="inputInvestasi">
                         <button type="submit"
                             class="bg-[#0A4D68] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#0A4D68] border border-transparent hover:border-[#0A4D68] transition duration-300">
                             UNDUH DATA
@@ -73,7 +74,7 @@
                     foreach ($kategoriList as &$kategori) {
                         $kategori['jumlah'] = \App\Models\DataIKM::where('jenis_industri', $kategori['nama'])->count();
                     }
-                    unset($kategori); // hindari reference carryover
+                    unset($kategori);
 
                 @endphp
 
@@ -109,6 +110,7 @@
                                 <th class="p-3">JENIS INDUSTRI</th>
                                 <th class="p-3">TELEPON</th>
                                 <th class="p-3">TENAGA KERJA</th>
+                                <th class="p-3">INVESTASI</th>
                                 <th class="p-3 rounded-tr-xl">AKSI</th>
                             </tr>
                         </thead>
@@ -116,7 +118,7 @@
                         <tbody>
                             @foreach ($dataIkm as $index => $ikm)
                                 <tr class="bg-white border-b row-ikm" data-kecamatan="{{ $ikm->kecamatan }}"
-                                    data-industri="{{ $ikm->jenis_industri }}">
+                                    data-industri="{{ $ikm->jenis_industri }}" data-investasi-nilai="{{ $ikm->level }}">
                                     <td class="p-2 text-center">{{ $index + 1 }}</td>
                                     <td class="p-2">{{ $ikm->nama_ikm }}</td>
                                     <td class="p-2">{{ $ikm->nama_pemilik }}</td>
@@ -129,6 +131,7 @@
                                     <td class="p-2">{{ $ikm->jenis_industri }}</td>
                                     <td class="p-2">{{ $ikm->no_telp }}</td>
                                     <td class="p-2 text-center">{{ $ikm->tenaga_kerja }}</td>
+                                    <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
                                     <td class="p-2 text-center">
                                         <div class="flex justify-center gap-2">
                                             <button type="button" @click='openEdit(@json($ikm))'
@@ -198,7 +201,7 @@
         </main>
     @endsection
 
-    @section('scripts')
+    @push('scripts')
         <script>
             let kategoriDipilih = [];
 
@@ -225,6 +228,7 @@
             function filterTabel() {
                 const selectedKecamatan = document.getElementById('filterKecamatan').value.trim().toLowerCase();
                 const searchKeyword = document.getElementById('searchInput').value.trim().toLowerCase();
+                const selectedInvestasi = document.getElementById('filterInvestasi').value.trim().toLowerCase();
                 const rows = document.querySelectorAll('.row-ikm');
 
                 let anyVisible = false;
@@ -232,14 +236,31 @@
                 rows.forEach(row => {
                     const rowKecamatan = row.getAttribute('data-kecamatan')?.trim().toLowerCase() || '';
                     const rowIndustri = row.getAttribute('data-industri')?.trim().toLowerCase() || '';
+
+                    const investasiNilaiStr = row.getAttribute('data-investasi-nilai') || '0';
+
+                    // Bersihkan string supaya hanya angka
+                    const angkaBersih = investasiNilaiStr.replace(/[^0-9]/g, '');
+                    const investasiNilai = parseFloat(angkaBersih) || 0;
+
+                    let kategoriInvestasi = '';
+                    if (investasiNilai < 100000000) {
+                        kategoriInvestasi = 'kecil';
+                    } else if (investasiNilai >= 100000000 && investasiNilai < 1000000000) {
+                        kategoriInvestasi = 'menengah';
+                    } else {
+                        kategoriInvestasi = 'besar';
+                    }
+
                     const rowText = row.textContent.toLowerCase();
 
                     const cocokKecamatan = !selectedKecamatan || rowKecamatan === selectedKecamatan;
                     const cocokIndustri = kategoriDipilih.length === 0 || kategoriDipilih.map(k => k.toLowerCase())
                         .includes(rowIndustri);
+                    const cocokInvestasi = !selectedInvestasi || kategoriInvestasi === selectedInvestasi;
                     const cocokCari = !searchKeyword || rowText.includes(searchKeyword);
 
-                    const show = cocokKecamatan && cocokIndustri && cocokCari;
+                    const show = cocokKecamatan && cocokIndustri && cocokInvestasi && cocokCari;
                     row.style.display = show ? '' : 'none';
 
                     if (show) anyVisible = true;
@@ -250,7 +271,6 @@
                     noResultsEl.style.display = anyVisible ? 'none' : 'block';
                 }
             }
-
 
             function syncExportFilter() {
                 document.getElementById('inputKecamatan').value = document.getElementById('filterKecamatan').value;
@@ -266,9 +286,25 @@
                     input.value = jenis;
                     container.appendChild(input);
                 });
+
+                const filterInvestasiSelect = document.getElementById('filterInvestasi');
+                const investasiDipilih = [];
+
+                if (filterInvestasiSelect && filterInvestasiSelect.value.trim() !== '') {
+                    investasiDipilih.push(filterInvestasiSelect.value.trim().toLowerCase());
+                }
+
+                const oldInvestasiInputs = document.querySelectorAll('input[name="investasi[]"]');
+                oldInvestasiInputs.forEach(el => el.remove());
+
+                investasiDipilih.forEach(inv => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'investasi[]';
+                    input.value = inv;
+                    container.appendChild(input);
+                });
             }
-
-
 
             document.addEventListener('DOMContentLoaded', () => {
                 filterTabel();
@@ -313,4 +349,4 @@
                 }
             }
         </script>
-    @endsection
+    @endpush

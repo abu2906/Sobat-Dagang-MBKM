@@ -12,11 +12,13 @@ class DataIkmExport implements WithMultipleSheets
 {
     protected $filterJenis;
     protected $filterKecamatan;
+    protected $filterInvestasi;
 
-    public function __construct(array $filterJenis = [], ?string $filterKecamatan = null)
+    public function __construct(array $filterJenis = [], ?string $filterKecamatan = null, ?array $filterInvestasi = null)
     {
         $this->filterJenis = $filterJenis;
         $this->filterKecamatan = $filterKecamatan;
+        $this->filterInvestasi = $filterInvestasi;
     }
 
     public function sheets(): array
@@ -24,7 +26,7 @@ class DataIkmExport implements WithMultipleSheets
         $sheets = [];
 
         foreach ($this->filterJenis as $jenis) {
-            $sheet = new IKMFullExportSheet($jenis, $this->filterKecamatan);
+            $sheet = new IKMFullExportSheet($jenis, $this->filterKecamatan, $this->filterInvestasi);
             $collection = $sheet->collection();
             if ($collection && $collection->isNotEmpty()) {
                 $sheets[] = $sheet;
@@ -32,7 +34,7 @@ class DataIkmExport implements WithMultipleSheets
         }
 
         if (empty($sheets)) {
-            $sheets[] = new IKMFullExportSheet(null, $this->filterKecamatan);
+            $sheets[] = new IKMFullExportSheet(null, $this->filterKecamatan, $this->filterInvestasi);
         }
 
         return $sheets;
@@ -43,13 +45,16 @@ class IKMFullExportSheet implements FromCollection, WithHeadings, WithTitle
 {
     protected $jenis;
     protected $kecamatan;
+    protected $investasi;
     protected $cachedData;
 
-    public function __construct(?string $jenis, ?string $kecamatan = null)
+    public function __construct(?string $jenis, ?string $kecamatan = null, ?array $investasi = null)
     {
         $this->jenis = $jenis;
         $this->kecamatan = $kecamatan;
+        $this->investasi = $investasi;
     }
+
 
     public function collection()
     {
@@ -78,6 +83,19 @@ class IKMFullExportSheet implements FromCollection, WithHeadings, WithTitle
         if ($this->kecamatan !== null) {
             $query->where('kecamatan', $this->kecamatan);
         }
+        if ($this->investasi !== null && count($this->investasi) > 0) {
+            $query->where(function ($q) {
+                foreach ($this->investasi as $kategori) {
+                    if ($kategori === 'kecil') {
+                        $q->orWhere('level', '<', 100000000);
+                    } elseif ($kategori === 'menengah') {
+                        $q->orWhereBetween('level', [100000000, 999999999]);
+                    } elseif ($kategori === 'besar') {
+                        $q->orWhere('level', '>=', 1000000000);
+                    }
+                }
+            });
+        }
 
         $this->cachedData = $query->get()->map(function ($ikm) {
             return [
@@ -94,6 +112,7 @@ class IKMFullExportSheet implements FromCollection, WithHeadings, WithTitle
                 'nib' => $ikm->nib,
                 'no_telp' => $ikm->no_telp,
                 'tenaga_kerja' => $ikm->tenaga_kerja,
+                'investasi' => $ikm->level,
 
                 'pemerintah_pusat' => $ikm->persentasePemilik->pemerintah_pusat ?? 0,
                 'pemerintah_daerah' => $ikm->persentasePemilik->pemerintah_daerah ?? 0,

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\PenggunaanAir;
+use App\Models\DataIkm;
 use Illuminate\Database\Seeder;
 
 class IndustriSeeder extends Seeder
@@ -28,5 +28,12 @@ class IndustriSeeder extends Seeder
             ModalSeeder::class,
             BentukPengelolaanLimbahSeeder::class
         ]);
+
+        // Update kolom level untuk semua data IKM setelah semua seeder dijalankan
+        $dataIkms = DataIkm::all();
+        foreach ($dataIkms as $ikm) {
+            $ikm->level = $ikm->hitungLevel();
+            $ikm->save();
+        }
     }
 }
