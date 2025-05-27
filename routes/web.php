@@ -27,6 +27,7 @@ use App\Http\Controllers\FAQController;
 use App\Http\Controllers\ForumDiskusiController;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\KadisController;
 use App\Http\Controllers\AdminManagementController;
 
 // Controller untuk halaman utama (homepage)

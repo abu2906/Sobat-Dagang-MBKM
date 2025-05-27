@@ -147,7 +147,7 @@ class KadisController extends Controller
     private function dataSuratMetrologi()    {
       //ini mu isi
     }
-    private function dataSuratTotal() { 
+    private function dataSuratTotal() {
         $perdagangan = $this->dataSuratPerdagangan();
         // $industri = $this->dataSuratIndustri();
         // $metrologi = $this->dataSuratMetrologi();
