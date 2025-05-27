@@ -29,15 +29,9 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        <div class="xl:col-span-2 bg-white p-4 rounded-2xl shadow-md">
-            <h3 class="text-xl font-semibold mb-5 text-gray-800">Daftar Permohonan Terbaru</h3>
-=======
     <div class="grid grid-cols-1 gap-8 xl:grid-cols-3">
         <div class="p-4 bg-white shadow-md xl:col-span-2 rounded-2xl">
             <h3 class="mb-5 text-xl font-semibold text-gray-800">Daftar Permohonan</h3>
->>>>>>> Robert-Database
             <div class="overflow-y-auto max-h-[800px] rounded-xl shadow-inner">
                 <table class="w-full text-sm text-left border-collapse">
                     <thead class="bg-[#083458] text-white sticky top-0 z-10">
@@ -86,9 +80,9 @@
                     <div class="text-3xl font-bold text-center text-gray-900">{{ $totalDistributor }}</div>
                 </div>
 
-                <div class="flex-1 bg-white p-6 rounded-2xl shadow-md flex flex-col items-center">
-                    <img src="{{ asset('assets/img/icon/komoditas.png') }}" alt="Icon" class="w-14 h-14 mb-3">
-                    <div class="font-semibold text-base text-center text-gray-700">Total IKM Terdaftar</div>
+                <div class="flex flex-col items-center flex-1 p-6 bg-white shadow-md rounded-2xl">
+                    <img src="{{ asset('assets/img/icon/komoditas.png') }}" alt="Icon" class="mb-3 w-14 h-14">
+                    <div class="text-base font-semibold text-center text-gray-700">Total IKM Terdaftar</div>
                     <div class="text-3xl font-bold text-center text-gray-900">{{ $totalKomoditas }}</div>
                 </div>
             </div>
