@@ -268,8 +268,7 @@ Route::middleware(['check.role:kabid_metrologi'])->group(function () {
 
 // Kepala Dinas Routes
 Route::middleware(['check.role:kepala_dinas'])->group(function () {
-    Route::get('/kadis/dashboard', [DashboardMetrologiController::class, 'showKadis'])->name('dashboard-kadis');
-    Route::get('/dashboard', [KadisController::class, 'index'])->name('suratDashboard');
+    Route::get('/kadis/dashboard', [KadisController::class, 'index'])->name('dashboard-kadis');
 
     Route::get('/kadis/persuratan', [DashboardMetrologiController::class, 'showPersuratanKadis'])->name('persuratan-kadis');
     Route::get('/kadis/persuratan/metrologi', [DashboardMetrologiController::class, 'showPersuratanMetrologiKadis'])->name('surat-metrologi-kadis');

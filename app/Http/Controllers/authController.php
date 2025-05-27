@@ -56,7 +56,7 @@ class authController extends Controller
                 case 'kabid_metrologi':
                     return redirect()->intended(route('dashboard-kabid-metrologi'));
                 case 'kepala_dinas':
-                    return redirect()->intended('/kadis/dashboard');
+                    return redirect()->intended(route('dashboard-kadis'));
                 default:
                     return redirect('/dashboard');
             }
