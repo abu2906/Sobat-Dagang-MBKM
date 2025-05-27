@@ -11,20 +11,26 @@ class ForumDiskusiController extends Controller
 {
     public function index()
 {
-    $chats = ForumDiskusi::with('user', 'disdag')->orderBy('waktu', 'asc')->get();
-
     if (Auth::guard('user')->check()) {
+        // Jika yang login adalah user
+        $chats = ForumDiskusi::with('user', 'disdag')->orderBy('waktu', 'asc')->get();
         return view('user.forum', compact('chats'));
+
     } elseif (Auth::guard('disdag')->check()) {
+        // Jika yang login adalah disdag
+        $chats = ForumDiskusi::with('user', 'disdag')->orderBy('waktu', 'asc')->get();
         $pengaduan = ForumDiskusi::with('user')
-                    ->whereNotNull('id_user') // hanya dari user
-                    ->orderBy('waktu', 'desc')
-                    ->get();
+                        ->whereNotNull('id_user') // hanya dari user
+                        ->orderBy('waktu', 'desc')
+                        ->get();
         return view('admin.adminSuper.pengaduanUser', compact('chats', 'pengaduan'));
+
     } else {
+        // Jika tidak login sebagai user maupun disdag
         abort(403); // unauthorized
     }
 }
+
 
 
     public function kirimPesan(Request $request)

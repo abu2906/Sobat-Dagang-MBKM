@@ -3,35 +3,41 @@
 @section('title', 'Master Admin')
 
 @section('content')
-<div class="px-4 py-6 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-2xl shadow-md flex items-center space-x-5">
+<div class="px-4 py-6 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+    <div class="grid grid-cols-1 gap-6 mb-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="flex items-center p-6 space-x-5 bg-white shadow-md rounded-2xl">
             <div>
-                <div class="font-semibold text-sm text-gray-700">Total Permohonan</div>
+                <div class="text-sm font-semibold text-gray-700">Total Permohonan</div>
                 <div class="text-3xl font-bold text-gray-900">{{ $totalPermohonan }}</div>
                 <div class="text-sm text-gray-500">Total Keseluruhan</div>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl shadow-md flex items-center space-x-5">
+        <div class="flex items-center p-6 space-x-5 bg-white shadow-md rounded-2xl">
             <img src="{{ asset('assets/img/icon/validation-approval.png') }}" alt="Icon" class="w-12 h-12">
             <div>
-                <div class="font-semibold text-sm text-gray-700">Total Pengguna</div>
+                <div class="text-sm font-semibold text-gray-700">Total Pengguna</div>
                 <div class="text-3xl font-bold text-gray-900">{{ $totalPengguna }}</div>
                 <div class="text-sm text-gray-500">Hingga Bulan Ini</div>
             </div>
         </div>
-        <div class="bg-white p-6 rounded-2xl shadow-md flex items-center space-x-5">
+        <div class="flex items-center p-6 space-x-5 bg-white shadow-md rounded-2xl">
             <img src="{{ asset('assets/img/icon/validation-approval.png') }}" alt="Icon" class="w-12 h-12">
             <div>
-                <div class="font-semibold text-sm text-gray-700">Total Pengaduan</div>
+                <div class="text-sm font-semibold text-gray-700">Total Pengaduan</div>
                 <div class="text-3xl font-bold text-gray-900">{{ $totalPengaduan }}</div>
                 <div class="text-sm text-gray-500">Hingga Bulan Ini</div>
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div class="xl:col-span-2 bg-white p-4 rounded-2xl shadow-md">
             <h3 class="text-xl font-semibold mb-5 text-gray-800">Daftar Permohonan Terbaru</h3>
+=======
+    <div class="grid grid-cols-1 gap-8 xl:grid-cols-3">
+        <div class="p-4 bg-white shadow-md xl:col-span-2 rounded-2xl">
+            <h3 class="mb-5 text-xl font-semibold text-gray-800">Daftar Permohonan</h3>
+>>>>>>> Robert-Database
             <div class="overflow-y-auto max-h-[800px] rounded-xl shadow-inner">
                 <table class="w-full text-sm text-left border-collapse">
                     <thead class="bg-[#083458] text-white sticky top-0 z-10">
@@ -73,10 +79,10 @@
         </div>
 
         <div class="space-y-8">
-            <div class="flex flex-col xl:flex-row gap-6">
-                <div class="flex-1 bg-white p-6 rounded-2xl shadow-md flex flex-col items-center">
-                    <img src="{{ asset('assets/img/icon/permintaan.png') }}" alt="Icon" class="w-14 h-14 mb-3">
-                    <div class="font-semibold text-base text-center text-gray-700">Total Distributor</div>
+            <div class="flex flex-col gap-6 xl:flex-row">
+                <div class="flex flex-col items-center flex-1 p-6 bg-white shadow-md rounded-2xl">
+                    <img src="{{ asset('assets/img/icon/permintaan.png') }}" alt="Icon" class="mb-3 w-14 h-14">
+                    <div class="text-base font-semibold text-center text-gray-700">Total Distributor</div>
                     <div class="text-3xl font-bold text-center text-gray-900">{{ $totalDistributor }}</div>
                 </div>
 
@@ -87,13 +93,13 @@
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl shadow-md">
-                <h3 class="text-base font-semibold mb-4 text-gray-800">Statistik Permohonan Perbulan</h3>
+            <div class="p-6 bg-white shadow-md rounded-2xl">
+                <h3 class="mb-4 text-base font-semibold text-gray-800">Statistik Permohonan Perbulan</h3>
                 <canvas id="chartPermohonan" height="180"></canvas>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl shadow-md">
-                <h3 class="text-base font-semibold mb-4 text-gray-800">Kategori Pengaduan</h3>
+            <div class="p-6 bg-white shadow-md rounded-2xl">
+                <h3 class="mb-4 text-base font-semibold text-gray-800">Kategori Pengaduan</h3>
                 <canvas id="piePengaduan" height="180"></canvas>
             </div>
         </div>
