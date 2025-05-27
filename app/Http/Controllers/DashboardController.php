@@ -132,9 +132,13 @@ class DashboardController extends Controller
         $totalPengguna = DB::table('user')->count();
         $totalKomoditas = DB::table('data_ikm')->count();
 
-        $totalPermohonan = DB::table('form_permohonan')->count() + DB::table('surat_metrologi')->count();
+        $totalPermohonan = DB::table('form_permohonan')
+        ->where('status', '!=', 'disimpan')
+        ->count() 
+        + DB::table('surat_metrologi')->count();
 
         $permohonanPerdagangan = DB::table('form_permohonan')
+            ->where('form_permohonan.status', '!=', 'disimpan')
             ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
             ->select(
                 DB::raw('DATE_FORMAT(form_permohonan.tgl_pengajuan, "%d-%m-%Y") as tanggal'),
