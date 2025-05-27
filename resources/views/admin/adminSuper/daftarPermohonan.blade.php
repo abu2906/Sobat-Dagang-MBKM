@@ -3,7 +3,7 @@
 @section('title', 'Daftar Permohonan')
 
 @section('content')
-<div class="relative w-full h-64">
+<div class="relative w-full h-44">
     <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         <h1 class="text-5xl font-bold text-[#FAA31E]">Daftar Permohonan</h1>
@@ -17,7 +17,7 @@
                 search
             </span>
             <input type="text" id="searchInput" placeholder="Cari"
-                class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                class="w-full p-3 pl-10 bg-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
     </div>
 </div>
@@ -29,19 +29,18 @@
     </div>
     @endif
 
-    <div class="overflow-x-auto">
-        <table class="w-full bg-white shadow-md rounded-xl">
-            <thead>
-                <tr class="bg-[#083358] text-white font-semibold">
-                    <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                    <th class="px-4 py-3 border-b">Tanggal</th>
-                    <th class="px-4 py-3 border-b">Nama Pengirim</th>
-                    <th class="px-4 py-3 border-b">Bidang Terkait</th>
-                    <th class="px-4 py-3 border-b">Status</th>
-                    <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="overflow-x-auto max-h-80">
+    <table class="w-full bg-white shadow-md rounded-xl text-sm text-left">
+        <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
+            <tr>
+                <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
+                <th class="px-4 py-3 border-b">Tanggal</th>
+                <th class="px-4 py-3 border-b">Nama Pengirim</th>
+                <th class="px-4 py-3 border-b">Bidang Terkait</th>
+                <th class="px-4 py-3 border-b">Status</th>
+                <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
+            </tr>
+        </thead>
                 @php
                     $counter = 1;
                 @endphp

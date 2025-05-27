@@ -3,7 +3,7 @@
 @section('title', 'Edit Pengguna')
 
 @section('content')
-<div class="relative w-full h-64">
+<div class="relative w-full h-44">
     <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         <h1 class="text-5xl font-bold text-[#FAA31E]">Edit Pengguna</h1>

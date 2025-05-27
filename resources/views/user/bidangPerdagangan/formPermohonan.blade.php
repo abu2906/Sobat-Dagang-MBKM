@@ -141,18 +141,6 @@
             </div>
 
             {{-- Kelurahan --}}
-            {{-- <div>
-                <label for="kelurahan">Kelurahan <span class="text-red-500">*</span></label>
-                <select id="kelurahan" name="kelurahan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <option value="">Pilih Kelurahan</option>
-                    @foreach($listKelurahan as $kel)
-                        <option value="{{ $kel }}" {{ (old('kelurahan', $draft->kelurahan ?? '') == $kel) ? 'selected' : '' }}>
-                            {{ ucwords(str_replace('_', ' ', $kel)) }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('kelurahan') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
-            </div> --}}
             <div>
                 <label for="kelurahan">Kelurahan <span class="text-red-500">*</span></label>
                 <select id="kelurahan" name="kelurahan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
@@ -163,9 +151,6 @@
                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p> 
                 @enderror
             </div>
-
-            {{-- Nama Usaha --}}
-
 
             {{-- Foto Usaha --}}
             <div>

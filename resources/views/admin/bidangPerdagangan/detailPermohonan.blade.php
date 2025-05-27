@@ -4,7 +4,7 @@
 @section('content')
 <div class="bg-white">
     <div class="bg-white">
-        <div class="relative w-full h-64">
+        <div class="relative w-full h-36">
             <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
             <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
                 <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Background" class="object-cover w-full h-full -ml-16">

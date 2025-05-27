@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Models\Uttp;
-use App\Models\suratMetrologi;
 use App\Models\Barang;
 use App\Models\IndexHarga;
 
@@ -219,8 +217,6 @@ class KadisController extends Controller
                 ->values()
                 ->all();
         }
-
-        
         $calibrationData = $this->getCalibrationComparisonData();
 
         return view('admin.kepalaDinas.dashboard', [

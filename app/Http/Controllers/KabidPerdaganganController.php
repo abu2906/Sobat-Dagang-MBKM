@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;  
 use App\Models\PermohonanSurat;
 use App\Models\Barang;
-use App\Models\StokOpname;
 use Carbon\Carbon;
 
 class KabidPerdaganganController extends Controller

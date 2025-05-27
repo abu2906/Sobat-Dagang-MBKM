@@ -194,8 +194,6 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
 
 // admin master
 Route::middleware(['check.role:master_admin'])->group(function () {
-    #dashboard nddpi isinya untuk tes2 ji
-    // Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
     #distribusi
     Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
     Route::post('/distributor/{id_distributor}/terima', [PelaporanController::class, 'setujui'])->name('distributor.setujui');
@@ -284,5 +282,6 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kepala-dinas/surat-perdagangan', [sobatHargaController::class, 'suratPerdagangan'])->name('kepalaDinas.suratPerdagangan');
     Route::put('/kabid-perdagangan/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('suratPerdagangan.setujui');
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
+    Route::get('/kadis/metrologi', [DashboardMetrologiController::class, 'showKadisMetro'])->name('kadis-metro');
     
 });

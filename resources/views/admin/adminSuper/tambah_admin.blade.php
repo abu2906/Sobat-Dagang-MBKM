@@ -3,10 +3,10 @@
 @section('title', 'Tambah Pengguna')
 
 @section('content')
-<div class="relative w-full h-64">
+<div class="relative w-full h-44">
     <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        <h1 class="text-5xl font-bold text-[#FAA31E]">Tambah Pengguna</h1>
+        <h1 class="text-5xl font-bold text-[#FAA31E]">Tambah Admin Baru</h1>
     </div>
 </div>
 
@@ -80,7 +80,7 @@
             </div>
             <!-- Tombol -->
             <div class="flex justify-center gap-4 mt-8">
-                <a href="{{ route('manajemen.pengguna') }}" 
+                <a href="{{ route('manajemen.admin') }}" 
                    class="px-6 py-2 text-gray-600 bg-gray-200 rounded-full hover:bg-gray-300">
                     Batal
                 </a>

@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -174,23 +171,23 @@ class DashboardController extends Controller
 
     $countsPerMonth = [];
 
-foreach ($permohonan as $item) {
-    // parsing tanggal "dd-mm-yyyy" ke Carbon
-    $date = Carbon::createFromFormat('d-m-Y', $item->tanggal);
-    $month = $date->format('Y-m'); // contoh "2025-05"
+    foreach ($permohonan as $item) {
+        // parsing tanggal "dd-mm-yyyy" ke Carbon
+        $date = Carbon::createFromFormat('d-m-Y', $item->tanggal);
+        $month = $date->format('Y-m'); // contoh "2025-05"
 
-    if (!isset($countsPerMonth[$month])) {
-        $countsPerMonth[$month] = 0;
+        if (!isset($countsPerMonth[$month])) {
+            $countsPerMonth[$month] = 0;
+        }
+        $countsPerMonth[$month]++;
     }
-    $countsPerMonth[$month]++;
-}
 
-// Sortir berdasarkan bulan ascending
-ksort($countsPerMonth);
+    // Sortir berdasarkan bulan ascending
+    ksort($countsPerMonth);
 
-// Pisahkan keys dan values jadi array untuk Chart.js
-$labelsPermohonan = array_keys($countsPerMonth);
-$dataPermohonan = array_values($countsPerMonth);
+    // Pisahkan keys dan values jadi array untuk Chart.js
+    $labelsPermohonan = array_keys($countsPerMonth);
+    $dataPermohonan = array_values($countsPerMonth);
 
 
 

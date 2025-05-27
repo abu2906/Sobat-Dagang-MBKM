@@ -10,8 +10,6 @@ use App\Models\suratMetrologi;
 use App\Models\suratBalasan;
 use Illuminate\Support\Facades\Auth;
 
-
-// Berisikan seluruh fungsi tentang persuratan termasuk riwayat surat dll untuk semua bidang
 class PersuratanController extends Controller
 {
     public function showAdministrasiMetrologi()
