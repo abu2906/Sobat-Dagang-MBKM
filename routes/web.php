@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\View;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\KadisController;
 use App\Http\Controllers\AdminManagementController;
+use App\Http\Controllers\Auth\LupaPasswordController;
 
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
@@ -46,6 +47,12 @@ Route::post('/register', [AuthController::class, 'submitRegister'])->name('regis
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/lupa-password', [LupaPasswordController::class, 'showForm'])->name('password.request');
+Route::post('/lupa-password', [LupaPasswordController::class, 'sendLink'])->name('password.email');
+
+Route::get('/reset-password/{token}', [LupaPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [LupaPasswordController::class, 'resetPassword'])->name('password.update');
+
 
 // guest
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
@@ -67,7 +74,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
     Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
-
+    
     //pengaduan
     Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
     Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');

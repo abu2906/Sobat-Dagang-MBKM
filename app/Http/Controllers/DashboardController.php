@@ -4,16 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('user.dashboard');
+            // Ambil id_user dari session
+        $idUser = $request->session()->get('id_user');
+
+        if (!$idUser) {
+            // Jika tidak ada id_user di session, redirect ke halaman login atau halaman lain
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // Ambil data user dari database berdasarkan id_user
+        $user = User::find($idUser);
+
+        if (!$user) {
+            // Jika user tidak ditemukan, redirect ke login juga atau bisa tampilkan halaman error
+            return redirect()->route('login')->with('error', 'User tidak ditemukan.');
+        }
+
+        // Kirim data user ke view 'user.dashboard'
+        return view('user.dashboard', ['user' => $user]);
     }
 
     public function profile()
@@ -130,9 +150,9 @@ class DashboardController extends Controller
         $totalKomoditas = DB::table('data_ikm')->count();
 
         $totalPermohonan = DB::table('form_permohonan')
-        ->where('status', '!=', 'disimpan')
-        ->count() 
-        + DB::table('surat_metrologi')->count();
+            ->where('status', '!=', 'disimpan')
+            ->count() 
+            + DB::table('surat_metrologi')->count();
 
         $permohonanPerdagangan = DB::table('form_permohonan')
         ->where('form_permohonan.status', '!=', 'disimpan')
@@ -153,149 +173,106 @@ class DashboardController extends Controller
             END as status')
         );
 
-    $permohonanMetrologi = DB::table('surat_metrologi')
-        ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
-        ->select(
-            DB::raw('DATE_FORMAT(surat_metrologi.created_at, "%d-%m-%Y") as tanggal'),
-            'user.nama as nama_pengirim',
-            DB::raw('"Metrologi" as bidang_terkait'),
-            'surat_metrologi.status_surat_masuk as status'
-        );
-
-    $unionQuery = $permohonanPerdagangan->union($permohonanMetrologi);
-
-    $permohonan = DB::table(DB::raw("({$unionQuery->toSql()}) as sub"))
-        ->mergeBindings($permohonanPerdagangan)
-        ->orderByRaw('STR_TO_DATE(tanggal, "%d-%m-%Y") desc')
-        ->get();
-
-    $countsPerMonth = [];
-
-    foreach ($permohonan as $item) {
-        // parsing tanggal "dd-mm-yyyy" ke Carbon
-        $date = Carbon::createFromFormat('d-m-Y', $item->tanggal);
-        $month = $date->format('Y-m'); // contoh "2025-05"
-
-        if (!isset($countsPerMonth[$month])) {
-            $countsPerMonth[$month] = 0;
-        }
-        $countsPerMonth[$month]++;
-    }
-
-    // Sortir berdasarkan bulan ascending
-    ksort($countsPerMonth);
-
-    // Pisahkan keys dan values jadi array untuk Chart.js
-    $labelsPermohonan = array_keys($countsPerMonth);
-    $dataPermohonan = array_values($countsPerMonth);
-
-
-
-    // Inisialisasi status
-    $statusCounts = [
-        'Menunggu' => 0,
-        'Disetujui' => 0,
-        'Ditolak' => 0,
-    ];
-
-    // Ambil dari surat_metrologi
-    $metrologi = DB::table('surat_metrologi')
-        ->select('status_surat_masuk', DB::raw('count(*) as total'))
-        ->whereIn('status_surat_masuk', ['Menunggu', 'Disetujui', 'Ditolak'])
-        ->groupBy('status_surat_masuk')
-        ->pluck('total', 'status_surat_masuk');
-
-    foreach ($metrologi as $status => $total) {
-        $statusCounts[$status] += $total;
-    }
-
-    // Ambil dari form_permohonan (status lowercase → dicocokkan ke kapitalisasi)
-    $form_permohonan = DB::table('form_permohonan')
-        ->select('status', DB::raw('count(*) as total'))
-        ->whereIn('status', ['menunggu', 'diterima', 'ditolak'])
-        ->groupBy('status')
-        ->pluck('total', 'status');
-
-    foreach ($form_permohonan as $status => $total) {
-        $statusFormatted = ucfirst($status); // 'menunggu' → 'Menunggu'
-        if (isset($statusCounts[$statusFormatted])) {
-            $statusCounts[$statusFormatted] += $total;
-        }
-    }
-
-    return view('admin.adminSuper.dashboardMaster', compact(
-        'totalDistributor',
-        'totalPengaduan',
-        'totalPengguna',
-        'totalKomoditas',
-        'totalPermohonan',
-        'permohonan',
-        'statusCounts',
-        'labelsPermohonan',
-        'dataPermohonan'
-    ));
-    }
-    public function daftarPermohonan()
-    {
-        // Get permohonan data from both tables
-        $permohonanPerdagangan = DB::table('form_permohonan')
-            ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
-            ->select(
-                DB::raw('DATE_FORMAT(form_permohonan.tgl_pengajuan, "%d-%m-%Y") as tanggal'),
-                'form_permohonan.tgl_pengajuan as raw_date',
-                'user.nama as nama_pengirim',
-                'form_permohonan.id_permohonan as id',
-                DB::raw('CASE 
-                    WHEN form_permohonan.jenis_surat LIKE "%perdagangan%" THEN "Perdagangan"
-                    WHEN form_permohonan.jenis_surat LIKE "%industri%" THEN "Industri"
-                    ELSE "Perdagangan"
-                END as bidang_terkait'),
-                DB::raw('CASE 
-                    WHEN form_permohonan.status = "menunggu" THEN "Menunggu"
-                    WHEN form_permohonan.status = "diterima" THEN "Disetujui"
-                    WHEN form_permohonan.status = "ditolak" THEN "Ditolak"
-                    WHEN form_permohonan.status = "selesai" THEN "Selesai"
-                    ELSE form_permohonan.status
-                END as status'),
-                'form_permohonan.file_balasan'
-            );
-
         $permohonanMetrologi = DB::table('surat_metrologi')
             ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
-            ->leftJoin('surat_keluar_metrologi', 'surat_metrologi.id_surat', '=', 'surat_keluar_metrologi.id_surat')
             ->select(
                 DB::raw('DATE_FORMAT(surat_metrologi.created_at, "%d-%m-%Y") as tanggal'),
-                'surat_metrologi.created_at as raw_date',
                 'user.nama as nama_pengirim',
-                'surat_metrologi.id_surat as id',
                 DB::raw('"Metrologi" as bidang_terkait'),
-                DB::raw('CASE 
-                    WHEN surat_metrologi.status_surat_masuk = "menunggu" THEN "Menunggu"
-                    WHEN surat_metrologi.status_surat_masuk = "disetujui" THEN "Disetujui"
-                    WHEN surat_metrologi.status_surat_masuk = "ditolak" THEN "Ditolak"
-                    WHEN surat_metrologi.status_surat_masuk = "diproses" THEN "Diproses"
-                    WHEN surat_metrologi.status_surat_masuk = "menunggu_persetujuan" THEN "Menunggu"
-                    WHEN surat_metrologi.status_surat_masuk = "butuh_revisi" THEN "Butuh Revisi"
-                    ELSE surat_metrologi.status_surat_masuk
-                END as status'),
-                'surat_keluar_metrologi.path_dokumen as file_balasan'
+                'surat_metrologi.status_surat_masuk as status'
             );
 
-        // Combine and order by raw date, limit to 17 entries
-        $permohonan = $permohonanPerdagangan->union($permohonanMetrologi)
-            ->orderBy('raw_date', 'desc')
+        $unionQuery = $permohonanPerdagangan->unionAll($permohonanMetrologi);
+
+        $permohonan = DB::table(DB::raw("({$unionQuery->toSql()}) as sub"))
+            ->mergeBindings($permohonanPerdagangan)
+            ->orderByRaw('STR_TO_DATE(tanggal, "%d-%m-%Y") desc')
             ->get();
-        
-        return view('admin.adminSuper.daftarPermohonan', compact('permohonan'));
+
+        $countsPerMonth = [];
+
+        foreach ($permohonan as $item) {
+            // parsing tanggal "dd-mm-yyyy" ke Carbon
+            $date = Carbon::createFromFormat('d-m-Y', $item->tanggal);
+            $month = $date->format('Y-m'); // contoh "2025-05"
+
+            if (!isset($countsPerMonth[$month])) {
+                $countsPerMonth[$month] = 0;
+            }
+            $countsPerMonth[$month]++;
+        }
+
+        // Sortir berdasarkan bulan ascending
+        ksort($countsPerMonth);
+
+        // Pisahkan keys dan values jadi array untuk Chart.js
+        $labelsPermohonan = array_keys($countsPerMonth);
+        $dataPermohonan = array_values($countsPerMonth);
+
+
+        // Inisialisasi status akhir
+        $statusCounts = [
+            'Menunggu' => 0,
+            'Disetujui' => 0,
+            'Ditolak' => 0,
+        ];
+
+        // Ambil status dari surat_metrologi
+        $metrologi = DB::table('surat_metrologi')
+            ->select('status_surat_masuk', DB::raw('count(*) as total'))
+            ->whereIn('status_surat_masuk', ['Menunggu', 'Disetujui', 'Ditolak'])
+            ->groupBy('status_surat_masuk')
+            ->pluck('total', 'status_surat_masuk');
+
+        foreach ($metrologi as $status => $total) {
+            $statusCounts[$status] += $total;
+        }
+
+        // Mapping status dari form_permohonan ke format standar
+        $statusMap = [
+            'menunggu' => 'Menunggu',
+            'diterima' => 'Disetujui',
+            'ditolak' => 'Ditolak',
+        ];
+
+        $form_permohonan = DB::table('form_permohonan')
+            ->select('status', DB::raw('count(*) as total'))
+            ->whereIn('status', ['menunggu', 'diterima', 'ditolak'])
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        foreach ($form_permohonan as $status => $total) {
+            if (isset($statusMap[$status])) {
+                $mappedStatus = $statusMap[$status];
+                $statusCounts[$mappedStatus] += $total;
+            }
+        }
+
+
+        return view('admin.adminSuper.dashboardMaster', compact(
+            'totalDistributor',
+            'totalPengaduan',
+            'totalPengguna',
+            'totalKomoditas',
+            'totalPermohonan',
+            'permohonan',
+            'statusCounts',
+            'labelsPermohonan',
+            'dataPermohonan'
+        ));
     }
+    
 
     public function detailPermohonan($id, $bidang)
     {
+        // Decode the ID parameter
+        $decodedId = base64_decode($id);
+        
         if ($bidang === 'metrologi') {
             $permohonan = DB::table('surat_metrologi')
                 ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
                 ->leftJoin('surat_keluar_metrologi', 'surat_metrologi.id_surat', '=', 'surat_keluar_metrologi.id_surat')
-                ->where('surat_metrologi.id_surat', $id)
+                ->where('surat_metrologi.id_surat', $decodedId)
                 ->select(
                     'surat_metrologi.*',
                     'user.nama as nama_pengirim',
@@ -306,7 +283,7 @@ class DashboardController extends Controller
         } else {
             $permohonan = DB::table('form_permohonan')
                 ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
-                ->where('form_permohonan.id_permohonan', $id)
+                ->where('form_permohonan.id_permohonan', $decodedId)
                 ->select('form_permohonan.*', 'user.nama as nama_pengirim')
                 ->first();
         }
@@ -341,5 +318,63 @@ class DashboardController extends Controller
 
             return Storage::disk('public')->download($balasan->file_balasan);
         }
+    }
+
+    public function daftarPermohonan()
+    {
+        // Get permohonan data from both tables
+        $permohonanPerdagangan = DB::table('form_permohonan')
+            ->where('status', '!=', 'disimpan')
+            ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
+            ->select(
+                DB::raw('DATE_FORMAT(form_permohonan.tgl_pengajuan, "%d-%m-%Y") as tanggal'),
+                'form_permohonan.tgl_pengajuan as raw_date',
+                'user.nama as nama_pengirim',
+                'form_permohonan.id_permohonan as id',
+                'form_permohonan.jenis_surat', // ✅ Tambahkan ini
+                DB::raw('CASE 
+                    WHEN form_permohonan.jenis_surat LIKE "%perdagangan%" THEN "Perdagangan"
+                    WHEN form_permohonan.jenis_surat LIKE "%industri%" THEN "Industri"
+                    ELSE "Perdagangan"
+                END as bidang_terkait'),
+                DB::raw('CASE 
+                    WHEN form_permohonan.status = "menunggu" THEN "Menunggu"
+                    WHEN form_permohonan.status = "diterima" THEN "Disetujui"
+                    WHEN form_permohonan.status = "ditolak" THEN "Ditolak"
+                    WHEN form_permohonan.status = "selesai" THEN "Selesai"
+                    ELSE form_permohonan.status
+                END as status'),
+                'form_permohonan.file_balasan'
+            );
+
+        $permohonanMetrologi = DB::table('surat_metrologi')
+            ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
+            ->leftJoin('surat_keluar_metrologi', 'surat_metrologi.id_surat', '=', 'surat_keluar_metrologi.id_surat')
+            ->select(
+                DB::raw('DATE_FORMAT(surat_metrologi.created_at, "%d-%m-%Y") as tanggal'),
+                'surat_metrologi.created_at as raw_date',
+                'user.nama as nama_pengirim',
+                'surat_metrologi.id_surat as id',
+                'surat_metrologi.jenis_surat', // ✅ Tambahkan ini
+                DB::raw('"Metrologi" as bidang_terkait'),
+                DB::raw('CASE 
+                    WHEN surat_metrologi.status_surat_masuk = "menunggu" THEN "Menunggu"
+                    WHEN surat_metrologi.status_surat_masuk = "disetujui" THEN "Disetujui"
+                    WHEN surat_metrologi.status_surat_masuk = "ditolak" THEN "Ditolak"
+                    WHEN surat_metrologi.status_surat_masuk = "diproses" THEN "Diproses"
+                    WHEN surat_metrologi.status_surat_masuk = "menunggu_persetujuan" THEN "Menunggu"
+                    WHEN surat_metrologi.status_surat_masuk = "butuh_revisi" THEN "Butuh Revisi"
+                    ELSE surat_metrologi.status_surat_masuk
+                END as status'),
+                'surat_keluar_metrologi.path_dokumen as file_balasan'
+            );
+
+        // Combine and order by raw date, limit to 17 entries
+        $permohonan = $permohonanPerdagangan->union($permohonanMetrologi)
+            ->orderBy('raw_date', 'desc')
+            ->limit(17)
+            ->get();
+        
+        return view('admin.adminSuper.daftarPermohonan', compact('permohonan'));
     }
 }

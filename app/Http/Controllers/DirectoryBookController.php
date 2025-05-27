@@ -492,14 +492,15 @@ class DirectoryBookController extends Controller{
         $search = $request->input('search');
         
         $users = User::where('nama', 'like', "%{$search}%")
-            ->orWhere('id_user', 'like', "%{$search}%")
-            ->select('id_user', 'nama')
+            ->orWhere('nib', 'like', "%{$search}%")
+            ->select('id_user', 'nama', 'nib')
             ->limit(10)
             ->get()
             ->map(function ($user) {
+                $nib = $user->nib ? $user->nib : '-';
                 return [
                     'id' => $user->id_user,
-                    'text' => "({$user->id_user}) - {$user->nama}"
+                    'text' => "({$nib}) - {$user->nama}"
                 ];
             });
 

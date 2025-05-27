@@ -76,12 +76,12 @@ class KadisController extends Controller
 
             // Total keseluruhan ketiga bidang
             'totalSuratKeseluruhan' =>
-                $perdagangan['totalSuratPerdagangan'],+
+                $perdagangan['totalSuratPerdagangan']+
                 $industri['totalSuratIndustri'] +
                 $metrologi['totalSuratMetrologi'],
 
             'totalSuratTerverifikasiKeseluruhan' =>
-                $perdagangan['totalSuratTerverifikasi'],
+                $perdagangan['totalSuratTerverifikasi']
                 +
                 $industri['totalSuratTerverifikasi'] +
                 $metrologi['totalSuratTerverifikasi'],

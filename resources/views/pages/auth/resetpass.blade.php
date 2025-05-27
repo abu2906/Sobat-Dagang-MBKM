@@ -16,11 +16,27 @@
             <p class="text-white text-center text-sm">Masukkan Email Anda untuk melakukan reset kata sandi</p>
         </div>
 
-        <form method="POST" action="#">
-            @csrf
+            <div class="max-w-md mx-auto mt-10">
+    <form method="POST" action="{{ route('password.update') }}">
+        @csrf
 
-            <!-- Hidden token (biasanya dari URL) -->
-            <input type="hidden" name="token" value="#">
+        <input type="hidden" name="token" value="{{ $token }}">
+        <input type="hidden" name="email" value="{{ $email }}">
+
+        <div class="mb-4">
+            <label>Password Baru</label>
+            <input type="password" name="password" class="w-full p-2 border rounded" required>
+        </div>
+
+        <div class="mb-4">
+            <label>Konfirmasi Password</label>
+            <input type="password" name="password_confirmation" class="w-full p-2 border rounded" required>
+        </div>
+
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Reset Password</button>
+    </form>
+</div>
+            {{-- <input type="hidden" name="token" value="#">
 
             <div class="mb-4">
                 <label class="block text-white font-semibold mb-1" for="password">Kata Sandi Baru</label>
@@ -62,7 +78,7 @@
                 <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-400">
                     Ubah Kata Sandi
                 </button>
-            </div>
+            </div> --}}
         </form>
     </div>
 </body>

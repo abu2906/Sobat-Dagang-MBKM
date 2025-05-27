@@ -47,10 +47,20 @@
                 @foreach($permohonan as $p)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-2 text-center">{{ $counter++ }}</td>
-                    <td class="px-4 py-2">{{ $p->tanggal }}</td>
-                    <td class="px-4 py-2">{{ $p->nama_pengirim }}</td>
-                    <td class="px-4 py-2">{{ $p->bidang_terkait }}</td>
-                    <td class="px-4 py-2">
+                    <td class="px-4 py-2 text-center">{{ $p->tanggal }}</td>
+                    <td class="px-4 py-2 text-center">{{ $p->nama_pengirim }}</td>
+                    @php
+                        $jenisSuratMap = [
+                        'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                        'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                        'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                        ];
+                        @endphp
+                    <td class="px-4 py-2 text-center">
+                            {{ $jenisSuratMap[$p->jenis_surat] ?? $p->jenis_surat }}
+                    </td>
+                    <td class="px-4 py-2 text-center">{{ $p->bidang_terkait }}</td>
+                    <td class="px-4 py-2 text-center">
                         @php
                             $status = $p->status;
                             $color = match($status) {
@@ -69,7 +79,7 @@
                     </td>
                     <td class="px-4 py-2">
                         <div class="flex items-center justify-center space-x-2">
-                            <a href="{{ route('admin.detailPermohonan', ['id' => $p->id, 'bidang' => strtolower($p->bidang_terkait)]) }}" 
+                            <a href="{{ route('admin.detailPermohonan', ['id' => base64_encode($p->id), 'bidang' => strtolower($p->bidang_terkait)]) }}" 
                                 class="text-[#083358] hover:text-black">
                                 <span class="material-symbols-outlined">visibility</span>
                             </a>
