@@ -30,7 +30,7 @@
     <!-- Grafik Metrologi -->
     <div class="p-4 mb-6 bg-white shadow-md rounded-xl">
         <h3 class="mb-2 text-sm font-semibold text-gray-700">Bidang Metrologi</h3>
-        <p class="text-lg font-semibold mb-4">Grafik Perbandingan Jumlah Tera</p>
+        <p class="mb-4 text-lg font-semibold">Grafik Perbandingan Jumlah Tera</p>
         <div class="h-[280px]">
             <canvas id="chartLine"></canvas>
         </div>

@@ -1,6 +1,11 @@
-<div x-data="{ showProfileMenu: true }"
+<div x-data="{ showProfileMenu: false }"
      x-show="showProfile"
-     x-transition
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0 translate-x-full"
+     x-transition:enter-end="opacity-100 translate-x-0"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="opacity-100 translate-x-0"
+     x-transition:leave-end="opacity-0 translate-x-full"
      @click.outside="showProfile = false"
      class="fixed top-[70px] right-0 w-[350px] h-[700px] bg-white shadow-2xl z-50 rounded-l-2xl overflow-hidden flex flex-col">
 

@@ -114,9 +114,10 @@
     new Chart(ctxLine, {
         type: 'line',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'],
+            labels: {!! json_encode($labelsPermohonan) !!},
             datasets: [{
-                label: 'Jumlah',
+                label: 'Jumlah Surat Masuk',
+                data: {!! json_encode($dataPermohonan) !!},
                 borderColor: '#2563eb',
                 backgroundColor: 'rgba(37, 99, 235, 0.2)',
                 fill: true,
@@ -126,19 +127,16 @@
         options: {
             responsive: true,
             scales: {
-                y: { beginAtZero: true }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        font: {
-                            size: 14
-                        }
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision:0
                     }
                 }
             }
         }
     });
+
 
     const ctx = document.getElementById('combinedPieChart').getContext('2d');
     const combinedPieChart = new Chart(ctx, {
