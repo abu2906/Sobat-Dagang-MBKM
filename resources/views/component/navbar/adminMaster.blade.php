@@ -29,7 +29,7 @@
                 ['href' => route('dashboard.master'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => route('forum.admin'), 'icon' => 'forum.png', 'label' => 'Pengaduan'],
                 ['href' => route('review.pengajuan'), 'icon' => 'data.png', 'label' => 'Pelaporan Distributor'],
-                ['href' => '#', 'icon' => '', 'label' => 'Surat Permohonan'],
+                ['href' => route('admin.daftarPermohonan'), 'icon' => 'persuratan.png', 'label' => 'Surat Permohonan'],
                 ['href' => route('manajemen.pengguna'), 'icon' => 'person.png', 'label' => 'Manajemen Pengguna'],
                 ['href' => route('manajemen.admin'), 'icon' => 'person.png', 'label' => 'Manajemen Admin'],
                 ['href' => route('kelola.berita'), 'icon' => 'newspaper.png', 'label' => 'Kelola Berita'],
