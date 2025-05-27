@@ -197,7 +197,7 @@
 		<div id="formPermohonan" class="relative flex justify-center">
 			<form class="bg-white p-6 rounded-xl shadow-lg w-full max-w-3xl" method="POST" action="{{ route('proses-surat-metrologi') }}" enctype="multipart/form-data">
 				@csrf
-				<h2 class="text-center font-bold text-xl mb-4">FORM PERMOHONAN TERA/TERA ULANG</h2>
+				<h2 class="text-center font-bold text-xl mb-4">FORM PERMOHONAN TERA BARU/TERA ULANG</h2>
 
 				<div class="mb-4">
 					<h3 class="font-semibold mb-2">Data Pemohon:</h3>
