@@ -124,6 +124,7 @@ return [
     ],
     'aliases' => [
         'Image' => Intervention\Image\Facades\Image::class,
+        'Storage' => Illuminate\Support\Facades\Storage::class,
     ],
     'pusher' => [
         'driver' => 'pusher',
