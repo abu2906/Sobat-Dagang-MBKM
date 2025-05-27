@@ -31,7 +31,7 @@
     </div>
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div class="xl:col-span-2 bg-white p-4 rounded-2xl shadow-md">
-            <h3 class="text-xl font-semibold mb-5 text-gray-800">Daftar Permohonan</h3>
+            <h3 class="text-xl font-semibold mb-5 text-gray-800">Daftar Permohonan Terbaru</h3>
             <div class="overflow-y-auto max-h-[800px] rounded-xl shadow-inner">
                 <table class="w-full text-sm text-left border-collapse">
                     <thead class="bg-[#083458] text-white sticky top-0 z-10">
