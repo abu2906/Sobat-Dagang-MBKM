@@ -370,7 +370,7 @@ class DashboardMetrologiController extends Controller
             'totalSurat',
             'totalSuratDisetujui',
             'totalSuratDitolak',
-            'totalSuratMenunggu'
+            'totalSuratMenunggu',
         ));
     }
     public function showUttp(Request $request)
