@@ -126,13 +126,58 @@ class DashboardController extends Controller
 
     public function dashboardMaster()
     {
+        // Get counts for dashboard cards
         $totalDistributor = DB::table('distributor')->count();
         $totalPengaduan = DB::table('forum_diskusi')
-        ->whereNotNull('id_user')
-        ->count();
+            ->whereNotNull('id_user')
+            ->count();
         $totalPengguna = DB::table('user')->count();
+        $totalKomoditas = DB::table('barang')->count();
+
+        // Get total permohonan from both tables
+        $totalPermohonan = DB::table('form_permohonan')->count() + DB::table('surat_metrologi')->count();
+
+        // Get permohonan data from both tables
+        $permohonanPerdagangan = DB::table('form_permohonan')
+            ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
+            ->select(
+                DB::raw('DATE_FORMAT(form_permohonan.tgl_pengajuan, "%d-%m-%Y") as tanggal'),
+                'user.nama as nama_pengirim',
+                DB::raw('CASE 
+                    WHEN form_permohonan.jenis_surat LIKE "%perdagangan%" THEN "Perdagangan"
+                    WHEN form_permohonan.jenis_surat LIKE "%industri%" THEN "Industri"
+                    ELSE "Perdagangan"
+                END as bidang_terkait'),
+                DB::raw('CASE 
+                    WHEN form_permohonan.status = "menunggu" THEN "Menunggu"
+                    WHEN form_permohonan.status = "diterima" THEN "Disetujui"
+                    WHEN form_permohonan.status = "ditolak" THEN "Ditolak"
+                    ELSE form_permohonan.status
+                END as status')
+            );
+
+        $permohonanMetrologi = DB::table('surat_metrologi')
+            ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
+            ->select(
+                DB::raw('DATE_FORMAT(surat_metrologi.created_at, "%d-%m-%Y") as tanggal'),
+                'user.nama as nama_pengirim',
+                DB::raw('"Metrologi" as bidang_terkait'),
+                'surat_metrologi.status_surat_masuk as status'
+            );
+
+        // Combine and order by date
+        $permohonan = $permohonanPerdagangan->union($permohonanMetrologi)
+            ->orderBy(DB::raw('STR_TO_DATE(tanggal, "%d-%m-%Y")'), 'desc')
+            ->get();
         
-        return view('admin.adminSuper.dashboardMaster', compact('totalDistributor', 'totalPengaduan', 'totalPengguna'));
+        return view('admin.adminSuper.dashboardMaster', compact(
+            'totalDistributor',
+            'totalPengaduan',
+            'totalPengguna',
+            'totalKomoditas',
+            'totalPermohonan',
+            'permohonan'
+        ));
     }
 
 }

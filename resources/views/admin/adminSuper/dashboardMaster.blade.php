@@ -9,7 +9,7 @@
         <div class="bg-white p-6 rounded-2xl shadow-md flex items-center space-x-5">
             <div>
                 <div class="font-semibold text-sm text-gray-700">Total Permohonan</div>
-                <div class="text-3xl font-bold text-gray-900">200</div>
+                <div class="text-3xl font-bold text-gray-900">{{ $totalPermohonan }}</div>
                 <div class="text-sm text-gray-500">Total Keseluruhan</div>
             </div>
         </div>
@@ -17,7 +17,7 @@
             <img src="{{ asset('assets/img/icon/validation-approval.png') }}" alt="Icon" class="w-12 h-12">
             <div>
                 <div class="font-semibold text-sm text-gray-700">Total Pengguna</div>
-                <div class="text-3xl font-bold text-gray-900">{{ $totalPengaduan }}</div>
+                <div class="text-3xl font-bold text-gray-900">{{ $totalPengguna }}</div>
                 <div class="text-sm text-gray-500">Hingga Bulan Ini</div>
             </div>
         </div>
@@ -44,17 +44,21 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        @foreach(range(1, 20) as $i)
+                        @foreach($permohonan as $p)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-3 whitespace-nowrap">1 Januari 2025</td>
-                            <td class="px-6 py-3">Nama {{ $i }}</td>
-                            <td class="px-6 py-3">{{ ['Perdagangan', 'Industri', 'Metrologi'][rand(0,2)] }}</td>
+                            <td class="px-6 py-3 whitespace-nowrap">{{ $p->tanggal }}</td>
+                            <td class="px-6 py-3">{{ $p->nama_pengirim }}</td>
+                            <td class="px-6 py-3">{{ $p->bidang_terkait }}</td>
                             @php
-                                $status = ['Diproses', 'Selesai', 'Ditolak'][rand(0,2)];
+                                $status = $p->status;
                                 $color = match($status) {
-                                    'Diproses' => 'bg-yellow-100 text-yellow-800',
-                                    'Selesai' => 'bg-green-100 text-green-800',
+                                    'Menunggu' => 'bg-yellow-100 text-yellow-800',
+                                    'Disetujui' => 'bg-green-100 text-green-800',
                                     'Ditolak' => 'bg-red-100 text-red-800',
+                                    'Diproses' => 'bg-blue-100 text-blue-800',
+                                    'Menunggu Persetujuan' => 'bg-blue-100 text-blue-800',
+                                    'Butuh Revisi' => 'bg-orange-100 text-orange-800',
+                                    default => 'bg-gray-100 text-gray-800',
                                 };
                             @endphp
                             <td class="px-6 py-3">
@@ -80,7 +84,7 @@
                 <div class="flex-1 bg-white p-6 rounded-2xl shadow-md flex flex-col items-center">
                     <img src="{{ asset('assets/img/icon/komoditas.png') }}" alt="Icon" class="w-14 h-14 mb-3">
                     <div class="font-semibold text-base text-center text-gray-700">Total Komoditas Aktif</div>
-                    <div class="text-3xl font-bold text-center text-gray-900">210</div>
+                    <div class="text-3xl font-bold text-center text-gray-900">{{ $totalKomoditas }}</div>
                 </div>
             </div>
 
