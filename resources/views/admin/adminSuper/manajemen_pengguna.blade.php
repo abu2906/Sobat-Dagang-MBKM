@@ -84,28 +84,6 @@
                     </td>
                 </tr>
                 @endforeach
-
-                {{-- Disdag Users --}}
-                @foreach($disdagUsers as $user)
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-2 text-center">{{ $counter++ }}</td>
-                    <td class="px-4 py-2">{{ $user->nip }}</td>
-                    <td class="px-4 py-2">{{ $user->email }}</td>
-                    <td class="px-4 py-2">{{ $user->telp }}</td>
-                    <td class="px-4 py-2">{{ $user->nip }}</td>
-                    <td class="px-4 py-2">-</td>
-                    <td class="px-4 py-2">-</td>
-                    <td class="px-4 py-2">{{ $user->role }}</td>
-                    <td class="px-4 py-2">
-                        <div class="flex items-center justify-center space-x-2">
-                            <a href="{{ route('manajemen.pengguna.edit.disdag', $user->id_disdag) }}" 
-                                class="text-[#083358] hover:text-black">
-                                <span class="material-symbols-outlined">edit</span>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
             </tbody>
         </table>
     </div>
@@ -124,4 +102,4 @@
     });
 </script>
 @endpush
-@endsection 
+@endsection

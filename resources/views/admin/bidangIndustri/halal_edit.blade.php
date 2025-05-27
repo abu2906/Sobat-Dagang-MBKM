@@ -41,7 +41,7 @@
         <div>
             <label for="status" class="block mb-1 font-semibold">Status</label>
             <select name="status" id="status" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                <option value="" disabled {{ old('status', $item->status) ? '' : 'selected' }}>-- Pilih Status --</option>
+                <option value="" disabled {{ old('status', $item->status) ? 'selected' : '' }}>-- Pilih Status --</option>
                 <option value="Berlaku" {{ old('status', $item->status) == 'Berlaku' ? 'selected' : '' }}>Berlaku</option>
                 <option value="Perlu Pembaruan" {{ old('status', $item->status) == 'Perlu Pembaruan' ? 'selected' : '' }}>Perlu Pembaruan</option>
             </select>

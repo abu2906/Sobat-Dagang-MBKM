@@ -6,12 +6,12 @@
 use App\Helpers\StatusHelper;
 @endphp
 
-<div class="p-6 bg-gray-100 min-h-screen">
+<div class="min-h-screen p-6 bg-gray-100">
     <!-- Header Background -->
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
         <!-- Floating Filter + Button -->
         <div class="absolute bottom-[-30px] w-full px-8">
-            <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl shadow-md">
+            <div class="flex flex-wrap items-center justify-between gap-4 p-4 shadow-md rounded-xl">
                 <!-- Filter/Search Input -->
                 <div class="flex flex-wrap items-center gap-4 flex-1">
                     <form action="{{ route('management-uttp-metrologi') }}" method="GET" class="flex items-center gap-4 flex-1">
@@ -21,17 +21,17 @@ use App\Helpers\StatusHelper;
                             <option value="Kadaluarsa" {{ request('status') === 'Kadaluarsa' ? 'selected' : '' }}>{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
                         </select>
                         <div class="relative flex-1">
-                            <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
-                            <button type="submit" class="absolute right-0 top-0 h-full px-4 text-gray-400 hover:text-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}" class="w-full py-2 pl-10 pr-4 text-sm border rounded-full shadow">
+                            <button type="submit" class="absolute top-0 right-0 h-full px-4 text-gray-400 hover:text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
                                 </svg>
                             </button>
                         </div>
-                        <div class="hidden relative flex-grow mt-2 md:mt-0 mx-4">
-                            <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full shadow text-sm w-full">
-                            <span class="absolute left-3 top-2 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor"
+                        <div class="relative flex-grow hidden mx-4 mt-2 md:mt-0">
+                            <input type="text" id="searchInput" placeholder="Cari" class="w-full py-2 pl-10 pr-4 text-sm rounded-full shadow">
+                            <span class="absolute text-gray-400 left-3 top-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
@@ -50,7 +50,7 @@ use App\Helpers\StatusHelper;
                         Download
                     </a>
                     <button onclick="openModal()" class="text-white flex items-center gap-2 bg-[#0c3252] transition-colors duration-300 hover:bg-[#F49F1E] hover:text-black rounded-full px-8 py-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Tambah UTTP
@@ -77,7 +77,7 @@ use App\Helpers\StatusHelper;
     </div>
 
     <!-- Modal Tambah Alat Ukur -->
-    <div id="modalTambahAlat" class="fixed inset-0 z-40 hidden bg-black bg-opacity-30 flex items-center justify-center overflow-y-auto">
+    <div id="modalTambahAlat" class="fixed inset-0 z-40 flex items-center justify-center hidden overflow-y-auto bg-black bg-opacity-30">
         <div class="fixed inset-0 bg-black bg-opacity-30"></div>
         <div class="relative bg-white w-[90%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] rounded-lg shadow-lg p-4 sm:p-6 my-4 sm:my-8 max-h-[90vh] overflow-y-auto mx-auto ml-[calc(16.666667%+1rem)] sm:ml-[calc(16.666667%+2rem)] mr-[calc(1%+1rem)] sm:mr-[calc(1%+2rem)]">
             <div class="flex justify-between items-center border-b pb-3 mb-4">
@@ -102,7 +102,7 @@ use App\Helpers\StatusHelper;
                         <select name="id_user" id="userSelect" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" style="height: 38px;">
                             <option value="">Pilih User</option>
                         </select>
-                        <p class="text-xs text-gray-500 mt-1">Kosongkan bila pemilik uttp tidak terdaftar pada sistem</p>
+                        <p class="mt-1 text-xs text-gray-500">Kosongkan bila pemilik uttp tidak terdaftar pada sistem</p>
                     </div>
                     <div>
                         <label class="block text-xs sm:text-sm font-medium mb-1">No Registrasi <span class="text-red-500">*</span></label>
@@ -206,43 +206,43 @@ use App\Helpers\StatusHelper;
     </div>
     
     <!-- Tabel Alat Ukur Sah -->
-    <div class="overflow-x-auto rounded-lg shadow-sm mt-6">
+    <div class="mt-6 overflow-x-auto rounded-lg shadow-sm">
         <table class="min-w-full text-sm text-left text-gray-700 bg-white border border-gray-200">
             <thead class="bg-[#0c3252] text-white">
                 <tr>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">No</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nomor Registrasi</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nama Usaha</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Jenis Alat</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Tanggal Tera</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Tanggal Exp</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Status</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Aksi</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">No</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Nomor Registrasi</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Nama Usaha</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Jenis Alat</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Tanggal Tera</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Tanggal Exp</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Status</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($alatUkur as $index => $data)
-                <tr class="hover:bg-blue-50 transition">
-                    <td class="px-5 text-center py-3 border-b">{{ $alatUkur->firstItem() + $index }}</td>
-                    <td class="px-5 text-center py-3 border-b">{{ $data->uttp->no_registrasi }}</td>
-                    <td class="px-5 text-center py-3 border-b">{{ $data->uttp->nama_usaha }}</td>
-                    <td class="px-5 text-center py-3 border-b">{{ $data->uttp->jenis_alat }}</td>
-                    <td class="px-5 text-center py-3 border-b">{{ \Carbon\Carbon::parse($data->uttp->tanggal_penginputan)->format('d F Y') }}</td>
-                    <td class="px-5 text-center py-3 border-b">
+                <tr class="transition hover:bg-blue-50">
+                    <td class="px-5 py-3 text-center border-b">{{ $alatUkur->firstItem() + $index }}</td>
+                    <td class="px-5 py-3 text-center border-b">{{ $data->uttp->no_registrasi }}</td>
+                    <td class="px-5 py-3 text-center border-b">{{ $data->uttp->nama_usaha }}</td>
+                    <td class="px-5 py-3 text-center border-b">{{ $data->uttp->jenis_alat }}</td>
+                    <td class="px-5 py-3 text-center border-b">{{ \Carbon\Carbon::parse($data->uttp->tanggal_penginputan)->format('d F Y') }}</td>
+                    <td class="px-5 py-3 text-center border-b">
                         {{ optional($data)->tanggal_exp ? \Carbon\Carbon::parse($data->tanggal_exp)->format('d F Y') : '-' }}
                     </td>
-                    <td class="px-5 text-center py-3 border-b">
+                    <td class="px-5 py-3 text-center border-b">
                         <span class="
                             font-semibold
                             {{ $data->status === 'Valid' ? 'text-green-600' : ($data->status === 'Kadaluarsa' ? 'text-red-600' : 'text-gray-500') }}">
                             {{ $data->status === 'Valid' ? 'Valid' : StatusHelper::formatStatus($data->status) }}
                         </span>
                     </td>
-                    <td class="px-5 text-center py-3 border-b">
+                    <td class="px-5 py-3 text-center border-b">
                         <div class="flex justify-center space-x-2">
                             <!-- Tombol Preview -->
-                            <button class="flex items-center space-x-1 text-black hover:text-gray-600 transition p-2 rounded hover:bg-blue-100 transition duration-200" onclick="loadDetailAlat('{{ $data->uttp->id_uttp }}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <button class="flex items-center p-2 space-x-1 text-black transition duration-200 rounded hover:text-gray-600 hover:bg-blue-100" onclick="loadDetailAlat('{{ $data->uttp->id_uttp }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -253,7 +253,7 @@ use App\Helpers\StatusHelper;
                             <!-- Tombol Edit -->
                             <button
                                 onclick="openEditModal({{ $data->uttp }}, '{{ route('update-uttp', $data->uttp->id_uttp) }}')"
-                                class="p-2 rounded hover:bg-blue-100 transition duration-200"
+                                class="p-2 transition duration-200 rounded hover:bg-blue-100"
                                 title="Edit">
                                 <span class="material-symbols-outlined">edit</span>
                             </button>
@@ -266,7 +266,7 @@ use App\Helpers\StatusHelper;
     </div>
 
     <!-- Pagination -->
-    <div class="mt-6 flex justify-center">
+    <div class="flex justify-center mt-6">
         {{ $alatUkur->links('pagination::tailwind') }}
     </div>
 </div>
@@ -388,7 +388,7 @@ use App\Helpers\StatusHelper;
                         // Tampilkan pesan error untuk setiap field
                         if (data.errors) {
                             Object.keys(data.errors).forEach(field => {
-                                const input = form.querySelector(`[name="${field}"]`);
+                                const input = form.querySelector([name="${field}"]);
                                 if (input) {
                                     const errorDiv = document.createElement('div');
                                     errorDiv.className = 'error-message text-red-500 text-sm mt-1';
@@ -522,7 +522,7 @@ use App\Helpers\StatusHelper;
         // Handle user selection
         if (data.id_user) {
             // Fetch user data and set it in Select2
-            fetch(`/admin/users/search?search=${data.id_user}`)
+            fetch(/admin/users/search?search=${data.id_user})
                 .then(response => response.json())
                 .then(users => {
                     if (users.length > 0) {
@@ -542,7 +542,7 @@ use App\Helpers\StatusHelper;
             existingFile.className = 'mt-2 text-sm text-gray-600';
             existingFile.innerHTML = `
                 <p>File saat ini: <a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a></p>
-                <p class="text-xs text-gray-500 mt-1">Upload file baru untuk mengganti sertifikat</p>
+                <p class="mt-1 text-xs text-gray-500">Upload file baru untuk mengganti sertifikat</p>
             `;
             sertifikatContainer.appendChild(existingFile);
         }
@@ -567,7 +567,7 @@ use App\Helpers\StatusHelper;
             if (userId) {
                 // Jika dari persuratan, set user dan disable select
                 if (fromPersuratan === 'true') {
-                    fetch(`/admin/users/search?search=${userId}`)
+                    fetch(/admin/users/search?search=${userId})
                         .then(response => response.json())
                         .then(users => {
                             if (users.length > 0) {
@@ -580,7 +580,7 @@ use App\Helpers\StatusHelper;
                         .catch(error => console.error('Error loading user:', error));
                 } else {
                     // Jika bukan dari persuratan, set user tapi tetap bisa diubah
-                    fetch(`/admin/users/search?search=${userId}`)
+                    fetch(/admin/users/search?search=${userId})
                         .then(response => response.json())
                         .then(users => {
                             if (users.length > 0) {

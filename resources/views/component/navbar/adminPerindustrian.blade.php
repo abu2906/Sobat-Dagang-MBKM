@@ -24,7 +24,7 @@
             </div>
 
             <ul class="space-y-2 text-sm">
-                @php
+               @php
                 $menuItems = [
                 ['href' => route('dashboard.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => route('dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],

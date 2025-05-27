@@ -2,6 +2,11 @@
 @section('title', 'Lihat Laporan Distribusi Barang')
 
 @section('content')
+<style>
+    input[type="month"]::-webkit-calendar-picker-indicator {
+        filter: invert(1); /* Bikin ikon kalender jadi putih */
+    }
+</style>
 <div class="w-full h-36">
     <img src="{{ asset('assets/img/background/dagang.jpg') }}"
         alt="Background" class="object-cover w-full h-full">
@@ -10,33 +15,28 @@
     <h2 class="mt-6 text-center text-2xl font-bold mb-6 uppercase tracking-wide text-[#083358]">LAPORAN PENYALURAN PUPUK BERSUBSIDI</h2>
     <form id="filterForm" method="GET" action="{{ route('lihat.laporan.distribusi') }}">
         <div class="flex items-center justify-end gap-3 mb-4">
-
-            {{-- Dropdown Bulan --}}
-            <div class="relative">
-                <select id="bulan" name="bulan" class="appearance-none bg-[#083358] border text-center border text-center-gray-300 text-sm text-white rounded-full py-1 pl-3 pr-8 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-                    <option value="">Pilih Bulan</option>
-                    @foreach ([1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-                            5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-                            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'] as $num => $name)
-                        <option value="{{ $num }}" {{ request('bulan') == $num ? 'selected' : '' }}>
-                            {{ $name }}
-                        </option>
-                    @endforeach
-                </select>
-                <div class="absolute inset-y-0 flex items-center text-white pointer-events-none right-2">▼</div>
+            {{-- Dropdown Bulan & Tahun --}}
+            <div class="flex flex-col w-full md:w-1/2">
+                <label for="bulan_tahun" class="mb-2 font-semibold text-white">Pilih Bulan dan Tahun</label>
+                <input type="month" id="bulan_tahun" name="bulan_tahun"
+                    value="{{ request('bulan_tahun') }}"
+                    class="bg-[#083358] text-white border border-gray-400 text-sm rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                    onchange="clearTahunAndSubmit()">
             </div>
 
-            {{-- Dropdown Tahun --}}
-            <div class="relative">
-                <select id="tahun" name="tahun" class="appearance-none bg-[#083358] text-white border text-center border text-center-gray-300 text-sm rounded-full py-1 pl-3 pr-8 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
-                    <option value="">Pilih Tahun</option>
+            {{-- Dropdown Tahun Saja --}}
+            <div class="flex flex-col w-full md:w-1/2">
+                <label for="tahun" class="mb-2 font-semibold text-white">Pilih Tahun Saja</label>
+                <select id="tahun" name="tahun"
+                    class="bg-[#083358] text-white border border-gray-400 text-sm rounded-full py-2 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                    onchange="clearBulanTahunAndSubmit()">
+                    <option value="">-- Pilih Tahun --</option>
                     @for ($year = now()->year; $year >= 2020; $year--)
                         <option value="{{ $year }}" {{ request('tahun') == $year ? 'selected' : '' }}>
                             {{ $year }}
                         </option>
                     @endfor
                 </select>
-                <div class="absolute inset-y-0 flex items-center text-white pointer-events-none right-2">▼</div>
             </div>
         </div>
     </form>
@@ -126,24 +126,17 @@
 <!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const form = document.getElementById('filterForm');
-    const bulanSelect = document.getElementById('bulan');
-    const tahunSelect = document.getElementById('tahun');
-
-    bulanSelect.addEventListener('change', function() {
-        if (this.value !== '') {
-            // Reset tahun ke kosong saat bulan dipilih
-            tahunSelect.value = '';
-        }
-        form.submit();
+    function submitForm() {
+        document.getElementById('filterForm').submit();
+    }
+    document.getElementById('bulan_tahun').addEventListener('change', function () {
+        document.getElementById('tahun').value = '';
+        submitForm();
     });
 
-    tahunSelect.addEventListener('change', function() {
-        if (this.value !== '') {
-            // Reset bulan ke kosong saat tahun dipilih
-            bulanSelect.value = '';
-        }
-        form.submit();
+    document.getElementById('tahun').addEventListener('change', function () {
+        document.getElementById('bulan_tahun').value = '';
+        submitForm();
     });
 </script>
 <script>

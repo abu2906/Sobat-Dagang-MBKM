@@ -26,7 +26,7 @@
         ],
         'INDUSTRI' => [
             ['label' => 'Permohonan IKM Binaan', 'route' => route('bidangIndustri.formPermohonan')],
-            ['label' => 'Data Sertifikat Halal', 'route' => route('halal')],
+            ['label' => 'Data Sertifikat Halal', 'route' => route('halal.user')],
         ],
         'METROLOGI' => [
             ['label' => 'Permohonan Tera/Teraulang', 'route' => route('administrasi-metrologi')],
@@ -93,4 +93,3 @@
     <img src="{{ asset('assets/img/icon/pengaduan.png') }}" alt="Chat" class="w-8 h-8">
 </a>
 @endsection
-        

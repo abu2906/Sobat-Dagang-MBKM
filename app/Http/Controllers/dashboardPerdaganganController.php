@@ -17,7 +17,7 @@ use App\Models\DocumentUser;
 use App\Models\IndexKategori;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use App\Models\IndexHarga;  
+use App\Models\IndexHarga;
 use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
@@ -34,6 +34,7 @@ class DashboardPerdaganganController extends Controller{
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']) // hanya status ini yang ditampilkan
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -144,7 +145,6 @@ class DashboardPerdaganganController extends Controller{
             'rata_rata' => $rata_rata,
             'tertinggi' => $tertinggi,
             'volatilitas' => $volatilitas,
-            // 'pupuk' => $pupuk,
             'daftar_lokasi' => $daftar_lokasi,
             'lokasi' => $lokasi,
         ]);
@@ -169,6 +169,7 @@ class DashboardPerdaganganController extends Controller{
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -311,8 +312,11 @@ class DashboardPerdaganganController extends Controller{
 
     public function laporanPupuk(Request $request)
     {
-        $bulan = $request->input('bulan');
-        $tahun = $request->input('tahun');
+        $bulanTahun = $request->input('bulan_tahun');
+        $tahunInput = $request->input('tahun');
+
+        $bulan = null;
+        $tahun = null;
 
         $data = [];
         $pieData = [];
@@ -323,34 +327,25 @@ class DashboardPerdaganganController extends Controller{
             'NPK-FK' => [],
         ];
 
-        // Jika tidak memilih apapun, tampilkan data bulan dan tahun saat ini
-        if (empty($bulan) && empty($tahun)) {
+        if ($bulanTahun) {
+            [$tahun, $bulan] = explode('-', $bulanTahun);
+        } elseif ($tahunInput) {
+            $tahun = $tahunInput;
+        } else {
+            // Default ke bulan dan tahun saat ini
             $bulan = now()->month;
             $tahun = now()->year;
         }
 
-        // Validasi: jika request berisi bulan dan tahun, tapi kosong, tampilkan pesan
-        if (!empty($bulan) && !empty($tahun) && $request->has('bulan') && $request->has('tahun')) {
-            return view('admin.bidangPerdagangan.lihatLaporan', [
-                'data' => [],
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-                'pieData' => [],
-                'lineChartLabels' => [],
-                'lineChartData' => [],
-                'message' => 'Silakan pilih salah satu: bulan atau tahun saja.'
-            ]);
-        }
-
-        // Ambil data stok_opname
         $query = StokOpname::with('toko');
 
-        if (!empty($bulan) && empty($tahun)) {
-            $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', now()->year);
-        } elseif (!empty($tahun) && empty($bulan)) {
+        if ($bulan && $tahun) {
+            // Data 1 bulan
+            $query->whereMonth('tanggal', $bulan)
+                ->whereYear('tanggal', $tahun);
+        } elseif ($tahun) {
+            // Data 1 tahun penuh
             $query->whereYear('tanggal', $tahun);
-        } else {
-            $query->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun);
         }
 
         $stokOpnames = $query->get();
@@ -382,7 +377,6 @@ class DashboardPerdaganganController extends Controller{
         // Data Line Chart
         foreach ($data as $toko => $pupuk) {
             $lineChartLabels[] = $toko;
-
             foreach (['UREA', 'NPK', 'NPK-FK'] as $jenis) {
                 $lineChartData[$jenis][] = $pupuk[$jenis]['penyaluran'] ?? 0;
             }
@@ -398,6 +392,7 @@ class DashboardPerdaganganController extends Controller{
             'message' => ''
         ]);
     }
+
 
     public function formPermohonan(Request $request)
     {
