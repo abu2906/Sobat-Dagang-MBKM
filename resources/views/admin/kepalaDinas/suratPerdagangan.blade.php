@@ -1,6 +1,6 @@
 @extends('layouts.metrologi.kadis')
 
-@section('title', 'Data Surat Bidang Perdagangan<')
+@section('title', 'Data Surat Bidang Perdagangan')
 
 @section('content')
 <div class="relative w-full h-32">
@@ -8,7 +8,7 @@
     <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
         <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Background" class="object-cover w-full h-full -ml-16">
     </div>
-    <a href="{{ route('persuratan-kadis') }}"
+    <a href="{{ url()->previous() }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">
             arrow_back
@@ -27,7 +27,7 @@
                 <p class="text-2xl font-bold text-blue-600">{{ $totalSuratPerdagangan }}</p>
             </div>
         </a>
-
+        
         <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-12 h-12">
             <div>

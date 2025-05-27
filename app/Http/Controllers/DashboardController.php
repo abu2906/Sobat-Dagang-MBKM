@@ -124,7 +124,7 @@ class DashboardController extends Controller
 
         return redirect()->route('kelola.pengguna')->with('success', 'Pengguna berhasil dihapus');
     }
-    public function dashboardMaster()    {
+    public function dashboardMaster() {
         $totalDistributor = DB::table('distributor')->count();
         $totalPengaduan = DB::table('forum_diskusi')
             ->whereNotNull('id_user')
@@ -133,10 +133,11 @@ class DashboardController extends Controller
         $totalKomoditas = DB::table('data_ikm')->count();
 
         $totalPermohonan = DB::table('form_permohonan')
-        ->where('status', '!=', 'disimpan')
-        ->count() 
-        + DB::table('surat_metrologi')->count();
+                ->where('status', '!=', 'disimpan')
+                ->count() 
+            + DB::table('surat_metrologi')->count();
 
+        // Ambil permohonan dari form_permohonan
         $permohonanPerdagangan = DB::table('form_permohonan')
             ->where('form_permohonan.status', '!=', 'disimpan')
             ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
@@ -154,8 +155,10 @@ class DashboardController extends Controller
                     WHEN form_permohonan.status = "ditolak" THEN "Ditolak"
                     ELSE form_permohonan.status
                 END as status')
-            );
+            )
+            ->get();
 
+        // Ambil permohonan dari surat_metrologi
         $permohonanMetrologi = DB::table('surat_metrologi')
             ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
             ->select(
@@ -163,12 +166,17 @@ class DashboardController extends Controller
                 'user.nama as nama_pengirim',
                 DB::raw('"Metrologi" as bidang_terkait'),
                 'surat_metrologi.status_surat_masuk as status'
-            );
-
-        $permohonan = $permohonanPerdagangan->union($permohonanMetrologi)
-            ->orderBy(DB::raw('STR_TO_DATE(tanggal, "%d-%m-%Y")'), 'desc')
+            )
             ->get();
-        
+
+        // Gabungkan keduanya dan urutkan berdasarkan tanggal DESC
+        $permohonan = $permohonanPerdagangan
+            ->merge($permohonanMetrologi)
+            ->sortByDesc(function ($item) {
+                return \Carbon\Carbon::createFromFormat('d-m-Y', $item->tanggal);
+            })
+            ->values(); // reset index
+
         return view('admin.adminSuper.dashboardMaster', compact(
             'totalDistributor',
             'totalPengaduan',
