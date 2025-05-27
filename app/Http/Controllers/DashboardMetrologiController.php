@@ -226,28 +226,32 @@ class DashboardMetrologiController extends Controller
         ];
     }
 
-    public function jumlahSuratKadis()
+    private function jumlahSuratKadis()
     {
         // Total surat yang sudah diproses (Disetujui + Ditolak + Menunggu)
         $totalSuratMasuk = DB::table('surat_keluar_metrologi')
-            ->whereIn('status_kadis', ['Disetujui', 'Ditolak', 'Menunggu'])
+            ->where('status_kepalaBidang', 'Disetujui')
             ->count();
         
-        // Surat yang sudah diproses oleh kabid (diterima/ditolak)
+        // Surat yang sudah diproses oleh kadis (diterima/ditolak)
         $totalSuratDiterima = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
             ->where('status_kadis', 'Disetujui')
             ->count();
             
         $totalSuratDitolak = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
             ->where('status_kadis', 'Ditolak')
             ->count();
             
         $totalSuratMenunggu = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
             ->where('status_kadis', 'Menunggu')
             ->count();
 
-        // Surat yang menunggu persetujuan kabid
+        // Surat yang menunggu persetujuan kadis
         $totalSuratMenungguKabid = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
             ->where('status_kadis', 'Menunggu')
             ->count();
 
@@ -263,9 +267,10 @@ class DashboardMetrologiController extends Controller
 
         $suratTerkirim = suratBalasan::where('status_surat_keluar', 'Disetujui')->count();
 
-        $totalSuratMasukBulanIni = DB::table('surat_metrologi')
+        $totalSuratMasukBulanIni = DB::table('surat_keluar_metrologi')
             ->whereMonth('created_at', $bulanIni)
             ->whereYear('created_at', $tahunIni)
+            ->where('status_kepalaBidang', 'Disetujui')
             ->count();
 
         return [
