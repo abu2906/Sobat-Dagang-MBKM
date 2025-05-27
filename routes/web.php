@@ -167,10 +167,6 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::delete('/admin/industri/data-IKM/{id}', [AdminIndustriController::class, 'destroyIKM'])->name('destroyIKM'); 
 });
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 1049de14b86c42fa21c0f4c3d66e0efc154a809a
 //admin metrologi
 Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::get('/admin/metrologi', [DashboardMetrologiController::class, 'index'])->name('dashboard-admin-metrologi');
