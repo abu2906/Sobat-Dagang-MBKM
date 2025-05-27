@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use App\Models\Barang;
 use App\Models\IndexHarga;
 
-class KadisController extends Controller
+class DisdagController extends Controller
 {
     public function dataGrafikPerdagangan(Request $request)    {
         {} $lokasi = $request->lokasi ?? 'Pasar Sumpang';
@@ -130,7 +130,6 @@ class KadisController extends Controller
         $jenis = [
             'surat_rekomendasi_perdagangan',
             'surat_keterangan_perdagangan',
-            'dan_lainnya_perdagangan',
         ];
 
         return [
@@ -141,17 +140,29 @@ class KadisController extends Controller
         ];
     }
     private function dataSuratIndustri()    {
-        //ini mu isi
+        $jenis = [
+            'surat_rekomendasi_industri',
+            'surat_keterangan_industri',
+        ];
+
+        return [
+            'totalSuratIndustri' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
+            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        ];
     }
     private function dataSuratMetrologi()    {
         $jenis = [
             'tera',
-            'tera_ulang',
+            'tera_ulang'
         ];
+
         return [
-            'totalSuratPerdagangan' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->count(),
-            'totalSuratTerverifikasi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
-            'totalSuratDitolak' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratMetrologi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Disetujui')->count(),
+            'totalSuratDitolak' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Ditolak')->count(),
+            'totalSuratDraft' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Menunggu')->count(),
         ];
     }
     private function dataSuratTotal() { 

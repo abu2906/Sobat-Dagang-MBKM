@@ -124,10 +124,7 @@ class DashboardController extends Controller
 
         return redirect()->route('kelola.pengguna')->with('success', 'Pengguna berhasil dihapus');
     }
-
-    public function dashboardMaster()
-    {
-        // Get counts for dashboard cards
+    public function dashboardMaster()    {
         $totalDistributor = DB::table('distributor')->count();
         $totalPengaduan = DB::table('forum_diskusi')
             ->whereNotNull('id_user')
@@ -135,16 +132,13 @@ class DashboardController extends Controller
         $totalPengguna = DB::table('user')->count();
         $totalKomoditas = DB::table('data_ikm')->count();
 
-        // Get total permohonan from both tables
         $totalPermohonan = DB::table('form_permohonan')->count() + DB::table('surat_metrologi')->count();
 
-        // Get permohonan data from both tables
         $permohonanPerdagangan = DB::table('form_permohonan')
             ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
             ->select(
                 DB::raw('DATE_FORMAT(form_permohonan.tgl_pengajuan, "%d-%m-%Y") as tanggal'),
                 'user.nama as nama_pengirim',
-                'form_permohonan.id_permohonan as id',
                 DB::raw('CASE 
                     WHEN form_permohonan.jenis_surat LIKE "%perdagangan%" THEN "Perdagangan"
                     WHEN form_permohonan.jenis_surat LIKE "%industri%" THEN "Industri"
@@ -155,26 +149,20 @@ class DashboardController extends Controller
                     WHEN form_permohonan.status = "diterima" THEN "Disetujui"
                     WHEN form_permohonan.status = "ditolak" THEN "Ditolak"
                     ELSE form_permohonan.status
-                END as status'),
-                'form_permohonan.file_balasan'
+                END as status')
             );
 
         $permohonanMetrologi = DB::table('surat_metrologi')
             ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
-            ->leftJoin('surat_keluar_metrologi', 'surat_metrologi.id_surat', '=', 'surat_keluar_metrologi.id_surat')
             ->select(
                 DB::raw('DATE_FORMAT(surat_metrologi.created_at, "%d-%m-%Y") as tanggal'),
                 'user.nama as nama_pengirim',
-                'surat_metrologi.id_surat as id',
                 DB::raw('"Metrologi" as bidang_terkait'),
-                'surat_metrologi.status_surat_masuk as status',
-                'surat_keluar_metrologi.path_dokumen as file_balasan'
+                'surat_metrologi.status_surat_masuk as status'
             );
 
-        // Combine and order by date, limit to 20 latest entries
         $permohonan = $permohonanPerdagangan->union($permohonanMetrologi)
             ->orderBy(DB::raw('STR_TO_DATE(tanggal, "%d-%m-%Y")'), 'desc')
-            ->limit(17)
             ->get();
         
         return view('admin.adminSuper.dashboardMaster', compact(
@@ -186,114 +174,4 @@ class DashboardController extends Controller
             'permohonan'
         ));
     }
-
-    public function daftarPermohonan()
-    {
-        // Get permohonan data from both tables
-        $permohonanPerdagangan = DB::table('form_permohonan')
-            ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
-            ->select(
-                DB::raw('DATE_FORMAT(form_permohonan.tgl_pengajuan, "%d-%m-%Y") as tanggal'),
-                'form_permohonan.tgl_pengajuan as raw_date',
-                'user.nama as nama_pengirim',
-                'form_permohonan.id_permohonan as id',
-                DB::raw('CASE 
-                    WHEN form_permohonan.jenis_surat LIKE "%perdagangan%" THEN "Perdagangan"
-                    WHEN form_permohonan.jenis_surat LIKE "%industri%" THEN "Industri"
-                    ELSE "Perdagangan"
-                END as bidang_terkait'),
-                DB::raw('CASE 
-                    WHEN form_permohonan.status = "menunggu" THEN "Menunggu"
-                    WHEN form_permohonan.status = "diterima" THEN "Disetujui"
-                    WHEN form_permohonan.status = "ditolak" THEN "Ditolak"
-                    WHEN form_permohonan.status = "selesai" THEN "Selesai"
-                    ELSE form_permohonan.status
-                END as status'),
-                'form_permohonan.file_balasan'
-            );
-
-        $permohonanMetrologi = DB::table('surat_metrologi')
-            ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
-            ->leftJoin('surat_keluar_metrologi', 'surat_metrologi.id_surat', '=', 'surat_keluar_metrologi.id_surat')
-            ->select(
-                DB::raw('DATE_FORMAT(surat_metrologi.created_at, "%d-%m-%Y") as tanggal'),
-                'surat_metrologi.created_at as raw_date',
-                'user.nama as nama_pengirim',
-                'surat_metrologi.id_surat as id',
-                DB::raw('"Metrologi" as bidang_terkait'),
-                DB::raw('CASE 
-                    WHEN surat_metrologi.status_surat_masuk = "menunggu" THEN "Menunggu"
-                    WHEN surat_metrologi.status_surat_masuk = "disetujui" THEN "Disetujui"
-                    WHEN surat_metrologi.status_surat_masuk = "ditolak" THEN "Ditolak"
-                    WHEN surat_metrologi.status_surat_masuk = "diproses" THEN "Diproses"
-                    WHEN surat_metrologi.status_surat_masuk = "menunggu_persetujuan" THEN "Menunggu"
-                    WHEN surat_metrologi.status_surat_masuk = "butuh_revisi" THEN "Butuh Revisi"
-                    ELSE surat_metrologi.status_surat_masuk
-                END as status'),
-                'surat_keluar_metrologi.path_dokumen as file_balasan'
-            );
-
-        // Combine and order by raw date, limit to 17 entries
-        $permohonan = $permohonanPerdagangan->union($permohonanMetrologi)
-            ->orderBy('raw_date', 'desc')
-            ->limit(17)
-            ->get();
-        
-        return view('admin.adminSuper.daftarPermohonan', compact('permohonan'));
-    }
-
-    public function detailPermohonan($id, $bidang)
-    {
-        if ($bidang === 'metrologi') {
-            $permohonan = DB::table('surat_metrologi')
-                ->join('user', 'surat_metrologi.user_id', '=', 'user.id_user')
-                ->leftJoin('surat_keluar_metrologi', 'surat_metrologi.id_surat', '=', 'surat_keluar_metrologi.id_surat')
-                ->where('surat_metrologi.id_surat', $id)
-                ->select(
-                    'surat_metrologi.*',
-                    'user.nama as nama_pengirim',
-                    'surat_keluar_metrologi.path_dokumen as file_balasan',
-                    'surat_keluar_metrologi.isi_surat as isi_balasan'
-                )
-                ->first();
-        } else {
-            $permohonan = DB::table('form_permohonan')
-                ->join('user', 'form_permohonan.id_user', '=', 'user.id_user')
-                ->where('form_permohonan.id_permohonan', $id)
-                ->select('form_permohonan.*', 'user.nama as nama_pengirim')
-                ->first();
-        }
-
-        if (!$permohonan) {
-            abort(404);
-        }
-
-        return view('admin.adminSuper.detailPermohonan', compact('permohonan', 'bidang'));
-    }
-
-    public function downloadBalasan($id, $bidang)
-    {
-        if ($bidang === 'metrologi') {
-            $balasan = DB::table('surat_keluar_metrologi')
-                ->where('id_surat', $id)
-                ->first();
-
-            if (!$balasan || !$balasan->path_dokumen) {
-                abort(404);
-            }
-
-            return Storage::disk('public')->download($balasan->path_dokumen);
-        } else {
-            $balasan = DB::table('form_permohonan')
-                ->where('id_permohonan', $id)
-                ->first();
-
-            if (!$balasan || !$balasan->file_balasan) {
-                abort(404);
-            }
-
-            return Storage::disk('public')->download($balasan->file_balasan);
-        }
-    }
-
 }
