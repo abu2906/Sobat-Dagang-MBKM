@@ -386,6 +386,7 @@ class DashboardPerdaganganController extends Controller{
         $drafts = DB::table('form_permohonan')
             ->where('id_user', $idUser)
             ->where('status', 'disimpan')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -420,7 +421,8 @@ class DashboardPerdaganganController extends Controller{
         $userId = Auth::guard('user')->id();
 
         $query = PermohonanSurat::where('id_user', $userId)
-            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']); // hanya status ini yang ditampilkan
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']) // hanya status ini yang ditampilkan
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan']);
 
         if ($searchTerm = request('search')) {
             $search = strtolower(trim($searchTerm));

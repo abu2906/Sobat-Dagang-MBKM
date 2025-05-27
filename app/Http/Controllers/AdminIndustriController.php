@@ -18,34 +18,106 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\DataIkm;
 use App\Models\SertifikasiHalal;
 use App\Exports\DataIkmExport;
-use Maatwebsite\Excel\Facades\Excel;
-
+use Maatwebsite\Excel\Facades\Excel;;
+use App\Http\Controllers\user;
 
 class AdminIndustriController extends Controller
 {
-    public function showDashboard()
+    public function showDashboard(Request $request)
     {
 
-        // Ambil data surat industri
+        $tahun = $request->input('tahun', date('Y'));
+       
         $rekapSurat = $this->getSuratIndustriData();
-        $dataSurat = PermohonanSurat::with('user')
-            ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
-            ->orderBy('created_at', 'desc')
+        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
+
+        $statusCounts = [
+            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
+            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
+            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
+        ];
+
+        // total investasi
+        $totalInvestasi = DataIkm::sum('level');
+
+        // akumulasi IKM
+        $bulanIni = Carbon::now()->month;
+        $tahunIni = Carbon::now()->year;
+
+        $akumulasiIKM = DataIkm::whereYear('created_at', $tahunIni)
+            ->whereMonth('created_at', '<=', $bulanIni)
+            ->count();
+
+        // IKM tahun ke Tahun
+        $pertumbuhanIkm = DataIkm::select(
+            DB::raw('YEAR(created_at) as tahun'),
+            DB::raw('COUNT(*) as jumlah')
+        )
+        ->groupBy(DB::raw('YEAR(created_at)'))
+        ->orderBy('tahun')
+        ->get();
+
+        // Total semua industri
+        $totalIndustri = DataIkm::count();
+
+        // Data jumlah per jenis industri
+        $sebaranJenisIndustri = DataIkm::select(
+                'jenis_industri',
+                DB::raw('COUNT(*) as jumlah')
+            )
+            ->groupBy('jenis_industri')
+            ->orderBy('jumlah', 'desc')
             ->get();
 
+        // Jumlah total halal & grafik pertumbuhan halal
+        $totalHalal = SertifikasiHalal::count();
 
-        // Definisikan range tanggal sebulan terakhir
-        $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
-        $endDate = Carbon::now()->format('Y-m-d');
+        $pertumbuhanHalal = SertifikasiHalal::select(
+            DB::raw('YEAR(tanggal_sah) as tahun'),
+            DB::raw('COUNT(*) as jumlah')
+        )
+        ->groupBy(DB::raw('YEAR(tanggal_sah)'))
+        ->orderBy('tahun')
+        ->get();
 
-        // Kirim semua data ke view
+        // Jumlah IKM berdasarkan Investasi
+        $levelInvestasi = DataIkm::selectRaw("
+            CASE 
+                WHEN level < 100000000 THEN 'Kecil'
+                WHEN level >= 100000000 THEN 'Menengah'
+            END as kategori,
+            COUNT(*) as jumlah
+        ")
+        ->groupBy('kategori')
+        ->pluck('jumlah', 'kategori')
+        ->toArray();
+
+        $labels = ['Kecil', 'Menengah'];
+        $data = [
+            'Kecil' => $levelInvestasi['Kecil'] ?? 0,
+            'Menengah' => $levelInvestasi['Menengah'] ?? 0
+        ];
+
+        $levelIKM = array_sum($levelInvestasi);
+
+
+
         return view('admin.bidangIndustri.dashboardAdmin', [
-            'dataSurat' => $dataSurat,
             'totalSuratIndustri' => $rekapSurat['totalSuratIndustri'],
             'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
             'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
             'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
-
+            'totalHalal' => $totalHalal,
+            'pertumbuhanHalal' => $pertumbuhanHalal,
+            'totalInvestasi' => $totalInvestasi,
+            'akumulasiIKM' => $akumulasiIKM,
+            'pertumbuhanIkm' => $pertumbuhanIkm,
+            'totalIndustri' => $totalIndustri,
+            'sebaranJenisIndustri' => $sebaranJenisIndustri,
+            'levelIKM' => $levelIKM,
+            'labels' => $labels,
+            'data' => $data,
+            'levelInvestasi' => $levelInvestasi
         ]);
     }
 
@@ -78,7 +150,7 @@ class AdminIndustriController extends Controller
         ]);
     }
 
-    public function viewDokumen($id, $type)
+    public function viewDokumenn($id, $type)
     {
         $dokumen = DB::table('document_user')->where('id_permohonan', $id)->first();
 
@@ -270,7 +342,21 @@ class AdminIndustriController extends Controller
 
     public function showDataIKM()
     {
-        $dataIkm = DataIkm::all();
+        $dataIkm = DataIkm::with([
+            'pemakaianBahan',
+            'penggunaanAir',
+            'pengeluaran',
+            'penggunaanBahanBakar',
+            'listrik',
+            'mesinProduksi',
+            'produksi',
+            'persediaan',
+            'pendapatan',
+            'modal',
+            'bentukPengelolaanLimbah'
+        ])->get();
+
+
         return view('admin.bidangIndustri.dataIKM', compact('dataIkm'));
     }
 
@@ -286,8 +372,7 @@ class AdminIndustriController extends Controller
         return redirect()->route('dataIKM')->with('success', 'Data berhasil dihapus.');
     }
 
-
-    public function formDataIKM()
+    public function ShowformIKM()
     {
         $json = file_get_contents(public_path('assets/data/wilayah.json'));
         $wilayah = json_decode($json, true);
@@ -297,20 +382,14 @@ class AdminIndustriController extends Controller
 
     public function exportIKM(Request $request)
     {
-        $filtered = DataIKM::query();
+        $jenis = $request->input('jenis', []);
+        $kecamatan = $request->input('kecamatan');
+        $investasi = $request->input('investasi', []);
 
-        if ($request->filled('kecamatan')) {
-            $filtered->where('kecamatan', $request->kecamatan);
-        }
 
-        if ($request->filled('jenis_industri')) {
-            $filtered->where('jenis_industri', $request->jenis_industri);
-        }
-
-        $data = $filtered->get();
-
-        return Excel::download(new DataIkmExport($data), 'data_ikm_terfilter.xlsx');
+        return Excel::download(new DataIkmExport($jenis, $kecamatan, $investasi), 'data_ikm.xlsx');
     }
+
 
     public function storeDataIKM(Request $request)
     {
@@ -824,7 +903,6 @@ class AdminIndustriController extends Controller
         ]);
     }
 
-
     public function showHalal()
     {
         $data = SertifikasiHalal::all();
@@ -836,14 +914,32 @@ class AdminIndustriController extends Controller
         return view('user.bidangIndustri.halal');
     }
 
-    public function kelolaSuratt()
+    public function user()
+    {
+        return $this->belongsTo(user::class, 'id_user', 'id_user');
+    }
+
+
+    public function kelolaSuratt(Request $request)
     {
         $rekapSurat = $this->getSuratIndustriData();
-        $dataSurat = PermohonanSurat::with('user')
+        $query = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
-            ->whereIn('status', ['menunggu', 'diterima', 'ditolak'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->whereIn('status', ['menunggu', 'diterima', 'ditolak']);
+
+        if ($request->filled('search')) {
+            $search = strtolower(trim($request->search));
+
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->whereRaw('LOWER(nama) LIKE ?', ["%$search%"]);
+                })
+                ->orWhereRaw('LOWER(jenis_surat) LIKE ?', ["%$search%"])
+                ->orWhereRaw('LOWER(status) LIKE ?', ["%$search%"]);
+            });
+        }
+
+        $dataSurat = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.bidangIndustri.kelolaSurat', [
             'dataSurat' => $dataSurat,
@@ -868,6 +964,7 @@ class AdminIndustriController extends Controller
         $draft = DB::table('form_permohonan')
             ->where('id_user', $idUser)
             ->where('status', 'disimpan')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
             ->first();
 
         $dokumen = null;
@@ -892,7 +989,9 @@ class AdminIndustriController extends Controller
         }
         $userId = Auth::guard('user')->id();
         $query = PermohonanSurat::where('id_user', $userId)
-                ->whereIn('status', ['menunggu', 'diterima', 'ditolak']);
+            ->whereIn('status', ['menunggu', 'diterima', 'ditolak'])
+            ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri']);
+        
 
         if ($searchTerm = request('search')) {
             $search = strtolower(trim($searchTerm));
@@ -928,116 +1027,6 @@ class AdminIndustriController extends Controller
 
         return view('user.bidangIndustri.riwayatSurat', compact('riwayatSurat'));
     }
-
-    // public function ajukanPermohonann(Request $request)
-    // {
-    //     // Validasi input
-    //     $validated = $request->validate([
-    //         'jenis_surat' => 'required|in:surat_rekomendasi_industri,surat_keterangan_industri,dan_lainnya_industri',
-    //         'kecamatan' => 'required|string',
-    //         'kelurahan' => 'required|string',
-    //         'titik_koordinat' => 'required|string',
-    //         'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-    //         'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:10240',
-    //         'dokumen_nib' => 'required|mimes:pdf|max:10240',
-    //         'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:10240',
-    //         'akta_perusahaan' => 'required|mimes:pdf|max:10240',
-    //         'surat' => 'required|file|mimes:pdf,doc,docx|max:10240',
-    //     ]);
-
-    //     try {
-
-    //         $idUser = session('id_user');
-
-    //         // Cek apakah ada draft
-    //         $draft = DB::table('form_permohonan')
-    //             ->where('id_user', $idUser)
-    //             ->where('status', 'draft')
-    //             ->orderBy('created_at', 'desc')
-    //             ->first();
-            
-    //         if($draft) {
-                
-    //             // Jika ada draft, update data & simpan file
-    //             $fotoUsahaPath = $request->file('foto_usaha')->store('DokumentUser', 'public');
-    //             $fotoKTPPath = $request->file('foto_ktp')->store('DokumentUser', 'public');
-    //             $dokumenNibPath = $request->file('dokumen_nib')->store('DokumentUser', 'public');
-    //             $npwpPath = $request->file('npwp')->store('DokumentUser', 'public');
-    //             $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('DokumentUser', 'public');
-    //             $fileSuratPath = $request->file('surat')->store('DokumentUser', 'public');
-
-    //             // Simpan ke tabel form_permohonan
-    //             DB::table('form_permohonan')
-    //                 ->where('id_permohonan', $draft->id_permohonan)
-    //                 ->update([
-    //                     'kecamatan' => $request->kecamatan,
-    //                     'kelurahan' => $request->kelurahan,
-    //                     'tgl_pengajuan' => now()->toDateString(),
-    //                     'jenis_surat' => $request->jenis_surat,
-    //                     'titik_koordinat' => $request->titik_koordinat,
-    //                     'file_surat' => $fileSuratPath,
-    //                     'status' => 'menunggu',
-    //                     'updated_at' => now(),
-    //                 ]);
-
-    //             // Simpan ke tabel document_user
-    //             DB::table('document_user')
-    //                 ->where('id_permohonan', $draft)
-    //                 ->update([
-    //                 'npwp' => $npwpPath,
-    //                 'akta_perusahaan' => $aktaPerusahaanPath,
-    //                 'foto_ktp' => $fotoKTPPath,
-    //                 'foto_usaha' => $fotoUsahaPath,
-    //                 'dokument_nib' => $dokumenNibPath,
-    //                 'updated_at' => now(),
-    //             ]);
-
-    //     } else {
-    //         // Kalau tidak ada draft, buat permohonan baru
-
-    //         $fotoUsahaPath = $request->file('foto_usaha')->store('DokumentUser', 'public');
-    //         $fotoKTPPath = $request->file('foto_ktp')->store('DokumentUser', 'public');
-    //         $dokumenNibPath = $request->file('dokumen_nib')->store('DokumentUser', 'public');
-    //         $npwpPath = $request->file('npwp')->store('DokumentUser', 'public');
-    //         $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('DokumentUser', 'public');
-    //         $fileSuratPath = $request->file('surat')->store('DokumentUser', 'public');
-
-    //         $idPermohonan = Str::uuid()->toString();
-
-    //         DB::table('form_permohonan')->insert([
-    //             'id_permohonan' => $idPermohonan,
-    //             'id_user' => $idUser,
-    //             'kecamatan' => $request->kecamatan,
-    //             'kelurahan' => $request->kelurahan,
-    //             'tgl_pengajuan' => now()->toDateString(),
-    //             'jenis_surat' => $request->jenis_surat,
-    //             'titik_koordinat' => $request->titik_koordinat,
-    //             'file_surat' => $fileSuratPath,
-    //             'status' => 'menunggu',
-    //             'created_at' => now(),
-    //             'updated_at' => now(),
-    //         ]);
-
-    //         DB::table('document_user')->insert([
-    //             'id_permohonan' => $idPermohonan,
-    //             'npwp' => $npwpPath,
-    //             'akta_perusahaan' => $aktaPerusahaanPath,
-    //             'foto_ktp' => $fotoKTPPath,
-    //             'foto_usaha' => $fotoUsahaPath,
-    //             'dokument_nib' => $dokumenNibPath,
-    //             'created_at' => now(),
-    //             'updated_at' => now(),
-    //         ]);
-    //     }
-
-    //     return redirect()->route('bidangIndustri.riwayatSurat')
-    //         ->with('success', 'Pengajuan surat berhasil diajukan.');
-    //     } catch (Exception $e) {
-    //         Log::error('Gagal mengajukan surat: ' . $e->getMessage());
-    //         return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
-    //     }
-    // }
-
     public function ajukanPermohonann(Request $request)
     {
         // Generate UUID untuk id_permohonan
@@ -1068,32 +1057,33 @@ class AdminIndustriController extends Controller
             'surat' => ($draft && $draft->file_surat) ? 'nullable|file|mimes:pdf,doc,docx|max:512' : 'required|file|mimes:pdf,doc,docx|max:512',
         ];
 
-        $messages = [ 'jenis_surat.required' => 'Jenis surat wajib diisi.',
-                'jenis_surat.in' => 'Jenis surat tidak valid.',
-                'kecamatan.required' => 'Kecamatan wajib diisi.',
-                'kelurahan.required' => 'Kelurahan wajib diisi.',
-                'titik_koordinat.required' => 'Titik koordinat wajib diisi.',
-                'foto_usaha.required' => 'Foto usaha wajib diunggah.',
-                'foto_usaha.image' => 'Foto usaha harus berupa gambar.',
-                'foto_usaha.mimes' => 'Foto usaha harus berformat jpeg, png, atau jpg.',
-                'foto_usaha.max' => 'Ukuran foto usaha tidak boleh lebih dari 512 kilobyte.',
-                'foto_ktp.required' => 'Foto KTP wajib diunggah.',
-                'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
-                'foto_ktp.mimes' => 'Foto KTP harus berformat jpeg, png, atau jpg.',
-                'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 512 KILOBYTE.',
-                'dokumen_nib.required' => 'Dokumen NIB wajib diunggah.',
-                'dokumen_nib.mimes' => 'Dokumen NIB harus berformat PDF.',
-                'dokumen_nib.max' => 'Ukuran dokumen NIB tidak boleh lebih dari 512 KILOBYTE.',
-                'npwp.required' => 'Dokumen NPWP wajib diunggah.',
-                'npwp.mimes' => 'NPWP harus berformat PDF atau gambar.',
-                'npwp.max' => 'Ukuran dokumen NPWP tidak boleh lebih dari 512 KILOBYTE.',
-                'akta_perusahaan.required' => 'Akta perusahaan wajib diunggah.',
-                'akta_perusahaan.mimes' => 'Akta perusahaan harus berformat PDF.',
-                'akta_perusahaan.max' => 'Ukuran akta perusahaan tidak boleh lebih dari 512 KILOBYTE.',
-                'surat.required' => 'File surat wajib diunggah.',
-                'surat.mimes' => 'File surat harus berformat PDF, DOC, atau DOCX.',
-                'surat.max' => 'Ukuran file surat tidak boleh lebih dari 512 KILOBYTE.',
-            ];
+        $messages = [
+            'jenis_surat.required' => 'Jenis surat wajib diisi.',
+            'jenis_surat.in' => 'Jenis surat tidak valid.',
+            'kecamatan.required' => 'Kecamatan wajib diisi.',
+            'kelurahan.required' => 'Kelurahan wajib diisi.',
+            'titik_koordinat.required' => 'Titik koordinat wajib diisi.',
+            'foto_usaha.required' => 'Foto usaha wajib diunggah.',
+            'foto_usaha.image' => 'Foto usaha harus berupa gambar.',
+            'foto_usaha.mimes' => 'Foto usaha harus berformat jpeg, png, atau jpg.',
+            'foto_usaha.max' => 'Ukuran foto usaha tidak boleh lebih dari 512 kilobyte.',
+            'foto_ktp.required' => 'Foto KTP wajib diunggah.',
+            'foto_ktp.image' => 'Foto KTP harus berupa gambar.',
+            'foto_ktp.mimes' => 'Foto KTP harus berformat jpeg, png, atau jpg.',
+            'foto_ktp.max' => 'Ukuran foto KTP tidak boleh lebih dari 512 KILOBYTE.',
+            'dokumen_nib.required' => 'Dokumen NIB wajib diunggah.',
+            'dokumen_nib.mimes' => 'Dokumen NIB harus berformat PDF.',
+            'dokumen_nib.max' => 'Ukuran dokumen NIB tidak boleh lebih dari 512 KILOBYTE.',
+            'npwp.required' => 'Dokumen NPWP wajib diunggah.',
+            'npwp.mimes' => 'NPWP harus berformat PDF atau gambar.',
+            'npwp.max' => 'Ukuran dokumen NPWP tidak boleh lebih dari 512 KILOBYTE.',
+            'akta_perusahaan.required' => 'Akta perusahaan wajib diunggah.',
+            'akta_perusahaan.mimes' => 'Akta perusahaan harus berformat PDF.',
+            'akta_perusahaan.max' => 'Ukuran akta perusahaan tidak boleh lebih dari 512 KILOBYTE.',
+            'surat.required' => 'File surat wajib diunggah.',
+            'surat.mimes' => 'File surat harus berformat PDF, DOC, atau DOCX.',
+            'surat.max' => 'Ukuran file surat tidak boleh lebih dari 512 KILOBYTE.',
+        ];
 
         $validated = $request->validate($rules, $messages);
 
@@ -1161,7 +1151,7 @@ class AdminIndustriController extends Controller
             Log::error("Gagal mengajukan permohonan: " . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-    }
+    }   
 
     public function viewSuratBalasan($id)
     {
@@ -1241,11 +1231,16 @@ class AdminIndustriController extends Controller
                 'created_at' => now(),
             ]);
 
-        //     return redirect()->route('bidangIndustri.riwayatSurat')
-        //         ->with('success', 'Pengajuan surat berhasil diajukan.');
+            //     return redirect()->route('bidangIndustri.riwayatSurat')
+            //         ->with('success', 'Pengajuan surat berhasil diajukan.');
         } catch (Exception $e) {
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
+    }
+
+    public function showSurat()
+    {
+        return view('admin.bidangIndustri.suratBalasan');
     }
 }

@@ -85,10 +85,9 @@
                 </select>
             </div>
 
-            <div x-data="{ showInfo: false }">
+            <div x-data="{ showInfo: false, hide() { this.showInfo = false } }">
                 <label for="titik_koordinat" class="block mb-1">
                     Titik Koordinat <span class="text-red-500">*</span>
-                    <!-- Icon Info -->
                     <button type="button" @click="showInfo = true" class="ml-1 text-blue-500 hover:text-blue-700 focus:outline-none">
                         <svg class="inline w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-8 3a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1zm0-7a1 1 0 100 2 1 1 0 000-2zM9 9h2v5H9V9z" clip-rule="evenodd" />
@@ -101,8 +100,11 @@
                 value= "{{ old('titik_koordinat', $draft->titik_koordinat ?? '') }}"
                 placeholder="Masukkan Titik Koordinat Usaha Anda (ex. -4.028889, 119.633521)">
 
-                <!-- Pop-up / Modal Info -->
-                <div x-show="showInfo" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" @click.away="showInfo = false" x-transition>
+                
+                <style>
+                [x-cloak] { display: none !important; }
+                </style>
+                <div x-show="showInfo" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" @click.away="hide()" x-transition>
                     <div class="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-xl relative">
                         <h2 class="mb-3 text-lg font-semibold text-center">Cara Mengambil Titik Koordinat</h2>
                         <p class="text-sm leading-relaxed text-gray-700">
@@ -113,7 +115,7 @@
                             5. Salin dan tempelkan ke kolom ini.
                         </p>
                         <div class="flex justify-center mt-6">
-                            <button @click="showInfo = false" class="px-5 py-2 text-white transition-all duration-200 bg-blue-600 rounded-full hover:bg-blue-700">Tutup</button>
+                            <button @click="hide()" class="px-5 py-2 text-white transition-all duration-200 bg-blue-600 rounded-full hover:bg-blue-700">Tutup</button>
                         </div>
                     </div>
                 </div>
@@ -121,14 +123,14 @@
             </div>
 
             <div class="mb-4">
-                <label for="kelurahan">Kelurahan
-                    <span class="text-red-500">*</span>
-                </label>
-                <select id="kelurahan" name="kelurahan"
-                    class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    disabled>
+                <label for="kelurahan">Kelurahan <span class="text-red-500">*</span></label>
+                <select id="kelurahan" name="kelurahan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     <option value="">Pilih Kelurahan</option>
+                    {{-- Diisi oleh JavaScript berdasarkan kecamatan --}}
                 </select>
+                @error('kelurahan') 
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p> 
+                @enderror
             </div>
             <div>
                 <label for="foto_usaha">
@@ -216,7 +218,7 @@
         <div class="flex justify-center mt-6 mb-4 space-x-4">
             <button type="button" id="btn-draft" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Draft</button>
             <button type="button" id="btn-modal-ajukan" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
-                Ajukan
+                Ajukan  
             </button>
         </div>
         <div id="modal-verifikasi" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
@@ -239,6 +241,51 @@
 </div>
 
 <script>
+
+    const kelurahanList = {
+        bacukiki: ["Galung Maloang", "Lemoe", "Lompoe", "Watang Bacukiki"],
+        bacukiki_barat: ["Bumi Harapan", "Cappa Galung", "Kampung Baru", "Lumpue", "Sumpang Minangae", "Tiro Sompe"],
+        soreang: ["Bukit Harapan", "Bukit Indah", "Kampung Pisang", "Lakessi", "Ujung Baru", "Ujung Lare", "Watang Soreang"],
+        ujung: ["Labukkang", "Lapadde", "Mallusetasi", "Ujung Bulu", "Ujung Sabbang"]
+    };
+
+    const kecamatanSelect = document.getElementById('kecamatan');
+    const kelurahanSelect = document.getElementById('kelurahan');
+
+    const selectedKecamatan = "{{ old('kecamatan', $draft->kecamatan ?? '') }}";
+    const selectedKelurahan = "{{ old('kelurahan', $draft->kelurahan ?? '') }}";
+
+    function populateKelurahan(kecamatanValue) {
+        kelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+        kelurahanSelect.disabled = true;
+
+        if (kelurahanList[kecamatanValue]) {
+            kelurahanList[kecamatanValue].forEach(kel => {
+                const kelValue = kel.toLowerCase().replace(/\s+/g, '_');
+                const option = document.createElement('option');
+                option.value = kelValue;
+                option.textContent = kel;
+
+                if (kelValue === selectedKelurahan) {
+                    option.selected = true;
+                }
+
+                kelurahanSelect.appendChild(option);
+            });
+            kelurahanSelect.disabled = false;
+        }
+    }
+
+    kecamatanSelect.addEventListener('change', function () {
+        populateKelurahan(this.value);
+    });
+
+    // Populate saat load jika sudah ada nilai sebelumnya
+    if (selectedKecamatan) {
+        kecamatanSelect.value = selectedKecamatan;
+        populateKelurahan(selectedKecamatan);
+    }
+
     document.getElementById('btn-draft').addEventListener('click', function () {
         let form = document.getElementById('permohonanForm');
         form.action = "{{ route('bidangIndustri.draftPermohonan') }}"; 

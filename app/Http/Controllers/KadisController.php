@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Barang;
 use App\Models\IndexHarga;
+use App\Models\DataIkm;
 
 class KadisController extends Controller
 {
@@ -16,58 +17,21 @@ class KadisController extends Controller
         $jenis = [
             'surat_rekomendasi_perdagangan',
             'surat_keterangan_perdagangan',
+            'dan_lainnya_perdagangan',
         ];
 
         return [
             'totalSuratPerdagangan' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
             'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
             'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
         ];
     }
-
-    private function getCalibrationComparisonData()
-    {
-        $currentYear = Carbon::now()->year;
-        $lastYear = $currentYear - 1;
-        
-        // Get data for current year
-        $currentYearData = DB::table('surat_metrologi')
-            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->whereYear('created_at', $currentYear)
-            ->where('status_surat_masuk', 'Disetujui')
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->toArray();
-            
-        // Get data for last year
-        $lastYearData = DB::table('surat_metrologi')
-            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->whereYear('created_at', $lastYear)
-            ->where('status_surat_masuk', 'Disetujui')
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->toArray();
-            
-        // Fill in missing months with 0
-        $currentYearComplete = [];
-        $lastYearComplete = [];
-        for ($i = 1; $i <= 12; $i++) {
-            $currentYearComplete[] = $currentYearData[$i] ?? 0;
-            $lastYearComplete[] = $lastYearData[$i] ?? 0;
-        }
-        
-        return [
-            'currentYearData' => json_encode($currentYearComplete),
-            'lastYearData' => json_encode($lastYearComplete),
-            'currentYear' => $currentYear,
-            'lastYear' => $lastYear
-        ];
-    }
-
     private function dataSuratIndustri()    {
         $jenis = [
             'surat_rekomendasi_industri',
             'surat_keterangan_industri',
+            'dan_lainnya_industri',
         ];
 
         return [
@@ -76,8 +40,8 @@ class KadisController extends Controller
             'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
             'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
         ];
-
     }
+    
     private function dataSuratMetrologi()    {
         $jenis = [
             'tera',
@@ -123,11 +87,51 @@ class KadisController extends Controller
                 $metrologi['totalSuratTerverifikasi'],
 
             'totalSuratDitolakKeseluruhan' =>
-                $perdagangan['totalSuratDitolak'],                +
+                $perdagangan['totalSuratDitolak'],+
                 $industri['totalSuratDitolak'] +
                 $metrologi['totalSuratDitolak'],
         ];
     }
+
+    private function getCalibrationComparisonData()
+    {
+        $currentYear = Carbon::now()->year;
+        $lastYear = $currentYear - 1;
+        
+        // Get data for current year
+        $currentYearData = DB::table('surat_metrologi')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $currentYear)
+            ->where('status_surat_masuk', 'Disetujui')
+            ->groupBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
+            
+        // Get data for last year
+        $lastYearData = DB::table('surat_metrologi')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $lastYear)
+            ->where('status_surat_masuk', 'Disetujui')
+            ->groupBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
+            
+        // Fill in missing months with 0
+        $currentYearComplete = [];
+        $lastYearComplete = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $currentYearComplete[] = $currentYearData[$i] ?? 0;
+            $lastYearComplete[] = $lastYearData[$i] ?? 0;
+        }
+        
+        return [
+            'currentYearData' => json_encode($currentYearComplete),
+            'lastYearData' => json_encode($lastYearComplete),
+            'currentYear' => $currentYear,
+            'lastYear' => $lastYear
+        ];
+    }
+    
     public function index(Request $request)
     {
         $totalSuratSmuaBidang = $this->dataSuratTotal();
@@ -146,6 +150,27 @@ class KadisController extends Controller
             'today' => [],
             'yesterday' => []
         ];
+
+        //Grafik Industri
+        // Jumlah IKM berdasarkan Investasi
+        $levelInvestasi = DataIkm::selectRaw("
+            CASE 
+                WHEN level < 100000000 THEN 'Kecil'
+                WHEN level >= 100000000 THEN 'Menengah'
+            END as kategori,
+            COUNT(*) as jumlah
+        ")
+        ->groupBy('kategori')
+        ->pluck('jumlah', 'kategori')
+        ->toArray();
+
+        $labels = ['Kecil', 'Menengah'];
+        $data = [
+            'Kecil' => $levelInvestasi['Kecil'] ?? 0,
+            'Menengah' => $levelInvestasi['Menengah'] ?? 0
+        ];
+
+        $levelIKM = array_sum($levelInvestasi);
 
         if (in_array($lokasi, ['Pasar Sumpang', 'Pasar Lakessi'])) {
             $current = Carbon::parse($startDate);
@@ -232,6 +257,10 @@ class KadisController extends Controller
             'topHargaTurun' => $topHargaTurun,
             'barChartData' => $barChartData,
             'calibrationData' => $calibrationData,
+            'levelIKM' => $levelIKM,
+            'labels' => $labels,
+            'data' => $data,
+            'levelInvestasi' => $levelInvestasi, 
         ]);
     }
 

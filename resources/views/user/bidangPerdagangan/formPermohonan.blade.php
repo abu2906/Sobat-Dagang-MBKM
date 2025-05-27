@@ -40,7 +40,14 @@
                 <option value="">-- Pilih Draft --</option>
                 @foreach($drafts as $d)
                     <option value="{{ $d->id_permohonan }}" {{ request('draft_id') == $d->id_permohonan ? 'selected' : '' }}>
-                        Draft - {{ \Carbon\Carbon::parse($d->tgl_pengajuan)->format('d M Y') }}
+                        Draft - {{ \Carbon\Carbon::parse($d->tgl_pengajuan)->format('d M Y') }} - 
+                        @if($d->jenis_surat == 'surat_rekomendasi_perdagangan')
+                            Surat Rekomendasi
+                        @elseif($d->jenis_surat == 'surat_keterangan_perdagangan')
+                            Surat Keterangan
+                        @else
+                            {{ $d->jenis_surat }}
+                        @endif
                     </option>
                 @endforeach
             </select>

@@ -26,6 +26,8 @@ class CreateDataIkmTable extends Migration
             $table->string('nib');
             $table->string('no_telp', 20);
             $table->integer('tenaga_kerja');
+            $table->bigInteger('level')->default(0);
+
 
             $table->timestamps();
         });
