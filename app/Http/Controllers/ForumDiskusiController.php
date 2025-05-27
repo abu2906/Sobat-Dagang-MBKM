@@ -4,14 +4,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ForumDiskusi;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class ForumDiskusiController extends Controller
 {
-    public function index()    
-    {
-        $chats = ForumDiskusi::with('user')->orderBy('waktu', 'asc')->get();
+    public function index()
+{
+    $chats = ForumDiskusi::with('user', 'disdag')->orderBy('waktu', 'asc')->get();
+
+    if (Auth::guard('user')->check()) {
         return view('user.forum', compact('chats'));
+    } elseif (Auth::guard('disdag')->check()) {
+        $pengaduan = ForumDiskusi::with('user')
+                    ->whereNotNull('id_user') // hanya dari user
+                    ->orderBy('waktu', 'desc')
+                    ->get();
+        return view('admin.adminSuper.pengaduanUser', compact('chats', 'pengaduan'));
+    } else {
+        abort(403); // unauthorized
     }
+}
+
 
     public function kirimPesan(Request $request)
     {
@@ -55,5 +69,65 @@ class ForumDiskusiController extends Controller
 
         return response()->json($chats);
     }
+
+    public function load()
+    {
+        $chats = \App\Models\ForumDiskusi::with('user', 'disdag')->orderBy('waktu')->get();
+        
+        return response()->json($chats);
+    }
+
+
+    public function send(Request $request)
+    {
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        $userId = auth()->guard('user')->id();
+        $disdagId = auth()->guard('disdag')->id();
+
+        // Cek apakah user atau disdag login
+        if (!$userId && !$disdagId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User atau admin belum login'
+            ], 403);
+        }
+
+        try {
+            DB::table('forum_diskusi')->insert([
+                'id_user' => $userId,
+                'id_disdag' => $disdagId,
+                'chat' => $request->message,
+                'status' => 'terkirim',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Admin'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function destroy($id)
+    {
+        $chat = ForumDiskusi::findOrFail($id);
+
+        if ($chat->id_user === null) {
+            return back()->with('error', 'Pesan dari admin tidak bisa dihapus!');
+        }
+
+        $chat->delete();
+        return back()->with('success', 'Pesan berhasil dihapus.');
+    }
+
 
 }

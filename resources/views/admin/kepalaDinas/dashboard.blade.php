@@ -8,6 +8,7 @@
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" class="w-10 h-10">
             <div>
                 <p class="text-sm text-gray-500">Jumlah Surat Masuk</p>
+                <p class="text-xl font-bold text-blue-600">4</p>
                 {{-- <p class="text-xl font-bold text-blue-600">{{ $totalSuratSmuaBidang['totalSuratKeseluruhan'] }}</p> --}}
             </div>
         </div>
@@ -41,6 +42,10 @@
         <!-- Bidang Perdagangan -->
         <div class="bg-white rounded-xl shadow-md p-4 flex flex-col h-full">
             <h3 class="text-sm font-semibold text-gray-700 mb-2">Bidang Perdagangan</h3>
+                <select id="lokasiSelect" class="border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">
+                        {{-- <option value="Pasar Sumpang" {{ $selectedLokasi == 'Pasar Sumpang' ? 'selected' : '' }}>Pasar Sumpang</option>
+                        <option value="Pasar Lakessi" {{ $selectedLokasi == 'Pasar Lakessi' ? 'selected' : '' }}>Pasar Lakessi</option> --}}
+                </select>
             <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 flex-grow">
                 <div class="flex-1 max-w-full max-h-[220px] overflow-hidden">
                     <p class="text-center font-medium text-gray-600 mb-1">Naik</p>
@@ -60,9 +65,9 @@
         <div class="bg-white rounded-xl shadow-md p-4 flex flex-col h-full">
             <h3 class="text-sm font-semibold text-gray-700 mb-2">Bidang Industri</h3>
             <div class="max-w-full max-h-[220px] overflow-hidden flex-grow">
-                <canvas id="chartIndustri" class="w-full max-w-full max-h-[200px]"></canvas>
+                <canvas id="chartIndustri" class="w-600px max-w-full max-h-[170px]"></canvas>
             </div>
-            <a href="#" class="mt-auto block w-full bg-[#083458] text-white px-4 py-2 rounded-md text-center text-sm hover:bg-blue-300 hover:text-black">
+            <a href="{{route('kadis.industri')}}" class="mt-auto block w-full bg-[#083458] text-white px-4 py-2 rounded-md text-center text-sm hover:bg-blue-300 hover:text-black">
                 Lihat Detail
             </a>
         </div>
@@ -71,68 +76,128 @@
 </div>
 
 <script>
-    // Bidang Perdagangan Naik (Pie)
-    new Chart(document.getElementById('chartPerdaganganNaik'), {
-        type: 'pie',
-        data: {
-            labels: ['Sayur', 'Beras', 'Minyak', 'Daging', 'Ikan'],
-            datasets: [{
-                data: [30, 20, 15, 10, 25],
-                backgroundColor: ['#1E3A8A', '#3B82F6', '#93C5FD', '#BFDBFE', '#DBEAFE']
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
+    // Bidang Perdagangan Naik
+    // const naikCtx = document.getElementById('chartPerdaganganNaik');
+    // const turunCtx = document.getElementById('chartPerdaganganTurun');
 
-    // Bidang Perdagangan Turun (Pie)
-    new Chart(document.getElementById('chartPerdaganganTurun'), {
-        type: 'pie',
-        data: {
-            labels: ['Garam', 'Gula', 'Bawang', 'Telur'],
-            datasets: [{
-                data: [35, 25, 20, 20],
-                backgroundColor: ['#F43F5E', '#FB7185', '#FDA4AF', '#FBCFE8']
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
+    // if (naikCtx) {
+    //     const dataPieNaik = @json($topHargaNaik);
+    //     new Chart(naikCtx.getContext('2d'), {
+    //         type: 'pie',
+    //         data: {
+    //             labels: dataPieNaik.map(i => i.label),
+    //             datasets: [{
+    //                 data: dataPieNaik.map(i => i.price_change),
+    //                 backgroundColor: dataPieNaik.map(i => i.color),
+    //                 borderColor: '#fff',
+    //                 borderWidth: 2
+    //             }]
+    //         },
+    //         options: {
+    //             plugins: {
+    //                 legend: { position: 'none' },
+    //                 datalabels: {
+    //                     formatter: (value, context) => {
+    //                         const dataset = context.chart.data.datasets[0];
+    //                         const total = dataset.data.reduce((a, b) => a + b, 0);
+    //                         const percentage = (value / total * 100).toFixed(1);
+    //                         return percentage + '%';
+    //                     },
+    //                     color: '#fff',
+    //                     font: { weight: 'bold', size: 12 }
+    //                 }
+    //             }
+    //         },
+    //         plugins: [ChartDataLabels]
+    //     });
+    // }
 
-    // Bidang Industri (Bar)
-    new Chart(document.getElementById('chartIndustri'), {
+    // if (turunCtx) {
+    //     const dataPieTurun = @json($topHargaTurun);
+    //     new Chart(turunCtx.getContext('2d'), {
+    //         type: 'pie',
+    //         data: {
+    //             labels: dataPieTurun.map(i => i.label),
+    //             datasets: [{
+    //                 data: dataPieTurun.map(i => i.price_change),
+    //                 backgroundColor: dataPieTurun.map(i => i.color),
+    //                 borderColor: '#fff',
+    //                 borderWidth: 2
+    //             }]
+    //         },
+    //         options: {
+    //             plugins: {
+    //                 legend: { position: 'none' },
+    //                 datalabels: {
+    //                     formatter: (value, context) => {
+    //                         const dataset = context.chart.data.datasets[0];
+    //                         const total = dataset.data.reduce((a, b) => a + b, 0);
+    //                         const percentage = (value / total * 100).toFixed(1);
+    //                         return percentage + '%';
+    //                     },
+    //                     color: '#fff',
+    //                     font: { weight: 'bold', size: 12 }
+    //                 }
+    //             }
+    //         },
+    //         plugins: [ChartDataLabels]
+    //     });
+    // }
+
+
+
+    // Bar Chart Perbandingan IKM
+    const levelLabels = {!! json_encode(array_keys($levelInvestasi)) !!};
+    const levelData = {!! json_encode(array_values($levelInvestasi)) !!};
+    const chartIndustriCtx = document.getElementById('chartIndustri').getContext('2d');
+    const chartIndustri = new Chart(chartIndustriCtx, {
         type: 'bar',
         data: {
-            labels: ['2024', '2025'],
-            datasets: [
-                {
-                    label: 'Masuk',
-                    backgroundColor: '#FBBF24',
-                    data: [15, 10]
-                },
-                {
-                    label: 'Keluar',
-                    backgroundColor: '#3B82F6',
-                    data: [10, 14]
-                }
-            ]
+        labels: levelLabels,
+        datasets: [{
+            label: 'Jumlah IKM',
+            data: levelData, 
+            backgroundColor: [
+            'rgba(255, 206, 86, 0.7)',  
+            'rgba(255, 99, 132, 0.7)'
+            ],
+            borderColor: [
+            'rgba(255, 206, 86, 1)',
+            'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1,
+        }]
         },
         options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' }
+        responsive: true,
+        plugins: {
+            legend: {
+            display: false,
+            // position: 'bottom'
             },
-            scales: {
-                y: { beginAtZero: true }
+            tooltip: {
+            callbacks: {
+                label: function(context) {
+                return context.parsed.y + ' IKM';
+                }
+                }
             }
+            },
+        scales: {
+            y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Jumlah IKM'
+            }
+            },
+            x: {
+            title: {
+                display: true,
+                text: 'Level IKM'
+            }
+            }
+        }
         }
     });
 

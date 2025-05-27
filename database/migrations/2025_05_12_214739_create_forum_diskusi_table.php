@@ -12,7 +12,7 @@ class CreateForumDiskusiTable extends Migration
     {
         Schema::create('forum_diskusi', function (Blueprint $table) {
             $table->id('id_pengaduan');
-            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_user')->nullable();
             $table->unsignedBigInteger('id_disdag')->nullable();
             $table->text('chat');
             $table->timestamp('waktu');

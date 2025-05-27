@@ -242,7 +242,17 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');    
+    //pelaporan
+    Route::get('/admin/forum-pengaduan', [ForumDiskusiController::class, 'index'])->name('forum.admin');
+    Route::get('/forum/load', [ForumDiskusiController::class, 'load']);
+    Route::post('/kirim-pesan', [ForumDiskusiController::class, 'send']);
+    Route::delete('/forum-diskusi/{id}', [ForumDiskusiController::class, 'destroy'])->name('forum-diskusi.destroy');
+
+    // Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
+    // Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
+    // Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat');
+
 });
 
 //kabid Perdagangan
@@ -275,17 +285,16 @@ Route::middleware(['check.role:kabid_metrologi'])->group(function () {
 
 // Kepala Dinas Routes
 Route::middleware(['check.role:kepala_dinas'])->group(function () {
-    Route::get('/kadis/dashboard', [DashboardMetrologiController::class, 'showKadis'])->name('dashboard-kadis');
-    Route::get('/dashboard', [KadisController::class, 'index'])->name('suratDashboard');
+    Route::get('/kadis/dashboard', [KadisController::class, 'index'])->name('dashboard-kadis');
 
     Route::get('/kadis/persuratan', [DashboardMetrologiController::class, 'showPersuratanKadis'])->name('persuratan-kadis');
     Route::get('/kadis/persuratan/metrologi', [DashboardMetrologiController::class, 'showPersuratanMetrologiKadis'])->name('surat-metrologi-kadis');
     Route::post('/kadis/surat/{encoded_id}/setujui', [PersuratanController::class, 'setujuiKadis'])->name('setujuiKadis');
     Route::post('/kadis/surat/{encoded_id}/tolak', [PersuratanController::class, 'tolakKadis'])->name('tolakKadis');
+
     Route::get('/kepala-dinas/surat-perdagangan', [sobatHargaController::class, 'suratPerdagangan'])->name('kepalaDinas.suratPerdagangan');
     Route::put('/kabid-perdagangan/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('suratPerdagangan.setujui');
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
-    Route::get('kepala-dinas/perdagangan/pupuk', [sobatHargaController::class, 'pupuk'])->name('kepalaDinas.pupuk');
-    Route::get('/data-pasar-distribusi', [SobatHargaController::class, 'apiDataPasarDistribusi']);
+    
     Route::get('/kadis/industri', [KabidIndustriController::class, 'KadisIndustri'])->name('kadis.industri');
 });

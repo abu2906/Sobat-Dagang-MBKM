@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use App\Models\Barang;
+use App\Models\IndexHarga;
+use App\Models\DataIkm;
 
 class KadisController extends Controller
 {
+    
     private function dataSuratPerdagangan()    {
         $jenis = [
             'surat_rekomendasi_perdagangan',
@@ -23,7 +28,18 @@ class KadisController extends Controller
         ];
     }
     private function dataSuratIndustri()    {
-        //ini mu isi
+        $jenis = [
+            'surat_rekomendasi_industri',
+            'surat_keterangan_industri',
+            'dan_lainnya_industri',
+        ];
+
+        return [
+            'totalSuratIndustri' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
+            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        ];
     }
     private function dataSuratMetrologi()    {
       //ini mu isi
@@ -31,7 +47,7 @@ class KadisController extends Controller
     private function dataSuratTotal() { 
         $perdagangan = $this->dataSuratPerdagangan();
         $industri = $this->dataSuratIndustri();
-        $metrologi = $this->dataSuratMetrologi();
+        // $metrologi = $this->dataSuratMetrologi();
 
         return [
             'totalSuratPerdagangan' => $perdagangan['totalSuratPerdagangan'],
@@ -44,38 +60,165 @@ class KadisController extends Controller
             'totalSuratDitolakIndustri' => $industri['totalSuratDitolak'],
             'totalSuratDraftIndustri' => $industri['totalSuratDraft'],
 
-            'totalSuratMetrologi' => $metrologi['totalSuratMetrologi'],
-            'totalSuratTerverifikasiMetrologi' => $metrologi['totalSuratTerverifikasi'],
-            'totalSuratDitolakMetrologi' => $metrologi['totalSuratDitolak'],
-            'totalSuratDraftMetrologi' => $metrologi['totalSuratDraft'],
+            // 'totalSuratMetrologi' => $metrologi['totalSuratMetrologi'],
+            // 'totalSuratTerverifikasiMetrologi' => $metrologi['totalSuratTerverifikasi'],
+            // 'totalSuratDitolakMetrologi' => $metrologi['totalSuratDitolak'],
+            // 'totalSuratDraftMetrologi' => $metrologi['totalSuratDraft'],
 
             // Total keseluruhan ketiga bidang
-            'totalSuratKeseluruhan' => 
-                $perdagangan['totalSuratPerdagangan'] +
-                $industri['totalSuratIndustri'] +
-                $metrologi['totalSuratMetrologi'],
+            'totalSuratKeseluruhan' =>
+                $perdagangan['totalSuratPerdagangan'],
+                $industri['totalSuratIndustri'],
+                
+                // $metrologi['totalSuratMetrologi'],
 
-            'totalSuratTerverifikasiKeseluruhan' => 
-                $perdagangan['totalSuratTerverifikasi'] +
-                $industri['totalSuratTerverifikasi'] +
-                $metrologi['totalSuratTerverifikasi'],
+            'totalSuratTerverifikasiKeseluruhan' =>
+                $perdagangan['totalSuratTerverifikasi'],
+                $industri['totalSuratTerverifikasi'],
 
-            'totalSuratDitolakKeseluruhan' => 
-                $perdagangan['totalSuratDitolak'] +
-                $industri['totalSuratDitolak'] +
-                $metrologi['totalSuratDitolak'],
+                // $metrologi['totalSuratTerverifikasi'],
 
-            'totalSuratDraftKeseluruhan' => 
-                $perdagangan['totalSuratDraft'] +
-                $industri['totalSuratDraft'] +
-                $metrologi['totalSuratDraft'],
+            'totalSuratDitolakKeseluruhan' =>
+                $perdagangan['totalSuratDitolak'],
+                $industri['totalSuratDitolak'],
+
+                // $metrologi['totalSuratDitolak'],
+
+            'totalSuratDraftKeseluruhan' =>
+                $perdagangan['totalSuratDraft'],
+                $industri['totalSuratDraft'],
+                // $metrologi['totalSuratDraft'],
         ];
     }
-    public function index()
+    public function index(Request $request)
     {
         $totalSuratSmuaBidang = $this->dataSuratTotal();
 
-        // Kirim data ke view
-        return view('admin.kepalaDinas.dashboard', compact('totalSuratSmuaBidang'));
+        $lokasi = $request->lokasi ?? 'Pasar Sumpang';
+        $startDate = $request->start_date ?? now()->subDays(30)->format('Y-m-d');
+        $endDate = $request->end_date ?? now()->format('Y-m-d');
+
+        $tanggalList = collect();
+        $barangs = Barang::orderBy('nama_barang')->get();
+        $dataHarga = [];
+        $topHargaNaik = [];
+        $topHargaTurun = [];
+        $barChartData = [
+            'labels' => [],
+            'today' => [],
+            'yesterday' => []
+        ];
+
+
+        //Grafik Industri
+        // Jumlah IKM berdasarkan Investasi
+        $levelInvestasi = DataIkm::selectRaw("
+            CASE 
+                WHEN level < 100000000 THEN 'Kecil'
+                WHEN level >= 100000000 THEN 'Menengah'
+            END as kategori,
+            COUNT(*) as jumlah
+        ")
+        ->groupBy('kategori')
+        ->pluck('jumlah', 'kategori')
+        ->toArray();
+
+        $labels = ['Kecil', 'Menengah'];
+        $data = [
+            'Kecil' => $levelInvestasi['Kecil'] ?? 0,
+            'Menengah' => $levelInvestasi['Menengah'] ?? 0
+        ];
+
+        $levelIKM = array_sum($levelInvestasi);
+
+        if (in_array($lokasi, ['Pasar Sumpang', 'Pasar Lakessi'])) {
+            $current = Carbon::parse($startDate);
+            $end = Carbon::parse($endDate);
+            while ($current <= $end) {
+                $tanggalList->push($current->format('Y-m-d'));
+                $current->addDay();
+            }
+
+            foreach ($tanggalList as $tanggal) {
+                foreach ($barangs as $barang) {
+                    $harga = IndexHarga::whereDate('tanggal', $tanggal)
+                        ->where('id_barang', $barang->id_barang)
+                        ->where('lokasi', $lokasi)
+                        ->value('harga');
+
+                    $dataHarga[$tanggal][$barang->id_barang] = $harga ?? '-';
+                }
+            }
+
+            $today = Carbon::parse($endDate);
+            $yesterday = $today->copy()->subDay();
+
+            $barChartData['labels'] = $barangs->pluck('nama_barang');
+
+            $barChartData['today'] = $barangs->map(function ($barang) use ($lokasi, $today) {
+                return IndexHarga::where('id_barang', $barang->id_barang)
+                    ->where('lokasi', $lokasi)
+                    ->whereDate('tanggal', $today)
+                    ->value('harga') ?? 0;
+            });
+
+            $barChartData['yesterday'] = $barangs->map(function ($barang) use ($lokasi, $yesterday) {
+                return IndexHarga::where('id_barang', $barang->id_barang)
+                    ->where('lokasi', $lokasi)
+                    ->whereDate('tanggal', $yesterday)
+                    ->value('harga') ?? 0;
+            });
+
+            $perubahan = $barangs->map(function ($barang, $index) use ($barChartData) {
+                $todayPrice = $barChartData['today'][$index] ?? 0;
+                $yesterdayPrice = $barChartData['yesterday'][$index] ?? 0;
+                $diff = $todayPrice - $yesterdayPrice;
+
+                return [
+                    'label' => $barang->nama_barang,
+                    'price_change' => abs($diff),
+                    'isNaik' => $diff > 0,
+                ];
+            });
+
+            $topHargaNaik = $perubahan->where('isNaik', true)
+                ->sortByDesc('price_change')
+                ->take(5)
+                ->map(function ($item) {
+                    $item['color'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+                    return $item;
+                })
+                ->values()
+                ->all();
+
+            $topHargaTurun = $perubahan->where('isNaik', false)
+                ->sortByDesc('price_change')
+                ->take(5)
+                ->map(function ($item) {
+                    $item['color'] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+                    return $item;
+                })
+                ->values()
+                ->all();
+        }
+
+        return view('admin.kepalaDinas.dashboard', [
+            'totalSuratSmuaBidang' => $totalSuratSmuaBidang,
+            'lokasiOptions' => ['Pasar Sumpang', 'Pasar Lakessi'],
+            'selectedLokasi' => $lokasi,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'tanggalList' => $tanggalList,
+            'barangs' => $barangs,
+            'dataHarga' => $dataHarga,
+            'topHargaNaik' => $topHargaNaik,
+            'topHargaTurun' => $topHargaTurun,
+            'barChartData' => $barChartData,
+            'levelIKM' => $levelIKM,
+            'labels' => $labels,
+            'data' => $data,
+            'levelInvestasi' => $levelInvestasi, 
+        ]);
     }
+
 }
