@@ -164,49 +164,82 @@
 </div>
 
 <script>
+// Gunakan IIFE (Immediately Invoked Function Expression) untuk mengisolasi kode
+(function() {
+    // Get data from PHP
     const dataWilayah = @json($wilayah['kabupaten']);
-
+    
+    // Get select elements dengan ID yang spesifik untuk tambah pengguna
     const kabupatenSelect = document.getElementById('kabupaten');
     const kecamatanSelect = document.getElementById('kecamatan');
     const kelurahanSelect = document.getElementById('kelurahan');
 
+    // Function to reset a select
+    function resetSelect(select, placeholder) {
+        select.innerHTML = `<option value="">${placeholder}</option>`;
+    }
+
+    // Function to populate a select with options
+    function populateSelect(select, options) {
+        options.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option;
+            opt.textContent = option;
+            select.appendChild(opt);
+        });
+    }
+
+    // Kabupaten change event
     kabupatenSelect.addEventListener('change', function() {
-        const selectedKab = dataWilayah.find(kab => kab.name === this.value);
-        kecamatanSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
-        kelurahanSelect.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
-        kelurahanSelect.disabled = true;
+        const selectedKabupaten = dataWilayah.find(kab => kab.name === this.value);
+        
+        // Reset kecamatan and kelurahan
+        resetSelect(kecamatanSelect, '-- Pilih Kecamatan --');
+        resetSelect(kelurahanSelect, '-- Pilih Kelurahan --');
 
-        if (selectedKab) {
-            selectedKab.kecamatan.forEach(kec => {
-                const opt = document.createElement('option');
-                opt.value = kec.name;
-                opt.textContent = kec.name;
-                kecamatanSelect.appendChild(opt);
-            });
-            kecamatanSelect.disabled = false;
-        } else {
-            kecamatanSelect.disabled = true;
+        if (selectedKabupaten && selectedKabupaten.kecamatan) {
+            const kecamatanNames = selectedKabupaten.kecamatan.map(kec => kec.name);
+            populateSelect(kecamatanSelect, kecamatanNames);
         }
     });
 
+    // Kecamatan change event
     kecamatanSelect.addEventListener('change', function() {
-        const selectedKab = dataWilayah.find(kab => kab.name === kabupatenSelect.value);
-        const selectedKec = selectedKab?.kecamatan.find(kec => kec.name === this.value);
+        const selectedKabupaten = dataWilayah.find(kab => kab.name === kabupatenSelect.value);
+        if (!selectedKabupaten) return;
 
-        kelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+        const selectedKecamatan = selectedKabupaten.kecamatan.find(kec => kec.name === this.value);
+        
+        // Reset kelurahan
+        resetSelect(kelurahanSelect, '-- Pilih Kelurahan --');
 
-        if (selectedKec) {
-            selectedKec.kelurahan.forEach(kel => {
-                const opt = document.createElement('option');
-                opt.value = kel;
-                opt.textContent = kel;
-                kelurahanSelect.appendChild(opt);
-                console.log(" ->", opt);
-            });
-            kelurahanSelect.disabled = false;
-        } else {
-            kelurahanSelect.disabled = true;
+        if (selectedKecamatan && selectedKecamatan.kelurahan) {
+            populateSelect(kelurahanSelect, selectedKecamatan.kelurahan);
         }
     });
+
+    // Set old values if they exist
+    const oldKabupaten = '{{ old('kabupaten') }}';
+    const oldKecamatan = '{{ old('kecamatan') }}';
+    const oldKelurahan = '{{ old('kelurahan') }}';
+
+    if (oldKabupaten) {
+        kabupatenSelect.value = oldKabupaten;
+        kabupatenSelect.dispatchEvent(new Event('change'));
+        
+        if (oldKecamatan) {
+            setTimeout(() => {
+                kecamatanSelect.value = oldKecamatan;
+                kecamatanSelect.dispatchEvent(new Event('change'));
+                
+                if (oldKelurahan) {
+                    setTimeout(() => {
+                        kelurahanSelect.value = oldKelurahan;
+                    }, 100);
+                }
+            }, 100);
+        }
+    }
+})(); // End of IIFE
 </script>
 @endsection 

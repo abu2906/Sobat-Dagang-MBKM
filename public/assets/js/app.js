@@ -1,32 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    //hanya memanggil menu dropdown kelurahan jika kecamatan dipilih
-    const kelurahanList = {
-        bacukiki: ["Galung Maloang", "Lemoe", "Lompoe", "Watang Bacukiki"],
-        bacukiki_barat: ["Bumi Harapan", "Cappa Galung", "Kampung Baru", "Lumpue", "Sumpang Minangae", "Tiro Sompe"],
-        soreang: ["Bukit Harapan", "Bukit Indah", "Kampung Pisang", "Lakessi", "Ujung Baru", "Ujung Lare", "Watang Soreang"],
-        ujung: ["Labukkang", "Lapadde", "Mallusetasi", "Ujung Bulu", "Ujung Sabbang"]
-    };
-
-    const kecamatanSelect = document.getElementById('kecamatan');
-    const kelurahanSelect = document.getElementById('kelurahan');
-
-    kecamatanSelect.addEventListener('change', function () {
-        const selected = this.value;
-        kelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
-        kelurahanSelect.disabled = true;
-
-        if (kelurahanList[selected]) {
-            kelurahanList[selected].forEach(kel => {
-                const option = document.createElement('option');
-                option.value = kel.toLowerCase().replace(/\s+/g, '_');
-                option.textContent = kel;
-                kelurahanSelect.appendChild(option);
-            });
-            kelurahanSelect.disabled = false;
-        }
-    });
-
-
     const btnAjukan = document.getElementById('btn-ajukan');
     const btnDraft = document.getElementById('draftPerdagangan'); // tombol draft baru
     const modalVerifikasi = document.getElementById('modal-verifikasi');
@@ -79,6 +51,4 @@ document.addEventListener('DOMContentLoaded', () => {
             this.classList.add('hidden');
         }
     });
-
-
 });
