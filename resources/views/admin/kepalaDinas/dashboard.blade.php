@@ -31,7 +31,9 @@
     <div class="p-4 mb-6 bg-white shadow-md rounded-xl">
         <div class="bg-white shadow-md rounded-xl p-4">
             <p class="text-lg font-semibold mb-4">Grafik Perbandingan Jumlah Tera</p>
-            <canvas id="chartLine"></canvas>
+            <div class="h-[300px]">
+                <canvas id="chartLine"></canvas>
+            </div>
         </div>
         <div class="mt-4 text-right">
             <a href="{{ route('kadis-metro') }}" class="mt-auto block w-full bg-[#083458] text-white px-4 py-2 rounded-md text-center text-sm hover:bg-blue-300 hover:text-black">Lihat Detail</a>
@@ -200,7 +202,9 @@
                         text: 'Jumlah Tera'
                     }
                 }
-            }
+            },
+            maintainAspectRatio: false,
+            responsive: true
         }
     });
 
