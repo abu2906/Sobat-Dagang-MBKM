@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Uttp;
+use App\Models\suratMetrologi;
 use App\Models\Barang;
 use App\Models\IndexHarga;
 
@@ -141,6 +143,46 @@ class KadisController extends Controller
             'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
         ];
     }
+
+    private function getCalibrationComparisonData()
+    {
+        $currentYear = Carbon::now()->year;
+        $lastYear = $currentYear - 1;
+        
+        // Get data for current year
+        $currentYearData = DB::table('surat_metrologi')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $currentYear)
+            ->where('status_surat_masuk', 'Disetujui')
+            ->groupBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
+            
+        // Get data for last year
+        $lastYearData = DB::table('surat_metrologi')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $lastYear)
+            ->where('status_surat_masuk', 'Disetujui')
+            ->groupBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
+            
+        // Fill in missing months with 0
+        $currentYearComplete = [];
+        $lastYearComplete = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $currentYearComplete[] = $currentYearData[$i] ?? 0;
+            $lastYearComplete[] = $lastYearData[$i] ?? 0;
+        }
+        
+        return [
+            'currentYearData' => json_encode($currentYearComplete),
+            'lastYearData' => json_encode($lastYearComplete),
+            'currentYear' => $currentYear,
+            'lastYear' => $lastYear
+        ];
+    }
+
     private function dataSuratIndustri()    {
         //ini mu isi
     }
@@ -283,6 +325,9 @@ class KadisController extends Controller
                 ->all();
         }
 
+        
+        $calibrationData = $this->getCalibrationComparisonData();
+
         return view('admin.kepalaDinas.dashboard', [
             'totalSuratSmuaBidang' => $totalSuratSmuaBidang,
             'lokasiOptions' => ['Pasar Sumpang', 'Pasar Lakessi'],
@@ -295,6 +340,7 @@ class KadisController extends Controller
             'topHargaNaik' => $topHargaNaik,
             'topHargaTurun' => $topHargaTurun,
             'barChartData' => $barChartData,
+            'calibrationData' => $calibrationData,
         ]);
     }
 
