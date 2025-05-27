@@ -32,7 +32,7 @@
     <div class="grid grid-cols-1 gap-8 xl:grid-cols-3">
         <div class="p-4 bg-white shadow-md xl:col-span-2 rounded-2xl">
             <h3 class="mb-5 text-xl font-semibold text-gray-800">Daftar Permohonan</h3>
-            <div class="overflow-y-auto max-h-[800px] rounded-xl shadow-inner">
+            <div class="overflow-y-auto max-h-[calc(3.5rem*17)] rounded-xl shadow-inner">
                 <table class="w-full text-sm text-left border-collapse">
                     <thead class="bg-[#083458] text-white sticky top-0 z-10">
                         <tr>
@@ -80,9 +80,9 @@
                     <div class="text-3xl font-bold text-center text-gray-900">{{ $totalDistributor }}</div>
                 </div>
 
-                <div class="flex-1 bg-white p-6 rounded-2xl shadow-md flex flex-col items-center">
-                    <img src="{{ asset('assets/img/icon/komoditas.png') }}" alt="Icon" class="w-14 h-14 mb-3">
-                    <div class="font-semibold text-base text-center text-gray-700">Total IKM Terdaftar</div>
+                <div class="flex flex-col items-center flex-1 p-6 bg-white shadow-md rounded-2xl">
+                    <img src="{{ asset('assets/img/icon/komoditas.png') }}" alt="Icon" class="mb-3 w-14 h-14">
+                    <div class="text-base font-semibold text-center text-gray-700">Total IKM Terdaftar</div>
                     <div class="text-3xl font-bold text-center text-gray-900">{{ $totalKomoditas }}</div>
                 </div>
             </div>
@@ -93,15 +93,22 @@
             </div>
 
             <div class="p-6 bg-white shadow-md rounded-2xl">
-                <h3 class="mb-4 text-base font-semibold text-gray-800">Kategori Pengaduan</h3>
-                <canvas id="piePengaduan" height="180"></canvas>
+                <h3 class="mb-4 text-base font-semibold text-gray-800">Status Permohonan</h3>
+                <canvas id="combinedPieChart" height="180"></canvas>
             </div>
+
         </div>
     </div>
 </div>
+@php
+    $labels = ['Menunggu', 'Disetujui', 'Ditolak'];
+    $data = [
+        $statusCounts['Menunggu'],
+        $statusCounts['Disetujui'],
+        $statusCounts['Ditolak'],
+    ];
+@endphp
 
-{{-- Chart.js CDN --}}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctxLine = document.getElementById('chartPermohonan').getContext('2d');
     new Chart(ctxLine, {
@@ -109,8 +116,7 @@
         data: {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'],
             datasets: [{
-                label: 'Permohonan',
-                data: [30, 45, 35, 50, 40, 60, 55],
+                label: 'Jumlah',
                 borderColor: '#2563eb',
                 backgroundColor: 'rgba(37, 99, 235, 0.2)',
                 fill: true,
@@ -134,27 +140,25 @@
         }
     });
 
-    const ctxPie = document.getElementById('piePengaduan').getContext('2d');
-    new Chart(ctxPie, {
+    const ctx = document.getElementById('combinedPieChart').getContext('2d');
+    const combinedPieChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ['Harga Barang', 'Pelayanan', 'Ketersediaan'],
+            labels: @json($labels),
             datasets: [{
-                label: 'Kategori',
-                data: [40, 35, 25],
-                backgroundColor: ['#3b82f6', '#0ea5e9', '#6366f1'],
+                label: 'Jumlah',
+                data: @json($data),
+                backgroundColor: ['#facc15', '#22c55e', '#ef4444'],
+                borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
             plugins: {
+                title: {
+                    display: true,
+                },
                 legend: {
-                    position: 'bottom',
-                    labels: {
-                        font: {
-                            size: 14
-                        }
-                    }
+                    position: 'bottom'
                 }
             }
         }
