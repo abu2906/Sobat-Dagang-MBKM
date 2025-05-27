@@ -62,12 +62,14 @@
 
     <div class="flex flex-wrap items-center justify-between mt-10 px-4">
         <div class="flex space-x-2 mb-2 md:mb-0">
-            <select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
-                <option value="">Semua</option>
-                <option value="Menunggu">Menunggu</option>
-                <option value="Disetujui">Disetujui</option>
-                <option value="Ditolak">Ditolak</option>
-            </select>
+            <form id="filterForm" method="GET" class="flex items-center space-x-4">
+                <select name="status" id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm" onchange="this.form.submit()">
+                    <option value="">Semua</option>
+                    <option value="Menunggu" {{ request('status') === 'Menunggu' ? 'selected' : '' }}>Menunggu</option>
+                    <option value="Disetujui" {{ request('status') === 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
+                    <option value="Ditolak" {{ request('status') === 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                </select>
+            </form>
         </div>
         <div class="relative flex-grow mt-2 md:mt-0">
             <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
@@ -148,31 +150,22 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const statusFilter = document.getElementById("statusFilter");
     const searchInput = document.getElementById("searchInput");
     const rows = document.querySelectorAll("tbody tr");
 
-    function applyFilters() {
-        const selectedStatus = statusFilter.value.toLowerCase();
+    function applySearch() {
         const keyword = searchInput.value.toLowerCase();
 
         rows.forEach(row => {
             if (!row.querySelector('td')) return;
-
-            const statusCell = row.querySelector('td:nth-child(4)');
-            const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
             const rowText = row.textContent.toLowerCase();
-
-            const matchStatus = !selectedStatus || status === selectedStatus;
             const matchSearch = !keyword || rowText.includes(keyword);
-
-            row.style.display = (matchStatus && matchSearch) ? '' : 'none';
+            row.style.display = matchSearch ? '' : 'none';
         });
     }
 
-    statusFilter.addEventListener("change", applyFilters);
-    searchInput.addEventListener("input", applyFilters);
-    applyFilters();
+    searchInput.addEventListener("input", applySearch);
+    applySearch();
 });
 
 function openPreview(url) {

@@ -16,7 +16,7 @@
       <input type="text" x-model="searchQuery" placeholder="Cari"
         class="w-full rounded-xl bg-blue-200/80 py-3 pl-12 pr-4 text-gray-600 placeholder-gray-600 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
       <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-        <i class="fas fa-search"></i>
+       
       </span>
     </div>
   </div>

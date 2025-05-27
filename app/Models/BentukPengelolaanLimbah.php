@@ -26,6 +26,7 @@ class BentukPengelolaanLimbah extends Model
         'parameter_limbah_cair',
         'jumlah_limbah_cair',
     ];
+    
 
     public function dataIkm(): BelongsTo
     {

@@ -56,14 +56,13 @@ class authController extends Controller
                 case 'kabid_metrologi':
                     return redirect()->intended(route('dashboard-kabid-metrologi'));
                 case 'kepala_dinas':
-                    return redirect()->intended('/kepaladinas');
+                    return redirect()->intended('/kadis/dashboard');
                 default:
                     return redirect('/dashboard');
             }
         }
 
 
-    
         // 2. Jika tidak ditemukan di disdag, coba login sebagai user
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
 

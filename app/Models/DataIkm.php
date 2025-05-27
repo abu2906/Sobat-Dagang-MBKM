@@ -27,12 +27,14 @@ class DataIkm extends Model
         'nib',
         'no_telp',
         'tenaga_kerja',
+        'level'
     ];
 
-    // === RELASI KE SEMUA TABEL CHILD ===
+    // === RELASI ===
+
     public function karyawan()
     {
-        return $this->hasMany(Karyawan::class, 'id_ikm', 'id_ikm');
+        return $this->hasOne(Karyawan::class, 'id_ikm');
     }
 
     public function persentasePemilik()
@@ -47,7 +49,7 @@ class DataIkm extends Model
 
     public function penggunaanAir()
     {
-        return $this->hasOne(PenggunaanAir::class, 'id_ikm', 'id_ikm');
+        return $this->hasOne(PenggunaanAir::class, 'id_ikm');
     }
 
     public function pengeluaran()
@@ -62,7 +64,7 @@ class DataIkm extends Model
 
     public function listrik()
     {
-        return $this->hasOne(Listrik::class, 'id_ikm', 'id_ikm');
+        return $this->hasMany(Listrik::class, 'id_ikm');
     }
 
     public function mesinProduksi()
@@ -85,13 +87,67 @@ class DataIkm extends Model
         return $this->hasMany(Pendapatan::class, 'id_ikm', 'id_ikm');
     }
 
-    public function bentukPengelolaan()
-    {
-        return $this->hasMany(BentukPengelolaanLimbah::class, 'id_ikm', 'id_ikm');
-    }
-
     public function modal()
     {
-        return $this->hasOne(Modal::class, 'id_ikm', 'id_ikm');
+        return $this->hasMany(Modal::class, 'id_ikm', 'id_ikm');
+    }
+
+    public function bentukPengelolaanLimbah()
+    {
+        return $this->hasOne(BentukPengelolaanLimbah::class, 'id_ikm', 'id_ikm');
+    }
+
+    public function hitungLevel()
+    {
+        $nilaiDalamNegeri = $this->pemakaianBahan->sum('nilai_dalam_negeri');
+        $nilaiImpor = $this->pemakaianBahan->sum('nilai_impor');
+        $biaya = $this->penggunaanAir->biaya ?? 0;
+        $pengeluaran = $this->pengeluaran;
+        $upahGaji = $pengeluaran->upah_gaji ?? 0;
+        $pengeluaranIndustriDistribusi = $pengeluaran->pengeluaran_industri_distribusi ?? 0;
+        $pengeluaranRnd = $pengeluaran->pengeluaran_rnd ?? 0;
+        $pengeluaranTanah = $pengeluaran->pengeluaran_tanah ?? 0;
+        $pengeluaranGedung = $pengeluaran->pengeluaran_gedung ?? 0;
+        $pengeluaranMesin = $pengeluaran->pengeluaran_mesin ?? 0;
+        $lainnya = $pengeluaran->lainnya ?? 0;
+        $nilaiProsesProduksi = $this->penggunaanBahanBakar->sum('nilai_proses_produksi');
+        $nilaiPtl = $this->penggunaanBahanBakar->sum('nilai_ptl');
+        $nilaiPenggunaanListrik = $this->listrik->sum('nilai_penggunaan_listrik');
+        $awal = $this->persediaan->sum('awal');
+        $akhir = $this->persediaan->sum('akhir');
+        $nilaiPendapatan = $this->pendapatan->sum('nilai');
+        $pembelianPenambahanPerbaikan = $this->modal->sum('pembelian_penambahan_perbaikan');
+        $penguranganBarangModal = $this->modal->sum('pengurangan_barang_modal');
+        $penyusutanBarang = $this->modal->sum('penyusutan_barang');
+        $nilaiTaksiran = $this->modal->sum('nilai_taksiran');
+
+        return
+            $nilaiDalamNegeri
+            + $nilaiImpor
+            + $biaya
+            + $upahGaji
+            + $pengeluaranIndustriDistribusi
+            + $pengeluaranRnd
+            + $pengeluaranTanah
+            + $pengeluaranGedung
+            + $pengeluaranMesin
+            + $lainnya
+            + $nilaiProsesProduksi
+            + $nilaiPtl
+            + $nilaiPenggunaanListrik
+            + $awal
+            + $akhir
+            + $nilaiPendapatan
+            + $pembelianPenambahanPerbaikan
+            + $penguranganBarangModal
+            + $penyusutanBarang
+            + $nilaiTaksiran;
+    }
+
+    protected static function booted()
+    {
+        static::saving(function ($model) {
+            $model->level = $model->hitungLevel();
+        });
     }
 }

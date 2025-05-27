@@ -261,7 +261,7 @@
                             <label >Alamat Usaha</label><span class="text-red-500">*</span>
                             <input name="alamat_usaha" type="text" class="w-full px-3 py-2 border rounded">
                         </div>
-                        <div>
+                        <div class="col-span-2">
                             <label>Keterangan Surat</label><span class="text-red-500">*</span>
                             <textarea name="isi" id="summernote_rekomendasi" class="w-full px-3 py-2 border rounded " rows="3" required required></textarea>
                         </div>

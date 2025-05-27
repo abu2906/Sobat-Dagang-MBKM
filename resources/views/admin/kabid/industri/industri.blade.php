@@ -194,8 +194,8 @@
   });
 
   // Bar Chart Perbandingan IKM
-  const levelLabels = {!! json_encode($levelIKM->pluck('level')) !!};
-  const levelData = {!! json_encode($levelIKM->pluck('jumlah')) !!};
+  const levelLabels = {!! json_encode(array_keys($levelInvestasi)) !!};
+  const levelData = {!! json_encode(array_values($levelInvestasi)) !!};
   const perbandinganCtx = document.getElementById('perbandinganChart').getContext('2d');
   const perbandinganChart = new Chart(perbandinganCtx, {
     type: 'bar',

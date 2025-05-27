@@ -30,4 +30,3 @@ class ForumDiskusi extends Model
         return $this->belongsTo(Disdag::class, 'id_disdag', 'id_disdag');
     }
 }
-

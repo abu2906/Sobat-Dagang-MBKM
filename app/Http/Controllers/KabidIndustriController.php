@@ -52,7 +52,7 @@ class KabidIndustriController extends Controller
         ];
 
         // total investasi
-        $totalInvestasi = DataIkm::sum('nilai_investasi');
+        $totalInvestasi = DataIkm::sum('level');
 
         // akumulasi IKM
         $bulanIni = Carbon::now()->month;
@@ -94,10 +94,25 @@ class KabidIndustriController extends Controller
         ->orderBy('tahun')
         ->get();
 
-         // Jumlah IKM berdasarkan Investasi
-        $levelIKM = DataIkm::select('level', DB::raw('COUNT(*) as jumlah'))
-            ->groupBy('level')
-            ->get();
+        // Jumlah IKM berdasarkan Investasi
+        $levelInvestasi = DataIkm::selectRaw("
+            CASE 
+                WHEN level < 100000000 THEN 'Kecil'
+                WHEN level >= 100000000 THEN 'Menengah'
+            END as kategori,
+            COUNT(*) as jumlah
+        ")
+        ->groupBy('kategori')
+        ->pluck('jumlah', 'kategori')
+        ->toArray();
+
+        $labels = ['Kecil', 'Menengah'];
+        $data = [
+            'Kecil' => $levelInvestasi['Kecil'] ?? 0,
+            'Menengah' => $levelInvestasi['Menengah'] ?? 0
+        ];
+
+        $levelIKM = array_sum($levelInvestasi);
 
         return view('admin.kabid.industri.industri', [
             'totalSuratIndustri' => $rekapSurat['totalSuratIndustri'],
@@ -111,7 +126,10 @@ class KabidIndustriController extends Controller
             'pertumbuhanIkm' => $pertumbuhanIkm,
             'totalIndustri' => $totalIndustri,
             'sebaranJenisIndustri' => $sebaranJenisIndustri,
-            'levelIKM' => $levelIKM 
+            'levelIKM' => $levelIKM,
+            'labels' => $labels,
+            'data' => $data,
+            'levelInvestasi' => $levelInvestasi 
         ]);
     }
 
@@ -211,7 +229,7 @@ class KabidIndustriController extends Controller
         ];
 
         // total investasi
-        $totalInvestasi = DataIkm::sum('nilai_investasi');
+        $totalInvestasi = DataIkm::sum('level');
 
         // akumulasi IKM
         $bulanIni = Carbon::now()->month;

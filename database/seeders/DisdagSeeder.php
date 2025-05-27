@@ -42,8 +42,7 @@ class DisdagSeeder extends Seeder
                 'role' => 'kabid_industri',
             ],
             [
-                'nip' => '
-                ',
+                'nip' => '197709071998091007',
                 'email' => 'kabid_metrologi@disdag.local',
                 'role' => 'kabid_metrologi',
             ],
