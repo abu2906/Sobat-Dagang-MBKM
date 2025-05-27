@@ -237,6 +237,11 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::get('/forum/load', [ForumDiskusiController::class, 'load']);
     Route::post('/kirim-pesan', [ForumDiskusiController::class, 'send']);
     Route::delete('/forum-diskusi/{id}', [ForumDiskusiController::class, 'destroy'])->name('forum-diskusi.destroy');
+
+    Route::get('/admin/master', [DashboardController::class, 'dashboardMaster'])->name('dashboard-master');
+    Route::get('/admin/permohonan', [DashboardController::class, 'daftarPermohonan'])->name('admin.daftarPermohonan');
+    Route::get('/admin/permohonan/{id}/{bidang}', [DashboardController::class, 'detailPermohonan'])->name('admin.detailPermohonan');
+    Route::get('/admin/permohonan/{id}/{bidang}/balasan', [DashboardController::class, 'downloadBalasan'])->name('admin.downloadBalasan');
 });
 
 //kabid Perdagangan
