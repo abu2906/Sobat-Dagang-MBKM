@@ -246,12 +246,10 @@ class DashboardMetrologiController extends Controller
             ->where('status_kadis', 'Menunggu')
             ->count();
 
-        // Surat yang menunggu persetujuan kabid
         $totalSuratMenungguKabid = DB::table('surat_keluar_metrologi')
             ->where('status_kadis', 'Menunggu')
             ->count();
-
-        // Surat terbaru untuk ditampilkan di dashboard
+            
         $suratTerbaru = suratMetrologi::with('user')
             ->orderBy('created_at', 'desc')
             ->take(10)
