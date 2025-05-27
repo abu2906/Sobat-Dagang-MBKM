@@ -215,6 +215,8 @@ class KabidIndustriController extends Controller
         return view('admin.kabid.industri.sertifikathalal', compact('data'));
     }
 
+    //KADIS
+
     public function KadisIndustri (Request $request)
     {
         $tahun = $request->input('tahun', date('Y'));
@@ -306,7 +308,37 @@ class KabidIndustriController extends Controller
             'levelIKM' => $levelIKM,
             'labels' => $labels,
             'data' => $data,
-            'levelInvestasi' => $levelInvestasi 
+            'levelInvestasi' => $levelInvestasi, 
+        ]);
+    }
+
+    public function SuratKadis(Request $request)
+    {
+        $rekapSurat = $this->getSuratIndustriData();
+        $query = PermohonanSurat::with('user')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
+            ->whereIn('status', ['menunggu', 'diterima', 'ditolak']);
+        
+        if ($request->filled('search')) {
+            $search = strtolower(trim($request->search));
+            
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->whereRaw('LOWER(nama) LIKE ?', ["%$search%"]);
+                })
+                ->orWhereRaw('LOWER(jenis_surat) LIKE ?', ["%$search%"])
+                ->orWhereRaw('LOWER(status) LIKE ?', ["%$search%"]);
+            });
+        }
+
+        $suratMasuk = $query->orderBy('created_at', 'desc')->get();
+
+        return view('admin.kepalaDinas.suratIndustri', [
+            'totalSuratIndustri' => $rekapSurat['totalSuratIndustri'],
+            'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
+            'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
+            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
+            'suratMasuk' => $suratMasuk,
         ]);
     }
 }
