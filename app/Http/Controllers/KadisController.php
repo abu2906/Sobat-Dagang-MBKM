@@ -187,7 +187,7 @@ class KadisController extends Controller
                 // $industri['totalSuratDitolak'] +
                 // $metrologi['totalSuratDitolak'],
 
-            'totalSuratDraftKeseluruhan' => 
+            'totalSuratDraftKeseluruhan' =>
                 $perdagangan['totalSuratDraft'],
                 // $industri['totalSuratDraft'] +
                 // $metrologi['totalSuratDraft'],
