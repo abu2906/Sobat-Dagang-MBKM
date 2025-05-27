@@ -34,9 +34,9 @@
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
                     <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                    <th class="px-4 py-3 border-b">ID</th>
                     <th class="px-4 py-3 border-b">Tanggal</th>
                     <th class="px-4 py-3 border-b">Nama Pengirim</th>
+                    <th class="px-4 py-3 border-b">Jenis Surat</th>
                     <th class="px-4 py-3 border-b">Bidang Terkait</th>
                     <th class="px-4 py-3 border-b">Status</th>
                     <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
@@ -49,11 +49,20 @@
                 @foreach($permohonan as $p)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-2 text-center">{{ $counter++ }}</td>
-                    <td class="px-4 py-2">{{ $p->id }}</td>
-                    <td class="px-4 py-2">{{ $p->tanggal }}</td>
-                    <td class="px-4 py-2">{{ $p->nama_pengirim }}</td>
-                    <td class="px-4 py-2">{{ $p->bidang_terkait }}</td>
-                    <td class="px-4 py-2">
+                    <td class="px-4 py-2 text-center">{{ $p->tanggal }}</td>
+                    <td class="px-4 py-2 text-center">{{ $p->nama_pengirim }}</td>
+                    @php
+                        $jenisSuratMap = [
+                        'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                        'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                        'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                        ];
+                        @endphp
+                    <td class="px-4 py-2 text-center">
+                            {{ $jenisSuratMap[$p->jenis_surat] ?? $p->jenis_surat }}
+                    </td>
+                    <td class="px-4 py-2 text-center">{{ $p->bidang_terkait }}</td>
+                    <td class="px-4 py-2 text-center">
                         @php
                             $status = $p->status;
                             $color = match($status) {

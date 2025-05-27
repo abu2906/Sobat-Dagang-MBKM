@@ -397,7 +397,7 @@ class DashboardPerdaganganController extends Controller{
     public function formPermohonan(Request $request)
     {
         $idUser = auth()->guard('user')->id();
-        $draftId = $request->query('draft_id'); // Ambil draft_id dari query string
+        $draftId = $request->query('draft_id');
 
         // Ambil semua draft user (list untuk dropdown)
         $drafts = DB::table('form_permohonan')

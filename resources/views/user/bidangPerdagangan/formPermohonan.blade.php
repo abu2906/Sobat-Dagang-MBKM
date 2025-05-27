@@ -95,7 +95,7 @@
             </div>
 
             {{-- Titik Koordinat --}}
-            <div x-data="{ showInfo: false }">
+            <div x-data="{ showInfo: false, hide() { this.showInfo = false } }">
                 <label for="titik_koordinat" class="block mb-1">
                     Titik Koordinat <span class="text-red-500">*</span>
                     <button type="button" @click="showInfo = true" class="ml-1 text-blue-500 hover:text-blue-700 focus:outline-none">
@@ -104,14 +104,24 @@
                         </svg>
                     </button>
                 </label>
+
                 <input id="titik_koordinat" type="text" name="titik_koordinat" required
                     class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Masukkan Titik Koordinat Usaha Anda (ex. -4.028889, 119.633521)"
                     value="{{ old('titik_koordinat', $draft->titik_koordinat ?? '') }}">
-                @error('titik_koordinat') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+
+                @error('titik_koordinat') 
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p> 
+                @enderror
 
                 {{-- Info Pop-up --}}
-                <div x-show="showInfo" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" @click.away="showInfo = false" x-transition>
+                <style>
+                [x-cloak] { display: none !important; }
+                </style>
+                <div x-show="showInfo" x-cloak
+                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30"
+                    @click.away="hide()" x-transition>
+
                     <div class="bg-white p-6 rounded-lg w-[90%] max-w-md shadow-xl relative">
                         <h2 class="mb-3 text-lg font-semibold text-center">Cara Mengambil Titik Koordinat</h2>
                         <p class="text-sm leading-relaxed text-gray-700">
@@ -122,14 +132,16 @@
                             5. Salin dan tempelkan ke kolom ini.
                         </p>
                         <div class="flex justify-center mt-6">
-                            <button @click="showInfo = false" class="px-5 py-2 text-white transition-all duration-200 bg-blue-600 rounded-full hover:bg-blue-700">Tutup</button>
+                            <button @click="hide()" class="px-5 py-2 text-white bg-blue-600 rounded-full hover:bg-blue-700">
+                                Tutup
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
             {{-- Kelurahan --}}
-            <div>
+            {{-- <div>
                 <label for="kelurahan">Kelurahan <span class="text-red-500">*</span></label>
                 <select id="kelurahan" name="kelurahan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     <option value="">Pilih Kelurahan</option>
@@ -140,7 +152,20 @@
                     @endforeach
                 </select>
                 @error('kelurahan') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
+            </div> --}}
+            <div>
+                <label for="kelurahan">Kelurahan <span class="text-red-500">*</span></label>
+                <select id="kelurahan" name="kelurahan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="">Pilih Kelurahan</option>
+                    {{-- Diisi oleh JavaScript berdasarkan kecamatan --}}
+                </select>
+                @error('kelurahan') 
+                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p> 
+                @enderror
             </div>
+
+            {{-- Nama Usaha --}}
+
 
             {{-- Foto Usaha --}}
             <div>
@@ -284,4 +309,51 @@
         </div>
     </form>
 </div>
+<script>
+    const kelurahanList = {
+        bacukiki: ["Galung Maloang", "Lemoe", "Lompoe", "Watang Bacukiki"],
+        bacukiki_barat: ["Bumi Harapan", "Cappa Galung", "Kampung Baru", "Lumpue", "Sumpang Minangae", "Tiro Sompe"],
+        soreang: ["Bukit Harapan", "Bukit Indah", "Kampung Pisang", "Lakessi", "Ujung Baru", "Ujung Lare", "Watang Soreang"],
+        ujung: ["Labukkang", "Lapadde", "Mallusetasi", "Ujung Bulu", "Ujung Sabbang"]
+    };
+
+    const kecamatanSelect = document.getElementById('kecamatan');
+    const kelurahanSelect = document.getElementById('kelurahan');
+
+    const selectedKecamatan = "{{ old('kecamatan', $draft->kecamatan ?? '') }}";
+    const selectedKelurahan = "{{ old('kelurahan', $draft->kelurahan ?? '') }}";
+
+    function populateKelurahan(kecamatanValue) {
+        kelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+        kelurahanSelect.disabled = true;
+
+        if (kelurahanList[kecamatanValue]) {
+            kelurahanList[kecamatanValue].forEach(kel => {
+                const kelValue = kel.toLowerCase().replace(/\s+/g, '_');
+                const option = document.createElement('option');
+                option.value = kelValue;
+                option.textContent = kel;
+
+                if (kelValue === selectedKelurahan) {
+                    option.selected = true;
+                }
+
+                kelurahanSelect.appendChild(option);
+            });
+            kelurahanSelect.disabled = false;
+        }
+    }
+
+    kecamatanSelect.addEventListener('change', function () {
+        populateKelurahan(this.value);
+    });
+
+    // Populate saat load jika sudah ada nilai sebelumnya
+    if (selectedKecamatan) {
+        kecamatanSelect.value = selectedKecamatan;
+        populateKelurahan(selectedKecamatan);
+    }
+</script>
+
+
 @endsection
