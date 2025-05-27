@@ -220,6 +220,12 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::get('/admin/manajemen-pengguna/{id}/edit', [UserManagementController::class, 'edit'])->name('manajemen.pengguna.edit');
     Route::put('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'update'])->name('manajemen.pengguna.update');
     Route::delete('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'destroy'])->name('manajemen.pengguna.destroy'); 
+    
+    // Kelola Pengaduan
+    Route::get('/admin/forum-pengaduan', [ForumDiskusiController::class, 'index'])->name('forum.admin');
+    Route::get('/forum/load', [ForumDiskusiController::class, 'load']);
+    Route::post('/kirim-pesan', [ForumDiskusiController::class, 'send']);
+    Route::delete('/forum-diskusi/{id}', [ForumDiskusiController::class, 'destroy'])->name('forum-diskusi.destroy');
 
     #manajemen disdag
     Route::get('/admin/manajemen-pengguna/disdag/{id}/edit', [UserManagementController::class, 'editDisdag'])->name('manajemen.pengguna.edit.disdag');
