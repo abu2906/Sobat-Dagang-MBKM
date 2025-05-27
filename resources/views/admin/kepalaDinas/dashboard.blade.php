@@ -14,7 +14,7 @@
         <div class="flex items-center p-4 space-x-4 bg-white shadow-md rounded-xl">
             <img src="{{ asset('assets/img/icon/Verif.png') }}" class="w-10 h-10">
             <div>
-                <p class="text-sm text-gray-500">Jumlah Surat Terverifikasi</p>
+                <p class="text-sm text-gray-500">Jumlah Surat Disetujui</p>
                 <p class="text-xl font-bold text-yellow-500">{{ $totalSuratSmuaBidang['totalSuratTerverifikasiKeseluruhan'] }}</p>
             </div>
         </div>
@@ -29,8 +29,9 @@
 
     <!-- Grafik Metrologi -->
     <div class="p-4 mb-6 bg-white shadow-md rounded-xl">
-        <div class="bg-white shadow-md rounded-xl p-4">
-            <p class="text-lg font-semibold mb-4">Grafik Perbandingan Jumlah Tera</p>
+        <h3 class="mb-2 text-sm font-semibold text-gray-700">Bidang Metrologi</h3>
+        <p class="text-lg font-semibold mb-4">Grafik Perbandingan Jumlah Tera</p>
+        <div class="h-[280px]">
             <canvas id="chartLine"></canvas>
         </div>
         <div class="mt-4 text-right">
@@ -200,7 +201,9 @@
                         text: 'Jumlah Tera'
                     }
                 }
-            }
+            },
+            maintainAspectRatio: false,
+            responsive: true
         }
     });
 

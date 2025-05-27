@@ -26,7 +26,9 @@
                 @php
                 $menuItems = [
                     ['href' => route('dashboard-kadis'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                    ['href' => route('persuratan-kadis'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                    ['href' => route('surat-metrologi-kadis'), 'icon' => 'persuratan.png', 'label' => 'Persuratan Metrologi'],
+                    ['href' => #, 'icon' => 'persuratan.png', 'label' => 'Persuratan Perdagangan'],
+                    ['href' => #, 'icon' => 'persuratan.png', 'label' => 'Persuratan Industri'],
                 ];
                 @endphp
 
