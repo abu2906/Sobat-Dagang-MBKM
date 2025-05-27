@@ -44,7 +44,6 @@
                     <th class="px-4 py-3 border-b">NIP</th>
                     <th class="px-4 py-3 border-b">NIK</th>
                     <th class="px-4 py-3 border-b">NIB</th>
-                    <th class="px-4 py-3 border-b">Role</th>
                     <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
                 </tr>
             </thead>
@@ -63,7 +62,6 @@
                     <td class="px-4 py-2">-</td>
                     <td class="px-4 py-2">{{ $user->nik }}</td>
                     <td class="px-4 py-2">{{ $user->nib ?? '-' }}</td>
-                    <td class="px-4 py-2">{{ $user->role }}</td>
                     <td class="px-4 py-2">
                         <div class="flex items-center justify-center space-x-2">
                             <a href="{{ route('manajemen.pengguna.edit', $user->id_user) }}" 

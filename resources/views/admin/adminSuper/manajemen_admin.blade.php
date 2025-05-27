@@ -56,7 +56,23 @@
                     <td class="px-4 py-2">{{ $user->nip }}</td>
                     <td class="px-4 py-2">{{ $user->email }}</td>
                     <td class="px-4 py-2">{{ $user->telp }}</td>
-                    <td class="px-4 py-2">{{ $user->role }}</td>
+                    @php
+                        $roleLabels = [
+                            'master_admin' => 'Master Admin',
+                            'admin_perdagangan' => 'Admin Perdagangan',
+                            'admin_industri' => 'Admin Industri',
+                            'admin_metrologi' => 'Admin Metrologi',
+                            'kabid_perdagangan' => 'Kabid Perdagangan',
+                            'kabid_industri' => 'Kabid Industri',
+                            'kabid_metrologi' => 'Kabid Metrologi',
+                            'kepala_dinas' => 'Kepala Dinas',
+                        ];
+                    @endphp
+
+                    <td class="px-4 py-2">
+                        {{ $roleLabels[$user->role] ?? $user->role }}
+                    </td>
+
                     <td class="px-4 py-2">
                         <div class="flex items-center justify-center space-x-2">
                             <a href="{{ route('manajemen.admin.edit', $user->id_disdag) }}"

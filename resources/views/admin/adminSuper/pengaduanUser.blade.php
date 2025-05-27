@@ -13,13 +13,13 @@
 <div class="max-w-7xl px-4 mx-auto my-6">
     <div class="overflow-x-auto bg-white border border-gray-200 shadow-md rounded-xl">
         <table class="min-w-full text-sm text-left">
-            <thead class="bg-[#083358] text-white font-semibold">
+            <thead class="bg-[#083358] text-white text-center font-semibold">
                 <tr>
-                    <th class="px-3 py-2">No</th>
-                    <th class="px-3 py-2">Tanggal</th>
-                    <th class="px-3 py-2">Nama</th>
-                    <th class="px-3 py-2">Pengaduan</th>
-                    <th class="px-3 py-2">Aksi</th>
+                    <th class="px-6 py-3">No</th>
+                    <th class="px-6 py-3">Tanggal</th>
+                    <th class="px-6 py-3">Nama</th>
+                    <th class="px-6 py-3">Pengaduan</th>
+                    <th class="px-6 py-3">Aksi</th>
                 </tr>
             </thead>
             <tbody>
