@@ -31,6 +31,7 @@
                 ['href' => route('review.pengajuan'), 'icon' => 'data.png', 'label' => 'Pelaporan Distributor'],
                 ['href' => '#', 'icon' => '', 'label' => 'Surat Permohonan'],
                 ['href' => route('manajemen.pengguna'), 'icon' => 'person.png', 'label' => 'Manajemen Pengguna'],
+                ['href' => route('manajemen.admin'), 'icon' => 'person.png', 'label' => 'Manajemen Admin'],
                 ['href' => route('kelola.berita'), 'icon' => 'newspaper.png', 'label' => 'Kelola Berita'],
                 ['href' => route('faq-controller'), 'icon' => 'faq.png', 'label' => 'FAQ'],
                 ];

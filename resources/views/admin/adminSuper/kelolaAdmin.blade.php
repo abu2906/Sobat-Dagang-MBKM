@@ -1,3 +1,4 @@
+
 @extends('layouts.admin')
 
 @section('title', 'Kelola Admin')
@@ -35,47 +36,6 @@
         {{ session('success') }}
     </div>
     @endif
-
-    <table class="min-w-full overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
-        <thead>
-            <tr class="bg-[#083358] text-white font-semibold">
-                <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                <th class="px-4 py-3 border-b">Nama Lengkap</th>
-                <th class="px-4 py-3 border-b">No. Hp</th>
-                <th class="px-4 py-3 border-b">Email</th>
-                <th class="px-4 py-3 border-b">NIB/NIK/NIP</th>
-                <th class="px-4 py-3 border-b">Role</th>
-                <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($users as $key => $user)
-            <tr class="text-gray-700">
-                <td class="px-4 py-3 border-b">{{ $key + 1 }}</td>
-                <td class="px-4 py-3 border-b">{{ $user->name }}</td>
-                <td class="px-4 py-3 border-b">{{ $user->email }}</td>
-                <td class="px-4 py-3 border-b">{{ $user->nib_nik_nip }}</td>
-                <td class="px-4 py-3 border-b">{{ $user->phone }}</td>
-                <td class="px-4 py-3 border-b">{{ $user->role }}</td>
-                <td class="px-4 py-3 border-b">
-                    <button
-                        onclick="openModal('edit', this)"
-                        data-name="{{ $user->name }}"
-                        data-email="{{ $user->email }}"
-                        data-nib_nik_nip="{{ $user->nib_nik_nip }}"
-                        data-phone="{{ $user->phone }}"
-                        data-role="{{ htmlentities($user->role) }}"
-                        class="text-[#083358] hover:text-black">
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
-                    <button onclick="openModal('delete', {{ $user->name }})" class="text-[#083358] hover:text-black">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
 
 </div>
 

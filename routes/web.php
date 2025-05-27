@@ -27,6 +27,7 @@ use App\Http\Controllers\FAQController;
 use App\Http\Controllers\ForumDiskusiController;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\AdminManagementController;
 
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
@@ -214,22 +215,27 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/faq/store', [FAQController::class, 'store'])->name('faq-store');
     Route::put('/admin/faq/{faq}', [FAQController::class, 'update'])->name('faq.update');
     Route::delete('/admin/faq/{id}', [FAQController::class, 'destroy'])->name('faq-destroy');    #manajemen user
+    // Manajement Pengguna
     Route::get('/admin/manajemen-pengguna', [UserManagementController::class, 'index'])->name('manajemen.pengguna');
     Route::get('/admin/manajemen-pengguna/tambah', [UserManagementController::class, 'create'])->name('manajemen.pengguna.create');
     Route::post('/admin/manajemen-pengguna', [UserManagementController::class, 'store'])->name('manajemen.pengguna.store');
     Route::get('/admin/manajemen-pengguna/{id}/edit', [UserManagementController::class, 'edit'])->name('manajemen.pengguna.edit');
     Route::put('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'update'])->name('manajemen.pengguna.update');
     Route::delete('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'destroy'])->name('manajemen.pengguna.destroy'); 
+
+    // Manajement admin
+    Route::get('/admin/manajemen-admin', [AdminManagementController::class, 'index'])->name('manajemen.admin');
+    Route::get('/admin/manajemen-admin/tambah', [AdminManagementController::class, 'create'])->name('manajemen.admin.create');
+    Route::post('/admin/manajemen-admin', [AdminManagementController::class, 'store'])->name('manajemen.admin.store');
+    Route::delete('/admin/manajemen-admin/{id}', [AdminManagementController::class, 'destroy'])->name('manajemen.admin.destroy');
+    Route::get('/admin/manajemen-pengguna/disdag/{id}/edit', [AdminManagementController::class, 'editDisdag'])->name('manajemen.admin.edit');
+    Route::put('/admin/manajemen-pengguna/disdag/{id}', [AdminManagementController::class, 'updateDisdag'])->name('manajemen.admin.update');
     
     // Kelola Pengaduan
     Route::get('/admin/forum-pengaduan', [ForumDiskusiController::class, 'index'])->name('forum.admin');
     Route::get('/forum/load', [ForumDiskusiController::class, 'load']);
     Route::post('/kirim-pesan', [ForumDiskusiController::class, 'send']);
     Route::delete('/forum-diskusi/{id}', [ForumDiskusiController::class, 'destroy'])->name('forum-diskusi.destroy');
-
-    #manajemen disdag
-    Route::get('/admin/manajemen-pengguna/disdag/{id}/edit', [UserManagementController::class, 'editDisdag'])->name('manajemen.pengguna.edit.disdag');
-    Route::put('/admin/manajemen-pengguna/disdag/{id}', [UserManagementController::class, 'updateDisdag'])->name('manajemen.pengguna.update.disdag');
 });
 
 //kabid Perdagangan

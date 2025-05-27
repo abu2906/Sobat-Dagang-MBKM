@@ -11,8 +11,8 @@
 </div>
 
 <div class="container px-4 py-8 mx-auto">
-    <div class="max-w-4xl p-8 mx-auto bg-white rounded-xl shadow-md">
-        <form method="POST" action="{{ route('manajemen.pengguna.update.disdag', $user->id_disdag) }}" class="space-y-6">
+    <div class="max-w-4xl p-8 mx-auto bg-white shadow-md rounded-xl">
+        <form method="POST" action="{{ route('manajemen.admin.update', $user->id_disdag) }}" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -90,7 +90,7 @@
 
             <!-- Tombol -->
             <div class="flex justify-center gap-4 mt-8">
-                <a href="{{ route('manajemen.pengguna') }}" 
+                <a href="{{ route('manajemen.admin') }}" 
                    class="px-6 py-2 text-gray-600 bg-gray-200 rounded-full hover:bg-gray-300">
                     Batal
                 </a>

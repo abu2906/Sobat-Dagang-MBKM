@@ -19,9 +19,9 @@
             <input type="text" id="searchInput" placeholder="Cari"
                 class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
-        <a href="{{ route('manajemen.pengguna.create') }}" 
+        <a href="{{ route('manajemen.admin.create') }}"
             class="px-6 py-3 text-[#083358] font-semibold bg-white rounded-full shadow-xl shadow-gray-400/40 hover:text-white hover:bg-[#083358] transition-all duration-300">
-            + Tambah Pengguna
+            + Tambah Admin
         </a>
     </div>
 </div>
@@ -38,12 +38,9 @@
             <thead>
                 <tr class="bg-[#083358] text-white font-semibold">
                     <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                    <th class="px-4 py-3 border-b">Nama Lengkap</th>
+                                        <th class="px-4 py-3 border-b">NIP</th>
                     <th class="px-4 py-3 border-b">Email</th>
                     <th class="px-4 py-3 border-b">No. Telepon</th>
-                    <th class="px-4 py-3 border-b">NIP</th>
-                    <th class="px-4 py-3 border-b">NIK</th>
-                    <th class="px-4 py-3 border-b">NIB</th>
                     <th class="px-4 py-3 border-b">Role</th>
                     <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
                 </tr>
@@ -52,26 +49,22 @@
                 @php
                     $counter = 1;
                 @endphp
-                
-                {{-- Regular Users --}}
-                @foreach($users as $user)
+                {{-- Disdag Users --}}
+                @foreach($disdagUsers as $user)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-2 text-center">{{ $counter++ }}</td>
-                    <td class="px-4 py-2">{{ $user->nama }}</td>
+                    <td class="px-4 py-2">{{ $user->nip }}</td>
                     <td class="px-4 py-2">{{ $user->email }}</td>
                     <td class="px-4 py-2">{{ $user->telp }}</td>
-                    <td class="px-4 py-2">-</td>
-                    <td class="px-4 py-2">{{ $user->nik }}</td>
-                    <td class="px-4 py-2">{{ $user->nib ?? '-' }}</td>
                     <td class="px-4 py-2">{{ $user->role }}</td>
                     <td class="px-4 py-2">
                         <div class="flex items-center justify-center space-x-2">
-                            <a href="{{ route('manajemen.pengguna.edit', $user->id_user) }}" 
+                            <a href="{{ route('manajemen.admin.edit', $user->id_disdag) }}"
                                 class="text-[#083358] hover:text-black">
                                 <span class="material-symbols-outlined">edit</span>
                             </a>
                             @if($user->role !== 'disdag')
-                            <form action="{{ route('manajemen.pengguna.destroy', $user->id_user) }}" method="POST" class="inline">
+                            <form action="{{ route('manajemen.admin.destroy', $user->id_disdag) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-[#083358] hover:text-black" 
