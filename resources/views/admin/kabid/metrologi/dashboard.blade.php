@@ -64,9 +64,7 @@ use App\Helpers\StatusHelper;
                     <tr class="border-b">
                         <td class="px-4 py-2">{{ $uttp->uttp->jenis_alat }}</td>
                         <td class="px-4 py-2">{{ $uttp->uttp->no_registrasi }}</td>
-                        <td class="px-4 py-2">
-                            {{ \Carbon\Carbon::parse($uttp->tanggal_penginputan)->translatedFormat('d F Y') }}
-                        </td>
+                        <td class="px-4 py-2">{{ \Carbon\Carbon::parse($uttp->uttp->tanggal_penginputan)->format('d F Y') }}</td>
                         <td class="px-4 py-2 {{ $uttp->tanggal_exp >= now() ? 'text-green-600' : 'text-red-600' }}">
                             {{ $uttp->tanggal_exp >= now() ? 'Valid' : StatusHelper::formatStatus('Kadaluarsa') }}
                         </td>
