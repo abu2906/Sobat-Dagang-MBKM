@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Uttp;
+use App\Models\suratMetrologi;
 use App\Models\Barang;
 use App\Models\IndexHarga;
 use App\Models\DataIkm;
@@ -41,55 +43,97 @@ class KadisController extends Controller
             'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
         ];
     }
+    
     private function dataSuratMetrologi()    {
-      //ini mu isi
+        $jenis = [
+            'tera',
+            'tera_ulang'
+        ];
+
+        return [
+            'totalSuratMetrologi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Disetujui')->count(),
+            'totalSuratDitolak' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Ditolak')->count(),
+            'totalSuratDraft' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Menunggu')->count(),
+        ];
     }
-    private function dataSuratTotal() { 
+
+    private function dataSuratTotal() {
         $perdagangan = $this->dataSuratPerdagangan();
         $industri = $this->dataSuratIndustri();
-        // $metrologi = $this->dataSuratMetrologi();
+        $metrologi = $this->dataSuratMetrologi();
 
         return [
             'totalSuratPerdagangan' => $perdagangan['totalSuratPerdagangan'],
             'totalSuratTerverifikasiPerdagangan' => $perdagangan['totalSuratTerverifikasi'],
             'totalSuratDitolakPerdagangan' => $perdagangan['totalSuratDitolak'],
-            'totalSuratDraftPerdagangan' => $perdagangan['totalSuratDraft'],
 
             'totalSuratIndustri' => $industri['totalSuratIndustri'],
             'totalSuratTerverifikasiIndustri' => $industri['totalSuratTerverifikasi'],
             'totalSuratDitolakIndustri' => $industri['totalSuratDitolak'],
-            'totalSuratDraftIndustri' => $industri['totalSuratDraft'],
 
-            // 'totalSuratMetrologi' => $metrologi['totalSuratMetrologi'],
-            // 'totalSuratTerverifikasiMetrologi' => $metrologi['totalSuratTerverifikasi'],
-            // 'totalSuratDitolakMetrologi' => $metrologi['totalSuratDitolak'],
-            // 'totalSuratDraftMetrologi' => $metrologi['totalSuratDraft'],
+            'totalSuratMetrologi' => $metrologi['totalSuratMetrologi'],
+            'totalSuratTerverifikasiMetrologi' => $metrologi['totalSuratTerverifikasi'],
+            'totalSuratDitolakMetrologi' => $metrologi['totalSuratDitolak'],
 
             // Total keseluruhan ketiga bidang
             'totalSuratKeseluruhan' =>
-                $perdagangan['totalSuratPerdagangan'],
-                $industri['totalSuratIndustri'],
-                
-                // $metrologi['totalSuratMetrologi'],
+                $perdagangan['totalSuratPerdagangan'],+
+                $industri['totalSuratIndustri'] +
+                $metrologi['totalSuratMetrologi'],
 
             'totalSuratTerverifikasiKeseluruhan' =>
                 $perdagangan['totalSuratTerverifikasi'],
-                $industri['totalSuratTerverifikasi'],
-
-                // $metrologi['totalSuratTerverifikasi'],
+                +
+                $industri['totalSuratTerverifikasi'] +
+                $metrologi['totalSuratTerverifikasi'],
 
             'totalSuratDitolakKeseluruhan' =>
-                $perdagangan['totalSuratDitolak'],
-                $industri['totalSuratDitolak'],
-
-                // $metrologi['totalSuratDitolak'],
-
-            'totalSuratDraftKeseluruhan' =>
-                $perdagangan['totalSuratDraft'],
-                $industri['totalSuratDraft'],
-                // $metrologi['totalSuratDraft'],
+                $perdagangan['totalSuratDitolak'],+
+                $industri['totalSuratDitolak'] +
+                $metrologi['totalSuratDitolak'],
         ];
     }
+
+    private function getCalibrationComparisonData()
+    {
+        $currentYear = Carbon::now()->year;
+        $lastYear = $currentYear - 1;
+        
+        // Get data for current year
+        $currentYearData = DB::table('surat_metrologi')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $currentYear)
+            ->where('status_surat_masuk', 'Disetujui')
+            ->groupBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
+            
+        // Get data for last year
+        $lastYearData = DB::table('surat_metrologi')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $lastYear)
+            ->where('status_surat_masuk', 'Disetujui')
+            ->groupBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
+            
+        // Fill in missing months with 0
+        $currentYearComplete = [];
+        $lastYearComplete = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $currentYearComplete[] = $currentYearData[$i] ?? 0;
+            $lastYearComplete[] = $lastYearData[$i] ?? 0;
+        }
+        
+        return [
+            'currentYearData' => json_encode($currentYearComplete),
+            'lastYearData' => json_encode($lastYearComplete),
+            'currentYear' => $currentYear,
+            'lastYear' => $lastYear
+        ];
+    }
+    
     public function index(Request $request)
     {
         $totalSuratSmuaBidang = $this->dataSuratTotal();
@@ -202,6 +246,8 @@ class KadisController extends Controller
                 ->all();
         }
 
+        $calibrationData = $this->getCalibrationComparisonData();
+
         return view('admin.kepalaDinas.dashboard', [
             'totalSuratSmuaBidang' => $totalSuratSmuaBidang,
             'lokasiOptions' => ['Pasar Sumpang', 'Pasar Lakessi'],
@@ -214,6 +260,7 @@ class KadisController extends Controller
             'topHargaNaik' => $topHargaNaik,
             'topHargaTurun' => $topHargaTurun,
             'barChartData' => $barChartData,
+            'calibrationData' => $calibrationData,
             'levelIKM' => $levelIKM,
             'labels' => $labels,
             'data' => $data,

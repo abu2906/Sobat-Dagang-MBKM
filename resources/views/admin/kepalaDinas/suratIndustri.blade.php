@@ -2,7 +2,7 @@
 @section('title', 'Data Surat Bidang Industri')
 @section('content')
 
-<div class="relative w-full h-32">
+<div class="relative w-full h-32 bg-white">
     <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Background" class="object-cover w-full h-full" />
     <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
         <img src="{{ asset('assets/img/background/user_industri.png') }}" alt="Background" class="object-cover w-full h-full -ml-16">
@@ -14,7 +14,7 @@
         </span>
     </a>
 </div>
-<div class="container px-4 mx-auto -mt-8">
+<div class="container px-4 mx-auto -mt-8 ">
     <div class="flex justify-center mb-6">
         <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
             <form method="GET" action="{{ route('kabid.suratI') }}">
@@ -50,7 +50,7 @@
             </div>
         </a>
     </div>   
-    <div class="p-4 mb-6 bg-white rounded-xl">
+    <div class="p-4 mb-6 rounded-xl">
         @if ($errors->any())
         <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 border border-red-200 rounded-lg">
             <strong>Terjadi kesalahan:</strong>

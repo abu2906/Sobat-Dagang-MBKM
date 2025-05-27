@@ -10,9 +10,10 @@
                 <div
                     class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-11/12 bg-white rounded-xl shadow-lg px-6 py-4 flex flex-wrap justify-between gap-4 items-center z-20">
                     <div class="flex items-center bg-[#CAE2F6] rounded-lg px-4 py-2 flex-1 shadow-md">
-                        <span class="material-symbols-outlined text-gray-500 mr-2"></span>
+                        <i class="fas fa-search text-gray-500 ml-2"></i>
                         <input type="text" id="searchInput" placeholder="Cari"
-                            class="bg-transparent w-full focus:outline-none">
+                            class="ml-2 bg-transparent w-full focus:outline-none">
+                        
                     </div>
 
                     <div class="relative w-48">
@@ -79,7 +80,6 @@
                 @endphp
 
                 @foreach ($kategoriList as $kategori)
-                    `
                     <div onclick="selectKategori(this)"
                         class="kategori-card cursor-pointer flex flex-col items-center bg-white p-3 rounded-xl shadow-lg w-44 border-2 border-transparent transition transform hover:scale-105 text-center">
                         <img src="{{ asset('assets/img/kategori/' . $kategori['ikon']) }}"
@@ -93,70 +93,72 @@
                 @endforeach
             </section>
 
-            <section class="mt-12 px-6 pb-16">
-                <div class="overflow-x-auto rounded-lg">
-                    <table class="w-full border-collapse text-sm bg-white shadow-md">
-                        <thead>
-                            <tr class="text-white bg-[#083458]">
-                                <th class="p-3 rounded-tl-xl">NO.</th>
-                                <th class="p-3">NAMA USAHA</th>
-                                <th class="p-3">NAMA PEMILIK</th>
-                                <th class="p-3">JENIS KELAMIN</th>
-                                <th class="p-3">LUAS USAHA</th>
-                                <th class="p-3">ALAMAT</th>
-                                <th class="p-3">KELURAHAN</th>
-                                <th class="p-3">KECAMATAN</th>
-                                <th class="p-3">KOMODITI</th>
-                                <th class="p-3">JENIS INDUSTRI</th>
-                                <th class="p-3">TELEPON</th>
-                                <th class="p-3">TENAGA KERJA</th>
-                                <th class="p-3">INVESTASI</th>
-                                <th class="p-3 rounded-tr-xl">AKSI</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach ($dataIkm as $index => $ikm)
-                                <tr class="bg-white border-b row-ikm" data-kecamatan="{{ $ikm->kecamatan }}"
-                                    data-industri="{{ $ikm->jenis_industri }}" data-investasi-nilai="{{ $ikm->level }}">
-                                    <td class="p-2 text-center">{{ $index + 1 }}</td>
-                                    <td class="p-2">{{ $ikm->nama_ikm }}</td>
-                                    <td class="p-2">{{ $ikm->nama_pemilik }}</td>
-                                    <td class="p-2 text-center">{{ $ikm->jenis_kelamin }}</td>
-                                    <td class="p-2">{{ $ikm->luas }}</td>
-                                    <td class="p-2">{{ $ikm->alamat }}</td>
-                                    <td class="p-2">{{ $ikm->kelurahan }}</td>
-                                    <td class="p-2">{{ $ikm->kecamatan }}</td>
-                                    <td class="p-2">{{ $ikm->komoditi }}</td>
-                                    <td class="p-2">{{ $ikm->jenis_industri }}</td>
-                                    <td class="p-2">{{ $ikm->no_telp }}</td>
-                                    <td class="p-2 text-center">{{ $ikm->tenaga_kerja }}</td>
-                                    <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
-                                    <td class="p-2 text-center">
-                                        <div class="flex justify-center gap-2">
-                                            <button type="button" @click='openEdit(@json($ikm))'
-                                                class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-lg">
-                                                Edit
-                                            </button>
-
-                                            <form action="{{ route('destroyIKM', $ikm->id_ikm) }}" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menghapus data ini?');"
-                                                class="inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">Hapus</button>
-                                            </form>
-                                        </div>
-                                    </td>
+            <div class="container px-4 pb-4 mx-auto">
+                <section class="overflow-hidden mt-12 px-6 pb-16">
+                    <div class="overflow-x-auto overflow-y-auto max-h-[350px] rounded-lg">
+                        <table class="w-full border-collapse table-auto text-sm bg-white shadow-md">
+                            <thead class="text-white bg-[#083458] sticky top-0 z-10">
+                                <tr>
+                                    <th class="p-3 rounded-tl-xl">NO.</th>
+                                    <th class="p-3">NAMA USAHA</th>
+                                    <th class="p-3">NAMA PEMILIK</th>
+                                    <th class="p-3">JENIS KELAMIN</th>
+                                    <th class="p-3">LUAS USAHA</th>
+                                    <th class="p-3">ALAMAT</th>
+                                    <th class="p-3">KELURAHAN</th>
+                                    <th class="p-3">KECAMATAN</th>
+                                    <th class="p-3">KOMODITI</th>
+                                    <th class="p-3">JENIS INDUSTRI</th>
+                                    <th class="p-3">TELEPON</th>
+                                    <th class="p-3">TENAGA KERJA</th>
+                                    <th class="p-3">INVESTASI</th>
+                                    <th class="p-3 rounded-tr-xl">AKSI</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <p id="noResults" class="text-center mt-4 font-medium text-red-500 hidden">Data tidak ditemukan.</p>
+                            </thead>
 
-                </div>
-            </section>
+                            <tbody>
+                                @foreach ($dataIkm as $index => $ikm)
+                                    <tr class="bg-white border-b row-ikm" data-kecamatan="{{ $ikm->kecamatan }}"
+                                        data-industri="{{ $ikm->jenis_industri }}" data-investasi-nilai="{{ $ikm->level }}">
+                                        <td class="p-2 text-center">{{ $index + 1 }}</td>
+                                        <td class="p-2">{{ $ikm->nama_ikm }}</td>
+                                        <td class="p-2">{{ $ikm->nama_pemilik }}</td>
+                                        <td class="p-2 text-center">{{ $ikm->jenis_kelamin }}</td>
+                                        <td class="p-2">{{ $ikm->luas }}</td>
+                                        <td class="p-2">{{ $ikm->alamat }}</td>
+                                        <td class="p-2">{{ $ikm->kelurahan }}</td>
+                                        <td class="p-2">{{ $ikm->kecamatan }}</td>
+                                        <td class="p-2">{{ $ikm->komoditi }}</td>
+                                        <td class="p-2">{{ $ikm->jenis_industri }}</td>
+                                        <td class="p-2">{{ $ikm->no_telp }}</td>
+                                        <td class="p-2 text-center">{{ $ikm->tenaga_kerja }}</td>
+                                        <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
+                                        <td class="p-2 text-center">
+                                            <div class="flex justify-center gap-2">
+                                                <button type="button" @click='openEdit(@json($ikm))'
+                                                    class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-lg">
+                                                    Edit
+                                                </button>
+
+                                                <form action="{{ route('destroyIKM', $ikm->id_ikm) }}" method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menghapus data ini?');"
+                                                    class="inline-block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">Hapus</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <p id="noResults" class="text-center mt-4 font-medium text-red-500 hidden">Data tidak ditemukan.</p>
+
+                    </div>
+                </section>
+            </div>
 
             <!-- Overlay -->
             <div x-show="openModal" x-transition.opacity
@@ -164,7 +166,10 @@
             </div>
 
             <!-- Modal -->
-            <div x-show="openModal" x-transition class="fixed inset-0 flex items-start justify-center z-50 p-4">
+             <style>
+                [x-cloak] { display: none !important; }
+                </style>
+            <div x-show="openModal" x-cloak class="fixed inset-0 flex items-start justify-center z-50 p-4">
                 <div @click.away="openModal = false" @keydown.escape.window="openModal = false" tabindex="0"
                     class="relative w-full max-w-3xl bg-white rounded-lg shadow-lg p-8 mt-24 overflow-auto max-h-[80vh]">
                     <button @click="openModal = false" type="button"

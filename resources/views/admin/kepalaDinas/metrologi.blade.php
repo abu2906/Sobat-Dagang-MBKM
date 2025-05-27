@@ -37,7 +37,7 @@
 			<a href="#" class="bg-[#0c3252] rounded-2xl shadow-md hover:shadow-lg transition p-5 flex items-center space-x-4">
 				<img src="{{ asset('assets/img/icon/Verif.png') }}" alt="Terverifikasi" class="w-12 h-12">
 				<div>
-					<p class="text-base font-medium text-white">Jumlah Surat Terverifikasi</p>
+					<p class="text-base font-medium text-white">Jumlah Surat Disetujui</p>
 					<p class="text-2xl font-bold text-white">{{ $totalSuratDisetujui }}</p>
 				</div>
 			</a>

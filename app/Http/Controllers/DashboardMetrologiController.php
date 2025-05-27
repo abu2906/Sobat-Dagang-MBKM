@@ -88,6 +88,55 @@ class DashboardMetrologiController extends Controller
         ));
     }
 
+    public function showKadisMetro()
+    {
+        $dataSurat = $this->jumlahSuratKadis();
+        
+        $jumlahPerJenis = Uttp::select('jenis_alat', DB::raw('COUNT(*) as total'))
+            ->groupBy('jenis_alat')
+            ->orderBy('total', 'desc')
+            ->get();
+            
+        $topFive = $jumlahPerJenis->take(5);
+        $others = $jumlahPerJenis->skip(5);
+        
+        $othersTotal = $others->sum('total');
+        
+        $finalJumlahPerJenis = $topFive;
+        if ($othersTotal > 0) {
+            $finalJumlahPerJenis->push((object)[
+                'jenis_alat' => 'Lainnya',
+                'total' => $othersTotal
+            ]);
+        }
+        $jumlahValid = DB::table('uttp')
+            ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
+            ->where('data_alat_ukur.tanggal_exp', '>=', now())
+            ->count();
+            
+        $jumlahKadaluarsa = DB::table('uttp')
+            ->join('data_alat_ukur', 'uttp.id_uttp', '=', 'data_alat_ukur.id_uttp')
+            ->where('data_alat_ukur.tanggal_exp', '<', now())
+            ->count();
+            
+        $uttps = DataAlatUkur::with('uttp')
+            ->orderBy('created_at', 'desc')
+            ->take(12)
+            ->get();
+        $donutData = $this->getDonutChartData();
+        $calibrationData = $this->getCalibrationComparisonData();
+        
+        return view('admin.kepalaDinas.dashboardMetrologi', array_merge(
+            $dataSurat, 
+            ['jumlahPerJenis' => $finalJumlahPerJenis],
+            ['jumlahValid' => $jumlahValid],
+            ['jumlahKadaluarsa' => $jumlahKadaluarsa],
+            ['uttps' => $uttps],
+            $donutData,
+            $calibrationData
+        ));
+    }
+
     public function chartBarJenisAlat()
     {
         $tahunSekarang = Carbon::now()->year;
@@ -174,6 +223,64 @@ class DashboardMetrologiController extends Controller
         return [
             'donutLabels' => json_encode(array_keys($data)),
             'donutData' => json_encode(array_values($data))
+        ];
+    }
+
+    private function jumlahSuratKadis()
+    {
+        // Total surat yang sudah diproses (Disetujui + Ditolak + Menunggu)
+        $totalSuratMasuk = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->count();
+        
+        // Surat yang sudah diproses oleh kadis (diterima/ditolak)
+        $totalSuratDiterima = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Disetujui')
+            ->count();
+            
+        $totalSuratDitolak = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Ditolak')
+            ->count();
+            
+        $totalSuratMenunggu = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Menunggu')
+            ->count();
+
+        // Surat yang menunggu persetujuan kadis
+        $totalSuratMenungguKabid = DB::table('surat_keluar_metrologi')
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->where('status_kadis', 'Menunggu')
+            ->count();
+            
+        $suratTerbaru = suratMetrologi::with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        // Statistik bulanan
+        $bulanIni = Carbon::now()->month;
+        $tahunIni = Carbon::now()->year;
+
+        $suratTerkirim = suratBalasan::where('status_surat_keluar', 'Disetujui')->count();
+
+        $totalSuratMasukBulanIni = DB::table('surat_keluar_metrologi')
+            ->whereMonth('created_at', $bulanIni)
+            ->whereYear('created_at', $tahunIni)
+            ->where('status_kepalaBidang', 'Disetujui')
+            ->count();
+
+        return [
+            'totalSuratMasuk' => $totalSuratMasuk,
+            'totalSuratMasukBulanIni' => $totalSuratMasukBulanIni,
+            'totalSuratDiterima' => $totalSuratDiterima,
+            'totalSuratDitolak' => $totalSuratDitolak,
+            'totalSuratMenunggu' => $totalSuratMenunggu,
+            'totalSuratMenungguKabid' => $totalSuratMenungguKabid,
+            'suratTerbaru' => $suratTerbaru,
+            'totalSuratTerkirim' => $suratTerkirim
         ];
     }
 
@@ -370,7 +477,7 @@ class DashboardMetrologiController extends Controller
             'totalSurat',
             'totalSuratDisetujui',
             'totalSuratDitolak',
-            'totalSuratMenunggu'
+            'totalSuratMenunggu',
         ));
     }
     public function showUttp(Request $request)
@@ -405,11 +512,7 @@ class DashboardMetrologiController extends Controller
 
         return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
     }
-
-    public function showPersuratanKadis()
-    {
-        return view('admin.kepalaDinas.persuratan');
-    }
+    
     public function showPersuratanMetrologiKadis(Request $request)
     {
         $query = suratBalasan::with('suratMetrologi.user')

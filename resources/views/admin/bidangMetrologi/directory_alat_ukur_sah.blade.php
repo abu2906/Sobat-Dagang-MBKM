@@ -6,38 +6,32 @@
 use App\Helpers\StatusHelper;
 @endphp
 
-<div class="p-6 bg-gray-100 min-h-screen">
+<div class="min-h-screen p-6 bg-gray-100">
     <!-- Header Background -->
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
         <!-- Floating Filter + Button -->
         <div class="absolute bottom-[-30px] w-full px-8">
-            <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl shadow-md">
+            <div class="flex flex-wrap items-center justify-between gap-4 p-4 shadow-md rounded-xl">
                 <!-- Filter/Search Input -->
-                <div class="flex flex-wrap items-center gap-4 flex-1">
-                    <form id="filterForm" class="flex items-center" method="GET">
-                        <select name="status" id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm" onchange="this.form.submit()">
+                <div class="flex flex-wrap items-center flex-1 gap-4">
+                    <form action="{{ route('management-uttp-metrologi') }}" method="GET" class="flex items-center flex-1 gap-4">
+                        <select name="status" id="statusFilter" class="px-4 py-2 text-sm border rounded-full shadow" onchange="this.form.submit()">
                             <option value="">Semua</option>
                             <option value="Valid" {{ request('status') === 'Valid' ? 'selected' : '' }}>Valid</option>
                             <option value="Kadaluarsa" {{ request('status') === 'Kadaluarsa' ? 'selected' : '' }}>{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
                         </select>
-                    </form>
-                    
-                    <form action="{{ route('management-uttp-metrologi') }}" method="GET" class="flex items-center flex-1">
-                        @if(request('status'))
-                            <input type="hidden" name="status" value="{{ request('status') }}">
-                        @endif
                         <div class="relative flex-1">
-                            <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
-                            <button type="submit" class="absolute right-0 top-0 h-full px-4 text-gray-400 hover:text-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}" class="w-full py-2 pl-10 pr-4 text-sm border rounded-full shadow">
+                            <button type="submit" class="absolute top-0 right-0 h-full px-4 text-gray-400 hover:text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
                                 </svg>
                             </button>
                         </div>
-                        <div class="hidden relative flex-grow mt-2 md:mt-0 mx-4">
-                            <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full shadow text-sm w-full">
-                            <span class="absolute left-3 top-2 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor"
+                        <div class="relative flex-grow hidden mx-4 mt-2 md:mt-0">
+                            <input type="text" id="searchInput" placeholder="Cari" class="w-full py-2 pl-10 pr-4 text-sm rounded-full shadow">
+                            <span class="absolute text-gray-400 left-3 top-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
@@ -56,7 +50,7 @@ use App\Helpers\StatusHelper;
                         Download
                     </a>
                     <button onclick="openModal()" class="text-white flex items-center gap-2 bg-[#0c3252] transition-colors duration-300 hover:bg-[#F49F1E] hover:text-black rounded-full px-8 py-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
                         Tambah UTTP
@@ -67,109 +61,111 @@ use App\Helpers\StatusHelper;
     </div>
 
     <!-- Modal Popup Review -->
-    <div id="popupDetailAlat" class="fixed inset-0 z-50 hidden justify-center items-center bg-opacity-50">
-        <div class="bg-white p-6 rounded-xl w-[450px] max-w-full relative shadow-xl">
-            <button onclick="togglePopup(false)" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl font-bold">&times;</button>
-            <h2 class="text-center font-bold text-lg mb-4">
+    <div id="popupDetailAlat" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-50">
+        <div class="bg-white p-4 sm:p-6 rounded-xl w-[90%] sm:w-[85%] md:w-[70%] lg:w-[50%] max-w-[600px] relative shadow-xl mx-auto ml-[calc(16.666667%+1rem)] sm:ml-[calc(16.666667%+2rem)] mr-[calc(1%+1rem)] sm:mr-[calc(1%+2rem)]">
+            <button onclick="togglePopup(false)" class="absolute text-xl font-bold text-gray-500 top-2 right-3 hover:text-black">&times;</button>
+            <h2 class="mb-4 text-base font-bold text-center sm:text-lg">
                 Detail Alat Ukur - 
                 <span id="popupNoReg" class="text-gray-600"></span>
             </h2>
-            <table class="w-full text-sm">
-                <tbody id="popupDetailBody"></tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs sm:text-sm">
+                    <tbody id="popupDetailBody" class="divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Modal Tambah Alat Ukur -->
-    <div id="modalTambahAlat" class="fixed inset-0 z-40 hidden bg-black bg-opacity-30 flex items-center justify-center overflow-y-auto">
+    <div id="modalTambahAlat" class="fixed inset-0 z-40 flex items-center justify-center hidden overflow-y-auto bg-black bg-opacity-30">
         <div class="fixed inset-0 bg-black bg-opacity-30"></div>
-        <div class="relative bg-white w-[90%] md:w-[70%] lg:w-[50%] rounded-lg shadow-lg p-6 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b pb-3 mb-4">
-                <h2 class="text-lg font-semibold">Tambah UTTP</h2>
+        <div class="relative bg-white w-[90%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] rounded-lg shadow-lg p-4 sm:p-6 my-4 sm:my-8 max-h-[90vh] overflow-y-auto mx-auto ml-[calc(16.666667%+1rem)] sm:ml-[calc(16.666667%+2rem)] mr-[calc(1%+1rem)] sm:mr-[calc(1%+2rem)]">
+            <div class="flex items-center justify-between pb-3 mb-4 border-b">
+                <h2 class="text-base font-semibold sm:text-lg">Tambah UTTP</h2>
                 <button onclick="tutupModal()" class="text-gray-500 hover:text-gray-800">&times;</button>
             </div>
 
             <form id="form-alat" method="POST" action="{{ route('store-uttp') }}" onsubmit="handleSubmit(event)">
             @csrf
             <input type="hidden" name="_method" id="formMethod" value="POST">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-3 md:grid-cols-2 sm:gap-4">
                     <div>
-                        <label class="block text-sm font-medium">Tanggal Mulai <span class="text-red-500">*</span></label>
-                        <input type="date" name="tanggal_penginputan" class="w-full border rounded px-3 py-2" required>
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Tanggal Mulai <span class="text-red-500">*</span></label>
+                        <input type="date" name="tanggal_penginputan" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Tanggal Selesai <span class="text-red-500">*</span></label>
-                        <input type="date" name="tanggal_selesai" class="w-full border rounded px-3 py-2" required>
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Tanggal Selesai <span class="text-red-500">*</span></label>
+                        <input type="date" name="tanggal_selesai" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">ID User</label>
-                        <select name="id_user" id="userSelect" class="w-full border rounded px-3 py-2 text-sm" style="height: 38px;">
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">ID User</label>
+                        <select name="id_user" id="userSelect" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" style="height: 38px;">
                             <option value="">Pilih User</option>
                         </select>
-                        <p class="text-xs text-gray-500 mt-1">Kosongkan bila pemilik uttp tidak terdaftar pada sistem</p>
+                        <p class="mt-1 text-xs text-gray-500">Kosongkan bila pemilik uttp tidak terdaftar pada sistem</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">No Registrasi <span class="text-red-500">*</span></label>
-                        <input type="text" name="no_registrasi" class="w-full border rounded px-3 py-2" required>
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">No Registrasi <span class="text-red-500">*</span></label>
+                        <input type="text" name="no_registrasi" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Nama Usaha <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_usaha" class="w-full border rounded px-3 py-2" required>
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Nama Usaha <span class="text-red-500">*</span></label>
+                        <input type="text" name="nama_usaha" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Jenis Alat <span class="text-red-500">*</span></label>
-                        <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-3 py-2" required>
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Jenis Alat <span class="text-red-500">*</span></label>
+                        <select id="jenis_alat" name="jenis_alat" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                             <option value="" class="text-gray-400" selected>Pilih Jenis Alat</option>
-							<option value="UP-MK">UP-MK</option>
-							<option value="VOL-TK">VOLUME - TK</option>
-							<option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
-							<option value="VOL-TUM">VOLUME - TUM</option>
-							<option value="VOL-PUBBM">VOLUME - PUBBM</option>
-							<option value="VOL-MA">VOLUME - MA</option>
-							<option value="VOL-DLL">VOLUME - Lainnya</option>
-							<option value="MAS-DL">MASSA - DL</option>
-							<option value="MAS-TP">MASSA - TP</option>
-							<option value="MAS-TM">MASSA - TM</option>
-							<option value="MAS-TS">MASSA - TS</option>
-							<option value="MAS-NE">MASSA - NE</option>
-							<option value="MAS-ATB">MASSA - ATB</option>
-							<option value="MAS-ATH">MASSA - ATH</option>
-							<option value="MAS-TE">MASSA - TE</option>
-							<option value="MAS-TJE">MASSA - TJE</option>
-							<option value="MAS-DLL">MASSA - Lainnya</option>
-						</select>
+                            <option value="UP-MK">UP-MK</option>
+                            <option value="VOL-TK">VOLUME - TK</option>
+                            <option value="VOL-TUTSIT">VOLUME - TUTSIT</option>
+                            <option value="VOL-TUM">VOLUME - TUM</option>
+                            <option value="VOL-PUBBM">VOLUME - PUBBM</option>
+                            <option value="VOL-MA">VOLUME - MA</option>
+                            <option value="VOL-DLL">VOLUME - Lainnya</option>
+                            <option value="MAS-DL">MASSA - DL</option>
+                            <option value="MAS-TP">MASSA - TP</option>
+                            <option value="MAS-TM">MASSA - TM</option>
+                            <option value="MAS-TS">MASSA - TS</option>
+                            <option value="MAS-NE">MASSA - NE</option>
+                            <option value="MAS-ATB">MASSA - ATB</option>
+                            <option value="MAS-ATH">MASSA - ATH</option>
+                            <option value="MAS-TE">MASSA - TE</option>
+                            <option value="MAS-TJE">MASSA - TJE</option>
+                            <option value="MAS-DLL">MASSA - Lainnya</option>
+                        </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Merk / Type</label>
-                        <input type="text" name="merk_type" class="w-full border rounded px-3 py-2">
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Merk / Type</label>
+                        <input type="text" name="merk_type" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Kapasitas</label>
-                        <input type="text" name="nama_alat" class="w-full border rounded px-3 py-2">
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Kapasitas</label>
+                        <input type="text" name="nama_alat" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Nomor Seri</label>
-                        <input type="text" name="nomor_seri" class="w-full border rounded px-3 py-2">
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Nomor Seri</label>
+                        <input type="text" name="nomor_seri" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Alat Penguji <span class="text-red-500">*</span></label>
-                        <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-3 py-2" required>
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Alat Penguji <span class="text-red-500">*</span></label>
+                        <select id="alat_penguji" name="alat_penguji" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                             <option value="" class="text-gray-400" selected>Pilih Alat Penguji</option>
-							<option value="BUS">BUS</option>
-							<option value="AT">AT</option>
-							<option value="ATB">ATB</option>
-						</select>
+                            <option value="BUS">BUS</option>
+                            <option value="AT">AT</option>
+                            <option value="ATB">ATB</option>
+                        </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Cap Tanda Tera <span class="text-red-500">*</span></label>
-                        <select id="ctt" name="ctt" class="w-full border rounded px-3 py-2" required>
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Cap Tanda Tera <span class="text-red-500">*</span></label>
+                        <select id="ctt" name="ctt" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                             <option value="" class="text-gray-400" selected>Pilih Cap Tanda Tera</option>
-							<option value="SL6">SL6</option>
-							<option value="SL4">SL4</option>
-							<option value="SL2">SL2</option>
+                            <option value="SL6">SL6</option>
+                            <option value="SL4">SL4</option>
+                            <option value="SL2">SL2</option>
                             <option value="SK6">SK6</option>
-							<option value="SP6">SP6</option>
-							<option value="B4">B4</option>
+                            <option value="SP6">SP6</option>
+                            <option value="B4">B4</option>
                             <option value="J8">J8</option>
                             <option value="J5">J5</option>
                             <option value="J4">J4</option>
@@ -177,77 +173,76 @@ use App\Helpers\StatusHelper;
                             <option value="D4">D4</option>
                             <option value="H">H</option>
                             <option value="HP">HP</option>
-						</select>
+                        </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">No Surat Perintah Tugas</label>
-                        <input type="text" name="spt_keperluan" class="w-full border rounded px-3 py-2">
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">No Surat Perintah Tugas</label>
+                        <input type="text" name="spt_keperluan" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm">
                     </div>
                     <div>
-                    <label class="block text-sm font-medium">Keterangan <span class="text-red-500">*</span></label>
-                        <select id="keterangan" name="keterangan" class="w-full border rounded px-3 py-2" required>
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Keterangan <span class="text-red-500">*</span></label>
+                        <select id="keterangan" name="keterangan" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm" required>
                             <option value="" class="text-gray-400" selected>Pilih Keterangan</option>
                             <option value="Tera">Tera</option>
                             <option value="Tera Ulang">Tera Ulang</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium">Sertifikat (PDF)</label>
-                        <input type="file" name="sertifikat" accept=".pdf" class="w-full border rounded px-3 py-2">
+                        <label class="block mb-1 text-xs font-medium sm:text-sm">Sertifikat (PDF)</label>
+                        <input type="file" name="sertifikat" accept=".pdf" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm">
                     </div>
-                    <div class="flex items-center space-x-2 mt-2">
-                        <input type="checkbox" name="terapan" id="terapan" class="rounded border-gray-300">
-                        <label for="terapan" class="text-sm font-medium">Cerapan</label>
+                    <div class="flex items-center mt-2 space-x-2">
+                        <input type="checkbox" name="terapan" id="terapan" class="border-gray-300 rounded">
+                        <label for="terapan" class="text-xs font-medium sm:text-sm">Cerapan</label>
                     </div>
-
                 </div>
 
-                <div class="mt-4 flex justify-end gap-2">
-                    <button type="button" onclick="tutupModal()" class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">Batal</button>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Simpan</button>
+                <div class="flex justify-end gap-2 mt-4">
+                    <button type="button" onclick="tutupModal()" class="bg-gray-200 px-3 sm:px-4 py-1.5 sm:py-2 rounded hover:bg-gray-300 text-xs sm:text-sm">Batal</button>
+                    <button type="submit" class="bg-blue-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded hover:bg-blue-700 text-xs sm:text-sm">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
     
     <!-- Tabel Alat Ukur Sah -->
-    <div class="overflow-x-auto rounded-lg shadow-sm mt-6">
+    <div class="mt-6 overflow-x-auto rounded-lg shadow-sm">
         <table class="min-w-full text-sm text-left text-gray-700 bg-white border border-gray-200">
             <thead class="bg-[#0c3252] text-white">
                 <tr>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">No</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nomor Registrasi</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Nama Usaha</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Jenis Alat</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Tanggal Tera</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Tanggal Exp</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Status</th>
-                    <th scope="col" class="text-center px-5 py-3 font-medium border-b border-blue-100">Aksi</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">No</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Nomor Registrasi</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Nama Usaha</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Jenis Alat</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Tanggal Tera</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Tanggal Exp</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Status</th>
+                    <th scope="col" class="px-5 py-3 font-medium text-center border-b border-blue-100">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($alatUkur as $index => $data)
-                <tr class="hover:bg-blue-50 transition">
-                    <td class="px-5 text-center py-3 border-b">{{ $alatUkur->firstItem() + $index }}</td>
-                    <td class="px-5 text-center py-3 border-b">{{ $data->uttp->no_registrasi }}</td>
-                    <td class="px-5 text-center py-3 border-b">{{ $data->uttp->nama_usaha }}</td>
-                    <td class="px-5 text-center py-3 border-b">{{ $data->uttp->jenis_alat }}</td>
-                    <td class="px-5 text-center py-3 border-b">{{ \Carbon\Carbon::parse($data->uttp->tanggal_penginputan)->format('d F Y') }}</td>
-                    <td class="px-5 text-center py-3 border-b">
+                <tr class="transition hover:bg-blue-50">
+                    <td class="px-5 py-3 text-center border-b">{{ $alatUkur->firstItem() + $index }}</td>
+                    <td class="px-5 py-3 text-center border-b">{{ $data->uttp->no_registrasi }}</td>
+                    <td class="px-5 py-3 text-center border-b">{{ $data->uttp->nama_usaha }}</td>
+                    <td class="px-5 py-3 text-center border-b">{{ $data->uttp->jenis_alat }}</td>
+                    <td class="px-5 py-3 text-center border-b">{{ \Carbon\Carbon::parse($data->uttp->tanggal_penginputan)->format('d F Y') }}</td>
+                    <td class="px-5 py-3 text-center border-b">
                         {{ optional($data)->tanggal_exp ? \Carbon\Carbon::parse($data->tanggal_exp)->format('d F Y') : '-' }}
                     </td>
-                    <td class="px-5 text-center py-3 border-b">
+                    <td class="px-5 py-3 text-center border-b">
                         <span class="
                             font-semibold
                             {{ $data->status === 'Valid' ? 'text-green-600' : ($data->status === 'Kadaluarsa' ? 'text-red-600' : 'text-gray-500') }}">
                             {{ $data->status === 'Valid' ? 'Valid' : StatusHelper::formatStatus($data->status) }}
                         </span>
                     </td>
-                    <td class="px-5 text-center py-3 border-b">
+                    <td class="px-5 py-3 text-center border-b">
                         <div class="flex justify-center space-x-2">
                             <!-- Tombol Preview -->
-                            <button class="flex items-center space-x-1 text-black hover:text-gray-600 transition p-2 rounded hover:bg-blue-100 transition duration-200" onclick="loadDetailAlat('{{ $data->uttp->id_uttp }}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <button class="flex items-center p-2 space-x-1 text-black transition duration-200 rounded hover:text-gray-600 hover:bg-blue-100" onclick="loadDetailAlat('{{ $data->uttp->id_uttp }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -258,7 +253,7 @@ use App\Helpers\StatusHelper;
                             <!-- Tombol Edit -->
                             <button
                                 onclick="openEditModal({{ $data->uttp }}, '{{ route('update-uttp', $data->uttp->id_uttp) }}')"
-                                class="p-2 rounded hover:bg-blue-100 transition duration-200"
+                                class="p-2 transition duration-200 rounded hover:bg-blue-100"
                                 title="Edit">
                                 <span class="material-symbols-outlined">edit</span>
                             </button>
@@ -271,7 +266,7 @@ use App\Helpers\StatusHelper;
     </div>
 
     <!-- Pagination -->
-    <div class="mt-6 flex justify-center">
+    <div class="flex justify-center mt-6">
         {{ $alatUkur->links('pagination::tailwind') }}
     </div>
 </div>
@@ -284,35 +279,6 @@ use App\Helpers\StatusHelper;
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-    const statusFilter = document.getElementById("statusFilter");
-    const searchInput = document.getElementById("searchInput");
-    const rows = document.querySelectorAll("tbody tr");
-
-    function applyFilters() {
-        const selectedStatus = statusFilter.value.toLowerCase();
-        const keyword = searchInput.value.toLowerCase();
-
-        rows.forEach(row => {
-            if (!row.querySelector('td')) return;
-
-            const statusCell = row.querySelector('td:nth-child(6)');
-            const status = statusCell ? statusCell.textContent.trim().toLowerCase() : '';
-            const rowText = row.textContent.toLowerCase();
-
-            // Handle Kadaluarsa, Kadaluwarsa, and Kedaluwarsa in the filter
-            const matchStatus = !selectedStatus || 
-                (selectedStatus === 'kadaluarsa' && (status === 'kadaluarsa' || status === 'kadaluwarsa' || status === 'kedaluwarsa')) ||
-                (selectedStatus === 'valid' && status === 'valid');
-            const matchSearch = !keyword || rowText.includes(keyword);
-
-            row.style.display = (matchStatus && matchSearch) ? '' : 'none';
-        });
-    }
-
-    statusFilter.addEventListener("change", applyFilters);
-    searchInput.addEventListener("input", applyFilters);
-    applyFilters();
-
     function togglePopup(show) {
         const modal = document.getElementById('popupDetailAlat');
         if (show) {
@@ -326,57 +292,40 @@ use App\Helpers\StatusHelper;
 
     function loadDetailAlat(id) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
-        fetch('{{ route("uttp.detail.post") }}', {
+
+        fetch("{{ route('uttp.detail.post') }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
                 'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({ id: id })
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => {
-                    throw new Error(text || 'Network response was not ok');
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            
-            document.getElementById('popupNoReg').textContent = data.no_registrasi;
-            
-            const detailBody = document.getElementById('popupDetailBody');
-            detailBody.innerHTML = `
-                <tr><td class="py-2 font-semibold">Jenis Alat</td><td class="py-2">: ${data.jenis_alat ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Nama Usaha</td><td class="py-2">: ${data.nama_usaha ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Merk/Type</td><td class="py-2">: ${data.merk_type ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Kapasitas</td><td class="py-2">: ${data.nama_alat ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Nomor Seri</td><td class="py-2">: ${data.nomor_seri ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Alat Penguji</td><td class="py-2">: ${data.alat_penguji ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Cap Tanda Tera</td><td class="py-2">: ${data.ctt ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">No Surat Perintah Tugas</td><td class="py-2">: ${data.spt_keperluan ?? '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Tanggal Tera</td><td class="py-2">: ${data.tanggal_penginputan ? new Date(data.tanggal_penginputan).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Tanggal Selesai</td><td class="py-2">: ${data.tanggal_selesai ? new Date(data.tanggal_selesai).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Keterangan</td><td class="py-2">: ${data.keterangan || '-'}</td></tr>
-                <tr><td class="py-2 font-semibold">Sertifikat</td><td class="py-2">: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
+            document.getElementById('popupNoReg').textContent = data.no_registrasi ?? '-';
+
+            const body = document.getElementById('popupDetailBody');
+            body.innerHTML = `
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Nama Usaha</td><td class="px-2 py-2 sm:px-4">: ${data.nama_usaha ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Jenis Alat</td><td class="px-2 py-2 sm:px-4">: ${data.jenis_alat ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Merk / Tipe</td><td class="px-2 py-2 sm:px-4">: ${data.merk_type ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Kapasitas</td><td class="px-2 py-2 sm:px-4">: ${data.nama_alat ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Nomor Seri</td><td class="px-2 py-2 sm:px-4">: ${data.nomor_seri ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Alat Penguji</td><td class="px-2 py-2 sm:px-4">: ${data.alat_penguji ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Cap Tanda Tera</td><td class="px-2 py-2 sm:px-4">: ${data.ctt ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">No Surat Perintah Tugas</td><td class="px-2 py-2 sm:px-4">: ${data.spt_keperluan ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Tanggal Mulai</td><td class="px-2 py-2 sm:px-4">: ${data.tanggal_penginputan ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Tanggal Selesai</td><td class="px-2 py-2 sm:px-4">: ${data.tanggal_selesai ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Keterangan</td><td class="px-2 py-2 sm:px-4">: ${data.keterangan ?? '-'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Sertifikat</td><td class="px-2 py-2 sm:px-4">: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
             `;
-            
+
             togglePopup(true);
         })
         .catch(error => {
             console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'Terjadi kesalahan saat memuat detail alat',
-                confirmButtonText: 'OK'
-            });
+            alert('Terjadi kesalahan saat memuat detail alat');
         });
     }
 
@@ -593,7 +542,7 @@ use App\Helpers\StatusHelper;
             existingFile.className = 'mt-2 text-sm text-gray-600';
             existingFile.innerHTML = `
                 <p>File saat ini: <a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a></p>
-                <p class="text-xs text-gray-500 mt-1">Upload file baru untuk mengganti sertifikat</p>
+                <p class="mt-1 text-xs text-gray-500">Upload file baru untuk mengganti sertifikat</p>
             `;
             sertifikatContainer.appendChild(existingFile);
         }
@@ -654,40 +603,6 @@ use App\Helpers\StatusHelper;
             }
         }
     });
-
-    function getDetail(id) {
-        fetch(`/admin/metrologi/detail/${id}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('detailTanggalMulai').textContent = data.tanggal_penginputan || '-';
-                document.getElementById('detailNoRegistrasi').textContent = data.no_registrasi || '-';
-                document.getElementById('detailNamaUsaha').textContent = data.nama_usaha || '-';
-                document.getElementById('detailJenisAlat').textContent = data.jenis_alat || '-';
-                document.getElementById('detailNamaAlat').textContent = data.nama_alat || '-';
-                document.getElementById('detailMerkType').textContent = data.merk_type || '-';
-                document.getElementById('detailNomorSeri').textContent = data.nomor_seri || '-';
-                document.getElementById('detailAlatPenguji').textContent = data.alat_penguji || '-';
-                document.getElementById('detailCtt').textContent = data.ctt || '-';
-                document.getElementById('detailSptKeperluan').textContent = data.spt_keperluan || '-';
-                document.getElementById('detailTanggalSelesai').textContent = data.tanggal_selesai || '-';
-                document.getElementById('detailTerapan').textContent = data.terapan ? 'Ya' : 'Tidak';
-                document.getElementById('detailKeterangan').textContent = data.keterangan || '-';
-                
-                // Update certificate display
-                const sertifikatElement = document.getElementById('detailSertifikat');
-                if (data.sertifikat_path) {
-                    sertifikatElement.innerHTML = `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>`;
-                } else {
-                    sertifikatElement.innerHTML = '<span class="text-gray-500">Belum di upload oleh admin</span>';
-                }
-
-                document.getElementById('modalDetail').classList.remove('hidden');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengambil data');
-            });
-    }
 
     $(document).ready(function() {
         $('#userSelect').select2({

@@ -224,7 +224,7 @@
         
         <div class="grid md:grid-cols-2 gap-4">
           <div>
-            <label class="block mb-1 font-semibold"><i class="fas fa-store mr-1 text-blue-600"></i>Nama Usaha</label>
+            <label class="block mb-1 font-semibold">Nama Usaha</label>
             <input type="text" id="edit_nama_usaha" name="nama_usaha" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition" required>
           </div>
           <div>
@@ -247,7 +247,7 @@
             </select>
           </div>
           <div x-data="{ fileName: '' }">
-            <p class="block mb-1 font-semibold">Sertifikat (PDF - kosongkan jika tidak berubah)</p>
+            <p class="block mb-1 font-semibold">File Sertifikat - kosongkan jika tidak berubah</p>
             <label for="edit_filesertifikat" class="px-4 py-2 bg-blue-100 text-black rounded-full cursor-pointer transition-all duration-300 hover:bg-[#083358] hover:text-white inline-block">Pilih File</label>
             <input type="file" id="edit_filesertifikat" name="sertifikat" accept="application/pdf" class="hidden" @change="fileName = $event.target.files[0].name">
             <p x-text="fileName" class="mt-2 text-sm text-gray-600"></p>
@@ -255,14 +255,14 @@
           </div>
         </div>
         
-        <div class="mt-4">
+        <div class="mt-1">
           <label class="block mb-1 font-semibold">Alamat</label>
           <textarea id="edit_alamat" name="alamat" placeholder="Alamat" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition" required></textarea>
         </div>
         
         <div class="mt-6 flex justify-center gap-4">
-          <button type="button" onclick="closeEditModal()" class="px-6 py-2 bg-gray-300 rounded-xl hover:bg-gray-400 transition">Batal</button>
-          <button type="button" onclick="submitEdit()" class="bg-[#002B4E] text-white font-semibold rounded-xl px-6 py-3 shadow-md hover:brightness-110 transition">Simpan Perubahan</button>
+          <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition">Batal</button>
+          <button type="button" onclick="submitEdit()" class="bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:brightness-110 transitionn">Simpan Perubahan</button>
         </div>
       </form>
     </div>

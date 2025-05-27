@@ -26,13 +26,14 @@
             <ul class="space-y-2 text-sm">
                 @php
                 $menuItems = [
-                ['href' => route('dashboard.master'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                ['href' => route('dashboard-master'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                 ['href' => route('forum.admin'), 'icon' => 'forum.png', 'label' => 'Pengaduan'],
                 ['href' => route('review.pengajuan'), 'icon' => 'data.png', 'label' => 'Pelaporan Distributor'],
-                ['href' => '#', 'icon' => '', 'label' => 'Surat Permohonan'],
-                ['href' => '#', 'icon' => '', 'label' => 'User & Akun'],
+                ['href' => route('admin.daftarPermohonan'), 'icon' => 'persuratan.png', 'label' => 'Surat Permohonan'],
+                ['href' => route('manajemen.pengguna'), 'icon' => 'person.png', 'label' => 'Manajemen Pengguna'],
+                ['href' => route('manajemen.admin'), 'icon' => 'person.png', 'label' => 'Manajemen Admin'],
                 ['href' => route('kelola.berita'), 'icon' => 'newspaper.png', 'label' => 'Kelola Berita'],
-                ['href' => '#', 'icon' => '', 'label' => 'Notifikasi'],
+                ['href' => route('faq-controller'), 'icon' => 'faq.png', 'label' => 'FAQ'],
                 ];
                 @endphp
 
@@ -40,7 +41,7 @@
                 <li>
                     <a href="{{ $item['href'] }}"
                         class="flex items-center px-3 py-2 transition duration-200 rounded-full hover:bg-blue-500/20 hover:border hover:border-blue-500/40 hover:font-bold">
-                        <img src="{{ asset('assets/img/icon/' . $item['icon']) }}" class="w-5 h-5" alt="{{ $item['label'] }}">
+                        <img src="{{ asset('assets/img/icon/' . $item['icon']) }}" class="w-5 h-5 text-white" alt="{{ $item['label'] }}">
                         <span x-show="open" class="ml-3">{{ $item['label'] }}</span>
                     </a>
                 </li>

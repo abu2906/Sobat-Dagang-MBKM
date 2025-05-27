@@ -9,23 +9,37 @@ use App\Http\Controllers\Controller;
 
 class ForumDiskusiController extends Controller
 {
-    public function index()
-{
-    $chats = ForumDiskusi::with('user', 'disdag')->orderBy('waktu', 'asc')->get();
-
-    if (Auth::guard('user')->check()) {
-        return view('user.forum', compact('chats'));
-    } elseif (Auth::guard('disdag')->check()) {
-        $pengaduan = ForumDiskusi::with('user')
-                    ->whereNotNull('id_user') // hanya dari user
-                    ->orderBy('waktu', 'desc')
-                    ->get();
-        return view('admin.adminSuper.pengaduanUser', compact('chats', 'pengaduan'));
-    } else {
-        abort(403); // unauthorized
+    public function index(){
+    // Hanya untuk user
+    if (!Auth::guard('user')->check()) {
+        abort(403); // Unauthorized jika bukan user
     }
-}
 
+    $chats = ForumDiskusi::with('user', 'disdag')
+        ->orderBy('waktu', 'asc')
+        ->get();
+
+    return view('user.forum', compact('chats'));
+    }
+
+    public function adminForm()
+    {
+        // Hanya untuk admin (disdag)
+        if (!Auth::guard('disdag')->check()) {
+            abort(403); // Unauthorized jika bukan disdag
+        }
+
+        $chats = ForumDiskusi::with('user', 'disdag')
+            ->orderBy('waktu', 'asc')
+            ->get();
+
+        $pengaduan = ForumDiskusi::with('user')
+            ->whereNotNull('id_user') // hanya pesan dari user
+            ->orderBy('waktu', 'desc')
+            ->get();
+
+        return view('admin.adminSuper.pengaduanUser', compact('chats', 'pengaduan'));
+    }
 
     public function kirimPesan(Request $request)
     {

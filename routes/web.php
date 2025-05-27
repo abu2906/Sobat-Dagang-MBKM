@@ -23,13 +23,17 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\KabidIndustriController;
 use App\Http\Controllers\UserHalalController;
 use App\Http\Controllers\HalalController;
+use App\Http\Controllers\FAQController;
 use App\Http\Controllers\ForumDiskusiController;
 use Illuminate\Support\Facades\View;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\KadisController;
+use App\Http\Controllers\AdminManagementController;
 
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
 Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
+Route::get('/faq', [homeController::class, 'showFaqPage'])->name('faq');
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
 Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
 Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
@@ -52,6 +56,10 @@ Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama'
 Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
 Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
+
+//untuk download dan notif
+Route::get('/tes-kirim-notifikasi', [DirectoryBookController::class, 'periksaKadaluarsa']);
+Route::get('/uttp/download', [DirectoryBookController::class, 'downloadUttp'])->name('uttp.download');
 
 // user Login
 Route::middleware(['auth.role:user'])->group(function () {
@@ -217,17 +225,13 @@ Route::middleware(['check.role:admin_metrologi'])->group(function () {
     Route::get('/admin/surat/{id}/edit-balasan', [PersuratanController::class, 'editBalasan'])->name('edit-surat-balasan');
     Route::put('/admin/surat/{id}/update-balasan', [PersuratanController::class, 'updateBalasan'])->name('update-surat-balasan');
     Route::put('/admin/surat/{id}/selesai', [PersuratanController::class, 'tandaiSelesai'])->name('surat.selesai');
-
-    Route::get('/admin/dashboard-metrologi', [DashboardController::class, 'showMetrologi'])->name('dashboard-admin-metrologi');
-    Route::get('/admin/alat-ukur-metrologi', [DashboardController::class, 'showMetrologi'])->name('alat-ukur-metrologi');
-    Route::get('/admin/managemen-uttp-metrologi', [DashboardController::class, 'showMetrologi'])->name('managemen-uttp-metrologi');
-    Route::get('/admin/persuratan-metrologi', [DashboardController::class, 'showMetrologi'])->name('persuratan-metrologi');
+    Route::post('/uttp/detail', [DirectoryBookController::class, 'getDetail'])->name('uttp.detail.post');
 });
 
 // admin master
 Route::middleware(['check.role:master_admin'])->group(function () {
     #dashboard nddpi isinya untuk tes2 ji
-    Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
+    // Route::get('/dashboard-master', [DashboardController::class, 'dashboardMaster'])->name('dashboard.master');
     #distribusi
     Route::get('/review-distributor', [PelaporanController::class, 'reviewPengajuanDistributor'])->name('review.pengajuan');
     Route::post('/distributor/{id_distributor}/terima', [PelaporanController::class, 'setujui'])->name('distributor.setujui');
@@ -242,16 +246,38 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');    
-    //pelaporan
-    Route::get('/admin/forum-pengaduan', [ForumDiskusiController::class, 'index'])->name('forum.admin');
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');   
+    #Kelola FAQ
+    Route::get('/admin/kelola-faq', [FAQController::class, 'index'])->name('faq-controller');
+    Route::post('/admin/faq/store', [FAQController::class, 'store'])->name('faq-store');
+    Route::put('/admin/faq/{faq}', [FAQController::class, 'update'])->name('faq.update');
+    Route::delete('/admin/faq/{id}', [FAQController::class, 'destroy'])->name('faq-destroy');    #manajemen user
+    // Manajement Pengguna
+    Route::get('/admin/manajemen-pengguna', [UserManagementController::class, 'index'])->name('manajemen.pengguna');
+    Route::get('/admin/manajemen-pengguna/tambah', [UserManagementController::class, 'create'])->name('manajemen.pengguna.create');
+    Route::post('/admin/manajemen-pengguna', [UserManagementController::class, 'store'])->name('manajemen.pengguna.store');
+    Route::get('/admin/manajemen-pengguna/{id}/edit', [UserManagementController::class, 'edit'])->name('manajemen.pengguna.edit');
+    Route::put('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'update'])->name('manajemen.pengguna.update');
+    Route::delete('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'destroy'])->name('manajemen.pengguna.destroy'); 
+
+    // Manajement admin
+    Route::get('/admin/manajemen-admin', [AdminManagementController::class, 'index'])->name('manajemen.admin');
+    Route::get('/admin/manajemen-admin/tambah', [AdminManagementController::class, 'create'])->name('manajemen.admin.create');
+    Route::post('/admin/manajemen-admin', [AdminManagementController::class, 'store'])->name('manajemen.admin.store');
+    Route::delete('/admin/manajemen-admin/{id}', [AdminManagementController::class, 'destroy'])->name('manajemen.admin.destroy');
+    Route::get('/admin/manajemen-pengguna/disdag/{id}/edit', [AdminManagementController::class, 'editDisdag'])->name('manajemen.admin.edit');
+    Route::put('/admin/manajemen-pengguna/disdag/{id}', [AdminManagementController::class, 'updateDisdag'])->name('manajemen.admin.update');
+     
+    Route::get('/admin/master', [DashboardController::class, 'dashboardMaster'])->name('dashboard-master');
+    Route::get('/admin/permohonan', [DashboardController::class, 'daftarPermohonan'])->name('admin.daftarPermohonan');
+    Route::get('/admin/permohonan/{id}/{bidang}', [DashboardController::class, 'detailPermohonan'])->name('admin.detailPermohonan');
+    Route::get('/admin/permohonan/{id}/{bidang}/balasan', [DashboardController::class, 'downloadBalasan'])->name('admin.downloadBalasan');
+
+    // Kelola Pengaduan
+    Route::get('/admin/forum-pengaduan', [ForumDiskusiController::class, 'adminForm'])->name('forum.admin');
     Route::get('/forum/load', [ForumDiskusiController::class, 'load']);
     Route::post('/kirim-pesan', [ForumDiskusiController::class, 'send']);
     Route::delete('/forum-diskusi/{id}', [ForumDiskusiController::class, 'destroy'])->name('forum-diskusi.destroy');
-
-    // Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
-    // Route::get('/forum-chat/load', [ForumDiskusiController::class, 'ambilPesan'])->name('forum.ambil');
-    // Route::get('/forum-chat', [ForumDiskusiController::class, 'index'])->name('forum.chat');
 
 });
 
@@ -272,21 +298,21 @@ Route::middleware(['check.role:kabid_industri'])->group(function () {
     Route::put('/kabid-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('kabid.setujuiSurat');
 });
 
-//kabid metrologi
+// Kabid Metrologi Routes
 Route::middleware(['check.role:kabid_metrologi'])->group(function () {
     Route::get('/kabid/metrologi', [DashboardMetrologiController::class, 'showKabid'])->name('dashboard-kabid-metrologi');
     Route::get('/kabid/administrasi/metrologi', [DashboardMetrologiController::class, 'showAdministrasiKabid'])->name('administrasi-kabid-metrologi');
     Route::get('/kabid/uttp/metrologi', [DashboardMetrologiController::class, 'showUttp'])->name('informasi-uttp');
     Route::post('/surat/terima/{encoded_id}', [PersuratanController::class, 'terimaKabid'])->name('terimaKabid');
     Route::post('/surat/tolak/{encoded_id}', [PersuratanController::class, 'tolakKabid'])->name('tolakKabid');
-    Route::post('/uttp/detail', [DirectoryBookController::class, 'getDetail'])->name('alat.detail.post');
-    Route::post('/kabid/metrologi/detail/{id}', [DirectoryBookController::class, 'getDetail'])->name('kabid.detail');
+    Route::post('/kabid/metrologi/detail', [DirectoryBookController::class, 'getDetail'])->name('kabid.detail');
 });
 
 // Kepala Dinas Routes
 Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kadis/dashboard', [KadisController::class, 'index'])->name('dashboard-kadis');
 
+    Route::get('/kadis/metrologi', [DashboardMetrologiController::class, 'showKadisMetro'])->name('kadis-metro');
     Route::get('/kadis/persuratan', [DashboardMetrologiController::class, 'showPersuratanKadis'])->name('persuratan-kadis');
     Route::get('/kadis/persuratan/metrologi', [DashboardMetrologiController::class, 'showPersuratanMetrologiKadis'])->name('surat-metrologi-kadis');
     Route::post('/kadis/surat/{encoded_id}/setujui', [PersuratanController::class, 'setujuiKadis'])->name('setujuiKadis');
@@ -297,6 +323,6 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
     
     Route::get('/kadis/industri', [KabidIndustriController::class, 'KadisIndustri'])->name('kadis.industri');
-    Route::get('/kabid-industri/surat', [KabidIndustriController::class, 'verifSurat'])->name('kabid.suratI');
+    Route::get('/kadis-industri/surat', [KabidIndustriController::class, 'SuratKadis'])->name('kadis.industri.surat');
     Route::put('/kabid-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('kabid.setujuiSurat');
 });
