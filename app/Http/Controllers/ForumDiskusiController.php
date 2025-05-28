@@ -115,6 +115,7 @@ class ForumDiskusiController extends Controller
                 'id_disdag' => $disdagId,
                 'chat' => $request->message,
                 'status' => 'terkirim',
+                'waktu' => now(), // ✅ Tambahkan ini!
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

@@ -30,15 +30,16 @@
     @endif
 
     <div class="overflow-x-auto max-h-80">
-    <table class="w-full bg-white shadow-md rounded-xl text-sm text-left">
+    <table class="w-full text-sm text-left bg-white shadow-md rounded-xl">
         <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
             <tr>
-                <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                <th class="px-4 py-3 border-b">Tanggal</th>
-                <th class="px-4 py-3 border-b">Nama Pengirim</th>
-                <th class="px-4 py-3 border-b">Bidang Terkait</th>
-                <th class="px-4 py-3 border-b">Status</th>
-                <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
+                <th class="px-4 py-3 text-center border-b rounded-tl-xl">No</th>
+                <th class="px-4 py-3 text-center border-b">Tanggal</th>
+                <th class="px-4 py-3 text-center border-b">Nama Pengirim</th>
+                <th class="px-4 py-3 text-center border-b">Jenis Surat</th>
+                <th class="px-4 py-3 text-center border-b">Bidang Terkait</th>
+                <th class="px-4 py-3 text-center border-b">Status</th>
+                <th class="px-4 py-3 text-center border-b rounded-tr-xl">Aksi</th>
             </tr>
         </thead>
                 @php
@@ -53,6 +54,8 @@
                         $jenisSuratMap = [
                         'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
                         'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                        'surat_rekomendasi_industri' => 'Surat Rekomendasi',
+                        'surat_keterangan_industri' => 'Surat Keterangan',
                         'dan_lainnya_perdagangan' => 'Surat Lainnya',
                         ];
                         @endphp

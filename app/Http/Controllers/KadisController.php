@@ -154,7 +154,7 @@ class KadisController extends Controller
         //Grafik Industri
         // Jumlah IKM berdasarkan Investasi
         $levelInvestasi = DataIkm::selectRaw("
-            CASE 
+            CASE
                 WHEN level < 100000000 THEN 'Kecil'
                 WHEN level >= 100000000 THEN 'Menengah'
             END as kategori,
@@ -260,7 +260,7 @@ class KadisController extends Controller
             'levelIKM' => $levelIKM,
             'labels' => $labels,
             'data' => $data,
-            'levelInvestasi' => $levelInvestasi, 
+            'levelInvestasi' => $levelInvestasi,
         ]);
     }
 
