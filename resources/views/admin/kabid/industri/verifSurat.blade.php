@@ -22,7 +22,7 @@
             </form>
         </div>
     </div>
-    <div class="grid grid-cols-1 mx-7 gap-4 mb-6 sm:grid-cols-3 md:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 mb-6 mx-7 sm:grid-cols-3 md:grid-cols-3">
         <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>

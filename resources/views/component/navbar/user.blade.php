@@ -170,4 +170,4 @@
         navMenu.classList.toggle('hidden');
     });
 </script>
-@endauth
+@endauth    
