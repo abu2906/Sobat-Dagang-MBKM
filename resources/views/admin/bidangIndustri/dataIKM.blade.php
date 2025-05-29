@@ -34,7 +34,6 @@
                             <option value="">Investasi</option>
                             <option value="Kecil">Kecil</option>
                             <option value="Menengah">Menengah</option>
-                            <option value="Besar">Besar</option>
                         </select>
                         <i
                             class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4"></i>
@@ -251,7 +250,7 @@
                     } else {
                         kategoriInvestasi = 'besar';
                     }
-
+s
                     const rowText = row.textContent.toLowerCase();
 
                     const cocokKecamatan = !selectedKecamatan || rowKecamatan === selectedKecamatan;

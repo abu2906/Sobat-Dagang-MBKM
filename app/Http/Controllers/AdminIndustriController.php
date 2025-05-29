@@ -22,6 +22,8 @@ use App\Models\SertifikasiHalal;
 use App\Exports\DataIkmExport;
 use Maatwebsite\Excel\Facades\Excel;;
 
+use Illuminate\Support\Facades\Validator;
+
 
 
 class AdminIndustriController extends Controller
@@ -325,7 +327,19 @@ class AdminIndustriController extends Controller
 
     public function storeDataIKM(Request $request)
     {
-        $validatedDataIKM = $request->validate([
+
+        $validate = function (array $rules) use ($request) {
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ]);
+            }
+            return $validator->validated();
+        };
+
+        $validatedDataIKM = $validate([
             'nama_ikm' => 'required|string|max:255',
             'luas' => 'required|string|max:255',
             'nama_pemilik' => 'required|string|max:255',
@@ -340,26 +354,41 @@ class AdminIndustriController extends Controller
             'tenaga_kerja' => 'required|integer|min:0',
         ]);
 
-        // 🛠️ Jika ID dikirim, artinya edit — bukan tambah
+        if ($validatedDataIKM instanceof \Illuminate\Http\JsonResponse) return $validatedDataIKM;
+
         if ($request->filled('id')) {
             $ikm = \App\Models\DataIKM::find($request->id);
-            if ($ikm) {
-                $ikm->update($validatedDataIKM);
-            }
+            if ($ikm) $ikm->update($validatedDataIKM);
+            $idIkm = $ikm->id;
         } else {
-            // Tambah data baru
-            \App\Models\DataIKM::create($validatedDataIKM);
+            $ikm = \App\Models\DataIKM::create($validatedDataIKM);
+            $idIkm = $ikm->id;
         }
 
-        $validatedPersentasePemilik = $request->validate([
+        $validatedPersentasePemilik = $validate([
             'pemerintah_pusat' => 'required|numeric|min:0|max:100',
             'pemerintah_daerah' => 'required|numeric|min:0|max:100',
             'swasta_nasional' => 'required|numeric|min:0|max:100',
             'asing' => 'required|numeric|min:0|max:100',
         ]);
+        if ($validatedPersentasePemilik instanceof \Illuminate\Http\JsonResponse) return $validatedPersentasePemilik;
 
+        $totalPersentase =
+            (float) $request->pemerintah_pusat +
+            (float) $request->pemerintah_daerah +
+            (float) $request->swasta_nasional +
+            (float) $request->asing;
 
-        $validatedKaryawan = $request->validate([
+        if (round($totalPersentase, 2) !== 100.00) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_pemilik' => 'Total persentase kepemilikan harus 100%.'
+                ]
+            ]);
+        }
+
+        $validatedKaryawan = $validate([
             // Status Tenaga Kerja
             'tenaga_kerja_tetap' => 'required|integer|min:0',
             'tenaga_kerja_tidak_tetap' => 'required|integer|min:0',
@@ -377,27 +406,26 @@ class AdminIndustriController extends Controller
             's2' => 'required|integer|min:0',
             's3' => 'required|integer|min:0',
         ]);
+        if ($validatedKaryawan instanceof \Illuminate\Http\JsonResponse) return $validatedKaryawan;
 
-        $totalIkm = (int) $request->tenaga_kerja;
-
-        $totalStatus = (int) ($request->tenaga_kerja_tetap ?? 0) + (int) ($request->tenaga_kerja_tidak_tetap ?? 0);
-        $totalGender = (int) ($request->tenaga_kerja_laki_laki ?? 0) + (int) ($request->tenaga_kerja_perempuan ?? 0);
-        $totalPendidikan = (int) ($request->sd ?? 0)
-            + (int) ($request->smp ?? 0)
-            + (int) ($request->sma_smk ?? 0)
-            + (int) ($request->d1_d3 ?? 0)
-            + (int) ($request->s1_d4 ?? 0)
-            + (int) ($request->s2 ?? 0)
-            + (int) ($request->s3 ?? 0);
-
-        if ($totalStatus !== $totalIkm || $totalGender !== $totalIkm || $totalPendidikan !== $totalIkm) {
-            return back()->withErrors([
-                'konsistensi' => 'Jumlah tenaga kerja tidak konsisten. Pastikan semua total (status, gender, pendidikan) = total tenaga kerja.'
-            ])->withInput();
+        // 🔎 Cek konsistensi tenaga kerja
+        $total = (int) $request->tenaga_kerja;
+        $cek = [
+            (int) ($request->tenaga_kerja_tetap ?? 0) + (int) ($request->tenaga_kerja_tidak_tetap ?? 0),
+            (int) ($request->tenaga_kerja_laki_laki ?? 0) + (int) ($request->tenaga_kerja_perempuan ?? 0),
+            (int) ($request->sd ?? 0) + (int) ($request->smp ?? 0) + (int) ($request->sma_smk ?? 0) + (int) ($request->d1_d3 ?? 0) +
+                (int) ($request->s1_d4 ?? 0) + (int) ($request->s2 ?? 0) + (int) ($request->s3 ?? 0),
+        ];
+        if (in_array(false, array_map(fn($x) => $x === $total, $cek), true)) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_karyawan' => 'Jumlah tenaga kerja tidak konsisten. Pastikan total status, gender, dan pendidikan sama dengan total.'
+                ]
+            ]);
         }
 
-
-        $validatedPemakaianBahan = $request->validate([
+        $validatedPemakaianBahan = $validate([
             'nama_bahan' => 'required|array',
             'nama_bahan.*' => 'required|string|max:255',
 
@@ -428,14 +456,43 @@ class AdminIndustriController extends Controller
             'negara_asal_impor' => 'required|array',
             'negara_asal_impor.*' => 'required|string|max:255',
         ]);
+        if ($validatedPemakaianBahan instanceof \Illuminate\Http\JsonResponse) return $validatedPemakaianBahan;
 
-        $validatedPenggunaanAir = $request->validate([
+        $bahanFields = [
+            'nama_bahan',
+            'jenis_bahan',
+            'spesifikasi',
+            'kode_hs',
+            'satuan_standar_bahan',
+            'jumlah_dalam_negeri',
+            'nilai_dalam_negeri',
+            'jumlah_impor',
+            'nilai_impor',
+            'negara_asal_impor'
+        ];
+
+        $panjangPertama = count($request->nama_bahan);
+        $semuaSama = collect($bahanFields)->every(function ($field) use ($request, $panjangPertama) {
+            return is_array($request->$field) && count($request->$field) === $panjangPertama;
+        });
+
+        if (!$semuaSama) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_bahan' => 'Jumlah entri pada kolom pemakaian bahan tidak konsisten. Pastikan semua kolom memiliki jumlah baris yang sama.'
+                ]
+            ]);
+        }
+
+        $validatedPenggunaanAir = $validate([
             'sumber_air' => 'required|string|in:air_permukaan,air_tanah,perusahaan_penyedia_air,air_daur_ulang',
             'banyaknya_penggunaan_m3' => 'required|numeric|min:0.01',
             'biaya' => 'required|numeric|min:0',
         ]);
 
-        $validatedPengeluaran = $request->validate([
+
+        $validatedPengeluaran = $validate([
             'upah_gaji' => 'required|numeric|min:0',
             'pengeluaran_industri_distribusi' => 'required|numeric|min:0',
             'pengeluaran_rnd' => 'required|numeric|min:0',
@@ -444,8 +501,9 @@ class AdminIndustriController extends Controller
             'pengeluaran_mesin' => 'required|numeric|min:0',
             'lainnya' => 'required|numeric|min:0',
         ]);
+        if ($validatedPengeluaran instanceof \Illuminate\Http\JsonResponse) return $validatedPengeluaran;
 
-        $validatedPenggunaanBahanBakar = $request->validate([
+        $validatedPenggunaanBahanBakar = $validate([
             'jenis_bahan_bakar' => 'required|array',
             'jenis_bahan_bakar.*' => 'required|string|in:bensin,solar_hsd_ado,batubara,briket_batubara,gas_dari_pgn,gas_bukan_dari_pgn,cng,lpg,pelumas',
 
@@ -464,15 +522,53 @@ class AdminIndustriController extends Controller
             'nilai_ptl' => 'required|array',
             'nilai_ptl.*' => 'required|numeric|min:0',
         ]);
+        if ($validatedPenggunaanBahanBakar instanceof \Illuminate\Http\JsonResponse) return $validatedPenggunaanBahanBakar;
 
-        $validatedListrik = $request->validate([
+        $bakarFields = [
+            'jenis_bahan_bakar',
+            'satuan_standar',
+            'banyaknya_proses_produksi',
+            'nilai_proses_produksi',
+            'banyaknya_ptl',
+            'nilai_ptl'
+        ];
+
+        $jumlahData = count($request->jenis_bahan_bakar);
+        $semuaKonsisten = collect($bakarFields)->every(function ($field) use ($request, $jumlahData) {
+            return is_array($request->$field) && count($request->$field) === $jumlahData;
+        });
+
+        if (!$semuaKonsisten) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_bahan_bakar' => 'Mohon lengkapi semua kolom data bahan bakar untuk setiap baris. Setiap entri harus terisi secara lengkap.'
+                ]
+            ]);
+        }
+
+        $validatedListrik = $validate([
             'sumber_listrik' => 'required|string|in:pln,non_pln,pembangkit_sendiri',
             'banyaknya_penggunaan_listrik' => 'required|numeric|min:0',
             'nilai_penggunaan_listrik' => 'required|numeric|min:0',
             'peruntukkan_listrik' => 'required|string|max:255',
         ]);
+        if ($validatedListrik instanceof \Illuminate\Http\JsonResponse) return $validatedListrik;
 
-        $validatedMesinProduksi = $request->validate([
+        if (
+            (float) $request->banyaknya_penggunaan_listrik > 0 &&
+            (float) $request->nilai_penggunaan_listrik === 0.0 &&
+            $request->sumber_listrik !== 'pembangkit_sendiri'
+        ) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_listrik' => 'Jika terdapat penggunaan listrik, nilai tagihan tidak boleh nol kecuali menggunakan pembangkit sendiri.'
+                ]
+            ]);
+        }
+
+        $validatedMesinProduksi = $validate([
             'jenis_mesin' => 'required|array',
             'jenis_mesin.*' => 'required|string|in:Mesin,Peralatan',
 
@@ -497,8 +593,33 @@ class AdminIndustriController extends Controller
             'jumlah_unit' => 'required|array',
             'jumlah_unit.*' => 'required|integer|min:1',
         ]);
+        if ($validatedMesinProduksi instanceof \Illuminate\Http\JsonResponse) return $validatedMesinProduksi;
+        $mesinFields = [
+            'jenis_mesin',
+            'nama_mesin',
+            'merk_type',
+            'teknologi',
+            'negara_pembuat',
+            'tahun_perolehan',
+            'tahun_pembuatan',
+            'jumlah_unit'
+        ];
 
-        $validatedProduksi = $request->validate([
+        $panjangPertama = count($request->jenis_mesin);
+        $semuaSama = collect($mesinFields)->every(function ($field) use ($request, $panjangPertama) {
+            return is_array($request->$field) && count($request->$field) === $panjangPertama;
+        });
+
+        if (!$semuaSama) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_mesin' => 'Jumlah entri pada kolom mesin tidak konsisten. Pastikan semua kolom mesin memiliki jumlah baris yang sama.'
+                ]
+            ]);
+        }
+
+        $validatedProduksi = $validate([
             'jenis_produksi' => 'required|string|max:255',
             'kbli' => 'required|string|max:255',
             'produksi_kode_hs' => 'required|string|max:255',
@@ -510,19 +631,35 @@ class AdminIndustriController extends Controller
             'negara_ekspor' => 'nullable|string|max:255',
             'kapasitas_tahun' => 'required|integer|min:0',
         ]);
+        if ($validatedProduksi instanceof \Illuminate\Http\JsonResponse) return $validatedProduksi;
 
-        $validatedPersediaan = $request->validate([
+        if (
+            (float) $request->persentase_ekspor > 0 &&
+            empty($request->negara_ekspor)
+        ) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_produksi' => 'Anda mengisi ekspor, tapi belum menyebutkan negara tujuan. Mohon isi negara ekspor jika ada kegiatan ekspor.'
+                ]
+            ]);
+        }
+
+
+        $validatedPersediaan = $validate([
             'jenis_persediaan' => 'required|string|in:persediaan_bahan,setengah_jadi,barang_jadi',
             'awal' => 'required|numeric|min:0',
             'akhir' => 'required|numeric|min:0',
         ]);
+        if ($validatedPersediaan instanceof \Illuminate\Http\JsonResponse) return $validatedPersediaan;
 
-        $validatedPendapatan = $request->validate([
+        $validatedPendapatan = $validate([
             'sumber' => 'required|string|max:255',
             'nilai' => 'required|numeric|min:0',
         ]);
+        if ($validatedPendapatan instanceof \Illuminate\Http\JsonResponse) return $validatedPendapatan;
 
-        $validatedModal = $request->validate([
+        $validatedModal = $validate([
             'jenis_barang' => 'required|array',
             'jenis_barang.*' => 'required|string|in:tanah,gedung,mesin dan perlengkapan,kendaraan,software/database',
 
@@ -538,8 +675,9 @@ class AdminIndustriController extends Controller
             'nilai_taksiran' => 'required|array',
             'nilai_taksiran.*' => 'required|numeric|min:0',
         ]);
+        if ($validatedModal instanceof \Illuminate\Http\JsonResponse) return $validatedModal;
 
-        $validatedBentukPengelolaan = $request->validate([
+        $validatedBentukPengelolaan = $validate([
             'jenis_limbah' => 'required|string|max:255',
             'jumlah_limbah' => 'required|numeric|min:0',
 
@@ -553,6 +691,8 @@ class AdminIndustriController extends Controller
             'parameter_limbah_cair' => 'required|string|in:debit_inlet,debit_outlet,cod_inlet,cod_outlet,sludge_removed',
             'jumlah_limbah_cair' => 'required|numeric|min:0',
         ]);
+        if ($validatedBentukPengelolaan instanceof \Illuminate\Http\JsonResponse) return $validatedBentukPengelolaan;
+
 
         DB::beginTransaction();
 
@@ -572,17 +712,16 @@ class AdminIndustriController extends Controller
             $this->saveModal($idIkm, $validatedModal);
             $this->saveBentukPengelolaan($idIkm, $validatedBentukPengelolaan);
 
-
-
             DB::commit();
-
-            return redirect()->route('dataIKM')->with('success', 'Data berhasil disimpan.');
+            return response()->json(['success' => true]);
         } catch (\Exception $e) {
             DB::rollBack();
-
-            return back()->withErrors([
-                'msg' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ])->withInput();
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'msg' => 'Terjadi kesalahan: ' . $e->getMessage()
+                ]
+            ]);
         }
     }
     protected function saveDataIKM(array $data)

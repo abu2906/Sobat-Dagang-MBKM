@@ -3,13 +3,12 @@
 
 @section('content')
     <div class="flex h-screen overflow-hidden bg-gray-100">
-        <main class="flex-1 flex flex-col bg-gray-100 min-h-screen overflow-y-auto" x-data="ikmEdit()"
-            x-init="init()">
+        <main class="flex-1 flex flex-col bg-gray-100 min-h-screen overflow-y-auto" x-data>
             <!-- ALERT AREA -->
-            <div x-show="showAlert" x-transition
+            <div x-show="false" x-transition
                 class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-red-100 text-red-800 p-4 rounded-lg shadow-lg z-50 w-fit max-w-md text-center"
                 style="display: none;">
-                <p x-text="alertMessage" class="font-semibold"></p>
+                <p x-text="" class="font-semibold"></p>
             </div>
 
             <header class="relative z-10">
@@ -68,6 +67,11 @@
                     <div class="p-10 w-3/4 mx-auto flex justify-center">
                         <section id="tab-content"
                             class="inline-block bg-[#d0e6ff] rounded-2xl p-10 min-h-[200px] text-center text-blue-900 text-xl font-normal shadow-inner">
+                            @if ($errors->has('konsistensi'))
+                                <div id="backend-error-konsistensi"
+                                    data-error-konsistensi="{{ $errors->first('konsistensi') }}"></div>
+                            @endif
+
                             <form id="form-ikm" method="POST" action="{{ route('dataIKM.store') }}">
                                 @csrf
                                 {{-- DATA IKM --}}
@@ -820,7 +824,7 @@
 
                                                 <div>
                                                     <label class="block mb-1 font-medium">Tahun Perolehan</label>
-                                                    <input type="number" name="tahun_perolehan[]" min="1900"
+                                                    <input type="number" name="tahun_perolehan[]" min="2000"
                                                         required
                                                         class="border border-black outline-black p-2 rounded-2xl w-full"
                                                         placeholder="Masukkan Tahun">
@@ -828,7 +832,7 @@
 
                                                 <div>
                                                     <label class="block mb-1 font-medium">Tahun Pembuatan</label>
-                                                    <input type="number" name="tahun_pembuatan[]" min="1900"
+                                                    <input type="number" name="tahun_pembuatan[]" min="2000"
                                                         required
                                                         class="border border-black outline-black p-2 rounded-2xl w-full"
                                                         placeholder="Masukkan Tahun">
@@ -1009,7 +1013,7 @@
 
                                     <div>
                                         <label class="block mb-1 font-medium">Kapasitas Terpasang per Tahun</label>
-                                        <input type="number" id="kapasitas_tahun" name="kapasitas_tahun" min="0"
+                                        <input type="number" id="kapasitas_tahun" name="kapasitas_tahun" min="2000"
                                             required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Kapasitas Terpasang per Tahun">
@@ -1353,29 +1357,6 @@
 @endsection
 
 @push('scripts')
-    @if ($errors->has('konsistensi'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Mencegah submit otomatis karena validasi backend gagal
-                if (window.history.replaceState) {
-                    window.history.replaceState(null, null, window.location.href);
-                }
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Data tidak konsisten',
-                    text: @json($errors->first('konsistensi')),
-                    confirmButtonColor: '#e74c3c',
-                    confirmButtonText: 'Periksa Lagi'
-                }).then(() => {
-                    // Arahkan ke tab tenaga kerja
-                    const target = document.getElementById('btn-karyawan');
-                    if (target) target.click();
-                });
-            });
-        </script>
-    @endif
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // ================================
@@ -1432,9 +1413,6 @@
                 });
             }
 
-
-            showForm('btn-data-ikm');
-
             function initTabSwitching() {
                 tabs.forEach(tab => {
                     tab.addEventListener('click', () => {
@@ -1442,9 +1420,6 @@
                     });
                 });
             }
-
-            initTabSwitching();
-            showForm('btn-data-ikm');
 
             // ================================
             // WILAYAH (KECAMATAN & KELURAHAN)
@@ -1456,12 +1431,19 @@
                 const kelurahanSelect = document.getElementById('kelurahan');
 
                 if (parepareKabupaten && kecamatanSelect) {
-                    // Populate kecamatan options
+                    // Bersihkan isi dropdown kecamatan sebelum diisi ulang
+                    kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+
+                    // Populate kecamatan options tanpa duplikat
+                    const added = new Set();
                     parepareKabupaten.kecamatan.forEach(kec => {
-                        const opt = document.createElement('option');
-                        opt.value = kec.name;
-                        opt.textContent = kec.name;
-                        kecamatanSelect.appendChild(opt);
+                        if (!added.has(kec.name)) {
+                            const opt = document.createElement('option');
+                            opt.value = kec.name;
+                            opt.textContent = kec.name;
+                            kecamatanSelect.appendChild(opt);
+                            added.add(kec.name);
+                        }
                     });
 
                     // Handle kecamatan change
@@ -1486,6 +1468,7 @@
                 }
             }
 
+
             // ================================
             // FORM NAVIGATION (NEXT/PREV)
             // ================================
@@ -1494,7 +1477,7 @@
                     button.addEventListener('click', e => {
                         e.preventDefault();
                         const currentBtnId = button.id.replace('next-',
-                        'btn-'); // ubah ke id tombol
+                            'btn-'); // ubah ke id tombol
                         const btnIds = Object.keys(contents);
                         const currentIndex = btnIds.indexOf(currentBtnId);
                         if (currentIndex !== -1 && currentIndex + 1 < btnIds.length) {
@@ -1518,7 +1501,6 @@
                     }
                 });
             }
-
 
             // ================================
             // DYNAMIC FORM MANAGEMENT
@@ -1610,10 +1592,17 @@
             // ================================
             function prefillDummyData() {
                 const form = document.getElementById('form-ikm');
-                form?.querySelectorAll('input')?.forEach(el => {
+                if (!form) return;
+
+                const inputs = form.querySelectorAll('input');
+                const selects = form.querySelectorAll('select');
+
+                // Isi input
+                inputs.forEach(el => {
                     if (el.name !== '_token' && el.type !== 'hidden') {
                         if (el.type === 'number') {
-                            el.value = el.id.includes('tahun') ? Math.max(el.value, 1900) : 98;
+                            el.value = el.id && el.id.includes('tahun') ? Math.max(el.value || 0, 1900) :
+                                98;
                         } else if (el.type === 'tel') {
                             el.value = '081234567890';
                         } else {
@@ -1621,8 +1610,43 @@
                         }
                     }
                 });
+
+                // Isi select
+                selects.forEach(select => {
+                    if (select.name === 'kecamatan') {
+                        // Pilih kecamatan dan trigger change agar kelurahan aktif
+                        const option = Array.from(select.options).find(opt => opt.value && !opt.disabled);
+                        if (option) {
+                            select.value = option.value;
+                            select.dispatchEvent(new Event('change'));
+                        }
+                    } else if (select.name === 'kelurahan') {
+                        // Tunggu kelurahan terisi dulu baru isi
+                        const observer = new MutationObserver(() => {
+                            const validOption = Array.from(select.options).find(opt => opt.value &&
+                                !opt.disabled);
+                            if (validOption) {
+                                select.value = validOption.value;
+                                observer.disconnect();
+                            }
+                        });
+                        observer.observe(select, {
+                            childList: true
+                        });
+                    } else {
+                        // Select biasa → langsung pilih opsi pertama valid
+                        const defaultOption = Array.from(select.options).find(opt => opt.value && !opt
+                            .disabled);
+                        if (defaultOption) {
+                            select.value = defaultOption.value;
+                        }
+                    }
+                });
             }
 
+            // ================================
+            // FORM VALIDATION & SUBMISSION
+            // ================================
             // ================================
             // FORM VALIDATION & SUBMISSION
             // ================================
@@ -1633,64 +1657,170 @@
                 submitButton.addEventListener('click', function(e) {
                     e.preventDefault();
 
-                    // Skip jika ada error backend
-                    if (document.querySelector('[data-error-konsistensi]')) {
+                    let adaInputKosong = false;
+                    let inputPertamaKosong = null;
+
+                    for (let formId of formIds) {
+                        const bagian = document.getElementById(formId);
+                        if (!bagian) continue;
+
+                        const inputs = bagian.querySelectorAll('input, select, textarea');
+                        for (let input of inputs) {
+                            if (input.hasAttribute('required') && !input.disabled && !input.value.trim()) {
+                                adaInputKosong = true;
+                                if (!inputPertamaKosong) {
+                                    inputPertamaKosong = {
+                                        input: input,
+                                        formId: formId,
+                                        label: input.closest('div')?.querySelector('label')?.textContent
+                                            ?.trim() || input.name
+                                    };
+                                }
+                                break;
+                            }
+                        }
+                        if (adaInputKosong) break;
+                    }
+
+                    if (adaInputKosong && inputPertamaKosong) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Isian belum lengkap',
+                            text: `Bagian "${inputPertamaKosong.label}" wajib diisi.`,
+                            confirmButtonText: 'Oke, isi dulu',
+                            confirmButtonColor: '#F49F1E'
+                        }).then(() => {
+                            const tabBtn = document.querySelector(
+                                `.tab-button[id="btn-${inputPertamaKosong.formId.replace('form-', '')}"]`
+                                );
+                            if (tabBtn) tabBtn.click();
+                            setTimeout(() => {
+                                inputPertamaKosong.input.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
+                                inputPertamaKosong.input.focus();
+                            }, 300);
+                        });
                         return;
                     }
 
-                    // Validasi semua form
-                    for (let formId of formIds) {
-                        const section = document.getElementById(formId);
-                        if (!section) continue;
+                    const form = submitButton.closest('form');
+                    const formData = new FormData(form);
 
-                        const inputs = section.querySelectorAll('input, select, textarea');
-                        for (let input of inputs) {
-                            if (input.hasAttribute('required') && !input.disabled && !input.value.trim()) {
-                                const label = input.closest('div')?.querySelector('label')?.textContent
-                                    ?.trim() || input.name;
+                    Swal.fire({
+                        title: 'Memvalidasi data...',
+                        text: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => Swal.showLoading()
+                    });
+
+                    fetch(form.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    ?.getAttribute('content') || formData.get('_token')
+                            }
+                        })
+                        .then(response => response.json().catch(() => ({
+                            success: false,
+                            errors: {}
+                        })))
+                        .then(data => {
+                            Swal.close();
+
+                            if (data.success !== false && !data.errors) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil',
+                                    text: 'Data berhasil disimpan!',
+                                    confirmButtonText: 'Oke',
+                                    confirmButtonColor: '#22c55e'
+                                }).then(() => form.submit());
+                            } else {
+                                const errorFields = Object.keys(data.errors || {});
+                                const tabMapping = {};
+                                let tabToFocus = '';
+                                let elementToFocus = null;
+
+                                errorFields.forEach(field => {
+                                    let el = form.querySelector(`[name="${field}"]`) ||
+                                        Array.from(form.elements).find(e => field.startsWith(e
+                                            .name?.replace(/\[\]$/, '')));
+
+                                    if (el) {
+                                        const parentForm = el.closest('[id^="form-"]');
+                                        const tabId = parentForm?.id.replace('form-', '');
+                                        if (tabId) {
+                                            if (!elementToFocus) {
+                                                elementToFocus = el;
+                                                tabToFocus = tabId;
+                                            }
+                                            if (!tabMapping[tabId]) tabMapping[tabId] = [];
+                                            tabMapping[tabId].push(data.errors[field]);
+                                        }
+                                    }
+                                });
+
+                                let pesanHTML =
+                                    '<ul style="text-align:left;font-size:14px;padding-left:1.2rem;margin:0">';
+                                Object.values(tabMapping).forEach(messages => {
+                                    messages.forEach(msg => {
+                                        pesanHTML += `<li>${msg}</li>`;
+                                    });
+                                });
+                                pesanHTML += '</ul>';
 
                                 Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Isian belum lengkap',
-                                    text: `Bagian "${label}" wajib diisi.`,
-                                    confirmButtonText: 'Oke, isi dulu',
-                                    confirmButtonColor: '#F49F1E'
+                                    icon: 'error',
+                                    title: 'Data yang diinput tidak sesuai',
+                                    html: `<div style="margin-top:10px;">${pesanHTML}</div>`,
+                                    confirmButtonText: 'Periksa Lagi',
+                                    confirmButtonColor: '#e74c3c'
                                 }).then(() => {
-                                    // Pindah ke tab yang bermasalah
-                                    const tabBtn = document.getElementById('btn-' + formId.replace(
-                                        'form-', ''));
-                                    if (tabBtn) tabBtn.click();
-
-                                    // Focus ke input bermasalah
-                                    setTimeout(() => {
-                                        input.scrollIntoView({
-                                            behavior: 'smooth',
-                                            block: 'center'
-                                        });
-                                        input.focus();
-                                    }, 300);
+                                    if (tabToFocus) {
+                                        const tabBtn = document.querySelector(
+                                            `.tab-button[id="btn-${tabToFocus}"]`);
+                                        if (tabBtn) tabBtn.click();
+                                    }
+                                    if (elementToFocus) {
+                                        setTimeout(() => {
+                                            elementToFocus.scrollIntoView({
+                                                behavior: 'smooth',
+                                                block: 'center'
+                                            });
+                                            elementToFocus.focus();
+                                        }, 300);
+                                    }
                                 });
-                                return;
                             }
-                        }
-                    }
-
-                    // Jika semua validasi berhasil
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: 'Data berhasil disubmit!',
-                        confirmButtonText: 'Oke',
-                        confirmButtonColor: '#22c55e'
-                    }).then(() => {
-                        submitButton.closest('form').submit();
-                    });
+                        })
+                        .catch(error => {
+                            Swal.close();
+                            console.error('Kesalahan validasi:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi kesalahan',
+                                text: 'Tidak dapat memvalidasi data. Silakan coba lagi.',
+                                confirmButtonText: 'Oke',
+                                confirmButtonColor: '#e74c3c'
+                            });
+                        });
                 });
             }
+
+
 
             // ================================
             // INISIALISASI SEMUA FUNGSI
             // ================================
+            function ikmEdit() {
+                return {};
+            }
+
             function init() {
                 initTabSwitching();
                 initWilayahDropdown();
@@ -1698,15 +1828,43 @@
                 initDynamicForms();
                 prefillDummyData();
                 initFormValidation();
+                ikmEdit();
+                console.log('✅ init dijalankan!');
 
                 // Show first form
-                if (formIds.length > 0) {
-                    showForm('btn-' + formIds[0].replace('form-', ''));
-                }
+                showForm('btn-data-ikm');
             }
 
             // Jalankan inisialisasi
             init();
+            document.addEventListener('DOMContentLoaded', function() {
+                const closeBtn = document.getElementById('closeModal');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        const modal = document.getElementById('modal');
+                        if (modal) modal.classList.add('hidden');
+                    });
+                }
+            });
+
+
+            // ================================
+            // HANDLE ERROR KONSISTENSI DARI SERVER (jika ada reload halaman dengan error)
+            // ================================
+            @if ($errors->has('konsistensi'))
+                // Jika halaman di-reload dengan error konsistensi, tampilkan pesan
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data tidak konsisten',
+                    text: @json($errors->first('konsistensi')),
+                    confirmButtonText: 'Periksa Lagi',
+                    confirmButtonColor: '#e74c3c'
+                }).then(() => {
+                    const tabBtn = document.getElementById('btn-karyawan');
+                    if (tabBtn) tabBtn.click();
+                });
+            @endif
+
         });
     </script>
 @endpush
