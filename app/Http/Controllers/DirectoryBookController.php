@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Uttp;
 use App\Models\DataAlatUkur;
 use App\Mail\NotifikasiUttpKadaluarsa;
@@ -16,8 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 
-class DirectoryBookController extends Controller
-{
+class DirectoryBookController extends Controller{
     public function showDirectoryUserMetrologi()
     {
         $alatUkur = DataAlatUkur::select('data_alat_ukur.*')

@@ -40,7 +40,14 @@
                 <option value="">-- Pilih Draft --</option>
                 @foreach($drafts as $d)
                     <option value="{{ $d->id_permohonan }}" {{ request('draft_id') == $d->id_permohonan ? 'selected' : '' }}>
-                        Draft - {{ \Carbon\Carbon::parse($d->tgl_pengajuan)->format('d M Y') }}
+                        Draft - {{ \Carbon\Carbon::parse($d->tgl_pengajuan)->format('d M Y') }} - 
+                        @if($d->jenis_surat == 'surat_rekomendasi_perdagangan')
+                            Surat Rekomendasi
+                        @elseif($d->jenis_surat == 'surat_keterangan_perdagangan')
+                            Surat Keterangan
+                        @else
+                            {{ $d->jenis_surat }}
+                        @endif
                     </option>
                 @endforeach
             </select>
@@ -141,18 +148,6 @@
             </div>
 
             {{-- Kelurahan --}}
-            {{-- <div>
-                <label for="kelurahan">Kelurahan <span class="text-red-500">*</span></label>
-                <select id="kelurahan" name="kelurahan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <option value="">Pilih Kelurahan</option>
-                    @foreach($listKelurahan as $kel)
-                        <option value="{{ $kel }}" {{ (old('kelurahan', $draft->kelurahan ?? '') == $kel) ? 'selected' : '' }}>
-                            {{ ucwords(str_replace('_', ' ', $kel)) }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('kelurahan') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
-            </div> --}}
             <div>
                 <label for="kelurahan">Kelurahan <span class="text-red-500">*</span></label>
                 <select id="kelurahan" name="kelurahan" class="w-full p-2 bg-white border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
@@ -163,9 +158,6 @@
                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p> 
                 @enderror
             </div>
-
-            {{-- Nama Usaha --}}
-
 
             {{-- Foto Usaha --}}
             <div>

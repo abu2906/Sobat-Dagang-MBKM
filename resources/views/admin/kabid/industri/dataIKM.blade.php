@@ -10,8 +10,7 @@
         <div class="w-11/12 bg-white rounded-xl shadow-lg px-6 py-4 flex flex-wrap justify-between gap-4 items-center mx-auto -mt-10 z-20">
             <div class="flex items-center bg-[#CAE2F6] rounded-lg px-4 py-2 flex-1 shadow-md">
                 <span class="material-symbols-outlined text-gray-500 mr-2">search</span>
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-                    <i class="fas fa-search"></i></span>
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></span>
                 <input type="text" id="searchInput" placeholder="Cari"
                     class="bg-transparent w-full focus:outline-none">
             </div>
@@ -25,7 +24,6 @@
                     <option value="Bacukiki">Bacukiki Barat</option>
                 </select>
                 <i class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4">
-                    <span class="material-symbols-outlined text-sm text-gray-700">tune</span>
                 </i>
             </div>
 
@@ -39,7 +37,6 @@
                     <option value="Besar">Besar</option>
                 </select>
                 <i class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4">
-                    <span class="material-symbols-outlined text-sm text-gray-700">tune</span>
                 </i>
             </div>
         </div>
@@ -77,11 +74,11 @@
         @endforeach
     </section>
 
-    <section class="mt-12 px-6 pb-16">
-        <div class="overflow-x-auto rounded-lg">
-            <table class="w-full border-collapse text-sm bg-white shadow-md">
-                <thead>
-                    <tr class="text-white bg-[#083458]">
+    <section class="overflow-hidden mt-12 px-6 pb-16">
+        <div class="overflow-x-auto overflow-y-auto max-h-[350px] rounded-lg">
+            <table class="w-full border-collapse table-auto text-sm bg-white shadow-md">
+                <thead class="text-white bg-[#083458] sticky top-0 z-10">
+                    <tr>
                         <th class="p-3 rounded-tl-xl">NO.</th>
                         <th class="p-3">NAMA USAHA</th>
                         <th class="p-3">NAMA PEMILIK</th>
@@ -93,6 +90,7 @@
                         <th class="p-3">KOMODITI</th>
                         <th class="p-3">JENIS INDUSTRI</th>
                         <th class="p-3">TELEPON</th>
+                        <th class="p-3 rounded-tr-xl">INVESTASI</th>
                     </tr>
                 </thead>
 
@@ -111,6 +109,7 @@
                             <td class="p-2">{{ $ikm->komoditi }}</td>
                             <td class="p-2">{{ $ikm->jenis_industri }}</td>
                             <td class="p-2">{{ $ikm->no_telp }}</td>
+                            <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

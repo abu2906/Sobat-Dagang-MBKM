@@ -140,7 +140,7 @@
         <h1>SURAT KETERANGAN</h1>
     </div>
     <p>Yang Bertanda tangan dibawah ini:</p>
-    <table style="width: 97%; border-collapse: collapse; margin-left: 30px; ">
+    <table style="width: 98%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama</td>
             <td style="padding: 4px;">: {{ $nama_pengirim }}</td>
@@ -158,7 +158,7 @@
         </tr>
         <tr>
             <td style="padding: 4px; width: 160px;">Tempat, tanggal lahir</td>
-            <td style="padding: 4px;">: {{$tampat_lahir}},{{$tanggal_lahir}} </td>
+            <td style="padding: 4px;">: {{$tampat_lahir}}, {{ \Carbon\Carbon::parse($tanggal_lahir)->translatedFormat('d F Y') }}</td>
         </tr>
         <tr>
             <td style="padding: 4px; width: 160px;">Jenis Kelamin</td>

@@ -6,10 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Models\Uttp;
-use App\Models\suratMetrologi;
 use App\Models\Barang;
 use App\Models\IndexHarga;
+use App\Models\DataIkm;
 
 class KadisController extends Controller
 {
@@ -18,12 +17,79 @@ class KadisController extends Controller
         $jenis = [
             'surat_rekomendasi_perdagangan',
             'surat_keterangan_perdagangan',
+            'dan_lainnya_perdagangan',
         ];
 
         return [
             'totalSuratPerdagangan' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
             'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
             'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        ];
+    }
+    private function dataSuratIndustri()    {
+        $jenis = [
+            'surat_rekomendasi_industri',
+            'surat_keterangan_industri',
+            'dan_lainnya_industri',
+        ];
+
+        return [
+            'totalSuratIndustri' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
+            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
+            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        ];
+    }
+    
+    private function dataSuratMetrologi()    {
+        $jenis = [
+            'tera',
+            'tera_ulang'
+        ];
+
+        return [
+            'totalSuratMetrologi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratTerverifikasi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Disetujui')->count(),
+            'totalSuratDitolak' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Ditolak')->count(),
+            'totalSuratDraft' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Menunggu')->count(),
+        ];
+    }
+
+    private function dataSuratTotal() {
+        $perdagangan = $this->dataSuratPerdagangan();
+        $industri = $this->dataSuratIndustri();
+        $metrologi = $this->dataSuratMetrologi();
+
+        return [
+            'totalSuratPerdagangan' => $perdagangan['totalSuratPerdagangan'],
+            'totalSuratTerverifikasiPerdagangan' => $perdagangan['totalSuratTerverifikasi'],
+            'totalSuratDitolakPerdagangan' => $perdagangan['totalSuratDitolak'],
+
+            'totalSuratIndustri' => $industri['totalSuratIndustri'],
+            'totalSuratTerverifikasiIndustri' => $industri['totalSuratTerverifikasi'],
+            'totalSuratDitolakIndustri' => $industri['totalSuratDitolak'],
+
+            'totalSuratMetrologi' => $metrologi['totalSuratMetrologi'],
+            'totalSuratTerverifikasiMetrologi' => $metrologi['totalSuratTerverifikasi'],
+            'totalSuratDitolakMetrologi' => $metrologi['totalSuratDitolak'],
+
+            // Total keseluruhan ketiga bidang
+            'totalSuratKeseluruhan' =>
+                $perdagangan['totalSuratPerdagangan']+
+                $industri['totalSuratIndustri'] +
+                $metrologi['totalSuratMetrologi'],
+
+            'totalSuratTerverifikasiKeseluruhan' =>
+                $perdagangan['totalSuratTerverifikasi']
+                +
+                $industri['totalSuratTerverifikasi'] +
+                $metrologi['totalSuratTerverifikasi'],
+
+            'totalSuratDitolakKeseluruhan' =>
+                $perdagangan['totalSuratDitolak'],+
+                $industri['totalSuratDitolak'] +
+                $metrologi['totalSuratDitolak'],
         ];
     }
 
@@ -65,71 +131,7 @@ class KadisController extends Controller
             'lastYear' => $lastYear
         ];
     }
-
-    private function dataSuratIndustri()    {
-        $jenis = [
-            'surat_rekomendasi_industri',
-            'surat_keterangan_industri',
-        ];
-
-        return [
-            'totalSuratIndustri' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
-            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
-            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
-            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
-        ];
-
-    }
-    private function dataSuratMetrologi()    {
-        $jenis = [
-            'tera',
-            'tera_ulang'
-        ];
-
-        return [
-            'totalSuratMetrologi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->count(),
-            'totalSuratTerverifikasi' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Disetujui')->count(),
-            'totalSuratDitolak' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Ditolak')->count(),
-            'totalSuratDraft' => DB::table('surat_metrologi')->whereIn('jenis_surat', $jenis)->where('status_surat_masuk', 'Menunggu')->count(),
-        ];
-    }
-
-    private function dataSuratTotal() {
-        $perdagangan = $this->dataSuratPerdagangan();
-        $industri = $this->dataSuratIndustri();
-        $metrologi = $this->dataSuratMetrologi();
-
-        return [
-            'totalSuratPerdagangan' => $perdagangan['totalSuratPerdagangan'],
-            'totalSuratTerverifikasiPerdagangan' => $perdagangan['totalSuratTerverifikasi'],
-            'totalSuratDitolakPerdagangan' => $perdagangan['totalSuratDitolak'],
-
-            'totalSuratIndustri' => $industri['totalSuratIndustri'],
-            'totalSuratTerverifikasiIndustri' => $industri['totalSuratTerverifikasi'],
-            'totalSuratDitolakIndustri' => $industri['totalSuratDitolak'],
-
-            'totalSuratMetrologi' => $metrologi['totalSuratMetrologi'],
-            'totalSuratTerverifikasiMetrologi' => $metrologi['totalSuratTerverifikasi'],
-            'totalSuratDitolakMetrologi' => $metrologi['totalSuratDitolak'],
-
-            // Total keseluruhan ketiga bidang
-            'totalSuratKeseluruhan' =>
-                $perdagangan['totalSuratPerdagangan'],+
-                $industri['totalSuratIndustri'] +
-                $metrologi['totalSuratMetrologi'],
-
-            'totalSuratTerverifikasiKeseluruhan' =>
-                $perdagangan['totalSuratTerverifikasi'],
-                +
-                $industri['totalSuratTerverifikasi'] +
-                $metrologi['totalSuratTerverifikasi'],
-
-            'totalSuratDitolakKeseluruhan' =>
-                $perdagangan['totalSuratDitolak'],                +
-                $industri['totalSuratDitolak'] +
-                $metrologi['totalSuratDitolak'],
-        ];
-    }
+    
     public function index(Request $request)
     {
         $totalSuratSmuaBidang = $this->dataSuratTotal();
@@ -148,6 +150,27 @@ class KadisController extends Controller
             'today' => [],
             'yesterday' => []
         ];
+
+        //Grafik Industri
+        // Jumlah IKM berdasarkan Investasi
+        $levelInvestasi = DataIkm::selectRaw("
+            CASE
+                WHEN level < 100000000 THEN 'Kecil'
+                WHEN level >= 100000000 THEN 'Menengah'
+            END as kategori,
+            COUNT(*) as jumlah
+        ")
+        ->groupBy('kategori')
+        ->pluck('jumlah', 'kategori')
+        ->toArray();
+
+        $labels = ['Kecil', 'Menengah'];
+        $data = [
+            'Kecil' => $levelInvestasi['Kecil'] ?? 0,
+            'Menengah' => $levelInvestasi['Menengah'] ?? 0
+        ];
+
+        $levelIKM = array_sum($levelInvestasi);
 
         if (in_array($lokasi, ['Pasar Sumpang', 'Pasar Lakessi'])) {
             $current = Carbon::parse($startDate);
@@ -219,8 +242,6 @@ class KadisController extends Controller
                 ->values()
                 ->all();
         }
-
-        
         $calibrationData = $this->getCalibrationComparisonData();
 
         return view('admin.kepalaDinas.dashboard', [
@@ -236,6 +257,10 @@ class KadisController extends Controller
             'topHargaTurun' => $topHargaTurun,
             'barChartData' => $barChartData,
             'calibrationData' => $calibrationData,
+            'levelIKM' => $levelIKM,
+            'labels' => $labels,
+            'data' => $data,
+            'levelInvestasi' => $levelInvestasi,
         ]);
     }
 

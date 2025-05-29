@@ -5,15 +5,11 @@
 
 @section('content')
 
-<div class="relative w-full h-60">
-    <img src="{{ asset('assets/img/background/dagang.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
-    <div class="absolute bottom-0 w-full -left-4 h-60 -z-10">
-        <img src="{{ asset('assets/img/background/dagang.jpg') }}"
-             alt="Background"
-             class="object-cover w-full h-full -ml-16">
+<div class="relative w-full h-44">
+    <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
+    <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+    </div>
 </div>
-
-
 <div class="max-w-6xl px-4 mx-auto my-6 mb-12">
 <h2 class="text-2xl font-bold text-[#083358] mb-4 text-center">Daftar Pengajuan Distributor</h2>
 

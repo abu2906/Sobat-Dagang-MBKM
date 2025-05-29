@@ -20,7 +20,6 @@
 @endsection
 
 @section('content')
-    <!-- Bungkus dengan div agar layout fleksibel -->
     <div class="space-y-10 pb-32 relative">
 
 		<!-- Modal Lihat Keterangan Penolakan -->

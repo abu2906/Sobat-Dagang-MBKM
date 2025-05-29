@@ -24,10 +24,10 @@
             <ul class="space-y-2 text-sm">
                 @php
                 $menuItems = [
-                    ['href' => route('dashboard'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                    ['href' => route('dashboard.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
                     ['href' => route('dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],
-                    ['href' => route('halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
-                    ['href' => route('surat'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                    ['href' => route('admin.industri.halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Setifikasi Halal'],
+                    ['href' => route('kelolaSurat.industri'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
                 ];
                 @endphp
 

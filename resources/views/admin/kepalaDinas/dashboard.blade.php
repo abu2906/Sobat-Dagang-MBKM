@@ -30,7 +30,7 @@
     <!-- Grafik Metrologi -->
     <div class="p-4 mb-6 bg-white shadow-md rounded-xl">
         <h3 class="mb-2 text-sm font-semibold text-gray-700">Bidang Metrologi</h3>
-        <p class="text-lg font-semibold mb-4">Grafik Perbandingan Jumlah Tera</p>
+        <p class="mb-4 text-lg font-semibold">Grafik Perbandingan Jumlah Tera</p>
         <div class="h-[280px]">
             <canvas id="chartLine"></canvas>
         </div>
@@ -78,9 +78,9 @@
         <div class="flex flex-col h-full p-4 bg-white shadow-md rounded-xl">
             <h3 class="mb-2 text-sm font-semibold text-gray-700">Bidang Industri</h3>
             <div class="max-w-full max-h-[220px] overflow-hidden flex-grow">
-                <canvas id="chartIndustri" class="w-full max-w-full max-h-[200px]"></canvas>
+                <canvas id="chartIndustri" class="w-600px max-w-full max-h-[170px]"></canvas>
             </div>
-            <a href="#" class="mt-auto block w-full bg-[#083458] text-white px-4 py-2 rounded-md text-center text-sm hover:bg-blue-300 hover:text-black">
+            <a href="{{route('kadis.industri')}}" class="mt-auto block w-full bg-[#083458] text-white px-4 py-2 rounded-md text-center text-sm hover:bg-blue-300 hover:text-black">
                 Lihat Detail
             </a>
         </div>
@@ -207,32 +207,58 @@
         }
     });
 
-    // Bidang Industri (Bar)
-    new Chart(document.getElementById('chartIndustri'), {
+    // Bar Chart Perbandingan IKM
+    const levelLabels = {!! json_encode(array_keys($levelInvestasi)) !!};
+    const levelData = {!! json_encode(array_values($levelInvestasi)) !!};
+    const chartIndustriCtx = document.getElementById('chartIndustri').getContext('2d');
+    const chartIndustri = new Chart(chartIndustriCtx, {
         type: 'bar',
         data: {
-            labels: ['2024', '2025'],
-            datasets: [
-                {
-                    label: 'Masuk',
-                    backgroundColor: '#FBBF24',
-                    data: [15, 10]
-                },
-                {
-                    label: 'Keluar',
-                    backgroundColor: '#3B82F6',
-                    data: [10, 14]
-                }
-            ]
+        labels: levelLabels,
+        datasets: [{
+            label: 'Jumlah IKM',
+            data: levelData, 
+            backgroundColor: [
+            'rgba(255, 206, 86, 0.7)',  
+            'rgba(255, 99, 132, 0.7)'
+            ],
+            borderColor: [
+            'rgba(255, 206, 86, 1)',
+            'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1,
+        }]
         },
         options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' }
+        responsive: true,
+        plugins: {
+            legend: {
+            display: false,
+            // position: 'bottom'
             },
-            scales: {
-                y: { beginAtZero: true }
+            tooltip: {
+            callbacks: {
+                label: function(context) {
+                return context.parsed.y + ' IKM';
+                }
+                }
             }
+            },
+        scales: {
+            y: {
+            beginAtZero: true,
+            title: {
+                display: true,
+                text: 'Jumlah IKM'
+            }
+            },
+            x: {
+            title: {
+                display: true,
+                text: 'Level IKM'
+            }
+            }
+        }
         }
     });
 </script>

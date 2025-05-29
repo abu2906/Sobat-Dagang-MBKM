@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Surat;
-use App\Models\HargaBarang;
-use App\Models\Notifikasi;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Str;
@@ -18,14 +14,11 @@ use App\Models\IndexKategori;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\IndexHarga;
-use App\Models\DistribusiPupuk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StokOpname;
 use App\Models\Berita;
-
-
 
 class DashboardPerdaganganController extends Controller{
     public function index(Request $request)
@@ -182,8 +175,7 @@ class DashboardPerdaganganController extends Controller{
         ]);
     }
 
-    public function detailSurat($id)
-    {
+    public function detailSurat($id){
         $data = PermohonanSurat::where('id_permohonan', $id)->first();
         $dokumen = DocumentUser::where('id_permohonan', $id)->first();
         $user = DB::table('user')->where('id_user', $data->id_user)->first();
@@ -195,8 +187,7 @@ class DashboardPerdaganganController extends Controller{
         ]);
     }
 
-    public function viewDokumen($id, $type)
-    {
+    public function viewDokumen($id, $type){
         $dokumen = DB::table('document_user')->where('id_permohonan', $id)->first();
 
         if (!$dokumen) {
@@ -220,8 +211,7 @@ class DashboardPerdaganganController extends Controller{
         return response()->file(storage_path("app/public/{$filePath}"));
     }
 
-    public function formTambahBarang()
-    {
+    public function formTambahBarang(){
         $kategori = IndexKategori::all();
         return view('admin.bidangPerdagangan.tambahBarang', compact('kategori'));
     }
@@ -260,15 +250,13 @@ class DashboardPerdaganganController extends Controller{
         return redirect()->back()->with('success', 'Barang berhasil ditambahkan.');
     }
 
-    public function formUpdateHarga()
-    {
+    public function formUpdateHarga(){
         $kategoris = IndexKategori::orderBy('nama_kategori')->get();
         $barangs = Barang::orderBy('nama_barang')->get();
 
         return view('admin.bidangPerdagangan.updateHarga', compact('kategoris', 'barangs'));
     }
-    public function update(Request $request)
-    {
+    public function update(Request $request){
         $request->validate([
             'id_index_kategori' => 'required|exists:index_kategori,id_index_kategori',
             'id_barang' => 'required|exists:barang,id_barang',
@@ -290,28 +278,24 @@ class DashboardPerdaganganController extends Controller{
         return back()->with('success', 'Harga barang berhasil diperbarui.');
     }
 
-    public function getByKategori($id)
-    {
+    public function getByKategori($id){
         $barangs = Barang::where('id_index_kategori', $id)->get(['id_barang', 'nama_barang']);
         return response()->json($barangs);
     }
 
-    public function deleteBarang()
-    {
+    public function deleteBarang(){
         $barangs = Barang::with('kategori')->get(); // eager load kategori
         return view('admin.bidangPerdagangan.hapusBarang', compact('barangs'));
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id){
         $barang = Barang::findOrFail($id);
         $barang->delete();
 
         return redirect()->back()->with('success', 'Barang berhasil dihapus.');
     }
 
-    public function laporanPupuk(Request $request)
-    {
+    public function laporanPupuk(Request $request){
         $bulanTahun = $request->input('bulan_tahun');
         $tahunInput = $request->input('tahun');
 
@@ -393,7 +377,6 @@ class DashboardPerdaganganController extends Controller{
         ]);
     }
 
-
     public function formPermohonan(Request $request)
     {
         $idUser = auth()->guard('user')->id();
@@ -403,6 +386,7 @@ class DashboardPerdaganganController extends Controller{
         $drafts = DB::table('form_permohonan')
             ->where('id_user', $idUser)
             ->where('status', 'disimpan')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -430,18 +414,15 @@ class DashboardPerdaganganController extends Controller{
         return view('user.bidangPerdagangan.formPermohonan', compact('drafts', 'draft', 'listKelurahan'));
     }
 
-
-
-
-    public function riwayatSurat()
-    {
+    public function riwayatSurat(){
         if (!auth()->guard('user')->check()) {
             return redirect()->route('login')->with('error', 'Harap login terlebih dahulu');
         }
         $userId = Auth::guard('user')->id();
 
         $query = PermohonanSurat::where('id_user', $userId)
-            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']); // hanya status ini yang ditampilkan
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']) // hanya status ini yang ditampilkan
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan']);
 
         if ($searchTerm = request('search')) {
             $search = strtolower(trim($searchTerm));
@@ -479,19 +460,15 @@ class DashboardPerdaganganController extends Controller{
     }
 
 
-    public function tolak(Request $request, $id)
-    {
-        // Validasi input
+    public function tolak(Request $request, $id){
         $request->validate([
             'nama_pengirim' => 'required|string',
             'alasan' => 'required|string',
             'tanggal' => 'required|date',
         ]);
 
-        // Cari permohonan berdasarkan ID
         $permohonan = PermohonanSurat::findOrFail($id);
 
-        // Set status menjadi 'ditolak'
         $permohonan->status = 'ditolak';
 
         // Generate PDF
@@ -519,14 +496,13 @@ class DashboardPerdaganganController extends Controller{
 
             // Kembalikan response yang mengarah langsung ke file PDF menggunakan response()->file()
             return response()->file(storage_path("app/public/surat/{$filename}"));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Log error jika terjadi masalah
             dd($e->getMessage());
         }
     }
 
-    public function simpanRekomendasi(Request $request, $id)
-    {
+    public function simpanRekomendasi(Request $request, $id){
 
         
         set_time_limit(300); // waktu dalam detik
@@ -589,8 +565,7 @@ class DashboardPerdaganganController extends Controller{
         }
     }
 
-    public function simpanketerangan(Request $request, $id)
-    {
+    public function simpanketerangan(Request $request, $id){
 
         // Validasi input
         $request->validate([
@@ -645,8 +620,7 @@ class DashboardPerdaganganController extends Controller{
         }
     }
 
-    public function ajukanPermohonan(Request $request)
-    {
+    public function ajukanPermohonan(Request $request){
         $idUser = session('id_user');
         $status = $request->input('submit_action'); // 'ajukan' atau 'simpan'
 
