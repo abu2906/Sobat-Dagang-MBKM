@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="min-h-screen p-6 bg-white">
-    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-3">
         <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>
@@ -27,20 +27,9 @@
                 <p class="text-2xl font-bold text-green-600">{{ $totalSuratDitolak }}</p>
             </div>
         </a>
-
-        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
-            <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
-            <div>
-                <p class="text-base font-medium text-black">Draft Surat Balasan</p>
-                <p class="text-2xl font-bold text-orange-500">{{ $totalSuratDraft }}</p>
-            </div>
-        </a>
     </div>
 
-<!-- Grafik dan Informasi Tambahan - Versi Baru -->
 <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
-    
-    <!-- Bagian Tabel Harga Barang -->
     <div class="overflow-x-auto rounded-xl shadow max-h-[500px] overflow-y-auto scrollbar-hide">
         <table class="min-w-full text-sm text-left border-separate border-spacing-0">
             <thead class="sticky top-0 z-10 text-black bg-blue-300">
@@ -68,7 +57,6 @@
         </table>
     </div>
 
-    <!-- Bagian Grafik dan Statistik -->
     <div class="w-full max-w-xl p-4 mx-auto bg-white shadow-lg rounded-2xl">
         <div class="flex items-center gap-2 mb-4 text-base font-semibold text-gray-800 sm:text-lg">
             <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -78,12 +66,10 @@
             Statistik Indeks Harga
         </div>
 
-        <!-- Chart -->
         <div class="relative w-full mb-4 h-60 sm:h-80">
             <canvas id="hargaChart" class="w-full h-full"></canvas>
         </div>
 
-        <!-- Statistik Ringkasan -->
         <div class="grid grid-cols-2 text-sm text-center gap-y-4 gap-x-2 sm:grid-cols-4">
             <div>
                 <p class="text-gray-500">Terendah</p>
@@ -106,7 +92,6 @@
 </div>
 <h2 class="mt-4 mb-4 text-lg font-semibold text-center text-black lg:text-left">Daftar Surat Masuk</h2>
     <div class="flex flex-col gap-6 mb-6 lg:flex-row lg:items-start ">
-    <!-- Kiri: Tabel Surat -->
         <div class="w-full overflow-hidden border lg:w-3/4 rounded-xl">
             <div class="overflow-x-auto max-h-[500px] custom-scrollbar">
                 <table class="min-w-full text-sm text-left">
@@ -148,7 +133,6 @@
             </div>
         </div>
 
-        <!-- Kanan: Judul dan Kelola Surat -->
         <div class="flex flex-col w-full gap-4 lg:w-1/4">
             <div class="flex flex-col items-center gap-4 p-6 bg-white border border-gray-200 shadow-md rounded-2xl">
                 <a href="{{ route('perdagangan.kelolaSurat') }}" 

@@ -908,6 +908,7 @@ class AdminIndustriController extends Controller
         $rekapSurat = $this->getSuratIndustriData();
         $query = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
+            ->where('status', '!=', 'disimpan')
             ->whereIn('status', ['menunggu', 'diterima', 'ditolak']);
 
         if ($request->filled('search')) {

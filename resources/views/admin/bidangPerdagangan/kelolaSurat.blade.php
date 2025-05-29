@@ -21,7 +21,7 @@
                 class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
     </div>
-    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-3">
         <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>
@@ -46,13 +46,6 @@
             </div>
         </a>
 
-        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
-            <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
-            <div>
-                <p class="text-base font-medium text-black">Draft Surat Balasan</p>
-                <p class="text-2xl font-bold text-orange-500">{{ $totalSuratDraft }}</p>
-            </div>
-        </a>
     </div>
 
 <div class="container px-4 pb-4 mx-auto">
