@@ -2,67 +2,65 @@
     @section('title', 'Data IKM')
 
     @section('content')
-        <main class="flex-1 flex flex-col bg-gray-100 min-h-screen" x-data="ikmEdit()" x-init="init()">
+        <main class="flex flex-col flex-1 min-h-screen bg-gray-100" x-data="ikmEdit()" x-init="init()">
             <header class="relative z-10">
-                <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover"
-                    alt="Header">
+                <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover" alt="Header">
 
                 <div
-                    class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-11/12 bg-white rounded-xl shadow-lg px-6 py-4 flex flex-wrap justify-between gap-4 items-center z-20">
-                    <div class="flex items-center bg-[#CAE2F6] rounded-lg px-4 py-2 flex-1 shadow-md">
-                        <i class="fas fa-search text-gray-500 ml-2"></i>
+                    class="absolute bottom-0 z-20 flex flex-wrap items-stretch justify-between w-11/12 gap-4 px-4 py-4 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg left-1/2 rounded-xl md:flex-nowrap">
+
+                    {{-- Search Bar --}}
+                    <div class="flex items-center bg-[#CAE2F6] rounded-lg px-4 py-2 w-full md:flex-1 min-w-0 shadow-md">
+                        <i class="ml-2 text-gray-500 fas fa-search"></i>
                         <input type="text" id="searchInput" placeholder="Cari"
-                            class="ml-2 bg-transparent w-full focus:outline-none">
-                        
+                            class="w-full ml-2 text-sm bg-transparent focus:outline-none">
                     </div>
 
-                    <div class="relative w-48">
+                    {{-- Filter Kecamatan --}}
+                    <div class="relative w-full md:w-48">
                         <select id="filterKecamatan" onchange="filterTabel()"
-                            class="appearance-none bg-[#CAE2F6] rounded-lg px-4 py-2 pr-8 w-full focus:outline-none shadow-md">
+                            class="appearance-none bg-[#CAE2F6] rounded-lg px-4 py-2 pr-8 w-full focus:outline-none shadow-md text-sm">
                             <option value="">Kecamatan</option>
                             <option value="Soreang">Soreang</option>
                             <option value="Ujung">Ujung</option>
                             <option value="Bacukiki">Bacukiki</option>
                             <option value="BacukikiBarat">Bacukiki Barat</option>
                         </select>
-                        <i
-                            class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4"></i>
+                        <i class="absolute w-4 h-4 -translate-y-1/2 pointer-events-none fas fa-sliders-h right-3 top-1/2"></i>
                     </div>
 
-                    <div class="relative w-48">
+                    {{-- Filter Investasi --}}
+                    <div class="relative w-full md:w-48">
                         <select id="filterInvestasi" onchange="filterTabel()"
-                            class="appearance-none bg-[#CAE2F6] rounded-lg px-4 py-2 pr-8 w-full focus:outline-none shadow-md">
+                            class="appearance-none bg-[#CAE2F6] rounded-lg px-4 py-2 pr-8 w-full focus:outline-none shadow-md text-sm">
                             <option value="">Investasi</option>
                             <option value="Kecil">Kecil</option>
                             <option value="Menengah">Menengah</option>
                             <option value="Besar">Besar</option>
                         </select>
-                        <i
-                            class="fas fa-sliders-h absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none w-4 h-4"></i>
+                        <i class="absolute w-4 h-4 -translate-y-1/2 pointer-events-none fas fa-sliders-h right-3 top-1/2"></i>
                     </div>
 
+                    {{-- Tambah Data --}}
                     <a href="{{ route('formIKM') }}"
-                        class="bg-[#003366] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
+                        class="bg-[#003366] text-white font-semibold rounded-lg px-4 py-2 w-full md:w-auto text-center shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300 text-sm">
                         TAMBAH DATA
                     </a>
 
-                    <form method="GET" action="{{ route('exportIKM') }}" id="exportForm">
+                    {{-- Unduh Data --}}
+                    <form method="GET" action="{{ route('exportIKM') }}" id="exportForm" class="w-full md:w-auto">
                         <input type="hidden" name="kecamatan" id="inputKecamatan">
                         <input type="hidden" name="search" id="inputSearch">
                         <div id="inputJenisContainer"></div>
                         <input type="hidden" name="investasi[]" id="inputInvestasi">
                         <button type="submit"
-                            class="bg-[#0A4D68] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#0A4D68] border border-transparent hover:border-[#0A4D68] transition duration-300">
+                            class="w-full md:w-auto bg-[#0A4D68] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#0A4D68] border border-transparent hover:border-[#0A4D68] transition duration-300 text-sm">
                             UNDUH DATA
                         </button>
                     </form>
-
-
-
                 </div>
             </header>
-
-            <section class="mt-20 px-4 flex flex-wrap justify-center gap-4">
+            <section class="flex flex-wrap justify-center gap-4 px-4 mt-[200px] md:mt-20">
                 @php
                     $kategoriList = [
                         ['nama' => 'Sandang', 'ikon' => 'sandang.png'],
@@ -81,9 +79,9 @@
 
                 @foreach ($kategoriList as $kategori)
                     <div onclick="selectKategori(this)"
-                        class="kategori-card cursor-pointer flex flex-col items-center bg-white p-3 rounded-xl shadow-lg w-44 border-2 border-transparent transition transform hover:scale-105 text-center">
+                        class="flex flex-col items-center p-3 text-center transition transform bg-white border-2 border-transparent shadow-lg cursor-pointer kategori-card rounded-xl w-44 hover:scale-105">
                         <img src="{{ asset('assets/img/kategori/' . $kategori['ikon']) }}"
-                            alt="{{ $kategori['nama'] }} Icon" class="w-10 h-10 object-contain">
+                            alt="{{ $kategori['nama'] }} Icon" class="object-contain w-10 h-10">
                         <span
                             class="font-semibold mt-1 text-[#083458] leading-tight min-h-[2rem] flex items-center justify-center text-center">
                             {{ $kategori['nama'] }}
@@ -94,9 +92,9 @@
             </section>
 
             <div class="container px-4 pb-4 mx-auto">
-                <section class="overflow-hidden mt-12 px-6 pb-16">
+                <section class="px-6 pb-16 mt-12 overflow-hidden">
                     <div class="overflow-x-auto overflow-y-auto max-h-[350px] rounded-lg">
-                        <table class="w-full border-collapse table-auto text-sm bg-white shadow-md">
+                        <table class="w-full text-sm bg-white border-collapse shadow-md table-auto">
                             <thead class="text-white bg-[#083458] sticky top-0 z-10">
                                 <tr>
                                     <th class="p-3 rounded-tl-xl">NO.</th>
@@ -136,7 +134,7 @@
                                         <td class="p-2 text-center">
                                             <div class="flex justify-center gap-2">
                                                 <button type="button" @click='openEdit(@json($ikm))'
-                                                    class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-lg">
+                                                    class="px-3 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600">
                                                     Edit
                                                 </button>
 
@@ -146,7 +144,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
-                                                        class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">Hapus</button>
+                                                        class="px-3 py-1 text-xs text-white bg-red-500 rounded-lg hover:bg-red-600">Hapus</button>
                                                 </form>
                                             </div>
                                         </td>
@@ -154,7 +152,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <p id="noResults" class="text-center mt-4 font-medium text-red-500 hidden">Data tidak ditemukan.</p>
+                        <p id="noResults" class="hidden mt-4 font-medium text-center text-red-500">Data tidak ditemukan.</p>
 
                     </div>
                 </section>
@@ -162,33 +160,33 @@
 
             <!-- Overlay -->
             <div x-show="openModal" x-transition.opacity
-                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40">
+                class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm">
             </div>
 
             <!-- Modal -->
              <style>
                 [x-cloak] { display: none !important; }
                 </style>
-            <div x-show="openModal" x-cloak class="fixed inset-0 flex items-start justify-center z-50 p-4">
+            <div x-show="openModal" x-cloak class="fixed inset-0 z-50 flex items-start justify-center p-4">
                 <div @click.away="openModal = false" @keydown.escape.window="openModal = false" tabindex="0"
                     class="relative w-full max-w-3xl bg-white rounded-lg shadow-lg p-8 mt-24 overflow-auto max-h-[80vh]">
                     <button @click="openModal = false" type="button"
-                        class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none">
+                        class="absolute text-2xl font-bold leading-none top-4 right-4 hover:text-gray-700 focus:outline-none">
                         &times;
                     </button>
 
-                    <h2 class="mb-6 text-center text-lg font-bold md:text-xl">EDIT DATA IKM</h2>
+                    <h2 class="mb-6 text-lg font-bold text-center md:text-xl">EDIT DATA IKM</h2>
 
                     <form :action="'{{ url('data-IKM/store') }}'" method="POST" class="space-y-6">
                         @csrf
                         <input type="hidden" name="id" :value="formData.id_ikm">
 
-                        <div class="grid md:grid-cols-2 gap-6">
+                        <div class="grid gap-6 md:grid-cols-2">
                             <template x-for="(label, name) in fieldMap" :key="name">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1" x-text="label"></label>
+                                    <label class="block mb-1 text-sm font-medium text-gray-700" x-text="label"></label>
                                     <input type="text" :name="name" x-model="formData[name]" required
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
+                                        class="w-full px-4 py-2 text-sm transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                                 </div>
                             </template>
                         </div>

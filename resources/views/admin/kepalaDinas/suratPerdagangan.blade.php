@@ -77,6 +77,18 @@
             </ul>
         </div>
         @endif
+        <div class="flex items-center justify-end gap-2 mb-4">
+            <label for="filterStatus" class="text-sm font-medium text-gray-700">
+                Filter Status:
+            </label>
+            <select id="filterStatus"
+                class="text-sm border border-gray-300 rounded-lg px-3 py-1.5 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out hover:border-blue-400">
+                <option value="semua">Semua</option>
+                <option value="diterima">Disetujui</option>
+                <option value="ditolak">Ditolak</option>
+                <option value="menunggu">Menunggu</option>
+            </select>
+        </div>
         <div class="relative overflow-y-auto scrollbar-hide max-h-[600px]">
             <table class="w-full text-sm text-left text-gray-700">
                 <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
@@ -93,7 +105,7 @@
                 <tbody class="bg-white">
                     @php $nomor = 1; @endphp
                     @foreach($suratMasuk as $index => $surat)
-                    <tr class="border-b hover:bg-gray-50">
+                    <tr class="text-center border-b" data-status="{{ $surat->status }}">
                         <td class="px-4 py-2 text-center rounded-l">{{ $nomor++ }}</td>
                         <td class="px-4 py-2 text-center">{{ $surat->user->nama ?? 'Tidak Diketahui' }}</td>
                         <td class="px-4 py-2 text-center">{{ $surat->tgl_pengajuan }}</td>
@@ -212,6 +224,26 @@
                 renderCharts(data.statusCounts, data.dataBulanan);
             })
             .catch(error => console.error('Error:', error));
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterSelect = document.getElementById('filterStatus');
+        const rows = document.querySelectorAll('tbody tr');
+
+        filterSelect.addEventListener('change', function () {
+            const selected = this.value;
+
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+
+                if (selected === 'semua' || status === selected) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     });
 </script>
 @endsection
