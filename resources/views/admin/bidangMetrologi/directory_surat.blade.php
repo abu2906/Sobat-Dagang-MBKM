@@ -85,6 +85,7 @@
 						<th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 font-medium border-b border-blue-100 text-center">No Surat</th>
 						<th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 font-medium border-b border-blue-100 text-center">Tanggal</th>
 						<th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 font-medium border-b border-blue-100 text-center hidden sm:table-cell">NIB</th>
+						<th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 font-medium border-b border-blue-100 text-center hidden sm:table-cell">Titik Koordinat</th>
 						<th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 font-medium border-b border-blue-100 text-center">Pemohon</th>
 						<th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 font-medium border-b border-blue-100 text-center hidden md:table-cell">Jenis</th>
 						<th scope="col" class="px-3 py-2 sm:px-4 sm:py-3 font-medium border-b border-blue-100 text-center">Status</th>
@@ -100,6 +101,7 @@
 							{{ \Carbon\Carbon::parse($surat->created_at)->format('d-m-Y') }}
 						</td>
 						<td class="px-3 py-2 sm:px-4 sm:py-3 border-b text-center hidden sm:table-cell">{{ $surat->user->nib ?? '-' }}</td>
+						<td class="px-3 py-2 sm:px-4 sm:py-3 border-b text-center hidden sm:table-cell">{{ $surat->alamat_alat ?? '-' }}</td>
 						<td class="px-3 py-2 sm:px-4 sm:py-3 border-b text-center">{{ $surat->user->nama ?? '-' }}</td>
 						<td class="px-3 py-2 sm:px-4 sm:py-3 border-b text-center hidden md:table-cell">
 							{{ $surat->jenis_surat ? ucwords(str_replace('_', ' ', $surat->jenis_surat)) : '-' }}
