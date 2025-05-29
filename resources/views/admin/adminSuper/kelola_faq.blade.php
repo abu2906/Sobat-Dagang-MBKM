@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="relative w-full h-64">
+<div class="relative w-full h-44">
     <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         <h1 class="text-5xl font-bold text-[#FAA31E]">Kelola FAQ</h1>
@@ -15,7 +15,7 @@
                     search
                 </span>
                 <input id="faqSearch" type="text" placeholder="Cari"
-                    class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    class="w-full p-3 pl-10 bg-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
             <div class="bg-white rounded-full shadow-xl shadow-gray-400/40">
                 <button onclick="openModal()" class="btn btn-primary rounded-full py-3 px-6 text-[#083358] font-semibold bg-white

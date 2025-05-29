@@ -4,7 +4,7 @@
 <div class="bg-white flex justify-center py-10 px-4">
   <div class="max-w-3xl w-full">
     <h1
-      class="fredoka text-3xl text-center mb-8"
+      class="fredoka text-6xl font-extrabold text-center mb-8"
       style="color: #f9a825; text-shadow: 2px 2px 0 #000000;"
     >
       FAQ

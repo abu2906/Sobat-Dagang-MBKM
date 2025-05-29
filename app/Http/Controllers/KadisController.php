@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Models\Uttp;
-use App\Models\suratMetrologi;
 use App\Models\Barang;
 use App\Models\IndexHarga;
 use App\Models\DataIkm;
@@ -78,12 +76,12 @@ class KadisController extends Controller
 
             // Total keseluruhan ketiga bidang
             'totalSuratKeseluruhan' =>
-                $perdagangan['totalSuratPerdagangan'],+
+                $perdagangan['totalSuratPerdagangan']+
                 $industri['totalSuratIndustri'] +
                 $metrologi['totalSuratMetrologi'],
 
             'totalSuratTerverifikasiKeseluruhan' =>
-                $perdagangan['totalSuratTerverifikasi'],
+                $perdagangan['totalSuratTerverifikasi']
                 +
                 $industri['totalSuratTerverifikasi'] +
                 $metrologi['totalSuratTerverifikasi'],
@@ -153,11 +151,10 @@ class KadisController extends Controller
             'yesterday' => []
         ];
 
-
         //Grafik Industri
         // Jumlah IKM berdasarkan Investasi
         $levelInvestasi = DataIkm::selectRaw("
-            CASE 
+            CASE
                 WHEN level < 100000000 THEN 'Kecil'
                 WHEN level >= 100000000 THEN 'Menengah'
             END as kategori,
@@ -245,7 +242,6 @@ class KadisController extends Controller
                 ->values()
                 ->all();
         }
-
         $calibrationData = $this->getCalibrationComparisonData();
 
         return view('admin.kepalaDinas.dashboard', [
@@ -264,7 +260,7 @@ class KadisController extends Controller
             'levelIKM' => $levelIKM,
             'labels' => $labels,
             'data' => $data,
-            'levelInvestasi' => $levelInvestasi, 
+            'levelInvestasi' => $levelInvestasi,
         ]);
     }
 

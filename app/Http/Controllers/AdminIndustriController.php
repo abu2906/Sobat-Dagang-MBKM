@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Surat;
-use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -21,8 +19,7 @@ use App\Models\DataIkm;
 use App\Models\SertifikasiHalal;
 use App\Exports\DataIkmExport;
 use Maatwebsite\Excel\Facades\Excel;;
-
-
+use App\Http\Controllers\user;
 
 class AdminIndustriController extends Controller
 {
@@ -374,7 +371,6 @@ class AdminIndustriController extends Controller
         \App\Models\DataIkm::destroy($id);
         return redirect()->route('dataIKM')->with('success', 'Data berhasil dihapus.');
     }
-
 
     public function ShowformIKM()
     {
@@ -907,7 +903,6 @@ class AdminIndustriController extends Controller
         ]);
     }
 
-
     public function showHalal()
     {
         $data = SertifikasiHalal::all();
@@ -969,6 +964,7 @@ class AdminIndustriController extends Controller
         $draft = DB::table('form_permohonan')
             ->where('id_user', $idUser)
             ->where('status', 'disimpan')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
             ->first();
 
         $dokumen = null;
@@ -993,7 +989,9 @@ class AdminIndustriController extends Controller
         }
         $userId = Auth::guard('user')->id();
         $query = PermohonanSurat::where('id_user', $userId)
-            ->whereIn('status', ['menunggu', 'diterima', 'ditolak']);
+            ->whereIn('status', ['menunggu', 'diterima', 'ditolak'])
+            ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri']);
+        
 
         if ($searchTerm = request('search')) {
             $search = strtolower(trim($searchTerm));
@@ -1029,8 +1027,6 @@ class AdminIndustriController extends Controller
 
         return view('user.bidangIndustri.riwayatSurat', compact('riwayatSurat'));
     }
-
-
     public function ajukanPermohonann(Request $request)
     {
         // Generate UUID untuk id_permohonan

@@ -120,6 +120,7 @@
                                 <div class="text-[10px] text-gray-400 text-right mt-1">${waktuFormatted}</div>
                             </div>
                         `;
+                        
                         wrapper.innerHTML = autoReply;
                         chatMessages.appendChild(wrapper);
                         chatMessages.scrollTop = chatMessages.scrollHeight;

@@ -3,7 +3,7 @@
 @section('title', 'Pengaduan Masyarakat')
 
 @section('content')
-<div class="relative w-full h-48 sm:h-64">
+<div class="relative w-full h-44">
     <img src="{{ asset('assets/img/background/kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute inset-0 flex items-center justify-center">
         <h1 class="text-3xl sm:text-5xl font-bold text-[#FAA31E]">Pengaduan</h1>
@@ -12,16 +12,17 @@
 
 <div class="max-w-7xl px-4 mx-auto my-6">
     <div class="overflow-x-auto bg-white border border-gray-200 shadow-md rounded-xl">
-        <table class="min-w-full text-sm text-left">
-            <thead class="bg-[#083358] text-white text-center font-semibold">
-                <tr>
-                    <th class="px-6 py-3">No</th>
-                    <th class="px-6 py-3">Tanggal</th>
-                    <th class="px-6 py-3">Nama</th>
-                    <th class="px-6 py-3">Pengaduan</th>
-                    <th class="px-6 py-3">Aksi</th>
-                </tr>
-            </thead>
+        <div class="max-h-80 overflow-y-auto">
+            <table class="min-w-full text-sm text-left">
+                <thead class="bg-[#083358] text-white text-center font-semibold sticky top-0 z-10">
+                    <tr>
+                        <th class="px-6 py-3">No</th>
+                        <th class="px-6 py-3">Tanggal</th>
+                        <th class="px-6 py-3">Nama</th>
+                        <th class="px-6 py-3">Pengaduan</th>
+                        <th class="px-6 py-3">Aksi</th>
+                    </tr>
+                </thead>
             <tbody>
                 @forelse($pengaduan as $index => $chat)
                     <tr class="border-t hover:bg-gray-50">

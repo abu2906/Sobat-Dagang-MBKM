@@ -3,18 +3,16 @@
 @section('title', 'Tambah Pengguna')
 
 @section('content')
-<div class="relative w-full h-64">
+<div class="relative w-full h-44">
     <img src="{{ asset('assets\img\background\kepalaDinas_SuperAdmin.jpg') }}" alt="Port Background" class="object-cover w-full h-full">
     <div class="absolute z-10 text-center transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         <h1 class="text-5xl font-bold text-[#FAA31E]">Tambah Pengguna</h1>
     </div>
 </div>
-
 <div class="container px-4 py-8 mx-auto">
     <div class="max-w-4xl p-8 mx-auto bg-white rounded-xl shadow-md">
         <form method="POST" action="{{ route('manajemen.pengguna.store') }}" class="space-y-6">
             @csrf
-
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <!-- Nama Lengkap -->
                 <div>

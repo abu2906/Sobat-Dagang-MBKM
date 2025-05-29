@@ -20,7 +20,6 @@
 @endsection
 
 @section('content')
-    <!-- Bungkus dengan div agar layout fleksibel -->
     <div class="space-y-10 pb-32 relative">
 
 		<!-- Modal Lihat Keterangan Penolakan -->
@@ -51,27 +50,26 @@
         <div id="riwayatPermohonan" class="hidden relative">
             <div class="w-full">
                 <!-- Filter & Search -->
-				<div class="absolute top-[-50px] left-1/2 transform -translate-x-1/2 z-10 w-full">
-					<div class="flex flex-wrap items-center justify-between px-4">
-						<div class="flex space-x-2 mb-2 md:mb-0">
-							<select id="statusFilter" class="px-4 py-2 rounded-full border shadow text-sm">
-								<option value="">Semua</option>
-								<option value="Menunggu">Menunggu</option>
-								<option value="Disetujui">Disetujui</option>
-								<option value="Ditolak">Ditolak</option>
-							</select>
-						</div>
-						<div class="relative flex-grow mt-2 md:mt-0">
-							<input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
-							<span class="absolute left-3 top-2 text-gray-400">
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-								</svg>
-							</span>
-						</div>
-					</div>
-				</div>
-
+                <div class="mb-6">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-4">
+                        <div class="w-full sm:w-auto">
+                            <select id="statusFilter" class="w-full sm:w-auto px-4 py-2 rounded-full border shadow text-sm">
+                                <option value="">Semua</option>
+                                <option value="Menunggu">Menunggu</option>
+                                <option value="Disetujui">Disetujui</option>
+                                <option value="Ditolak">Ditolak</option>
+                            </select>
+                        </div>
+                        <div class="relative w-full sm:w-auto flex-grow">
+                            <input type="text" id="searchInput" placeholder="Cari" class="pl-10 pr-4 py-2 rounded-full border shadow text-sm w-full">
+                            <span class="absolute left-3 top-2 text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
                 @include('component.popup_surat')
 
@@ -80,79 +78,76 @@
                     <table class="min-w-full text-sm text-left text-gray-700 bg-white border border-gray-200">
                         <thead class="bg-[#1e3a8a] text-white">
                             <tr>
-                                <th class="text-center px-5 py-3 border-b">No</th>
-                                <th class="text-center px-5 py-3 border-b">Nomor Surat</th>
-                                <th class="text-center px-5 py-3 border-b">Tanggal Dikirim</th>
-                                <th class="text-center px-5 py-3 border-b">Status</th>
-                                <th class="text-center px-5 py-3 border-b">Aksi</th>
+                                <th class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b text-xs sm:text-sm">No</th>
+                                <th class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b text-xs sm:text-sm">Nomor Surat</th>
+                                <th class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b text-xs sm:text-sm">Tanggal Dikirim</th>
+                                <th class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b text-xs sm:text-sm">Status</th>
+                                <th class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b text-xs sm:text-sm">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-							@if ($permohonan->isEmpty())
-								<tr>
-									<td colspan="6" class="text-center px-6 py-10 text-gray-500">
-										<div class="flex flex-col items-center space-y-4">
-											<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-400" fill="none"
-												viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-												<path stroke-linecap="round" stroke-linejoin="round"
-													d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m4 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-											</svg>
-											<p class="text-lg font-semibold">Belum ada surat permohonan</p>
-											<p class="text-sm text-gray-500">Silakan ajukan surat permohonan terlebih dahulu dengan menekan tombol <span class="font-semibold text-blue-600"><a href="{{ route('administrasi-metrologi') }}">"Ajukan Surat Permohonan" </a></span> di atas.</p>
-										</div>
-									</td>
-								</tr>
-							@else
-								@foreach ($permohonan as $index => $item)
-									<tr class="hover:bg-blue-50 transition">
-										<td class="text-center px-5 py-3 border-b">{{ $index + 1 }}</td>
-										<td class="text-center px-5 py-3 border-b">{{ $item->id_surat }}</td>
-										<td class="text-center px-5 py-3 border-b">
-											{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
-										</td>
-										<td class="text-center px-5 py-3 border-b">
-											<span class="text-xs font-medium px-3 py-1 rounded-full
-												{{ $item->status_surat_masuk == 'Menunggu' ? 'bg-yellow-100 text-yellow-700' :
-													($item->status_surat_masuk == 'Disetujui' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700') }}">
-												{{ $item->status_surat_masuk }}
-											</span>
-										</td>
-										<td class="text-center px-5 py-3 border-b">
-										{{-- Tombol Lihat Surat Permohonan (selalu ada) --}}
-										<button
-											onclick="toggleModal(true, '{{ asset('storage/' . $item->dokumen) }}', 'Surat Permohonan')"
-											class="px-4 py-1 text-sm text-[#1e3a8a] border border-[#1e3a8a] rounded-full hover:bg-[#1e3a8a] hover:text-white">
-											Lihat Surat
-										</button>
+                            @if ($permohonan->isEmpty())
+                                <tr>
+                                    <td colspan="5" class="text-center px-4 py-6 text-gray-500">
+                                        <div class="flex flex-col items-center space-y-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 sm:h-12 w-10 sm:w-12 text-blue-400" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m4 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <p class="text-sm sm:text-base font-semibold">Belum ada surat permohonan</p>
+                                            <p class="text-xs sm:text-sm text-gray-500 text-center">Silakan ajukan surat permohonan terlebih dahulu dengan menekan tombol <span class="font-semibold text-blue-600"><a href="{{ route('administrasi-metrologi') }}">"Ajukan Surat Permohonan" </a></span> di atas.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @else
+                                @foreach ($permohonan as $index => $item)
+                                    <tr class="hover:bg-blue-50 transition">
+                                        <td class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b text-xs sm:text-sm">{{ $index + 1 }}</td>
+                                        <td class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b text-xs sm:text-sm">{{ $item->id_surat }}</td>
+                                        <td class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b text-xs sm:text-sm">
+                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
+                                        </td>
+                                        <td class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b">
+                                            <span class="text-xs font-medium px-2 py-1 rounded-full
+                                                {{ $item->status_surat_masuk == 'Menunggu' ? 'bg-yellow-100 text-yellow-700' :
+                                                    ($item->status_surat_masuk == 'Disetujui' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700') }}">
+                                                {{ $item->status_surat_masuk }}
+                                            </span>
+                                        </td>
+                                        <td class="text-center px-2 sm:px-4 py-2 sm:py-3 border-b">
+                                            <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
+                                                <button
+                                                    onclick="handleViewDocument('{{ asset('storage/' . $item->dokumen) }}', 'Surat Permohonan')"
+                                                    class="w-full sm:w-auto px-3 py-1 text-xs sm:text-sm text-[#1e3a8a] border border-[#1e3a8a] rounded-full hover:bg-[#1e3a8a] hover:text-white transition-colors">
+                                                    Lihat Surat
+                                                </button>
 
-										{{-- Jika statusnya Disetujui, tampilkan tombol Lihat Surat Balasan --}}
-										@if ($item->status_surat_masuk == 'Disetujui')
-											<button
-												onclick="toggleModal(true, '{{ asset('storage/' . $item->suratBalasan->path_dokumen) }}', 'Surat Balasan')"
-												class="ml-2 px-4 py-1 text-sm text-green-700 border border-green-700 rounded-full hover:bg-green-700 hover:text-white transition">
-												Lihat Balasan
-											</button>
-										@endif
+                                                @if ($item->status_surat_masuk == 'Disetujui')
+                                                    <button
+                                                        onclick="handleViewDocument('{{ asset('storage/' . $item->suratBalasan->path_dokumen) }}', 'Surat Balasan')"
+                                                        class="w-full sm:w-auto px-3 py-1 text-xs sm:text-sm text-green-700 border border-green-700 rounded-full hover:bg-green-700 hover:text-white transition-colors">
+                                                        Lihat Balasan
+                                                    </button>
+                                                @endif
 
-										{{-- Jika statusnya Ditolak, tampilkan tombol Lihat Alasan Penolakan --}}
-										@if ($item->status_surat_masuk == 'Ditolak')
-											<button
-												onclick="openKeteranganTolak(`{{ $item->keterangan }}`)"
-												class="ml-2 text-red-600 hover:scale-105 transition duration-200 inline-flex items-center justify-center"
-												title="Lihat Alasan Penolakan">
-												<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-														d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-												</svg>
-											</button>
-										@endif
-									</td>
-
-									</tr>
-								@endforeach
-							@endif
-						</tbody>
-
+                                                @if ($item->status_surat_masuk == 'Ditolak')
+                                                    <button
+                                                        onclick="openKeteranganTolak(`{{ $item->keterangan }}`)"
+                                                        class="w-full sm:w-auto text-red-600 hover:scale-105 transition duration-200"
+                                                        title="Lihat Alasan Penolakan">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                                                        </svg>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -195,9 +190,9 @@
 
         <!-- FORM PERMOHONAN -->
 		<div id="formPermohonan" class="relative flex justify-center">
-			<form class="bg-white p-6 rounded-xl shadow-lg w-full max-w-3xl" method="POST" action="{{ route('proses-surat-metrologi') }}" enctype="multipart/form-data">
+			<form class="bg-white p-6 rounded-xl shadow-lg w-full max-w-3xl" method="POST" action="{{ route('proses-surat-metrologi') }}?redirect=riwayat" enctype="multipart/form-data">
 				@csrf
-				<h2 class="text-center font-bold text-xl mb-4">FORM PERMOHONAN TERA/TERA ULANG</h2>
+				<h2 class="text-center font-bold text-xl mb-4">FORM PERMOHONAN TERA BARU/TERA ULANG</h2>
 
 				<div class="mb-4">
 					<h3 class="font-semibold mb-2">Data Pemohon:</h3>
@@ -333,6 +328,13 @@
             document.getElementById('btnForm').classList.add('text-black', 'hover:bg-gray-100');
         }
 
+        // Check if we should show riwayat on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('show_riwayat'))
+                showRiwayat(new Event('click'));
+            @endif
+        });
+
         // Implementasi filter status dan pencarian
         document.addEventListener('DOMContentLoaded', function() {
             const statusFilter = document.getElementById('statusFilter');
@@ -358,5 +360,16 @@
             statusFilter.addEventListener('change', applyFilters);
             searchInput.addEventListener('input', applyFilters);
         });
+
+        function handleViewDocument(url, title) {
+            // Check if screen width is mobile (less than 640px)
+            if (window.innerWidth < 640) {
+                // For mobile, open in new page
+                window.open(url, '_blank');
+            } else {
+                // For desktop, show in modal
+                toggleModal(true, url, title);
+            }
+        }
     </script>
 @endsection

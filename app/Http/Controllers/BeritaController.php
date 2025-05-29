@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\Berita;
 use Illuminate\Support\Facades\Storage;
 
-class BeritaController
-{
+class BeritaController{
 
-    // Menampilkan detail berita berdasarkan ID
     public function show()
     {
         $daftarBerita = Berita::orderBy('tanggal', 'desc')->get();
@@ -31,11 +28,10 @@ class BeritaController
             $lampiranPath = $request->file('lampiran')->store('lampiran', 'public');
         }
 
-        // Ambil id_disdag dari session
         $id_disdag = session('id_disdag');
 
         Berita::create([
-            'id_disdag' => $id_disdag, // masukkan ke database
+            'id_disdag' => $id_disdag,
             'judul' => $request->judul,
             'isi' => $request->isi,
             'lampiran' => $lampiranPath,
@@ -47,10 +43,8 @@ class BeritaController
 
     public function update(Request $request, $id_berita)
     {
-        // Ambil berita berdasarkan ID
         $berita = Berita::where('id_berita', $id_berita)->firstOrFail();
 
-        // Update data berita
         $berita->judul = $request->judul;
         $berita->tanggal = $request->tanggal;
         $berita->isi = $request->isi;
@@ -69,10 +63,8 @@ class BeritaController
             $berita->lampiran = $filename; // Simpan path relatif (misalnya: lampiran/squfglYeGtj1oWJ0iV2ry5t3euhIFybiXDGWMmeJ)
         }
 
-        // Simpan perubahan
         $berita->save();
 
-        // Kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Berita berhasil diperbarui.');
     }
 
