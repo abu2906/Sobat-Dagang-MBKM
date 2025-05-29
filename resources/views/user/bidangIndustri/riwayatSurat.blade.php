@@ -44,9 +44,10 @@
                 </tr>
             </thead>
             <tbody>
+                @php $nomor = 1; @endphp
                 @foreach ($riwayatSurat as $index => $item)
                 <tr class="border-b">
-                    <td class="px-4 py-3 text-center">{{ $index + 1 }}</td>
+                    <td class="px-4 py-3 text-center">{{ $nomor++ }}</td>
                     <td class="px-4 py-3 text-center">{{ \Carbon\Carbon::parse($item->tgl_pengajuan)->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</td>
                     <td class="px-4 py-3 text-center">
                         @if($item->jenis_surat == 'surat_rekomendasi_industri')

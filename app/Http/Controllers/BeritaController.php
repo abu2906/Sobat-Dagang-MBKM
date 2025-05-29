@@ -10,7 +10,7 @@ class BeritaController{
 
     public function show()
     {
-        $daftarBerita = Berita::orderBy('tanggal', 'desc')->get();
+        $daftarBerita = Berita::orderBy('tanggal', 'desc')->paginate(10);
         return view('admin.adminSuper.kelola_berita', compact('daftarBerita'));
     }
 

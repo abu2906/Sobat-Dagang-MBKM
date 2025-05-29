@@ -74,10 +74,10 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white">
+                            @php $nomor = 1; @endphp
                             @foreach($suratMasuk as $index => $surat)
-                            @if($surat->file_balasan)
                             <tr class="border-b">
-                                <td class="px-4 py-2 text-center rounded-l">{{ $index + 1 }}</td>
+                                <td class="px-4 py-2 text-center rounded-l">{{ $nomor++ }}</td>
                                 <td class="px-4 py-2 text-center">{{ $surat->user->nama ?? 'Tidak Diketahui' }}</td>
                                 <td class="px-4 py-2 text-center">{{ $surat->tgl_pengajuan }}</td>
                                 <td class="px-4 py-2 text-center">
@@ -98,21 +98,30 @@
                                 @endphp
                                 <td class="px-4 py-2 text-center">{{ $jenisSuratMap[$surat->jenis_surat] ?? 'Tidak tersedia' }}</td>
                                 <td class="px-4 py-2 text-center">
-                                    <a href="{{ asset('storage/' . $surat->file_balasan) }}" target="_blank" class="text-blue-600 underline">Lihat Balasan</a>
+                                    @if ($surat->file_balasan)
+                                        <a href="{{ asset('storage/' . $surat->file_balasan) }}" target="_blank" class="text-blue-600 underline">Lihat Balasan</a>
+                                    @else
+                                        <span class="italic text-gray-500">Belum tersedia</span>
+                                    @endif
                                 </td>
                                 <td class="px-4 py-2 text-center">
-                                    @if ($surat->status !== 'menunggu')
-                                    <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
+                                    @if ($surat->file_balasan)
+                                        @if ($surat->status !== 'menunggu')
+                                            <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
+                                        @else
+                                            <form action="{{ route('kabid.setujuiSurat', $surat->id_permohonan) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>
+                                            </form>
+                                        @endif
                                     @else
-                                    <form action="{{ route('kabid.setujuiSurat', $surat->id_permohonan) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>
-                                    </form>
+                                        <span class="flex items-center justify-center text-red-500">
+                                            <span class="text-base material-symbols-outlined">warning</span>
+                                        </span>
                                     @endif
                                 </td>
                             </tr>
-                            @endif
                             @endforeach
                         </tbody>
                     </table>

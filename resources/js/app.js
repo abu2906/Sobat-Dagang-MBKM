@@ -47,11 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Fungsi untuk tutup semua modal (verifikasi + draft)
-    window.closeModal = function () {
-        modalVerifikasi.classList.add('hidden');
-        modalDraft.classList.add('hidden');
-    };
 
     // Modal untuk Balasan (Lihat / Unduh PDF) pada riwayat surat
     function openModal(url) {

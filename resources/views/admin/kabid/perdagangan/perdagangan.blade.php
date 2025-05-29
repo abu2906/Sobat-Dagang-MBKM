@@ -57,45 +57,54 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white">
+                    @php $nomor = 1; @endphp
                     @foreach($suratMasuk as $index => $surat)
-                    @if($surat->file_balasan)
-                    <tr class="border-b">
-                        <td class="px-4 py-2 text-center rounded-l">{{ $index + 1 }}</td>
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-2 text-center rounded-l">{{ $nomor++ }}</td>
                         <td class="px-4 py-2 text-center">{{ $surat->user->nama ?? 'Tidak Diketahui' }}</td>
                         <td class="px-4 py-2 text-center">{{ $surat->tgl_pengajuan }}</td>
                         <td class="px-4 py-2 text-center">
                             @if($surat->status == 'menunggu')
-                            <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-300 rounded-full">Menunggu</span>
+                                <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-300 rounded-full">Menunggu</span>
                             @elseif($surat->status == 'diterima')
-                            <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-300 rounded-full">Diterima</span>
+                                <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-300 rounded-full">Diterima</span>
                             @elseif($surat->status == 'ditolak')
-                            <span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-300 rounded-full">Ditolak</span>
+                                <span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-300 rounded-full">Ditolak</span>
                             @endif
                         </td>
                         @php
-                        $jenisSuratMap = [
-                        'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
-                        'surat_keterangan_perdagangan' => 'Surat Keterangan',
-                        'dan_lainnya_perdagangan' => 'Surat Lainnya',
-                        ];
+                            $jenisSuratMap = [
+                                'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                                'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                                'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                            ];
                         @endphp
                         <td class="px-4 py-2 text-center">{{ $jenisSuratMap[$surat->jenis_surat] ?? 'Tidak tersedia' }}</td>
                         <td class="px-4 py-2 text-center">
-                            <a href="{{ asset('storage/' . $surat->file_balasan) }}" target="_blank" class="text-blue-600 underline">Lihat Balasan</a>
-                        </td>
-                        <td class="px-4 py-2 text-center">
-                            @if ($surat->status !== 'menunggu')
-                            <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
+                            @if ($surat->file_balasan)
+                                <a href="{{ asset('storage/' . $surat->file_balasan) }}" target="_blank" class="text-blue-600 underline">Lihat Balasan</a>
                             @else
-                            <form action="{{ route('suratPerdagangan.setujui', $surat->id_permohonan) }}" method="POST" class="inline">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>
-                            </form>
+                                <span class="italic text-gray-500">Belum tersedia</span>
                             @endif
                         </td>
-                </tr>
-                    @endif
+                        <td class="px-4 py-2 text-center">
+                            @if ($surat->file_balasan)
+                                @if ($surat->status !== 'menunggu')
+                                    <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
+                                @else
+                                    <form action="{{ route('suratPerdagangan.setujui', $surat->id_permohonan) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>
+                                    </form>
+                                @endif
+                            @else
+                                <span class="flex items-center justify-center text-red-500">
+                                    <span class="text-base material-symbols-outlined">warning</span>
+                                </span>
+                            @endif
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>

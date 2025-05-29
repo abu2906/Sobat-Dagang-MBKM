@@ -29,70 +29,72 @@
     </div>
     @endif
 
-    <div class="overflow-x-auto max-h-80">
-    <table class="w-full text-sm text-left bg-white shadow-md rounded-xl">
-        <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
-            <tr>
-                <th class="px-4 py-3 text-center border-b rounded-tl-xl">No</th>
-                <th class="px-4 py-3 text-center border-b">Tanggal</th>
-                <th class="px-4 py-3 text-center border-b">Nama Pengirim</th>
-                <th class="px-4 py-3 text-center border-b">Jenis Surat</th>
-                <th class="px-4 py-3 text-center border-b">Bidang Terkait</th>
-                <th class="px-4 py-3 text-center border-b">Status</th>
-                <th class="px-4 py-3 text-center border-b rounded-tr-xl">Aksi</th>
-            </tr>
-        </thead>
-                @php
-                    $counter = 1;
-                @endphp
-                @foreach($permohonan as $p)
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-2 text-center">{{ $counter++ }}</td>
-                    <td class="px-4 py-2 text-center">{{ $p->tanggal }}</td>
-                    <td class="px-4 py-2 text-center">{{ $p->nama_pengirim }}</td>
-                    @php
-                        $jenisSuratMap = [
-                        'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
-                        'surat_keterangan_perdagangan' => 'Surat Keterangan',
-                        'surat_rekomendasi_industri' => 'Surat Rekomendasi',
-                        'surat_keterangan_industri' => 'Surat Keterangan',
-                        'dan_lainnya_perdagangan' => 'Surat Lainnya',
-                        ];
-                        @endphp
-                    <td class="px-4 py-2 text-center">
-                            {{ $jenisSuratMap[$p->jenis_surat] ?? $p->jenis_surat }}
-                    </td>
-                    <td class="px-4 py-2 text-center">{{ $p->bidang_terkait }}</td>
-                    <td class="px-4 py-2 text-center">
+    <div class="overflow-x-auto">
+        <div class="max-h-[550px] overflow-y-auto">
+            <table class="w-full text-sm text-left bg-white shadow-md rounded-xl min-w-max">
+                <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
+                    <tr>
+                        <th class="px-4 py-3 text-center border-b rounded-tl-xl">No</th>
+                        <th class="px-4 py-3 text-center border-b">Tanggal</th>
+                        <th class="px-4 py-3 text-center border-b">Nama Pengirim</th>
+                        <th class="px-4 py-3 text-center border-b">Jenis Surat</th>
+                        <th class="px-4 py-3 text-center border-b">Bidang Terkait</th>
+                        <th class="px-4 py-3 text-center border-b">Status</th>
+                        <th class="px-4 py-3 text-center border-b rounded-tr-xl">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $counter = 1; @endphp
+                    @foreach($permohonan as $p)
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-2 text-center">{{ $counter++ }}</td>
+                        <td class="px-4 py-2 text-center">{{ $p->tanggal }}</td>
+                        <td class="px-4 py-2 text-center">{{ $p->nama_pengirim }}</td>
                         @php
-                            $status = $p->status;
-                            $color = match($status) {
-                                'Menunggu' => 'bg-yellow-100 text-yellow-800',
-                                'Disetujui' => 'bg-green-100 text-green-800',
-                                'Ditolak' => 'bg-red-100 text-red-800',
-                                'Diproses' => 'bg-blue-100 text-blue-800',
-                                'Butuh Revisi' => 'bg-orange-100 text-orange-800',
-                                'Selesai' => 'bg-green-100 text-green-800',
-                                default => 'bg-gray-100 text-gray-800',
-                            };
+                            $jenisSuratMap = [
+                                'surat_rekomendasi_perdagangan' => 'Surat Rekomendasi',
+                                'surat_keterangan_perdagangan' => 'Surat Keterangan',
+                                'surat_rekomendasi_industri' => 'Surat Rekomendasi',
+                                'surat_keterangan_industri' => 'Surat Keterangan',
+                                'dan_lainnya_perdagangan' => 'Surat Lainnya',
+                            ];
                         @endphp
-                        <span class="px-3 py-1 text-xs rounded-full font-semibold {{ $color }}">
-                            {{ $status }}
-                        </span>
-                    </td>
-                    <td class="px-4 py-2">
-                        <div class="flex items-center justify-center space-x-2">
-                            <a href="{{ route('admin.detailPermohonan', ['id' => base64_encode($p->id), 'bidang' => strtolower($p->bidang_terkait)]) }}" 
-                                class="text-[#083358] hover:text-black">
-                                <span class="material-symbols-outlined">visibility</span>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                        <td class="px-4 py-2 text-center">
+                            {{ $jenisSuratMap[$p->jenis_surat] ?? $p->jenis_surat }}
+                        </td>
+                        <td class="px-4 py-2 text-center">{{ $p->bidang_terkait }}</td>
+                        <td class="px-4 py-2 text-center">
+                            @php
+                                $status = $p->status;
+                                $color = match($status) {
+                                    'Menunggu' => 'bg-yellow-100 text-yellow-800',
+                                    'Disetujui' => 'bg-green-100 text-green-800',
+                                    'Ditolak' => 'bg-red-100 text-red-800',
+                                    'Diproses' => 'bg-blue-100 text-blue-800',
+                                    'Butuh Revisi' => 'bg-orange-100 text-orange-800',
+                                    'Selesai' => 'bg-green-100 text-green-800',
+                                    default => 'bg-gray-100 text-gray-800',
+                                };
+                            @endphp
+                            <span class="px-3 py-1 text-xs rounded-full font-semibold {{ $color }}">
+                                {{ $status }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2">
+                            <div class="flex items-center justify-center space-x-2">
+                                <a href="{{ route('admin.detailPermohonan', ['id' => base64_encode($p->id), 'bidang' => strtolower($p->bidang_terkait)]) }}" 
+                                    class="text-[#083358] hover:text-black">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
+
 </div>
 
 @push('scripts')
