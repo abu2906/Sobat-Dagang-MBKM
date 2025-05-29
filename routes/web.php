@@ -140,7 +140,6 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
 
     // Data IKM
     Route::get('/data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
-    Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
     Route::get('/form-IKM', [AdminIndustriController::class, 'ShowformIKM'])->name('formIKM');
     Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
     Route::get('data-IKM/{id}/edit', [AdminIndustriController::class, 'editIKM'])->name('editIKM');
