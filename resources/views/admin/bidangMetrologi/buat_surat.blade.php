@@ -156,7 +156,7 @@
                 title: 'Peringatan!',
                 text: 'Isi surat tidak boleh kosong!',
                 icon: 'warning',
-                confirmButtonColor: '#6b7280',
+                confirmButtonColor: '#0c3252',
                 confirmButtonText: 'OK'
             });
             return false;
@@ -197,7 +197,8 @@
                 title: 'Peringatan!',
                 text: 'Isi surat tidak boleh kosong!',
                 icon: 'warning',
-                confirmButtonColor: '#1e3a8a',
+                confirmButtonColor: '#0c3252',
+                cancelButtonColor: '#6B7280',
                 confirmButtonText: 'OK'
             });
             return false;
@@ -214,8 +215,8 @@
             text: text,
             icon: icon,
             showCancelButton: true,
-            confirmButtonColor: '#1e3a8a',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#0c3252',
+            cancelButtonColor: '#6B7280',
             confirmButtonText: confirmButtonText,
             cancelButtonText: cancelButtonText,
             reverseButtons: true
@@ -263,7 +264,7 @@
                             title: 'Peringatan!',
                             text: 'Isi surat tidak boleh kosong!',
                             icon: 'warning',
-                            confirmButtonColor: '#1e3a8a',
+                            confirmButtonColor: '#0c3252',
                             confirmButtonText: 'OK'
                         });
                         return;

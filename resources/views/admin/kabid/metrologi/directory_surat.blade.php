@@ -103,18 +103,18 @@
                         <div class="flex justify-center flex-wrap gap-2">
                             @if ($surat->suratBalasan->status_kepalaBidang === 'Menunggu')
                                 <button onclick="confirmAction('terima', '{{ base64_encode($surat->suratBalasan->id_surat_balasan) }}')" 
-                                    class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">
+                                    class="bg-[#0c3252] hover:bg-[#0a2942] text-white text-sm px-4 py-1 rounded">
                                     Terima
                                 </button>
                                 <button onclick="confirmAction('tolak', '{{ base64_encode($surat->suratBalasan->id_surat_balasan) }}')" 
-                                    class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">
+                                    class="bg-white hover:bg-gray-100 text-[#0c3252] border border-[#0c3252] text-sm px-4 py-1 rounded">
                                     Tolak
                                 </button>
                             @endif
 
                             <!-- TOMBOL PREVIEW -->
                             <button onclick="toggleModal(true, '{{ asset('storage/' . $surat->suratBalasan->path_dokumen) }}', '{{ $surat->status }}')"
-                                class="text-blue-600 hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Lihat Surat Keluar">
+                                class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Lihat Surat Keluar">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 6h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z" />
@@ -171,13 +171,13 @@ function confirmAction(action, id) {
         case 'terima':
             message = 'Apakah Anda yakin ingin menerima surat ini?';
             confirmButtonText = 'Ya, Terima';
-            confirmButtonClass = '#10B981';
+            confirmButtonClass = '#0c3252';
             routeUrl = '{{ route("terimaKabid", "") }}';
             break;
         case 'tolak':
             message = 'Apakah Anda yakin ingin menolak surat ini?';
             confirmButtonText = 'Ya, Tolak';
-            confirmButtonClass = '#EF4444';
+            confirmButtonClass = '#0c3252';
             routeUrl = '{{ route("tolakKabid", "") }}';
             break;
         default:
@@ -191,7 +191,7 @@ function confirmAction(action, id) {
         showCancelButton: true,
         confirmButtonText: confirmButtonText,
         cancelButtonText: 'Batal',
-        confirmButtonColor: confirmButtonClass,
+        confirmButtonColor: '#0c3252',
         cancelButtonColor: '#6B7280',
         reverseButtons: true
     }).then((result) => {

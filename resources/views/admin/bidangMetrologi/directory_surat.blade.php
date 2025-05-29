@@ -120,7 +120,7 @@
 							<div class="flex justify-center gap-2 flex-wrap">
 								@if ($surat->status_admin === 'Diterima')
 									<button onclick="openModalSelesai('{{ route('surat.selesai', str_replace(['/'], '_', $surat->id_surat)) }}')"
-										class="text-green-600 hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Tandai Selesai">
+										class="text-cyan-600 hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Tandai Selesai">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 										</svg>
@@ -133,7 +133,7 @@
 										</svg>
 									</button>
 									<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-										class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+										class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
 										</svg>
@@ -153,7 +153,7 @@
 										</svg>
 									</button>
 									<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-										class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+										class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
 										</svg>
@@ -162,11 +162,11 @@
 									@if($surat->suratBalasan)
 										@if($surat->suratBalasan->status_surat_keluar === 'Draft')
 											<a href="{{ route('create-surat-balasan', str_replace(['/'], '_', $surat->id_surat)) }}"
-												class="bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-4 py-1 rounded">
+												class="bg-[#0c3252] hover:bg-[#0a2942] text-white text-sm px-4 py-1 rounded">
 												Lanjutkan Draft
 											</a>
 											<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-												class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+												class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center">
 												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
 												</svg>
@@ -181,7 +181,7 @@
 												</svg>
 											</button>
 											<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-												class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+												class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center">
 												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
 												</svg>
@@ -189,11 +189,11 @@
 										@endif
 									@else
 										<a href="{{ route('create-surat-balasan', str_replace(['/'], '_', $surat->id_surat)) }}"
-											class="bg-blue-900 hover:bg-blue-800 text-white text-sm px-4 py-1 rounded">
+											class="bg-[#0c3252] hover:bg-[#0a2942] text-white text-sm px-4 py-1 rounded">
 											Buat Surat
 										</a>
 										<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-												class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+												class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center">
 												<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
 												</svg>
@@ -223,7 +223,7 @@
 
 									@if($surat->dokumen)
 									<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-										class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+										class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
 										</svg>
@@ -232,7 +232,7 @@
 								@elseif ($surat->status_admin === 'Ditolak')
 									@if($surat->dokumen)
 										<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-											class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Lihat Dokumen">
+											class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center" title="Lihat Dokumen">
 											<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
 											</svg>
@@ -250,16 +250,16 @@
 
 								@else
 									<button onclick="confirmAction('terima', '{{ str_replace(['/'], '_', $surat->id_surat) }}')" 
-										class="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-1 rounded">
+										class="bg-[#0c3252] hover:bg-[#0a2942] text-white text-sm px-4 py-1 rounded">
 										Terima
 									</button>
 									<button onclick="confirmAction('tolak', '{{ $surat->id_surat }}')" 
-										class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-1 rounded">
+										class="bg-white hover:bg-gray-100 text-[#0c3252] border border-[#0c3252] text-sm px-4 py-1 rounded">
 										Tolak
 									</button>
 									@if($surat->dokumen)
 									<button onclick="toggleModal(true, '{{ asset('storage/' . $surat->dokumen) }}', '{{ $surat->status_admin }}')"
-										class="text-blue-700 hover:scale-105 transition duration-200 inline-flex items-center justify-center">
+										class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center">
 										<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm7.5 0a10.5 10.5 0 01-21 0 10.5 10.5 0 0121 0z" />
 										</svg>
@@ -355,17 +355,17 @@
 			case 'terima':
 				message = 'Apakah Anda yakin ingin menerima surat ini?';
 				confirmButtonText = 'Ya, Terima';
-				confirmButtonClass = '#10B981';
+				confirmButtonClass = '#0c3252';
 				break;
 			case 'tolak':
 				message = 'Apakah Anda yakin ingin menolak surat ini?';
 				confirmButtonText = 'Ya, Tolak';
-				confirmButtonClass = '#EF4444';
+				confirmButtonClass = '#0c3252';
 				break;
 			case 'selesai':
 				message = 'Apakah Anda yakin ingin menandai surat ini sebagai selesai?';
 				confirmButtonText = 'Ya, Tandai Selesai';
-				confirmButtonClass = '#3B82F6';
+				confirmButtonClass = '#0c3252';
 				break;
 			default:
 				return;
@@ -395,7 +395,7 @@
 						showCancelButton: true,
 						confirmButtonText: 'Kirim',
 						cancelButtonText: 'Batal',
-						confirmButtonColor: '#EF4444',
+						confirmButtonColor: '#0c3252',
 						cancelButtonColor: '#6B7280',
 						inputValidator: (value) => {
 							if (!value) {
@@ -472,7 +472,7 @@
 			showCancelButton: true,
 			confirmButtonText: 'Ya, Tandai Selesai',
 			cancelButtonText: 'Batal',
-			confirmButtonColor: '#10B981',
+			confirmButtonColor: '#0c3252',
 			cancelButtonColor: '#6B7280',
 			reverseButtons: true
 		}).then((result) => {
