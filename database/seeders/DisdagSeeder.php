@@ -57,7 +57,7 @@ class DisdagSeeder extends Seeder
             DB::table('disdag')->insert([
                 'nip' => $user['nip'],
                 'email' => $user['email'],
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('sobatdagang01!'),
                 'telp' => '08123456789',
                 'role' => $user['role'],
                 'created_at' => now(),

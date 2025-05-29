@@ -25,6 +25,8 @@ class CreateUserTable extends Migration
             $table->string('telp');
             $table->string('email')->unique();
             $table->string('avatar')->nullable()->default('assets/img/profil.jpeg');
+            $table->string('verifikasi_token')->nullable();
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });
     }
