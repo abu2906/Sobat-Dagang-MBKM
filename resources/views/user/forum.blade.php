@@ -28,6 +28,13 @@
         const chatMessages = document.getElementById('chat-messages');
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const userId = {!! json_encode(auth()->guard('user')->id()) !!};
+        function formatName(name) {
+            if (!name || typeof name !== 'string') return 'Pengguna';
+            return name
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+        }
 
         async function ambilChat() {
             try {
@@ -42,7 +49,8 @@
 
                 data.forEach(chat => {
                     const isMe = chat.id_user === userId;
-                    const senderName = chat.user?.nama ?? chat.disdag?.nama ?? 'Admin Dinas Perdagangan';
+                    const rawName = chat.user?.nama || chat.disdag?.nama || 'Admin Dinas Perdagangan';
+                    const senderName = formatName(rawName);
                     const initial = senderName.charAt(0).toUpperCase();
                     const waktu = new Date(chat.waktu);
                     const waktuFormatted = new Intl.DateTimeFormat('id-ID', {
@@ -51,7 +59,7 @@
 
                     const wrapper = document.createElement('div');
                     wrapper.className = `flex items-end ${isMe ? 'justify-end' : 'justify-start'} gap-2`;
-
+                    
                     const bubble = `
                         <div class="max-w-[75%] p-2.5 text-sm leading-snug shadow ${isMe ? 'bg-[#083458] text-white rounded-3xl rounded-br-md' : 'bg-gray-200 text-black rounded-3xl rounded-bl-md'}">
                             <div class="mb-1 text-xs font-semibold">${senderName}</div>

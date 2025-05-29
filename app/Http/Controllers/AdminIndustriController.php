@@ -903,23 +903,6 @@ class AdminIndustriController extends Controller
         ]);
     }
 
-    public function showHalal()
-    {
-        $data = SertifikasiHalal::all();
-        return view('admin.bidangIndustri.Halal', compact('data'));
-    }
-
-    public function dataHalal()
-    {
-        return view('user.bidangIndustri.halal');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(user::class, 'id_user', 'id_user');
-    }
-
-
     public function kelolaSuratt(Request $request)
     {
         $rekapSurat = $this->getSuratIndustriData();
@@ -951,7 +934,6 @@ class AdminIndustriController extends Controller
     }
 
     //UNTUK USER INDUSTRI
-
     public function formPermohonan()
     {
         if (!auth()->guard('user')->check()) {
@@ -1153,28 +1135,6 @@ class AdminIndustriController extends Controller
         }
     }   
 
-    public function viewSuratBalasan($id)
-    {
-        $file = DB::table('form_permohonan')->where('id_permohonan', $id)->value('file_surat');
-
-        if (!$file || !Storage::disk('public')->exists($file)) {
-            return abort(404, 'Surat balasan tidak ditemukan.');
-        }
-
-        return response()->file(storage_path("app/public/{$file}"));
-    }
-
-    public function downloadSuratBalasan($id)
-    {
-        $file = DB::table('form_permohonan')->where('id_permohonan', $id)->value('file_surat');
-
-        if (!$file || !Storage::disk('public')->exists($file)) {
-            return abort(404, 'Surat balasan tidak ditemukan.');
-        }
-
-        return response()->download(storage_path("app/public/{$file}"));
-    }
-
     public function draftPermohonann(Request $request)
     {
         // Validasi input
@@ -1237,10 +1197,5 @@ class AdminIndustriController extends Controller
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
-    }
-
-    public function showSurat()
-    {
-        return view('admin.bidangIndustri.suratBalasan');
     }
 }

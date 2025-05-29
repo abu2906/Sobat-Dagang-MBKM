@@ -34,8 +34,7 @@
                             @if($chat->id_user !== null)
                                 <button
                                     class="hapus-btn bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                                    data-id="{{ $chat->id_pengaduan }}"
-                                >
+                                    data-id="{{ $chat->id_pengaduan }}">
                                     Hapus
                                 </button>
                             @endif
@@ -136,6 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
     bukaBtn.addEventListener('click', showModal);
     tutupBtn.addEventListener('click', hideModal);
 
+    function formatName(name) {
+        if (!name || typeof name !== 'string') return 'Pengguna';
+        return name
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    }
     async function loadMessages() {
         try {
             const res = await fetch('/forum/load');
@@ -143,7 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
             chatMessages.innerHTML = '';
             data.forEach(chat => {
                 const isMe = chat.id_disdag === adminId;
-                const senderName = chat.user?.nama ?? chat.disdag?.nama ?? 'Admin Dinas Perdagangan';
+                const rawName = chat.user?.nama || chat.disdag?.nama || 'Admin Dinas Perdagangan';
+                const senderName = formatName(rawName);
                 const waktu = new Date(chat.waktu);
                 const waktuFormatted = new Intl.DateTimeFormat('id-ID', {
                     hour: '2-digit',
