@@ -281,6 +281,6 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
     Route::get('/kadis/metrologi', [DashboardMetrologiController::class, 'showKadisMetro'])->name('kadis-metro');
     Route::get('/kadis/industri', [KabidIndustriController::class, 'KadisIndustri'])->name('kadis.industri');
-    Route::get('/kadis-industri/surat', [KabidIndustriController::class, 'SuratKadis'])->name('kadis.industri.surat');
-    Route::put('/kabid-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('kabid.setujuiSurat');
+    Route::get('/kadis/industri/surat', [KabidIndustriController::class, 'SuratKadis'])->name('kadis.industri.surat');
+    Route::put('/kadis/industri/surat/{id}/setujui', [KabidIndustriController::class, 'kadisSetujui'])->name('kadis.setujuiSurat');
 });

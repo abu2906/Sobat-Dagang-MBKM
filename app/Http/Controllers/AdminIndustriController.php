@@ -952,33 +952,40 @@ class AdminIndustriController extends Controller
 
     //UNTUK USER INDUSTRI
 
-    public function formPermohonan()
+    public function formPermohonan(Request $request)
     {
-        if (!auth()->guard('user')->check()) {
-            return redirect()->route('login')->with('error', 'Harap login terlebih dahulu');
-        }
-
-        $idUser = session('id_user');
+        $idUser = auth()->guard('user')->id();
+        $draftId = $request->query('draft_id');
 
         // Ambil draft permohonan
-        $draft = DB::table('form_permohonan')
+        $drafts = DB::table('form_permohonan')
             ->where('id_user', $idUser)
             ->where('status', 'disimpan')
             ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
-            ->first();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
+        $draft = null;
         $dokumen = null;
 
-        if ($draft) {
-            // Ambil dokumen user kalau ada draft
-            $dokumen = DB::table('document_user')
-                ->where('id_permohonan', $draft->id_permohonan)
+        if ($draftId) {
+            $draft = DB::table('form_permohonan')
+                ->where('id_user', $idUser)
+                ->where('id_permohonan', $draftId)
+                ->where('status', 'disimpan')
                 ->first();
+
+            if ($draft) {
+                $dokumen = DB::table('document_user')
+                    ->where('id_permohonan', $draft->id_permohonan)
+                    ->first();
+            }
         }
 
         return view('user.bidangIndustri.formPermohonan', [
             'draft' => $draft,
-            'dokumen' => $dokumen
+            'drafts' => $drafts,
+            'dokumen' => $dokumen,
         ]);
     }
 
@@ -1153,28 +1160,6 @@ class AdminIndustriController extends Controller
         }
     }   
 
-    public function viewSuratBalasan($id)
-    {
-        $file = DB::table('form_permohonan')->where('id_permohonan', $id)->value('file_surat');
-
-        if (!$file || !Storage::disk('public')->exists($file)) {
-            return abort(404, 'Surat balasan tidak ditemukan.');
-        }
-
-        return response()->file(storage_path("app/public/{$file}"));
-    }
-
-    public function downloadSuratBalasan($id)
-    {
-        $file = DB::table('form_permohonan')->where('id_permohonan', $id)->value('file_surat');
-
-        if (!$file || !Storage::disk('public')->exists($file)) {
-            return abort(404, 'Surat balasan tidak ditemukan.');
-        }
-
-        return response()->download(storage_path("app/public/{$file}"));
-    }
-
     public function draftPermohonann(Request $request)
     {
         // Validasi input
@@ -1231,8 +1216,11 @@ class AdminIndustriController extends Controller
                 'created_at' => now(),
             ]);
 
-            //     return redirect()->route('bidangIndustri.riwayatSurat')
-            //         ->with('success', 'Pengajuan surat berhasil diajukan.');
+            return redirect()->route('bidangIndustri.formPermohonan')->with([
+            'success' => 'Draft berhasil disimpan!',
+            'draft_id' => $idPermohonan
+        ]);
+
         } catch (Exception $e) {
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev

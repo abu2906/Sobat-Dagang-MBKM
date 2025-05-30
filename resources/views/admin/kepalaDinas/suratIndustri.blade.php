@@ -17,7 +17,7 @@
 <div class="container px-4 mx-auto -mt-8 ">
     <div class="flex justify-center mb-6">
         <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
-            <form method="GET" action="{{ route('kabid.suratI') }}">
+            <form method="GET" action="{{ route('kadis.industri.surat') }}">
             <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
             <input type="text" placeholder="Cari" name="search"
                 class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" 
@@ -107,7 +107,7 @@
                                     @if ($surat->status !== 'menunggu')
                                     <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
                                     @else
-                                    <form action="{{ route('kabid.setujuiSurat', $surat->id_permohonan) }}" method="POST" class="inline">
+                                    <form action="{{ route('kadis.setujuiSurat', $surat->id_permohonan) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>

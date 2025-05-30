@@ -11,8 +11,9 @@
   <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
  
 
-  <div class="flex items-center gap-4 px-6 py-6 max-w-7xl mx-auto z-10 relative">
-    <div class="relative flex-1">
+  <div class="container px-4 mx-auto -mt-8">
+    <div class="flex justify-center mb-6 gap-8">
+    <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
       <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
       <input type="text" x-model="searchQuery" placeholder="Cari"
         class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -20,6 +21,7 @@
        
       </span>
     </div>
+  </div>
   </div>
 
   <section class="flex-1 px-6 pb-10 mt-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent z-10 relative">
