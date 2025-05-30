@@ -188,8 +188,9 @@ class KabidPerdaganganController extends Controller
                 ];
             });
 
-            // Menyaring dan mengurutkan perubahan harga untuk mendapatkan top harga naik dan turun
-            $topHargaNaik = $perubahan->where('isNaik', true)
+            $topHargaNaik = $perubahan->filter(function ($item) {
+                    return $item['isNaik'] && $item['price_change'] > 0;
+                })
                 ->sortByDesc('price_change')
                 ->take(5)
                 ->map(function ($item) {
@@ -199,7 +200,9 @@ class KabidPerdaganganController extends Controller
                 ->values()
                 ->all();
 
-            $topHargaTurun = $perubahan->where('isNaik', false)
+            $topHargaTurun = $perubahan->filter(function ($item) {
+                    return !$item['isNaik'] && $item['price_change'] > 0;
+                })
                 ->sortByDesc('price_change')
                 ->take(5)
                 ->map(function ($item) {
