@@ -12,6 +12,9 @@
             color: #333;
         }
 
+        p {
+            font-size: 10pt;
+        }
 
         .bold-underline {
             font-weight: bold;
@@ -99,6 +102,8 @@
 
         .ttd .ttd_QR img {
             height: 100px;
+            margin-left: 200px;
+            margin-bottom: 10px;
         }
 
         .judul {
@@ -109,7 +114,7 @@
         }
 
         .judul h1 {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .judul p {
@@ -118,6 +123,9 @@
 
         .penutup p {
             text-align: justify;
+        }
+        .data-pengirim {
+            font-size: 10pt;
         }
     </style>
 </head>
@@ -140,7 +148,7 @@
         <h1>SURAT KETERANGAN</h1>
     </div>
     <p>Yang Bertanda tangan dibawah ini:</p>
-    <table style="width: 98%; border-collapse: collapse; margin-left: 30px; ">
+    <table class="data-pengirim" style="width: 98%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama</td>
             <td style="padding: 4px;">: {{ $nama_pengirim }}</td>
@@ -151,7 +159,7 @@
         </tr>
     </table>
     <p>Dengan ini Menerangkan Bahwa:</p>
-    <table style="width: 90%; border-collapse: collapse; margin-left: 30px; ">
+    <table class="data-pengirim" style="width: 90%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px; width: 160px; ">Nama</td>
             <td style="padding: 4px;">: {{$nama_penerima}}</td>
@@ -193,7 +201,6 @@
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">
-            <img src="{{ public_path('assets/ttd/contohstempel.png') }}" alt="Contoh Stempel">
             <img src="{{ public_path('assets/ttd/qr.png') }}" alt="QR Code">
         </div>
         <div></div>

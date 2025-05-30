@@ -51,7 +51,7 @@
     </div>
 </div>
 
-<div id="modal-verifikasi" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+<div id="modal-verifikasi" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">
     <div class="w-11/12 max-w-md p-6 bg-white shadow-xl rounded-2xl">
         <h2 class="mb-4 text-lg font-semibold">Konfirmasi Penghapusan</h2>
         <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin menghapus barang ini?</p>
@@ -60,7 +60,7 @@
                 class="px-4 py-2 text-black transition-all bg-gray-200 rounded-full hover:bg-gray-300">
                 Batal
             </button>
-            <button type="button" id="confirm-delete" class="px-4 py-2 text-white rounded-full bg-red-600 hover:bg-red-700 transition-all">
+            <button type="button" id="confirm-delete" class="px-4 py-2 text-white transition-all bg-red-600 rounded-full hover:bg-red-700">
                 Hapus
             </button>
         </div>

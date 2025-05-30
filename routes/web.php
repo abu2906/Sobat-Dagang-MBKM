@@ -68,11 +68,12 @@ Route::post('/register', [AuthController::class, 'submitRegister'])->name('regis
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 Route::get('/lupa-password', [LupaPasswordController::class, 'showForm'])->name('password.request');
 Route::post('/lupa-password', [LupaPasswordController::class, 'sendLink'])->name('password.email');
+
 Route::get('/reset-password/{token}', [LupaPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [LupaPasswordController::class, 'resetPassword'])->name('password.update');
+
 
 // guest
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
@@ -305,10 +306,10 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::post('/kadis/surat/{encoded_id}/setujui', [PersuratanController::class, 'setujuiKadis'])->name('setujuiKadis');
     Route::post('/kadis/surat/{encoded_id}/tolak', [PersuratanController::class, 'tolakKadis'])->name('tolakKadis');
     Route::get('/kepala-dinas/surat-perdagangan', [sobatHargaController::class, 'suratPerdagangan'])->name('kepalaDinas.suratPerdagangan');
-    Route::put('/kabid-perdagangan/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('suratPerdagangan.setujui');
+    Route::put('/kadis-perdagangan/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('kadissuratPerdagangan.setujui');
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
     Route::get('/kadis/metrologi', [DashboardMetrologiController::class, 'showKadisMetro'])->name('kadis-metro');
     Route::get('/kadis/industri', [KabidIndustriController::class, 'KadisIndustri'])->name('kadis.industri');
     Route::get('/kadis-industri/surat', [KabidIndustriController::class, 'SuratKadis'])->name('kadis.industri.surat');
-    Route::put('/kabid-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('kabid.setujuiSurat');
+    Route::put('/kadis-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('kadis.setujuiSurat');
 });

@@ -141,8 +141,11 @@ class DashboardController extends Controller
 
         return redirect()->route('kelola.pengguna')->with('success', 'Pengguna berhasil dihapus');
     }
+
     public function dashboardMaster()    {
-        $totalDistributor = DB::table('distributor')->count();
+        $totalDistributor = DB::table('distributor')
+            ->where('status', 'diterima')
+            ->count();
         $totalPengaduan = DB::table('forum_diskusi')
             ->whereNotNull('id_user')
             ->count();
@@ -160,12 +163,12 @@ class DashboardController extends Controller
         ->select(
             DB::raw('DATE_FORMAT(form_permohonan.tgl_pengajuan, "%d-%m-%Y") as tanggal'),
             'user.nama as nama_pengirim',
-            DB::raw('CASE 
+            DB::raw('CASE
                 WHEN form_permohonan.jenis_surat LIKE "%perdagangan%" THEN "Perdagangan"
                 WHEN form_permohonan.jenis_surat LIKE "%industri%" THEN "Industri"
                 ELSE "Perdagangan"
             END as bidang_terkait'),
-            DB::raw('CASE 
+            DB::raw('CASE
                 WHEN form_permohonan.status = "menunggu" THEN "Menunggu"
                 WHEN form_permohonan.status = "diterima" THEN "Disetujui"
                 WHEN form_permohonan.status = "ditolak" THEN "Ditolak"
@@ -369,11 +372,24 @@ class DashboardController extends Controller
                 'surat_keluar_metrologi.path_dokumen as file_balasan'
             );
 
+            $unionQuery = $permohonanPerdagangan->unionAll($permohonanMetrologi);
+
         // Combine and order by raw date, limit to 17 entries
-        $permohonan = $permohonanPerdagangan->union($permohonanMetrologi)
-            ->orderBy('raw_date', 'desc')
-            ->limit(17)
+        $permohonan = DB::table(DB::raw("({$unionQuery->toSql()}) as sub"))
+            ->mergeBindings($permohonanPerdagangan)
+            ->orderByRaw('STR_TO_DATE(tanggal, "%d-%m-%Y") desc')
             ->get();
+
+        foreach ($permohonan as $item) {
+            // parsing tanggal "dd-mm-yyyy" ke Carbon
+            $date = Carbon::createFromFormat('d-m-Y', $item->tanggal);
+            $month = $date->format('Y-m'); // contoh "2025-05"
+
+            if (!isset($countsPerMonth[$month])) {
+                $countsPerMonth[$month] = 0;
+            }
+            $countsPerMonth[$month]++;
+        }
         
         return view('admin.adminSuper.daftarPermohonan', compact('permohonan'));
     }

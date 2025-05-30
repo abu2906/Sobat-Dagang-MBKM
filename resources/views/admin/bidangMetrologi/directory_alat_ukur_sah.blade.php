@@ -7,58 +7,63 @@ use App\Helpers\StatusHelper;
 @endphp
 
 <div class="min-h-screen p-6 bg-gray-100">
-    <!-- Header Background -->
-    <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
-        <!-- Floating Filter + Button -->
-        <div class="absolute bottom-[-30px] w-full px-8">
-            <div class="flex flex-wrap items-center justify-between gap-4 p-4 shadow-md rounded-xl">
-                <!-- Filter/Search Input -->
-                <div class="flex flex-wrap items-center flex-1 gap-4">
-                    <form action="{{ route('management-uttp-metrologi') }}" method="GET" class="flex items-center flex-1 gap-4">
-                        <select name="status" id="statusFilter" class="px-4 py-2 text-sm border rounded-full shadow" onchange="this.form.submit()">
-                            <option value="">Semua</option>
-                            <option value="Valid" {{ request('status') === 'Valid' ? 'selected' : '' }}>Valid</option>
-                            <option value="Kadaluarsa" {{ request('status') === 'Kadaluarsa' ? 'selected' : '' }}>{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
-                        </select>
-                        <div class="relative flex-1">
-                            <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}" class="w-full py-2 pl-10 pr-4 text-sm border rounded-full shadow">
-                            <button type="submit" class="absolute top-0 right-0 h-full px-4 text-gray-400 hover:text-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="relative flex-grow hidden mx-4 mt-2 md:mt-0">
-                            <input type="text" id="searchInput" placeholder="Cari" class="w-full py-2 pl-10 pr-4 text-sm rounded-full shadow">
-                            <span class="absolute text-gray-400 left-3 top-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-                                </svg>
-                            </span>
-                        </div>
-                    </form>
-                </div>
+    <!-- Header Section -->
+    <div class="w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
+        <!-- Fixed Height Container -->
+        <div class="h-[150px]"></div>
+    </div>
 
-                <!-- Add Button -->
-                <div class="flex gap-4">
-                    <a href="{{ route('uttp.download') }}" class="text-white flex items-center gap-2 bg-[#0c3252] transition-colors duration-300 hover:bg-[#F49F1E] hover:text-black rounded-full px-6 py-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+    <!-- Floating Filter Section (sekarang relatif, bukan absolute) -->
+    <div class="w-full px-4 sm:px-6 md:px-8 mt-[-60px]">
+        <div class="flex flex-col justify-between gap-4 p-4 shadow-md lg:flex-row lg:items-center rounded-xl bg-white/90 backdrop-blur-md">
+            <!-- Filter Form -->
+            <form action="{{ route('management-uttp-metrologi') }}" method="GET"
+                class="flex flex-col flex-1 w-full gap-3 md:flex-row md:items-center md:gap-4">
+                <select name="status" id="statusFilter"
+                    class="w-full px-4 py-2 text-sm border rounded-full shadow md:w-auto"
+                    onchange="this.form.submit()">
+                    <option value="">Semua</option>
+                    <option value="Valid" {{ request('status') === 'Valid' ? 'selected' : '' }}>Valid</option>
+                    <option value="Kadaluarsa" {{ request('status') === 'Kadaluarsa' ? 'selected' : '' }}>{{ StatusHelper::formatStatus('Kadaluarsa') }}</option>
+                </select>
+
+                <div class="relative flex-1">
+                    <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}"
+                        class="w-full py-2 pl-10 pr-4 text-sm border rounded-full shadow" />
+                    <button type="submit"
+                        class="absolute top-0 right-0 h-full px-4 text-gray-400 hover:text-gray-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
                         </svg>
-                        Download
-                    </a>
-                    <button onclick="openModal()" class="text-white flex items-center gap-2 bg-[#0c3252] transition-colors duration-300 hover:bg-[#F49F1E] hover:text-black rounded-full px-8 py-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Tambah UTTP
                     </button>
                 </div>
+            </form>
+
+            <!-- Button Group -->
+            <div class="flex flex-col justify-end w-full gap-3 sm:flex-row sm:w-auto">
+                <a href="{{ route('uttp.download') }}"
+                    class="text-white flex items-center justify-center gap-2 bg-[#0c3252] hover:bg-[#F49F1E] hover:text-black rounded-full px-6 py-2 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download
+                </a>
+                <button onclick="openModal()"
+                    class="text-white flex items-center justify-center gap-2 bg-[#0c3252] hover:bg-[#F49F1E] hover:text-black rounded-full px-8 py-2 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah UTTP
+                </button>
             </div>
         </div>
     </div>
+
+
 
     <!-- Modal Popup Review -->
     <div id="popupDetailAlat" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-50">

@@ -84,13 +84,12 @@ class KadisController extends Controller
                 $metrologi['totalSuratMetrologi'],
 
             'totalSuratTerverifikasiKeseluruhan' =>
-                $perdagangan['totalSuratTerverifikasi']
-                +
+                $perdagangan['totalSuratTerverifikasi'] +
                 $industri['totalSuratTerverifikasi'] +
                 $metrologi['totalSuratTerverifikasi'],
 
             'totalSuratDitolakKeseluruhan' =>
-                $perdagangan['totalSuratDitolak'],+
+                $perdagangan['totalSuratDitolak'] +
                 $industri['totalSuratDitolak'] +
                 $metrologi['totalSuratDitolak'],
         ];

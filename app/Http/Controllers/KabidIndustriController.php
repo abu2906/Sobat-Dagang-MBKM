@@ -158,6 +158,7 @@ class KabidIndustriController extends Controller
         }
 
         $suratMasuk = $query->orderBy('created_at', 'desc')->get();
+        
 
         return view('admin.kabid.industri.verifSurat', [
             'totalSuratIndustri' => $rekapSurat['totalSuratIndustri'],

@@ -21,10 +21,21 @@ class KabidPerdaganganController extends Controller
         ];
 
         return [
-            'totalSuratPerdagangan' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
-            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
-            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
-            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        'totalSuratPerdagangan' => DB::table('form_permohonan')
+            ->whereIn('jenis_surat', $jenis)
+            ->where('status', '!=', 'disimpan') // hanya hitung status selain disimpan
+            ->count(),
+
+        'totalSuratTerverifikasi' => DB::table('form_permohonan')
+            ->whereIn('jenis_surat', $jenis)
+            ->where('status', 'diterima')
+            ->count(),
+
+        'totalSuratDitolak' => DB::table('form_permohonan')
+            ->whereIn('jenis_surat', $jenis)
+            ->where('status', 'ditolak')
+            ->count()
+
         ];
     }
     public function dashboardKabid(Request $request)
@@ -32,18 +43,42 @@ class KabidPerdaganganController extends Controller
         $tahun = $request->input('tahun', date('Y'));
 
         $rekapSurat = $this->getSuratPerdaganganData();
-        $suratMasuk = PermohonanSurat::orderBy('created_at', 'desc')->get();
+        $suratMasuk = PermohonanSurat::with('user')
+            ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->where('status', '!=', 'disimpan')
+            ->whereIn('status', ['menunggu', 'ditolak', 'diterima']) // hanya status ini yang ditampilkan
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $jenis = [
+            'surat_rekomendasi_perdagangan',
+            'surat_keterangan_perdagangan',
+        ];
 
         $statusCounts = [
-            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'diterima')->count(),
-            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'ditolak')->count(),
-            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)->where('status', 'menunggu')->count(),
+            'diterima' => PermohonanSurat::whereYear('created_at', $tahun)
+                ->whereIn('jenis_surat', $jenis)
+                ->where('status', 'diterima')
+                ->count(),
+            'ditolak' => PermohonanSurat::whereYear('created_at', $tahun)
+                ->whereIn('jenis_surat', $jenis)
+                ->where('status', 'ditolak')
+                ->count(),
+            'menunggu' => PermohonanSurat::whereYear('created_at', $tahun)
+                ->whereIn('jenis_surat', $jenis)
+                ->where('status', 'menunggu')
+                ->count(),
         ];
 
         $dataBulanan = [];
         for ($i = 1; $i <= 12; $i++) {
-            $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)->whereMonth('created_at', $i)->count();
+            $dataBulanan[] = PermohonanSurat::whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $i)
+                ->whereIn('jenis_surat', $jenis)
+                ->where('status', '!=', 'disimpan')
+                ->count();
         }
+
 
         if ($request->ajax()) {
             return response()->json([
@@ -57,7 +92,6 @@ class KabidPerdaganganController extends Controller
             'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
             'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
             'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
             'suratMasuk' => $suratMasuk,
             'statusCounts' => $statusCounts,
             'dataBulanan' => $dataBulanan
