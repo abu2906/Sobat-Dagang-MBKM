@@ -48,7 +48,6 @@
             <div class="flex items-center">
                 <img src="{{ asset('assets/img/icon/person.png') }}" class="w-8 h-8 rounded-full" alt="Profile">
                 <div class="ml-3" x-show="open">
-                    {{-- <p class="text-sm font-semibold">{{ Auth::user()->name }}</p> --}}
                     <p class="text-sm font-semibold">Bidang Industri</p>
                     <p class="text-xs">Admin</p>
                 </div>
@@ -66,3 +65,14 @@
             </div>
         </div>
     </div>
+
+<script>
+    function sidebar() {
+        return {
+            open: window.innerWidth >= 768,
+            checkScreen() {
+                this.open = window.innerWidth >= 768;
+            }
+        }
+    }
+</script>

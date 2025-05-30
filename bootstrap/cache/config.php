@@ -691,7 +691,7 @@
     ),
     'from' => 
     array (
-      'address' => 'info@sobatdagang',
+      'address' => 'andifff12@gmail.com',
       'name' => 'Sobat Dagang',
     ),
     'markdown' => 

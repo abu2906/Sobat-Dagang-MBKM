@@ -160,8 +160,8 @@ class authController extends Controller
         return view('pages.auth.changepass');
     }
 
-    public function showverification()
-    {
-        return view('pages.auth.verification');
-    }
+    // public function showverification()
+    // {
+    //     return view('pages.auth.verification');
+    // }
 };

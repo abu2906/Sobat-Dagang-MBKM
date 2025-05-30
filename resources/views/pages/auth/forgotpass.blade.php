@@ -18,12 +18,10 @@
       </span>
     </a>
   </div>
-  <!-- Logo -->
   <div class="mb-8">
     <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo Dinas Perdagangan" class="w-32 mx-auto">
   </div>
 
-  <!-- Form -->
   <div class="w-full max-w-md bg-primary text-white p-6 flex flex-col items-center">
     <h1 class="text-2xl font-bold mb-2 text-center">Lupa Kata Sandi?</h1>
     <p class="text-center mb-6 text-sm">Masukkan Email Anda untuk melakukan reset kata sandi</p>
@@ -47,7 +45,6 @@
     <form action="{{ route('password.email') }}" method="POST" class="w-full mt-5">
       @csrf
 
-    <!-- Email Input -->
     <div class="mb-4 w-full flex justify-center">
       <div class="w-full max-w-[350px]">
         <label for="email" class="block mb-1 font-semibold">Email</label>
@@ -61,15 +58,12 @@
       </div>
     </div>
 
-    <!-- Submit Button -->
     <div class="mt-6 w-full flex justify-center">
       <button type="submit"
         class="w-[100px] bg-secondary hover:bg-[var(--secondary-dark)] text-white font-semibold py-2 rounded-full transition">
         Lanjut
       </button>
     </div>
-
-
     </form>
   </div>
 

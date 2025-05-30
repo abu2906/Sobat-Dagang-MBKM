@@ -70,7 +70,7 @@
 <script>
     function sidebar() {
         return {
-            open: window.innerWidth >= 768, // default: true jika layar lebar
+            open: window.innerWidth >= 768,
             checkScreen() {
                 this.open = window.innerWidth >= 768;
             }

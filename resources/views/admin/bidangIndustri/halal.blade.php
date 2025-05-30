@@ -54,7 +54,7 @@
        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
        style="display: none;"
        x-cloak>
-    <div class="bg-white p-6 rounded shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
+    <div class="bg-white p-6 rounded shadow w-full max-w-lg max-h-[90vh] ml-24 mr-2 sm:justify-center overflow-y-auto"
          @click.away="openAdd = false">
       <h2 class="text-xl text-center font-semibold mb-4">Tambah Data Sertifikat Halal</h2>
       

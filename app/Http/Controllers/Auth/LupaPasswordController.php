@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use App\Http\Controllers\Auth\Auth;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\User;
@@ -76,5 +77,70 @@ class LupaPasswordController extends Controller
 
         return redirect('/login')->with('status', 'Kata sandi berhasil direset!');
     }
+
+    public function showVerifyForm()
+    {
+        return view('pages.auth.changepass'); // Halaman input password lama
+    }   
+
+    public function checkOldPassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required',
+        ]);
+
+        $userId = auth()->guard('user')->id();
+        $user = \App\Models\User::find($userId);
+        
+
+        if (!Hash::check($request->old_password, $user->password)) {
+            return back()->withErrors(['old_password' => 'Kata sandi lama tidak cocok.']);
+        }
+
+        session(['verified_old_password' => true]);
+        return redirect()->route('password.resetPass');
+    }
+
+    public function resetPass()
+    {
+        if (!session('verified_old_password')) {
+            return redirect()->route('password.verifyOldForm');
+        }
+
+        return view('pages.auth.resetNewPassword');
+    }
+
+    public function updateNewPassword(Request $request)
+    {
+        $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/[a-zA-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*#?&]/',
+                'confirmed'                
+            ]
+        ], [
+            'password.required' => 'Kata sandi tidak boleh kosong.',
+            'password.min' => 'Kata sandi minimal harus terdiri dari 8 karakter.',
+            'password.regex' => 'Kata sandi harus mengandung huruf, angka, dan simbol unik (@$!%*#?&).',
+            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+
+        ]);
+    $userId = auth()->guard('user')->id();
+    $user = \App\Models\User::find($userId);
+
+    if (Hash::check($request->password, $user->password)) {
+        return back()->withErrors(['password' => 'Kata sandi baru tidak boleh sama dengan kata sandi lama.'])->withInput();
+    }
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    session()->forget('verified_old_password');
+    return redirect()->route('login')->with('success', 'Kata sandi berhasil diubah.');
+    }  
+
 }
 

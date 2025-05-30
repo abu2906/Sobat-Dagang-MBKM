@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Reset Kata Sandi - Sobat Dagang</title>
+  <meta charset="UTF-8">
+  <title>Verifikasi - Sobat Dagang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="{{ asset('/assets/css/app.css') }}">
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #f8fafc; color: #1f2937; padding: 20px;">
+<body class="bg-primary min-h-screen flex flex-col justify-center items-center font-sans text-white">
 
-    <table width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
-        <tr>
-            <td style="padding: 30px;">
-                <h2 style="color: #083358;">Halo Sobat Dagang 👋</h2>
+    <div>
+        <a href="{{ url()->previous() }}"
+            class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+            <span class="text-2xl material-symbols-outlined">
+                arrow_back
+            </span>
+        </a>
+    </div>
+    <div class="mb-6">
+        <img src="{{ asset('/assets/img/icon/logo.png') }}" alt="Logo Dinas Perdagangan" class="w-32 mx-auto">
+    </div>
 
-                <p>Kami menerima permintaan untuk mengatur ulang kata sandi akun Anda.</p>
+    <div>
+        <h1 class="text-2xl font-bold mb-2 text-center">Laman Verifikasi</h1>
+        
+        @if (isset($status))
+            <p class="text-center mb-6 text-sm">{{ $status }}</p>
+        @endif
 
-                <p>Untuk melanjutkan proses reset, silakan klik tombol di bawah ini:</p>
-
-                <p style="text-align: center; margin: 30px 0;">
-                    <a href="{{ $resetLink }}" style="display: inline-block; background-color: #083358; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                        Reset Kata Sandi
-                    </a>
-                </p>
-
-                <p>Jika Anda tidak merasa melakukan permintaan ini, Anda dapat mengabaikan email ini dengan aman. Kata sandi Anda tidak akan berubah tanpa tindakan dari Anda.</p>
-
-                <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
-
-                <p style="font-size: 14px; color: #6b7280;">
-                    Salam hangat,<br>
-                    Tim Sobat Dagang
-                </p>
-            </td>
-        </tr>
-    </table>
-
+        <div class="mt-6 w-full flex justify-center">
+            <a href="{{ route('login') }}" class="w-[100px] text-center bg-secondary hover:bg-[var(--secondary-dark)] text-white font-semibold py-2 rounded-full transition">
+                Login
+            </a>
+        </div>
+    </div>
 </body>
 </html>
