@@ -204,7 +204,7 @@ use App\Helpers\StatusHelper;
 
                 <div class="flex justify-end gap-2 mt-4">
                     <button type="button" onclick="tutupModal()" class="bg-gray-200 px-3 sm:px-4 py-1.5 sm:py-2 rounded hover:bg-gray-300 text-xs sm:text-sm">Batal</button>
-                    <button type="submit" class="bg-blue-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded hover:bg-blue-700 text-xs sm:text-sm">Simpan</button>
+                    <button type="submit" class="bg-[#0c3252] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded hover:bg-[#0a2942] text-xs sm:text-sm">Simpan</button>
                 </div>
             </form>
         </div>
@@ -361,8 +361,8 @@ use App\Helpers\StatusHelper;
             showCancelButton: true,
             confirmButtonText: 'Ya, Simpan',
             cancelButtonText: 'Batal',
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33'
+            confirmButtonColor: '#0c3252',
+            cancelButtonColor: '#6B7280'
         }).then((result) => {
             if (result.isConfirmed) {
                 // Hapus pesan error yang ada
@@ -459,8 +459,8 @@ use App\Helpers\StatusHelper;
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Tutup',
                 cancelButtonText: 'Batal',
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33'
+                confirmButtonColor: '#0c3252',
+                cancelButtonColor: '#6B7280'
             }).then((result) => {
                 if (result.isConfirmed) {
                     closeModalAndReset();

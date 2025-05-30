@@ -9,7 +9,7 @@
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="w-full max-w-4xl bg-white rounded-lg shadow-xl">
             <div class="flex items-center justify-between p-4 border-b">
-                <h3 class="text-lg font-semibold text-gray-900">Preview Dokumen</h3>
+                <h3 class="text-lg font-semibold text-gray-900">Preview Surat Keluar</h3>
                 <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -123,19 +123,19 @@
                             <div class="flex flex-wrap items-center justify-center gap-2">
                                 @if ($surat->status_kadis === 'Menunggu')
                                     <button onclick="confirmAction('setujui', '{{ base64_encode($surat->id_surat_balasan) }}')" 
-                                        class="px-4 py-1 text-sm text-white bg-green-500 rounded hover:bg-green-600">
+                                        class="bg-[#0c3252] hover:bg-[#0a2942] text-white text-sm px-4 py-1 rounded">
                                         Terima
                                     </button>
                                     <button onclick="confirmAction('tolak', '{{ base64_encode($surat->id_surat_balasan) }}')" 
-                                        class="px-4 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600">
+                                        class="bg-white hover:bg-gray-100 text-[#0c3252] border border-[#0c3252] text-sm px-4 py-1 rounded">
                                         Tolak
                                     </button>
                                 @endif
 
                                 <!-- TOMBOL PREVIEW -->
                                 <button onclick="openPreview('{{ asset('storage/' . $surat->path_dokumen) }}')"
-                                class="inline-flex items-center justify-center text-blue-700 transition duration-200 hover:scale-105" 
-                                title="Lihat Surat">
+                                    class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center" 
+                                    title="Lihat Surat">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 6h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z" />
@@ -206,13 +206,13 @@ function confirmAction(action, id) {
         case 'setujui':
             message = 'Apakah Anda yakin ingin menyetujui surat ini?';
             confirmButtonText = 'Ya, Setujui';
-            confirmButtonClass = '#10B981';
+            confirmButtonClass = '#0c3252';
             routeUrl = '{{ url("kadis/surat") }}/' + id + '/setujui';
             break;
         case 'tolak':
             message = 'Apakah Anda yakin ingin menolak surat ini?';
             confirmButtonText = 'Ya, Tolak';
-            confirmButtonClass = '#EF4444';
+            confirmButtonClass = '#0c3252';
             routeUrl = '{{ url("kadis/surat") }}/' + id + '/tolak';
             break;
         default:
@@ -226,7 +226,7 @@ function confirmAction(action, id) {
         showCancelButton: true,
         confirmButtonText: confirmButtonText,
         cancelButtonText: 'Batal',
-        confirmButtonColor: confirmButtonClass,
+        confirmButtonColor: '#0c3252',
         cancelButtonColor: '#6B7280',
         reverseButtons: true
     }).then((result) => {
