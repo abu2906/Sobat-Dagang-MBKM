@@ -11,58 +11,61 @@
   <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
  
 
-  <div class="flex items-center gap-4 px-6 py-6 max-w-7xl mx-auto z-10 relative">
+  <div class="relative z-10 flex items-center gap-4 px-6 py-6 mx-auto max-w-7xl">
     <div class="relative flex-1">
       <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
       <input type="text" x-model="searchQuery" placeholder="Cari"
         class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+      <span class="absolute text-gray-500 -translate-y-1/2 left-4 top-1/2">
        
       </span>
     </div>
   </div>
 
-  <section class="flex-1 px-6 pb-10 mt-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent z-10 relative">
+  <section class="relative z-10 flex-1 px-6 pb-10 mt-1 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
     <div class="overflow-hidden rounded-xl">
-      <table class="w-full text-sm table-auto">
-        <thead class="bg-[#0d3b66] text-white">
-          <tr>
-            <th class="px-4 py-3 font-semibold text-left">NO</th>
-            <th class="px-4 py-3 font-semibold text-left">NAMA USAHA</th>
-            <th class="px-4 py-3 font-semibold text-left">NO. SERTIFIKAT</th>
-            <th class="px-4 py-3 font-semibold text-left">TANGGAL DITERBITKAN</th>
-            <th class="px-4 py-3 font-semibold text-left">BERLAKU SAMPAI</th>
-            <th class="px-4 py-3 font-semibold text-left">ALAMAT</th>
-            <th class="px-4 py-3 font-semibold text-left">DOKUMEN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template x-if="filteredItems.length">
-            <template x-for="(item, index) in filteredItems" :key="item.id_halal">
-              <tr :class="index % 2 === 0 ? 'bg-gray-100' : 'bg-white'" class="border-b hover:bg-gray-50">
-                <td class="px-4 py-3" x-text="index + 1"></td>
-                <td class="px-4 py-3" x-text="item.nama_usaha"></td>
-                <td class="px-4 py-3" x-text="item.no_sertifikasi_halal"></td>
-                <td class="px-4 py-3" x-text="item.tanggal_sah_formatted"></td>
-                <td class="px-4 py-3" x-text="item.tanggal_exp_formatted"></td>
-                <td class="px-4 py-3" x-text="item.alamat"></td>
-                <td class="px-4 py-3">
-                  <a :href="'/storage/' + item.sertifikat" target="_blank" class="text-blue-600 hover:underline">
-                    Lihat Sertifikat
-                  </a>
-                </td>
+      <div class="w-full overflow-x-auto">
+        <table class="w-full text-sm table-auto min-w-[800px]">
+          <thead class="bg-[#0d3b66] text-white">
+            <tr>
+              <th class="px-4 py-3 font-semibold text-left">NO</th>
+              <th class="px-4 py-3 font-semibold text-left">NAMA USAHA</th>
+              <th class="px-4 py-3 font-semibold text-left">NO. SERTIFIKAT</th>
+              <th class="px-4 py-3 font-semibold text-left">TANGGAL DITERBITKAN</th>
+              <th class="px-4 py-3 font-semibold text-left">BERLAKU SAMPAI</th>
+              <th class="px-4 py-3 font-semibold text-left">ALAMAT</th>
+              <th class="px-4 py-3 font-semibold text-left">DOKUMEN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template x-if="filteredItems.length">
+              <template x-for="(item, index) in filteredItems" :key="item.id_halal">
+                <tr :class="index % 2 === 0 ? 'bg-gray-100' : 'bg-white'" class="border-b hover:bg-gray-50">
+                  <td class="px-4 py-3" x-text="index + 1"></td>
+                  <td class="px-4 py-3" x-text="item.nama_usaha"></td>
+                  <td class="px-4 py-3" x-text="item.no_sertifikasi_halal"></td>
+                  <td class="px-4 py-3" x-text="item.tanggal_sah_formatted"></td>
+                  <td class="px-4 py-3" x-text="item.tanggal_exp_formatted"></td>
+                  <td class="px-4 py-3" x-text="item.alamat"></td>
+                  <td class="px-4 py-3">
+                    <a :href="'/storage/' + item.sertifikat" target="_blank" class="text-blue-600 hover:underline">
+                      Lihat Sertifikat
+                    </a>
+                  </td>
+                </tr>
+              </template>
+            </template>
+
+            <template x-if="filteredItems.length === 0">
+              <tr>
+                <td colspan="8" class="py-6 text-center text-gray-500">Tidak ada data yang cocok.</td>
               </tr>
             </template>
-          </template>
-
-          <template x-if="filteredItems.length === 0">
-            <tr>
-              <td colspan="8" class="text-center py-6 text-gray-500">Tidak ada data yang cocok.</td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
+
   </section>
 </section>
 <script>
