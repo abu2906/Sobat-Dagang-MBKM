@@ -29,7 +29,7 @@
         </button>
     </div>
 </div>
-<div class="max-w-4xl p-6 mx-auto mb-16 bg-white shadow-lg rounded-4xl">
+<div class="max-w-4xl p-6 mx-auto mb-16 bg-white shadow-lg rounded-4xl mt-1">
     <h2 class="mb-6 text-xl font-semibold text-center">Formulir Surat Permohonan</h2>
 
     @if (session('success'))
