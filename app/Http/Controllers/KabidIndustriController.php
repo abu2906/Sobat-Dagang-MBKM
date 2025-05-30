@@ -342,4 +342,15 @@ class KabidIndustriController extends Controller
             'suratMasuk' => $suratMasuk,
         ]);
     }
+
+    public function kadisSetujui($id)
+    {
+        $permohonan = PermohonanSurat::findOrFail($id);
+
+        // Ubah status menjadi 'diterima'
+        $permohonan->status = 'diterima';
+        $permohonan->save();
+
+        return redirect()->back()->with('success', 'Surat berhasil disetujui dan status diperbarui.');
+    }
 }

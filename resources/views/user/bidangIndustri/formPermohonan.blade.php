@@ -29,8 +29,33 @@
         </button>
     </div>
 </div>
-<div class="max-w-4xl p-6 mx-auto mb-16 bg-white shadow-lg rounded-4xl">
+<div class="max-w-4xl p-6 mx-auto mb-16 bg-white shadow-lg rounded-4xl mt-1">
     <h2 class="mb-6 text-xl font-semibold text-center">Formulir Surat Permohonan</h2>
+
+    <form method="GET" action="{{ route('bidangIndustri.formPermohonan') }}">
+        <div class="mt-6 mb-4">
+            <label for="draftSelect" class="block mb-2 text-sm font-medium text-gray-700">
+                Pilih Draft yang Pernah Disimpan
+            </label>
+            <select id="draftSelect" name="draft_id"
+                class="block w-full px-4 py-2 text-gray-700 transition bg-white border border-gray-300 shadow-sm rounded-full focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                onchange="this.form.submit()">
+                <option value="">Pilih Draft</option>
+                @foreach($drafts as $d)
+                    <option value="{{ $d->id_permohonan }}" {{ request('draft_id') == $d->id_permohonan ? 'selected' : '' }}>
+                        Draft - {{ \Carbon\Carbon::parse($d->tgl_pengajuan)->format('d F Y') }} - 
+                        @if($d->jenis_surat == 'surat_rekomendasi_industri')
+                            Surat Rekomendasi
+                        @elseif($d->jenis_surat == 'surat_keterangan_industri')
+                            Surat Keterangan
+                        @else
+                            {{ $d->jenis_surat }}
+                        @endif
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </form>
 
     @if (session('success'))
     <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 border border-green-200 rounded-lg" role="alert">
@@ -55,11 +80,6 @@
 
     <form id="permohonanForm" action="{{ route('ajukan.Permohonan') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @if($draft)
-        <script>
-            window.draftData = @json($draft);
-        </script>
-        @endif
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 font-roboto">
             <div>
@@ -67,8 +87,8 @@
                     <span class="text-red-500">*</span>
                 </label>
                 <select id="jenis_surat" name="jenis_surat" class="w-full p-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="surat_rekomendasi_industri" {{ old('jenis_surat', $draft->jenis_surat ?? '') == 'surat_rekomendasi_industri' ? 'selected' : '' }}>Surat Rekomendasi</option>
-                    <option value="surat_keterangan_industri" {{ old('jenis_surat', $draft->jenis_surat ?? '') == 'surat_keterangan_industri' ? 'selected' : '' }}>Surat Keterangan</option>
+                    <option value="surat_rekomendasi_industri" >Surat Rekomendasi</option>
+                    <option value="surat_keterangan_industri" >Surat Keterangan</option>
                 </select>
             </div>
             <div class="mb-4">
@@ -86,7 +106,7 @@
             </div>
 
             <div x-data="{ showInfo: false, hide() { this.showInfo = false } }">
-                <label for="titik_koordinat" class="block mb-1">
+                <label for="titik_koordinat" class="block ">
                     Titik Koordinat <span class="text-red-500">*</span>
                     <button type="button" @click="showInfo = true" class="ml-1 text-blue-500 hover:text-blue-700 focus:outline-none">
                         <svg class="inline w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -216,7 +236,7 @@
             </div>
         </div>
         <div class="flex justify-center mt-6 mb-4 space-x-4">
-            <button type="button" id="btn-draft" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Draft</button>
+            <button type="button" id="btn-modal-draft" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">Draft</button>
             <button type="button" id="btn-modal-ajukan" class="px-6 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
                 Ajukan  
             </button>
@@ -233,6 +253,22 @@
                     <button type="button" id="btn-ajukan" onclick="document.getElementById('permohonanForm').submit()"
                         class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
                         Ya, Ajukan
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="modal-draft" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+            <div class="w-11/12 max-w-md p-6 bg-white shadow-xl rounded-2xl">
+                <h2 class="mb-4 text-lg font-semibold">Konfirmasi Draft</h2>
+                <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin menyimpan surat permohonan ini sebagai draft?</p>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()"
+                        class="px-4 py-2 text-black transition-all bg-gray-200 rounded-full hover:bg-gray-300">
+                        Batal
+                    </button>
+                    <button type="button" id="btn-draft" onclick="document.getElementById('permohonanForm').submit()"
+                        class="px-4 py-2 bg-[#083358] text-white rounded-full hover:bg-[#061f3c] transition-all">
+                        Ya, Simpan sebagai Draft
                     </button>
                 </div>
             </div>
@@ -286,10 +322,14 @@
         populateKelurahan(selectedKecamatan);
     }
 
-    document.getElementById('btn-draft').addEventListener('click', function () {
+    document.getElementById('btn-modal-draft').addEventListener('click', function () {
         let form = document.getElementById('permohonanForm');
-        form.action = "{{ route('bidangIndustri.draftPermohonan') }}"; 
-        form.submit();
+        form.action = "{{ route('bidangIndustri.draftPermohonan') }}";
+        document.getElementById('modal-draft').classList.remove('hidden');
+    });
+
+    document.getElementById('btn-draft').addEventListener('click', function () {
+        document.getElementById('permohonanForm').submit();
     });
 
     document.getElementById('btn-modal-ajukan').addEventListener('click', function () {

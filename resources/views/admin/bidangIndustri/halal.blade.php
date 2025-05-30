@@ -33,14 +33,15 @@
     <div class="relative flex-1">
       <form method="GET" action="{{ route('admin.industri.halal') }}">
           <input type="text" name="search" placeholder="Cari"
-            class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}" />
+            class="w-full p-3 pl-10 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}" />
           <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
       </form>
     </div>
-      
-    <button @click="openAdd = true" class="bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:brightness-110 transition">
+
+    <button @click="openAdd = true" class="sticky bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
       TAMBAH DATA
     </button>
+  </div>
   </div>
 
   <!-- Fixed Form Tambah Data Modal -->

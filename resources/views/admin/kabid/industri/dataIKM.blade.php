@@ -43,7 +43,7 @@
     </div>
             
 
-    <section class="mt-20 px-4 flex flex-wrap justify-center gap-4">
+    <section class="mt-6 px-4 flex flex-wrap justify-center gap-4">
         @php
             $kategoriList = [
                 ['nama' => 'Sandang', 'ikon' => 'sandang.png'],
@@ -74,7 +74,7 @@
         @endforeach
     </section>
 
-    <section class="overflow-hidden mt-12 px-6 pb-16">
+    <section class="overflow-hidden mt-6 px-6 pb-16">
         <div class="overflow-x-auto overflow-y-auto max-h-[350px] rounded-lg">
             <table class="w-full border-collapse table-auto text-sm bg-white shadow-md">
                 <thead class="text-white bg-[#083458] sticky top-0 z-10">

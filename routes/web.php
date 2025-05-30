@@ -190,7 +190,6 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
 
     // Data IKM
     Route::get('/data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
-    Route::get('data-IKM', [AdminIndustriController::class, 'showdataIKM'])->name('dataIKM');
     Route::get('/form-IKM', [AdminIndustriController::class, 'ShowformIKM'])->name('formIKM');
     Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
     Route::get('data-IKM/{id}/edit', [AdminIndustriController::class, 'editIKM'])->name('editIKM');
@@ -310,6 +309,6 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
     Route::get('/kadis/metrologi', [DashboardMetrologiController::class, 'showKadisMetro'])->name('kadis-metro');
     Route::get('/kadis/industri', [KabidIndustriController::class, 'KadisIndustri'])->name('kadis.industri');
-    Route::get('/kadis-industri/surat', [KabidIndustriController::class, 'SuratKadis'])->name('kadis.industri.surat');
-    Route::put('/kadis-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('kadis.setujuiSurat');
+    Route::get('/kadis/industri/surat', [KabidIndustriController::class, 'SuratKadis'])->name('kadis.industri.surat');
+    Route::put('/kadis/industri/surat/{id}/setujui', [KabidIndustriController::class, 'kadisSetujui'])->name('kadis.setujuiSurat');
 });
