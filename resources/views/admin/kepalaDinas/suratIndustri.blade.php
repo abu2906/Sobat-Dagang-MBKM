@@ -124,7 +124,7 @@
                                         @if ($surat->status !== 'menunggu')
                                             <button class="px-3 py-1 text-white bg-gray-400 rounded cursor-not-allowed" disabled>✓</button>
                                         @else
-                                            <form action="{{ route('kabid.setujuiSurat', $surat->id_permohonan) }}" method="POST" class="inline">
+                                            <form action="{{ route('kadis.setujuiSurat', $surat->id_permohonan) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('PUT')
                                                 <button type="submit" class="px-3 py-1 text-white bg-green-500 rounded hover:bg-green-600">Setujui</button>

@@ -11,6 +11,9 @@
             padding: 30px;
             color: #333;
         }
+        p {
+            font-size: 10pt;
+        }
 
         .bold-underline {
             font-weight: bold;
@@ -53,11 +56,11 @@
         }
 
         .kop h1 {
-            font-size: 14pt;
+            font-size: 12pt;
         }
 
         .kop h2 {
-            font-size: 16pt;
+            font-size: 14pt;
             font-weight: bold;
         }
 
@@ -93,11 +96,12 @@
 
         .ttd .ttd_QR {
             display: flex;
-            margin-top: 20px;
         }
 
         .ttd .ttd_QR img {
             height: 100px;
+            margin-left: 200px;
+            margin-bottom: 10px;
         }
 
         .judul {
@@ -108,7 +112,7 @@
         }
 
         .judul h1 {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .judul p {
@@ -116,6 +120,11 @@
         }
         .penutup p {
             text-align: justify;
+            font-size: 10pt;
+        }
+
+        .data-pengirim {
+            font-size: 10pt;
         }
     </style>
 </head>
@@ -134,11 +143,11 @@
         </div>
     </div>
     <div class="judul">
-        <h1>REKOMENDASI</h1>
+        <h1>SURAT REKOMENDASI</h1>
         <p>Nomor: {{$nomor_surat}}</p>
     </div>
     <p>Yang Bertanda tangan dibawah ini. Kepala Dinas Parepare Menerangkan Bahwa :</p>
-    <table style="width: 72%; border-collapse: collapse; margin-left: 30px; ">
+    <table class="data-pengirim" style="width: 72%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama</td>
             <td style="padding: 4px;">: {{ $nama_pengirim }}</td>
@@ -161,7 +170,7 @@
         </tr>
     </table>
     <p>Untuk Membuka Usaha:</p>
-    <table style="width: 55%; border-collapse: collapse; margin-left: 30px; ">
+    <table class="data-pengirim" style="width: 55%; border-collapse: collapse; margin-left: 30px; ">
         <tr>
             <td style="padding: 4px;">Nama Perusahaan</td>
             <td style="padding: 4px;">: {{$nama_usaha}}</td>
@@ -200,7 +209,6 @@
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">
-            <img src="{{ public_path('assets/ttd/contohstempel.png') }}" alt="Contoh Stempel">
             <img src="{{ public_path('assets/ttd/qr.png') }}" alt="QR Code">
         </div>
         <div></div>

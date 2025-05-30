@@ -30,28 +30,6 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\KadisController;
 use App\Http\Controllers\AdminManagementController;
 use App\Http\Controllers\Auth\LupaPasswordController;
-use App\Mail\RegisterVerificationMail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Http\Request;
-use App\Models\User;
-
-Route::get('/verifikasi-akun', function (Request $request) {
-    $user = User::where('verifikasi_token', $request->token)->first();
-
-    if (!$user) {
-        $status = 'Token tidak valid atau sudah digunakan.';
-    } elseif ($user->is_verified) {
-        $status = 'Akun Anda sudah diverifikasi sebelumnya.';
-    } else {
-        $user->is_verified = true;
-        $user->verifikasi_token = null;
-        $user->save();
-        $status = 'Akun Anda berhasil diverifikasi. Silahkan login';
-    }
-
-    return view('pages.auth.verification', ['status' => $status]);
-});
-
 
 // Controller untuk halaman utama (homepage)
 Route::get('/', [homeController::class, 'index'])->name('Home');
@@ -69,11 +47,12 @@ Route::post('/register', [AuthController::class, 'submitRegister'])->name('regis
 Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
 Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 Route::get('/lupa-password', [LupaPasswordController::class, 'showForm'])->name('password.request');
 Route::post('/lupa-password', [LupaPasswordController::class, 'sendLink'])->name('password.email');
+
 Route::get('/reset-password/{token}', [LupaPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [LupaPasswordController::class, 'resetPassword'])->name('password.update');
+
 
 // guest
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
@@ -299,10 +278,10 @@ Route::middleware(['check.role:kepala_dinas'])->group(function () {
     Route::post('/kadis/surat/{encoded_id}/setujui', [PersuratanController::class, 'setujuiKadis'])->name('setujuiKadis');
     Route::post('/kadis/surat/{encoded_id}/tolak', [PersuratanController::class, 'tolakKadis'])->name('tolakKadis');
     Route::get('/kepala-dinas/surat-perdagangan', [sobatHargaController::class, 'suratPerdagangan'])->name('kepalaDinas.suratPerdagangan');
-    Route::put('/kabid-perdagangan/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('suratPerdagangan.setujui');
+    Route::put('/kadis-perdagangan/surat/{id}/setujui', [KabidPerdaganganController::class, 'setujui'])->name('kadissuratPerdagangan.setujui');
     Route::get('/kepala-dinas/perdagangan', [sobatHargaController::class, 'perdagangan'])->name('kepalaDinas.perdagangan');
     Route::get('/kadis/metrologi', [DashboardMetrologiController::class, 'showKadisMetro'])->name('kadis-metro');
     Route::get('/kadis/industri', [KabidIndustriController::class, 'KadisIndustri'])->name('kadis.industri');
     Route::get('/kadis-industri/surat', [KabidIndustriController::class, 'SuratKadis'])->name('kadis.industri.surat');
-    Route::put('/kabid-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('kabid.setujuiSurat');
+    Route::put('/kadis-industri/surat/{id}/setujui', [KabidIndustriController::class, 'setujuiI'])->name('kadis.setujuiSurat');
 });

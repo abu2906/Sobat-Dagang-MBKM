@@ -141,8 +141,11 @@ class DashboardController extends Controller
 
         return redirect()->route('kelola.pengguna')->with('success', 'Pengguna berhasil dihapus');
     }
+
     public function dashboardMaster()    {
-        $totalDistributor = DB::table('distributor')->count();
+        $totalDistributor = DB::table('distributor')
+            ->where('status', 'diterima')
+            ->count();
         $totalPengaduan = DB::table('forum_diskusi')
             ->whereNotNull('id_user')
             ->count();
