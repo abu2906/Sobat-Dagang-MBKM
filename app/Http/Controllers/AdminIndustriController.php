@@ -1164,26 +1164,26 @@ class AdminIndustriController extends Controller
     {
         // Validasi input
         $validated = $request->validate([
-            'jenis_surat' => 'required|in:surat_rekomendasi_industri,surat_keterangan_industri,dan_lainnya_industri',
-            'kecamatan' => 'required|string',
-            'kelurahan' => 'required|string',
-            'titik_koordinat' => 'required|string',
-            'foto_usaha' => 'required|image|mimes:jpeg,png,jpg|max:512',
-            'foto_ktp' => 'required|image|mimes:jpeg,png,jpg|max:512',
-            'dokumen_nib' => 'required|mimes:pdf|max:512',
-            'npwp' => 'required|mimes:pdf,jpg,jpeg,png|max:512',
-            'akta_perusahaan' => 'required|mimes:pdf|max:512',
-            'surat' => 'required|file|mimes:pdf,doc,docx|max:512',
+            'jenis_surat' => 'nullable|in:surat_rekomendasi_industri,surat_keterangan_industri,dan_lainnya_industri',
+            'kecamatan' => 'nullable|string',
+            'kelurahan' => 'nullable|string',
+            'titik_koordinat' => 'nullable|string',
+            'foto_usaha' => 'nullable|image|mimes:jpeg,png,jpg|max:512',
+            'foto_ktp' => 'nullable|image|mimes:jpeg,png,jpg|max:512',
+            'dokumen_nib' => 'nullable|mimes:pdf|max:512',
+            'npwp' => 'nullable|mimes:pdf,jpg,jpeg,png|max:512',
+            'akta_perusahaan' => 'nullable|mimes:pdf|max:512',
+            'surat' => 'nullable|file|mimes:pdf,doc,docx|max:512',
         ]);
 
         try {
             // Simpan file satu per satu
-            $fotoUsahaPath = $request->file('foto_usaha')->store('DokumentUser', 'public');
-            $fotoKTPPath = $request->file('foto_ktp')->store('DokumentUser', 'public');
-            $dokumenNibPath = $request->file('dokumen_nib')->store('DokumentUser', 'public');
-            $npwpPath = $request->file('npwp')->store('DokumentUser', 'public');
-            $aktaPerusahaanPath = $request->file('akta_perusahaan')->store('DokumentUser', 'public');
-            $fileSuratPath = $request->file('surat')->store('DokumentUser', 'public');
+            $fotoUsahaPath = $request->hasFile('foto_usaha') ? $request->file('foto_usaha')->store('DokumentUser', 'public') : null;
+            $fotoKTPPath = $request->hasFile('foto_ktp') ? $request->file('foto_ktp')->store('DokumentUser', 'public') : null;
+            $dokumenNibPath = $request->hasFile('dokumen_nib') ? $request->file('dokumen_nib')->store('DokumentUser', 'public') : null;
+            $npwpPath = $request->hasFile('npwp') ? $request->file('npwp')->store('DokumentUser', 'public') : null;
+            $aktaPerusahaanPath = $request->hasFile('akta_perusahaan') ? $request->file('akta_perusahaan')->store('DokumentUser', 'public') : null;
+            $fileSuratPath = $request->hasFile('surat') ? $request->file('surat')->store('DokumentUser', 'public') : null;
 
             // Buat id_permohonan unik
             $idPermohonan = Str::uuid()->toString();
@@ -1195,26 +1195,28 @@ class AdminIndustriController extends Controller
             DB::table('form_permohonan')->insert([
                 'id_permohonan' => $idPermohonan,  // Masukkan UUID yang baru dibuat
                 'id_user' => $idUser,  // Ambil id_user dari session
-                'kecamatan' => $request->kecamatan,
-                'kelurahan' => $request->kelurahan,
+                'kecamatan' => $request->kecamatan ?? '-',
+                'kelurahan' => $request->kelurahan ?? '-',
                 'tgl_pengajuan' => now()->toDateString(),
                 'jenis_surat' => $request->jenis_surat,
-                'titik_koordinat' => $request->titik_koordinat,
+                'titik_koordinat' => $request->titik_koordinat ?? '-',
                 'file_surat' => $fileSuratPath,
                 'status' => 'disimpan',
                 'created_at' => now(),
             ]);
 
             // Simpan ke tabel document_user
-            DB::table('document_user')->insert([
-                'id_permohonan' => $idPermohonan,  // Masukkan id_permohonan yang sama ke document_user
-                'npwp' => $npwpPath,
-                'akta_perusahaan' => $aktaPerusahaanPath,
-                'foto_ktp' => $fotoKTPPath,
-                'foto_usaha' => $fotoUsahaPath,
-                'dokument_nib' => $dokumenNibPath,
-                'created_at' => now(),
-            ]);
+            if ($fotoUsahaPath || $fotoKTPPath || $dokumenNibPath || $npwpPath || $aktaPerusahaanPath) {
+                DB::table('document_user')->insert([
+                    'id_permohonan' => $idPermohonan,  // Masukkan id_permohonan yang sama ke document_user
+                    'npwp' => $npwpPath,
+                    'akta_perusahaan' => $aktaPerusahaanPath,
+                    'foto_ktp' => $fotoKTPPath,
+                    'foto_usaha' => $fotoUsahaPath,
+                    'dokument_nib' => $dokumenNibPath,
+                    'created_at' => now(),
+                ]);
+            }
 
             return redirect()->route('bidangIndustri.formPermohonan')->with([
             'success' => 'Draft berhasil disimpan!',
