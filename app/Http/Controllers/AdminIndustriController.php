@@ -1186,7 +1186,7 @@ class AdminIndustriController extends Controller
             $fileSuratPath = $request->hasFile('surat') ? $request->file('surat')->store('DokumentUser', 'public') : null;
 
             // Buat id_permohonan unik
-            $idPermohonan = Str::uuid()->toString();
+            $idPermohonan = Str::uuid()->toString(); 
 
             // Ambil id_user dari session
             $idUser = session('id_user');
