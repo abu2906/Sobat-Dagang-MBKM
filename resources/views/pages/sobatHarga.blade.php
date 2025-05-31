@@ -36,6 +36,14 @@
                     <div class="bg-[#083358] text-white text-center py-2 rounded-t-xl mb-4 text-lg font-semibold">
                         {{ $pasar }}
                     </div>
+                    <div class="mt-4 mb-4 text-center">
+                        <p class="text-sm text-gray-600">
+                            Terakhir diperbarui: 
+                            <span class="font-semibold text-black">
+                                {{ \Carbon\Carbon::parse($data['tanggal_terakhir'])->translatedFormat('l, d M Y') }}
+                            </span>
+                        </p>
+                    </div>
 
                     <div class="grid grid-cols-3 gap-2 text-sm text-center text-gray-700">
                         <div>
