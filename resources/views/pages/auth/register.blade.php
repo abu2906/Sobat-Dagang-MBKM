@@ -98,7 +98,7 @@
                     </div>
 
                     <div class="relative">
-                        <label class="block mb-1 font-semibold">Kata Sandi</label>
+                        <label class="block font-semibold">Kata Sandi</label>
                         <input type="password" name="password" placeholder="Masukkan Kata Sandi"
                             class="w-full pr-10 px-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         <i class="fa-regular fa-eye absolute right-4 top-1/2 cursor-pointer text-gray-500 toggle-password"></i>
@@ -111,7 +111,7 @@
                     </div>
 
                     <div class="relative">
-                        <label class="block mb-1 font-semibold">Konfirmasi Kata Sandi</label>
+                        <label class="block  font-semibold">Konfirmasi Kata Sandi</label>
                         <input type="password" name="password_confirmation" placeholder="Ulangi Kata Sandi"
                             class="w-full pr-10 px-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         <i class="fa-regular fa-eye absolute right-4 top-1/2 cursor-pointer text-gray-500 toggle-password"></i>
