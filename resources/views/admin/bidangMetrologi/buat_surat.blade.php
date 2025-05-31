@@ -1,5 +1,5 @@
 @extends('layouts.metrologi.admin')
-
+@section('title', "Admin Bidang Metrologi")
 @section('content')
 <!-- Add SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">

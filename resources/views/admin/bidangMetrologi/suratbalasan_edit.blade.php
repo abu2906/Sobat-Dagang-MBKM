@@ -1,5 +1,5 @@
 @extends('layouts.metrologi.admin')
-
+@section('title', "Admin Bidang Metrologi")
 @section('content')
 <!-- Add SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
@@ -17,7 +17,6 @@
         padding-left: 1.5rem !important;
     }
 </style>
-
 <div class="p-6 bg-gray-100 min-h-screen">
     <div class="relative h-[150px] w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
         <div class="absolute bottom-[-30px] w-full px-8">

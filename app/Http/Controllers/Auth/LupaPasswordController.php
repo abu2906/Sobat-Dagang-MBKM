@@ -91,7 +91,6 @@ class LupaPasswordController extends Controller
 
         $userId = auth()->guard('user')->id();
         $user = \App\Models\User::find($userId);
-        
 
         if (!Hash::check($request->old_password, $user->password)) {
             return back()->withErrors(['old_password' => 'Kata sandi lama tidak cocok.']);

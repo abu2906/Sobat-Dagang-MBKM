@@ -1,18 +1,15 @@
 @extends('layouts.metrologi.admin')
-
+@section('title', "Admin Bidang Metrologi")
 @section('content')
 
 @php
 use App\Helpers\StatusHelper;
 @endphp
 
+<div class="w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
+    <div class="h-[150px]"></div>
+</div>
 <div class="min-h-screen p-6 bg-gray-100">
-    <!-- Header Section -->
-    <div class="w-full bg-cover bg-[center_87%]" style="background-image: url('/assets/img/background/user_metrologi.png');">
-        <!-- Fixed Height Container -->
-        <div class="h-[150px]"></div>
-    </div>
-
     <!-- Floating Filter Section (sekarang relatif, bukan absolute) -->
     <div class="w-full px-4 sm:px-6 md:px-8 mt-[-60px]">
         <div class="flex flex-col justify-between gap-4 p-4 shadow-md lg:flex-row lg:items-center rounded-xl bg-white/90 backdrop-blur-md">
@@ -66,7 +63,7 @@ use App\Helpers\StatusHelper;
 
 
     <!-- Modal Popup Review -->
-    <div id="popupDetailAlat" class="fixed inset-0 z-50 items-center justify-center hidden bg-black bg-opacity-50">
+    <div id="popupDetailAlat" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-26 bg-black bg-opacity-50 sm:justify-center">
         <div class="bg-white p-4 sm:p-6 rounded-xl w-[90%] sm:w-[85%] md:w-[70%] lg:w-[50%] max-w-[600px] relative shadow-xl mx-auto ml-[calc(16.666667%+1rem)] sm:ml-[calc(16.666667%+2rem)] mr-[calc(1%+1rem)] sm:mr-[calc(1%+2rem)]">
             <button onclick="togglePopup(false)" class="absolute text-xl font-bold text-gray-500 top-2 right-3 hover:text-black">&times;</button>
             <h2 class="mb-4 text-base font-bold text-center sm:text-lg">
@@ -82,7 +79,7 @@ use App\Helpers\StatusHelper;
     </div>
 
     <!-- Modal Tambah Alat Ukur -->
-    <div id="modalTambahAlat" class="fixed inset-0 z-40 flex items-center justify-center hidden overflow-y-auto bg-black bg-opacity-30">
+    <div id="modalTambahAlat" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-26 bg-black bg-opacity-50 sm:justify-center">
         <div class="fixed inset-0 bg-black bg-opacity-30"></div>
         <div class="relative bg-white w-[90%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] rounded-lg shadow-lg p-4 sm:p-6 my-4 sm:my-8 max-h-[90vh] overflow-y-auto mx-auto ml-[calc(16.666667%+1rem)] sm:ml-[calc(16.666667%+2rem)] mr-[calc(1%+1rem)] sm:mr-[calc(1%+2rem)]">
             <div class="flex items-center justify-between pb-3 mb-4 border-b">

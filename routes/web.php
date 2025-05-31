@@ -102,6 +102,8 @@ Route::post('/verify-old-password', [LupaPasswordController::class, 'checkOldPas
 Route::get('/new-password', [LupaPasswordController::class, 'resetPass'])->name('password.resetPass'); // Form password baru
 Route::post('/new-password', [LupaPasswordController::class, 'updateNewPassword'])->name('password.updateNew'); // Simpan password baru
 
+Route::get('/profile/edit', [HomeController::class, 'editProfile'])->name('edit.profile');
+Route::put('/profile/update', [HomeController::class, 'updateProfile'])->name('profile.update');
 
     //pengaduan
     Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');

@@ -29,7 +29,7 @@
     <h1 class="text-2xl font-bold text-[#083358] mb-6">Harga {{ ucfirst($judul) }} per Hari Ini</h1>
 
     @foreach ($daftarHarga as $jenis => $pasars)
-        <h2 class="mb-4 text-lg font-semibold text-center">{{ $jenis }}/Kg</h2>
+        <h2 class="mb-4 text-lg font-semibold text-center">{{ $jenis }}</h2>
         <div class="grid grid-cols-1 gap-6 mb-10 sm:grid-cols-2">
             @foreach ($pasars as $pasar => $data)
                 <div class="relative p-4 bg-white border shadow-lg rounded-xl">
@@ -154,43 +154,4 @@
         @endforeach
     @endforeach
 </script>
-
-{{-- <script>
-    @foreach ($daftarHarga as $jenis => $pasars)
-        @foreach ($pasars as $pasar => $data)
-            const ctx{{ $loop->parent->index }}{{ $loop->index }} = document.getElementById('chart-{{ $jenis }}-{{ $loop->index }}').getContext('2d');
-            new Chart(ctx{{ $loop->parent->index }}{{ $loop->index }}, {
-                type: 'line',
-                data: {
-                    labels: {!! json_encode($data['labels']) !!},
-                    datasets: [{
-                        label: 'Harga (Rp)',
-                        data: {!! json_encode($data['data']) !!},
-                        backgroundColor: 'rgba(8, 51, 88, 0.05)',
-                        borderColor: '#FFA500',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#FFA500'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            ticks: {
-                                callback: value => 'Rp' + value.toLocaleString()
-                            }
-                        }
-                    }
-                }
-            });
-        @endforeach
-    @endforeach
-</script> --}}
 @endsection

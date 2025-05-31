@@ -2,45 +2,33 @@
 
 <nav class="navbar w-full px-4 py-2 text-white bg-[#083358]" style="font-family: 'Poppins', sans-serif;" x-data="{ showProfile: false, menuOpen: false }">
     <div class="flex flex-col w-full md:flex-row md:items-center md:justify-between">
-        <div class="flex items-center justify-between w-full md:w-auto">
+        <div class="flex items-center w-full md:w-auto">
             <a href="{{ route('user.dashboard') }}">
                 <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="h-10">
             </a>
-            
-            <button id="burger-btn" class="md:hidden focus:outline-none">
+
+            <div class="flex items-center space-x-4 md:hidden ml-auto">
+                <button aria-label="Profil" class="focus:outline-none" @click="showProfile = true">
+                    @php
+                        $avatarPath = $user->avatar && file_exists(public_path('storage/foto_profil/' . $user->avatar))
+                            ? asset('storage/foto_profil/' . $user->avatar)
+                            : "https://ui-avatars.com/api/?name=" . urlencode($user->nama) . "&background=0D8ABC&color=fff";
+                    @endphp
+
+                    <img src="{{ $avatarPath }}" alt="Foto Profil"
+                        class="h-7 w-7 rounded-full object-cover border-2 border-white hover:opacity-80">
+                </button>
+            </div>
+
+            <button id="burger-btn" class="md:hidden focus:outline-none ml-4">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
-
-            <!-- Notifikasi & Profil (mobile only) -->
-            <div class="flex items-center space-x-4 md:hidden">
-                <!-- Notifikasi -->
-                <button aria-label="Notifikasi" class="focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-7 w-7 hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002
-                            6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67
-                            6.165 6 8.388 6 11v3.159c0 .538-.214
-                            1.055-.595 1.436L4 17h5m6 0v1a3 3 0
-                            11-6 0v-1m6 0H9" />
-                    </svg>
-                </button>
-
-                <!-- Profil -->
-                <button aria-label="Profil" class="focus:outline-none" @click="showProfile = true">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-7 w-7 hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0
-                            a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15
-                            9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    </svg>
-                </button>
-            </div>
         </div>
-
+            
         <div id="nav-menu" class="flex-col hidden navbar-center md:flex md:flex-row md:items-center md:space-x-6">
             <ul class="flex flex-col nav-menu md:flex-row">
                     <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
@@ -80,25 +68,16 @@
                 </ul>
             </div>
 
-            <!-- Notifikasi & Profil (desktop) -->
         <div class="items-center hidden space-x-4 md:flex">
-            <button aria-label="Notifikasi" class="focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-7 w-7 hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002
-                        6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67
-                        6.165 6 8.388 6 11v3.159c0 .538-.214
-                        1.055-.595 1.436L4 17h5m6 0v1a3 3 0
-                        11-6 0v-1m6 0H9" />
-                </svg>
-            </button>
             <button @click="showProfile = true" class="focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="text-white h-7 w-7 hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0
-                        a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15
-                        9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                </svg>
+                @php
+                    $avatarPath = $user->avatar && file_exists(public_path('storage/foto_profil/' . $user->avatar))
+                        ? asset('storage/foto_profil/' . $user->avatar)
+                        : "https://ui-avatars.com/api/?name=" . urlencode($user->nama) . "&background=0D8ABC&color=fff";
+                @endphp
+
+                <img src="{{ $avatarPath }}" alt="Foto Profil"
+                    class="h-7 w-7 rounded-full object-cover border-2 border-white hover:opacity-80">
             </button>
         </div>
         </div>
@@ -121,31 +100,61 @@
                         &times;
                     </button>
 
-                    <h2 class="mb-4 text-lg font-semibold text-center text-black">Profile Anda</h2>
+                    <h2 class="mb-2 text-lg font-semibold text-center text-black">Profile Anda</h2>
 
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($user->nama) }}&background=0D8ABC&color=fff" alt="Foto Profil"
-                        class="object-cover w-24 h-24 mx-auto mb-4 rounded-full">
+                    @php
+                        $avatarPath = $user->avatar && file_exists(public_path('storage/foto_profil/' . $user->avatar))
+                            ? asset('storage/foto_profil/' . $user->avatar)
+                            : "https://ui-avatars.com/api/?name=" . urlencode($user->nama) . "&background=0D8ABC&color=fff";
+                    @endphp
+
+                    <img src="{{ $avatarPath }}" alt="Foto Profil"
+                        class="object-cover w-20 h-20 mx-auto mb-4 rounded-full">
 
                     <!-- Nama & Detail Profil -->
-                    <div class="max-w-md px-6 py-4 mx-auto mt-4 text-left bg-white rounded-lg shadow-md">
-                        <h3 class="mb-4 text-3xl font-bold text-gray-900">{{ $user->nama ?? '-' }}</h3>
-                        <div class="space-y-2 text-gray-700">
-                            <p><span class="font-semibold text-gray-800">NIK:</span> {{ $user->nik ?? '-' }}</p>
-                            <p><span class="font-semibold text-gray-800">Alamat Lengkap:</span> {{ $user->alamat_lengkap ?? '-' }}</p>
-                            <p><span class="font-semibold text-gray-800">Jenis Kelamin:</span> {{ $user->jenis_kelamin ?? '-' }}</p>
-                            <p><span class="font-semibold text-gray-800">Email:</span> {{ $user->email ?? '-' }}</p>
-                            <p><span class="font-semibold text-gray-800">Telepon:</span> {{ $user->telp ?? '-' }}</p>
+                    <div class="max-w-md px-6 py-2 mx-auto mt-2 text-left bg-white rounded-lg shadow-md">
+                        <h3 class="capitalize mb-4 text-3xl font-bold text-center text-gray-900">{{ $user->nama ?? '-' }}</h3>
+                        <div class="space-y-4 text-gray-700">
+
+                            @php
+                                $info = [
+                                    'NIK' => $user->nik ?? '-',
+                                    'Alamat Lengkap' => $user->alamat_lengkap ?? '-',
+                                    'Jenis Kelamin' => $user->jenis_kelamin ?? '-',
+                                    'Email' => $user->email ?? '-',
+                                    'Telepon' => $user->telp ?? '-',
+                                ];
+                            @endphp
+
+                            @foreach ($info as $label => $value)
+                                <div class="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-1 sm:gap-4 items-start capitalize">
+                                    <span class="font-semibold text-gray-800 inline-flex items-center gap-1 sm:block">
+                                        <span>{{$label}}</span>
+                                        <span class="sm:hidden">:</span>
+                                    </span>
+                                    <span class="break-words whitespace-normal relative sm:before:content-[':'] sm:before:absolute sm:before:-left-2 sm:pl-4">
+                                        {{$value}}
+                                    </span>
+                                </div>
+                            @endforeach
+
                         </div>
                     </div>
 
-
-                    <!-- Link Ubah Password -->
                     <div class="px-4 mt-6 space-y-4 text-left">
                         <a href="{{ route('change.password') }}"
                         class="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-100">
                             <div class="flex items-center gap-2">
                                 <span class="text-lg">🔑</span>
                                 <span class="text-sm font-medium text-black">Ubah Kata Sandi</span>
+                            </div>
+                            <span class="text-xl text-black">›</span>
+                        </a>
+                        <a href="{{ route('edit.profile') }}"
+                        class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">👤</span>
+                                <span class="text-sm font-medium text-black">Edit Profil</span>
                             </div>
                             <span class="text-xl text-black">›</span>
                         </a>
@@ -164,7 +173,6 @@
 </nav>
 
 <script>
-    // Toggle menu burger
     document.getElementById('burger-btn').addEventListener('click', function() {
         const navMenu = document.getElementById('nav-menu');
         navMenu.classList.toggle('hidden');

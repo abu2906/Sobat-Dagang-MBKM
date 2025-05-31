@@ -1,6 +1,5 @@
 @extends('layouts.metrologi.admin')
 @section('title', 'Dashboard Metrologi')
-
 @section('content')
 <div class="p-4 sm:p-6 bg-gray-100 min-h-screen">
     <!-- Stats Cards -->
