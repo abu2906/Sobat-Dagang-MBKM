@@ -29,56 +29,62 @@
     </div>
 </div>
 
-<div class="overflow-x-auto rounded-xl container px-4 pb-12 mx-auto">
+<div class="container px-4 pb-12 mx-auto rounded-xl">
+
     @if(session('success'))
-    <div class="mb-4 text-green-600">
-        {{ session('success') }}
-    </div>
+        <div class="mb-4 text-green-600">
+            {{ session('success') }}
+        </div>
     @endif
 
-    <table class="min-w-full overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
-        <thead>
-            <tr class="bg-[#083358] text-white font-semibold">
-                <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
-                <th class="px-4 py-3 border-b">Tanggal</th>
-                <th class="px-4 py-3 border-b">Judul Berita</th>
-                <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($daftarBerita as $index => $item)
-            <tr>
-                <td class="px-4 py-2 text-center border">{{ $index + 1 }}</td>
-                <td class="px-4 py-2 text-center border">
-                    {{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('l, d F Y') : '-' }}
-                </td>
-                <td class="px-4 py-2 border ">{{ $item->judul }}</td>
-                <td class="flex items-center justify-center px-4 py-2 space-x-2 border">
-                    <button
-                        onclick="openModal('edit', this)"
-                        data-id="{{ $item->id_berita }}"
-                        data-judul="{{ $item->judul }}"
-                        data-tanggal="{{ $item->tanggal }}"
-                        data-isi="{{ htmlentities($item->isi) }}"
-                        data-lampiran="{{ $item->lampiran ? asset('storage/' . $item->lampiran) : '' }}"
-                        class="text-[#083358] hover:text-black">
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
-                    <button
-                        onclick="openModal('delete', this)"
-                        data-id="{{ $item->id_berita }}"
-                        class="text-[#083358] hover:text-black">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
+    <div class="overflow-x-auto border border-gray-300 shadow-md rounded-xl">
+        <table class="min-w-full bg-white w-max">
+            <thead>
+                <tr class="bg-[#083358] text-white font-semibold">
+                    <th class="px-4 py-3 border-b rounded-tl-xl">No</th>
+                    <th class="px-4 py-3 border-b">Tanggal</th>
+                    <th class="px-4 py-3 border-b">Judul Berita</th>
+                    <th class="px-4 py-3 border-b rounded-tr-xl">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($daftarBerita as $index => $item)
+                <tr>
+                    <td class="px-4 py-2 text-center border">{{ $index + 1 + $daftarBerita->firstItem() - 1 }}</td>
+                    <td class="px-4 py-2 text-center border">
+                        {{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->locale('id')->translatedFormat('l, d F Y') : '-' }}
+                    </td>
+                    <td class="px-4 py-2 border">{{ $item->judul }}</td>
+                    <td class="flex items-center justify-center px-4 py-2 space-x-2 border">
+                        <button
+                            onclick="openModal('edit', this)"
+                            data-id="{{ $item->id_berita }}"
+                            data-judul="{{ $item->judul }}"
+                            data-tanggal="{{ $item->tanggal }}"
+                            data-isi="{{ htmlentities($item->isi) }}"
+                            data-lampiran="{{ $item->lampiran ? asset('storage/' . $item->lampiran) : '' }}"
+                            class="text-[#083358] hover:text-black">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
+                        <button
+                            onclick="openModal('delete', this)"
+                            data-id="{{ $item->id_berita }}"
+                            class="text-[#083358] hover:text-black">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
+    {{-- Pagination --}}
+    <div class="mt-4">
+        {{ $daftarBerita->links() }}
+    </div>
 </div>
+
 
 <div id="modalEdit" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">
     <div class="relative max-w-xl w-full max-h-[90vh] overflow-y-auto p-8 bg-white rounded-lg shadow-xl">
@@ -137,7 +143,7 @@
     </div>
 </div>
 
-<div id="modalTambah" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">>
+<div id="modalTambah" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">
     <div class="relative max-w-xl w-full max-h-[90vh] overflow-y-auto p-8 bg-white rounded-lg shadow-xl">
         <h3 class="mb-6 text-2xl font-semibold text-center">Tambah Berita</h3>
         <form action="{{ route('tambah.berita') }}" method="POST" id="tambahForm" enctype="multipart/form-data" class="relative bg-white rounded-lg p-6 w-full max-w-full sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto
@@ -199,7 +205,7 @@
     </div>
 </div>
 
-<div id="modalDelete" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+<div id="modalDelete" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">
     <div class="w-11/12 max-w-md p-6 bg-white shadow-xl rounded-2xl">
         <h2 class="mb-4 text-lg font-semibold">Hapus Berita</h2>
         <p class="mb-6 text-sm text-black-600">Apakah Anda yakin ingin menghapus berita ini?</p>

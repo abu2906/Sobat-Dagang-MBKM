@@ -184,18 +184,18 @@
 
                 <!-- Modal Surat Rekomendasi -->
                 <div id="modalRekomendasi"
-                    class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 ml-24 sm:justify-center rounded-lg">
+                    class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">
                     <form action="{{ route('permohonan.rekomendasi', $data->id_permohonan) }}" method="POST"
                         class="relative bg-white rounded-lg p-6 w-full max-w-full sm:max-w-xl md:max-w-2xl max-h-[90vh] overflow-y-auto
                             scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
                         style="scrollbar-width: thin;">
                         <button type="button"
-                            class="absolute top-2 right-2 text-2xl text-gray-600 hover:text-gray-900 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            class="absolute p-1 text-2xl text-gray-600 rounded-full top-2 right-2 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             onclick="closeModal('modalRekomendasi')"
                             aria-label="Tutup modal"
-                        >&times;</button>
+                            >&times;</button>
 
-                        <h2 class="text-center text-xl font-bold mb-6">FORMULIR SURAT REKOMENDASI</h2>
+                        <h2 class="mb-6 text-xl font-bold text-center">FORMULIR SURAT REKOMENDASI</h2>
 
                         <div class="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                             @csrf
@@ -204,21 +204,21 @@
                             <div class="flex flex-col">
                                 <label for="nomor_surat" class="mb-1 font-semibold">Nomor Surat</label>
                                 <input id="nomor_surat" name="nomor_surat" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div class="flex flex-col">
                                 <label for="tanggal_surat" class="mb-1 font-semibold">Tanggal Surat</label>
                                 <input id="tanggal_surat" name="tanggal_surat" type="date"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div class="flex flex-col">
                                 <label for="nama_pengirim" class="mb-1 font-semibold">Nama Pemohon</label>
                                 <input id="nama_pengirim" name="nama_pengirim" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     value="{{ old('nama_pengirim', $user->nama ?? 'Null') }}"
                                 />
                             </div>
@@ -226,7 +226,7 @@
                             <div class="flex flex-col">
                                 <label for="nik" class="mb-1 font-semibold">NIK</label>
                                 <input id="nik" name="nik" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     value="{{ old('nik', $user->nik ?? 'Null') }}"
                                 />
                             </div>
@@ -234,7 +234,7 @@
                             <div class="flex flex-col">
                                 <label for="warga_negara" class="mb-1 font-semibold">Warga Negara</label>
                                 <select id="warga_negara" name="warga_negara"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">Pilih</option>
                                     <option>WNI</option>
@@ -245,35 +245,35 @@
                             <div class="flex flex-col">
                                 <label for="pekerjaan" class="mb-1 font-semibold">Pekerjaan</label>
                                 <input id="pekerjaan" name="pekerjaan" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div class="flex flex-col">
                                 <label for="alamat_rumah" class="mb-1 font-semibold">Alamat Rumah</label>
                                 <input id="alamat_rumah" name="alamat_rumah" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div class="flex flex-col">
                                 <label for="nama_usaha" class="mb-1 font-semibold">Nama Usaha</label>
                                 <input id="nama_usaha" name="nama_usaha" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div class="flex flex-col">
                                 <label for="bentuk_usaha" class="mb-1 font-semibold">Bentuk Usaha</label>
                                 <input id="bentuk_usaha" name="bentuk_usaha" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div class="flex flex-col">
                                 <label for="jenis_perusahaan" class="mb-1 font-semibold">Jenis Perusahaan</label>
                                 <select id="jenis_perusahaan" name="jenis_perusahaan"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="">Pilih</option>
                                     <option>Perusahaan Perseorangan</option>
@@ -290,21 +290,21 @@
                             <div class="flex flex-col">
                                 <label for="luas_ruangan" class="mb-1 font-semibold">Luas Ruangan (m<sup>2</sup>)</label>
                                 <input id="luas_ruangan" name="luas_ruangan" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div class="flex flex-col">
                                 <label for="alamat_usaha" class="mb-1 font-semibold">Alamat Usaha</label>
                                 <input id="alamat_usaha" name="alamat_usaha" type="text"
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
 
                             <div class="flex flex-col col-span-1 sm:col-span-2">
                                 <label for="isi" class="mb-1 font-semibold">Keterangan Surat</label>
                                 <textarea id="summernote_rekomendasi" name="isi" rows="4" required
-                                    class="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"></textarea>
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                             </div>
                         </div>
 
@@ -315,7 +315,7 @@
                 </div>
 
                 <!-- Modal Surat Keterangan -->
-                <div id="modalKeterangan" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 ml-24 sm:justify-center">
+                <div id="modalKeterangan" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 sm:justify-center">
                     <form action="{{ route('permohonan.keterangan', $data->id_permohonan) }}" method="POST" class="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white p-6 rounded-lg relative scrollbar-none" style="scrollbar-width: none;">
                         @csrf
                         @method('PUT')
@@ -396,7 +396,7 @@
                     </form>
                 </div>
 
-                <div id="modaltolak" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 ml-24 sm:justify-center">
+                <div id="modaltolak" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 sm:justify-center">
                     <form action="{{ route('permohonan.tolak', $data->id_permohonan) }}" method="POST" class="relative w-full max-w-xl p-6 bg-white rounded-lg">    
                         @csrf
                         @method('PUT')

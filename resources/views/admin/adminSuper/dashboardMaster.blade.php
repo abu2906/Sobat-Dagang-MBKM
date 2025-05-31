@@ -32,7 +32,7 @@
     <div class="grid grid-cols-1 gap-8 xl:grid-cols-3">
         <div class="p-4 bg-white shadow-md xl:col-span-2 rounded-2xl">
             <h3 class="mb-5 text-xl font-semibold text-gray-800">Daftar Permohonan</h3>
-            <div class="overflow-y-auto max-h-[calc(3.5rem*17)] rounded-xl shadow-inner">
+            <div class="overflow-y-auto max-h-[calc(3.5rem*14)] rounded-xl shadow-inner">
                 <table class="w-full text-sm text-left border-collapse">
                     <thead class="bg-[#083458] text-white sticky top-0 z-10">
                         <tr>

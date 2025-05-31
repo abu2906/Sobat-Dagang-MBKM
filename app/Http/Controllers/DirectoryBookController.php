@@ -35,7 +35,8 @@ class DirectoryBookController extends Controller{
             ->orderBy('data_alat_ukur.created_at', 'desc')
             ->get();
 
-        return view('user.bidangMetrologi.directory', compact('alatUkur'));
+        $user = auth()->guard('user')->user();
+        return view('user.bidangMetrologi.directory', compact('alatUkur', 'user'));
     }       
 
     public function showDirectoryAdminMetrologi(Request $request)
@@ -231,7 +232,8 @@ class DirectoryBookController extends Controller{
             ->orderBy('data_alat_ukur.created_at', 'desc')
             ->get();
 
-        return view('user.bidangMetrologi.directory', compact('alatUkur'));
+        $user = auth()->guard('user')->user();
+        return view('user.bidangMetrologi.directory', compact('alatUkur', 'user'));
     }
 
     public function getDetail(Request $request)

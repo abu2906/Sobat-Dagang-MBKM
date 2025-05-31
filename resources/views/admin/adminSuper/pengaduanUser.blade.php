@@ -10,9 +10,9 @@
     </div>
 </div>
 
-<div class="max-w-7xl px-4 mx-auto my-6">
+<div class="px-4 mx-auto my-6 max-w-7xl">
     <div class="overflow-x-auto bg-white border border-gray-200 shadow-md rounded-xl">
-        <div class="max-h-80 overflow-y-auto">
+        <div class="overflow-y-auto max-h-80">
             <table class="min-w-full text-sm text-left">
                 <thead class="bg-[#083358] text-white text-center font-semibold sticky top-0 z-10">
                     <tr>
@@ -33,9 +33,8 @@
                         <td class="px-3 py-2 text-center">
                             @if($chat->id_user !== null)
                                 <button
-                                    class="hapus-btn bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                                    data-id="{{ $chat->id_pengaduan }}"
-                                >
+                                    class="px-3 py-1 text-white bg-red-600 rounded hapus-btn hover:bg-red-700"
+                                    data-id="{{ $chat->id_pengaduan }}">
                                     Hapus
                                 </button>
                             @endif
@@ -52,8 +51,8 @@
 </div>
 
 <!-- Modal Hapus -->
-<div id="modalDelete" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-    <div class="bg-white w-11/12 max-w-md p-6 rounded-2xl shadow-xl">
+<div id="modalDelete" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">
+    <div class="w-11/12 max-w-md p-6 bg-white shadow-xl rounded-2xl">
         <h2 class="mb-4 text-lg font-semibold">Hapus Pengaduan</h2>
         <p class="mb-6 text-sm text-gray-700">Apakah Anda yakin ingin menghapus pengaduan ini?</p>
         <div class="flex justify-end gap-3">
@@ -61,7 +60,7 @@
             <form id="deleteForm" method="POST" action="">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Hapus</button>
+                <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700">Hapus</button>
             </form>
         </div>
     </div>
@@ -76,11 +75,11 @@
 <div id="forumModal" class="fixed inset-0 z-50 flex items-center justify-center hidden ml-24 mr-4 sm:justify-center">
     <div class="bg-white w-full max-w-sm sm:max-w-md h-[500px] rounded-lg shadow-2xl flex flex-col overflow-hidden">
         <div class="bg-[#083458] text-white p-3 flex justify-between items-center">
-            <h2 class="font-semibold text-base">Forum Diskusi</h2>
+            <h2 class="text-base font-semibold">Forum Diskusi</h2>
             <button id="tutupForumBtn" class="text-xl font-bold">&times;</button>
         </div>
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-50 text-sm"></div>
-        <form id="chat-form" class="p-3 border-t flex gap-2 items-center">
+        <div id="chat-messages" class="flex-1 p-3 space-y-2 overflow-y-auto text-sm bg-gray-50"></div>
+        <form id="chat-form" class="flex items-center gap-2 p-3 border-t">
             <input type="text" id="chat-input" class="flex-1 border rounded-full px-3 py-1.5 text-sm focus:outline-none" placeholder="Ketik pesan..." required>
             <button type="submit" class="bg-[#083458] text-white px-4 py-1.5 rounded-full hover:bg-[#0a4a78]">Kirim</button>
         </form>
@@ -136,6 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
     bukaBtn.addEventListener('click', showModal);
     tutupBtn.addEventListener('click', hideModal);
 
+    function formatName(name) {
+        if (!name || typeof name !== 'string') return 'Pengguna';
+        return name
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    }
     async function loadMessages() {
         try {
             const res = await fetch('/forum/load');
@@ -143,7 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
             chatMessages.innerHTML = '';
             data.forEach(chat => {
                 const isMe = chat.id_disdag === adminId;
-                const senderName = chat.user?.nama ?? chat.disdag?.nama ?? 'Admin Dinas Perdagangan';
+                const rawName = chat.user?.nama || chat.disdag?.nama || 'Admin Dinas Perdagangan';
+                const senderName = formatName(rawName);
                 const waktu = new Date(chat.waktu);
                 const waktuFormatted = new Intl.DateTimeFormat('id-ID', {
                     hour: '2-digit',
@@ -163,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
 
                 const avatar = `
-                    <div class="flex items-center justify-center w-7 h-7 text-xs font-bold text-white bg-gray-400 rounded-full select-none">
+                    <div class="flex items-center justify-center text-xs font-bold text-white bg-gray-400 rounded-full select-none w-7 h-7">
                         ${senderName.charAt(0).toUpperCase()}
                     </div>
                 `;

@@ -158,7 +158,8 @@
                 title: 'Peringatan!',
                 text: 'Isi surat tidak boleh kosong!',
                 icon: 'warning',
-                confirmButtonColor: '#1e3a8a',
+                confirmButtonColor: '#0c3252',
+                cancelButtonColor: '#6B7280',
                 confirmButtonText: 'OK'
             });
             return false;
@@ -167,16 +168,18 @@
         const title = 'Revisi Surat Balasan';
         const text = 'Apakah Anda yakin ingin menyimpan revisi surat balasan?';
         const icon = 'question';
-        const confirmButtonText = 'Ya, Simpan Revisi';
+        const confirmButtonText = 'Ya, Simpan';
         const cancelButtonText = 'Batal';
+        const confirmButtonColor = '#0c3252';
+        const cancelButtonColor = '#6B7280';
 
         Swal.fire({
             title: title,
             text: text,
             icon: icon,
             showCancelButton: true,
-            confirmButtonColor: '#1e3a8a',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: confirmButtonColor,
+            cancelButtonColor: cancelButtonColor,
             confirmButtonText: confirmButtonText,
             cancelButtonText: cancelButtonText,
             reverseButtons: true
@@ -222,7 +225,8 @@
                             title: 'Peringatan!',
                             text: 'Isi surat tidak boleh kosong!',
                             icon: 'warning',
-                            confirmButtonColor: '#1e3a8a',
+                            confirmButtonColor: '#0c3252',
+                            cancelButtonColor: '#6B7280',
                             confirmButtonText: 'OK'
                         });
                         return;

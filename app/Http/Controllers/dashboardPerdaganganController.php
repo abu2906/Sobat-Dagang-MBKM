@@ -27,6 +27,7 @@ class DashboardPerdaganganController extends Controller{
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+            ->where('status', '!=', 'disimpan')
             ->whereIn('status', ['menunggu', 'ditolak', 'diterima']) // hanya status ini yang ditampilkan
             ->orderBy('created_at', 'desc')
             ->get();
@@ -39,7 +40,7 @@ class DashboardPerdaganganController extends Controller{
                 'barang.nama_barang',
                 'index_kategori.nama_kategori as kategori_barang',
                 'index_harga.harga as harga_satuan',
-                'index_harga.updated_at',
+                'index_harga.updated_at',   
                 'index_harga.tanggal'
             )
             ->orderBy('index_harga.updated_at', 'desc')
@@ -129,7 +130,6 @@ class DashboardPerdaganganController extends Controller{
             'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
             'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
             'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
             'beritaTerbaru' => $beritaTerbaru,
             'labels' => $labels,
             'hargaSumpang' => $hargaSumpang,
@@ -151,16 +151,28 @@ class DashboardPerdaganganController extends Controller{
         ];
 
         return [
-            'totalSuratPerdagangan' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
-            'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
-            'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
-            'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
+        'totalSuratPerdagangan' => DB::table('form_permohonan')
+            ->whereIn('jenis_surat', $jenis)
+            ->where('status', '!=', 'disimpan') // hanya hitung status selain disimpan
+            ->count(),
+
+        'totalSuratTerverifikasi' => DB::table('form_permohonan')
+            ->whereIn('jenis_surat', $jenis)
+            ->where('status', 'diterima')
+            ->count(),
+
+        'totalSuratDitolak' => DB::table('form_permohonan')
+            ->whereIn('jenis_surat', $jenis)
+            ->where('status', 'ditolak')
+            ->count(),
+
         ];
     }
 
     public function kelolaSurat(){
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
+            ->where('status', '!=', 'disimpan')
             ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
             ->whereIn('status', ['menunggu', 'ditolak', 'diterima'])
             ->orderBy('created_at', 'desc')
@@ -171,7 +183,6 @@ class DashboardPerdaganganController extends Controller{
             'totalSuratPerdagangan' => $rekapSurat['totalSuratPerdagangan'],
             'totalSuratTerverifikasi' => $rekapSurat['totalSuratTerverifikasi'],
             'totalSuratDitolak' => $rekapSurat['totalSuratDitolak'],
-            'totalSuratDraft' => $rekapSurat['totalSuratDraft'],
         ]);
     }
 

@@ -21,7 +21,7 @@
                 class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
     </div>
-    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-4">
+    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-3">
         <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
             <div>
@@ -46,32 +46,38 @@
             </div>
         </a>
 
-        <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
-            <img src="{{ asset('assets/img/icon/draf.png') }}" alt="Draft" class="w-12 h-12">
-            <div>
-                <p class="text-base font-medium text-black">Draft Surat Balasan</p>
-                <p class="text-2xl font-bold text-orange-500">{{ $totalSuratDraft }}</p>
-            </div>
-        </a>
     </div>
 
 <div class="container px-4 pb-4 mx-auto">
+    <div class="flex items-center justify-end gap-2 mb-4">
+        <label for="filterStatus" class="text-sm font-medium text-gray-700">
+            Filter Status:
+        </label>
+        <select id="filterStatus"
+            class="text-sm border border-gray-300 rounded-lg px-3 py-1.5 bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out hover:border-blue-400">
+            <option value="semua">Semua</option>
+            <option value="diterima">Disetujui</option>
+            <option value="ditolak">Ditolak</option>
+            <option value="menunggu">Menunggu</option>
+        </select>
+    </div>
+
     <div class="overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
         <div class="overflow-y-auto max-h-[500px] scrollbar-hide">
             <table class="min-w-full text-sm text-left">
                 <thead class="bg-[#083358] text-white font-semibold sticky top-0 z-10">
                     <tr>
-                        <th class="px-4 py-3 border-b rounded-tl-xl bg-[#083358]">No</th>
-                        <th class="px-4 py-3 border-b bg-[#083358]">Nama Pemohon</th>
-                        <th class="px-4 py-3 border-b bg-[#083358]">Jenis Surat</th>
-                        <th class="px-4 py-3 border-b bg-[#083358]">Tanggal Dikirim</th>
-                        <th class="px-4 py-3 border-b bg-[#083358]">Status</th>
-                        <th class="px-4 py-3 border-b rounded-tr-xl bg-[#083358]">Aksi</th>
+                        <th class="px-4 py-3 border-b rounded-tl-xl bg-[#083358] text-center">No</th>
+                        <th class="px-4 py-3 border-b bg-[#083358] text-center">Nama Pemohon</th>
+                        <th class="px-4 py-3 border-b bg-[#083358] text-center">Jenis Surat</th>
+                        <th class="px-4 py-3 border-b bg-[#083358] text-center">Tanggal Dikirim</th>
+                        <th class="px-4 py-3 border-b bg-[#083358] text-center">Status</th>
+                        <th class="px-4 py-3 border-b rounded-tr-xl bg-[#083358] text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($dataSurat->take(10) as $index => $item)
-                    <tr class="text-center border-b">
+                    @foreach ($dataSurat as $index => $item)
+                    <tr class="text-center border-b" data-status="{{ $item->status }}">
                         <td class="px-4 py-2">{{ $index + 1 }}</td>
                         <td class="px-4 py-2">{{ $item->user->nama ?? 'Tidak Diketahui' }}</td>
                         @php
@@ -107,6 +113,25 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterSelect = document.getElementById('filterStatus');
+        const rows = document.querySelectorAll('tbody tr');
 
+        filterSelect.addEventListener('change', function () {
+            const selected = this.value;
+
+            rows.forEach(row => {
+                const status = row.getAttribute('data-status');
+
+                if (selected === 'semua' || status === selected) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
 </div>
 @endsection

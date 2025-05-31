@@ -903,28 +903,12 @@ class AdminIndustriController extends Controller
         ]);
     }
 
-    public function showHalal()
-    {
-        $data = SertifikasiHalal::all();
-        return view('admin.bidangIndustri.Halal', compact('data'));
-    }
-
-    public function dataHalal()
-    {
-        return view('user.bidangIndustri.halal');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(user::class, 'id_user', 'id_user');
-    }
-
-
     public function kelolaSuratt(Request $request)
     {
         $rekapSurat = $this->getSuratIndustriData();
         $query = PermohonanSurat::with('user')
             ->whereIn('jenis_surat', ['surat_rekomendasi_industri', 'surat_keterangan_industri'])
+            ->where('status', '!=', 'disimpan')
             ->whereIn('status', ['menunggu', 'diterima', 'ditolak']);
 
         if ($request->filled('search')) {
@@ -1227,10 +1211,5 @@ class AdminIndustriController extends Controller
             Log::error('Gagal mengajukan surat: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage()); // hanya untuk dev
         }
-    }
-
-    public function showSurat()
-    {
-        return view('admin.bidangIndustri.suratBalasan');
     }
 }

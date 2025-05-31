@@ -21,7 +21,10 @@ class KadisController extends Controller
         ];
 
         return [
-            'totalSuratPerdagangan' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratPerdagangan' => DB::table('form_permohonan')
+                ->whereIn('jenis_surat', $jenis)
+                ->where('status', '!=', 'disimpan')
+                ->count(),
             'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
             'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
             'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
@@ -81,13 +84,12 @@ class KadisController extends Controller
                 $metrologi['totalSuratMetrologi'],
 
             'totalSuratTerverifikasiKeseluruhan' =>
-                $perdagangan['totalSuratTerverifikasi']
-                +
+                $perdagangan['totalSuratTerverifikasi'] +
                 $industri['totalSuratTerverifikasi'] +
                 $metrologi['totalSuratTerverifikasi'],
 
             'totalSuratDitolakKeseluruhan' =>
-                $perdagangan['totalSuratDitolak'],+
+                $perdagangan['totalSuratDitolak'] +
                 $industri['totalSuratDitolak'] +
                 $metrologi['totalSuratDitolak'],
         ];

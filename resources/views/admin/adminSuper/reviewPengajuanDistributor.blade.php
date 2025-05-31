@@ -53,7 +53,7 @@
                 </button>
 
                 <!-- Modal Konfirmasi -->
-                <div x-show="openModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div x-show="openModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center px-4 ml-24 bg-black bg-opacity-50 rounded-lg sm:justify-center">
                     <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
                         <h2 class="mb-4 text-lg font-semibold text-gray-800">Konfirmasi Penghapusan</h2>
                         <p class="mb-6 text-gray-600">Apakah Anda yakin ingin menghapus distributor ini?</p>

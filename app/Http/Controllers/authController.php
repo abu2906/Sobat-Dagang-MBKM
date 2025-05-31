@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Disdag;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegisterVerificationMail;
 
 class authController extends Controller
 {
@@ -65,6 +68,14 @@ class authController extends Controller
         $user = User::where('nik', $identifier)->orWhere('nib', $identifier)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
+
+            // Cek apakah akun sudah diverifikasi
+            if ($user->is_verified != 1) {
+                return back()->withErrors([
+                    'identifier' => 'Akun Anda belum diverifikasi. Silakan cek email untuk verifikasi.',
+                ]);
+            }
+
             Auth::guard('user')->login($user);
             session(['id_user' => $user->id_user]); // Simpan id_user ke session
 
@@ -85,15 +96,17 @@ class authController extends Controller
                 'kabupaten' => 'required|string|max:255',
                 'kecamatan' => 'required|string|max:255',
                 'kelurahan' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:user',
+                'email' => 'required|string|email|max:255|unique:user,email',
                 'telp' => 'required|string|max:15',
                 'password' => 'required|string|min:8|confirmed',
                 'alamat_lengkap' => 'required|string',
-                'nik' => 'required|string|unique:user',
+                'nik' => 'required|string|unique:user,nik',
                 'nib' => 'nullable|string',
             ]);
- 
+
             Log::info('Validasi berhasil, data valid:', $validated);
+
+            $token = Str::random(64);
 
             $user = new User;
             $user->nama = $validated['nama'];
@@ -107,17 +120,22 @@ class authController extends Controller
             $user->alamat_lengkap = $validated['alamat_lengkap'];
             $user->nik = $validated['nik'];
             $user->nib = $validated['nib'];
+            $user->verifikasi_token = $token;
+            $user->is_verified = false;
 
             Log::info('Mencoba menyimpan user ke database');
             $user->save();
+
             Log::info('User berhasil disimpan dengan ID: ' . $user->id_user);
 
-            return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan login.');
-        } catch (\Exception $e) {
+            // Kirim email verifikasi
+            Log::info('Mengirim email verifikasi ke: ' . $user->email);
+            Mail::to($user->email)->send(new RegisterVerificationMail($user));
 
+            return redirect()->route('login')->with('success', 'Pendaftaran berhasil! Silakan cek email Anda untuk verifikasi.');
+        } catch (\Exception $e) {
             Log::error('Error saat registrasi: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
-
 
             return back()->withInput()->withErrors(['general' => 'Terjadi kesalahan saat mendaftar: ' . $e->getMessage()]);
         }
@@ -142,8 +160,8 @@ class authController extends Controller
         return view('pages.auth.changepass');
     }
 
-    public function showverification()
-    {
-        return view('pages.auth.verification');
-    }
+    // public function showverification()
+    // {
+    //     return view('pages.auth.verification');
+    // }
 };

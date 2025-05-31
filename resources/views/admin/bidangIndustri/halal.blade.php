@@ -29,9 +29,8 @@
       </a>
     </div>
 
-  <div class="container px-4 mx-auto -mt-8">
-    <div class="flex justify-center mb-6 gap-8">
-    <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
+  <div class="relative flex items-center w-full gap-4 px-6 py-6 mx-auto">
+    <div class="relative flex-1">
       <form method="GET" action="{{ route('admin.industri.halal') }}">
           <input type="text" name="search" placeholder="Cari"
             class="w-full p-3 pl-10 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}" />
@@ -53,12 +52,12 @@
        x-transition:leave="transition ease-in duration-200"
        x-transition:leave-start="opacity-100"
        x-transition:leave-end="opacity-0"
-       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
        style="display: none;"
        x-cloak>
-    <div class="bg-white p-6 rounded shadow w-full max-w-lg max-h-[90vh] overflow-y-auto"
+    <div class="bg-white p-6 rounded shadow w-full max-w-lg max-h-[90vh] ml-24 mr-2 sm:justify-center overflow-y-auto"
          @click.away="openAdd = false">
-      <h2 class="text-xl text-center font-semibold mb-4">Tambah Data Sertifikat Halal</h2>
+      <h2 class="mb-4 text-xl font-semibold text-center">Tambah Data Sertifikat Halal</h2>
       
       <!-- Alert Messages -->
       @if (session('success'))
@@ -94,34 +93,34 @@
       
       <form action="{{ route('admin.industri.halal.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-          <div class="grid md:grid-cols-2 gap-4">
+          <div class="grid gap-4 md:grid-cols-2">
             <div>
               <label class="block mb-1 font-semibold">Nama Usaha</label>
               <input type="text" name="nama_usaha" placeholder="Nama Usaha" 
                      value="{{ old('nama_usaha') }}"
-                     class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+                     class="w-full px-4 py-2 text-sm placeholder-gray-400 transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
             </div>
             <div>
               <label class="block mb-1 font-semibold">Nomor Sertifikat Halal</label>
               <input type="text" name="no_sertifikasi_halal" placeholder="No Sertifikat Halal" 
                      value="{{ old('no_sertifikasi_halal') }}"
-                     class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition">
+                     class="w-full px-4 py-2 text-sm placeholder-gray-400 transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
             </div>
             <div>
               <label class="block mb-1 font-semibold">Tanggal Diterbitkan</label>
               <input type="date" name="tanggal_sah" 
                      value="{{ old('tanggal_sah') }}"
-                     class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+                     class="w-full px-4 py-2 text-sm placeholder-gray-400 transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
             </div>
             <div>
               <label class="block mb-1 font-semibold">Berlaku Sampai</label>
               <input type="date" name="tanggal_exp" 
                      value="{{ old('tanggal_exp') }}"
-                     class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+                     class="w-full px-4 py-2 text-sm placeholder-gray-400 transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
             </div>
             <div>
               <label class="block mb-1 font-semibold">Status</label>
-              <select name="status" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>
+              <select name="status" class="w-full px-4 py-2 text-sm placeholder-gray-400 transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
                 <option value="Berlaku" {{ old('status') == 'Berlaku' ? 'selected' : '' }}>Berlaku</option>
                 <option value="Perlu Pembaruan" {{ old('status') == 'Perlu Pembaruan' ? 'selected' : '' }}>Perlu Pembaruan</option>
               </select>
@@ -138,11 +137,11 @@
           <div class="mt-4">
             <label class="block mb-1 font-semibold">Alamat</label>
             <textarea name="alamat" placeholder="Alamat" 
-                      class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm placeholder-gray-400 transition" required>{{ old('alamat') }}</textarea>
+                      class="w-full px-4 py-2 text-sm placeholder-gray-400 transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>{{ old('alamat') }}</textarea>
           </div>
           
           <div class="flex justify-center mt-6 space-x-2">
-            <button type="button" @click="openAdd = false" class="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition">Batal</button>
+            <button type="button" @click="openAdd = false" class="px-4 py-2 transition bg-gray-300 rounded-full hover:bg-gray-400">Batal</button>
             <button type="submit" class="bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:brightness-110 transition">Simpan</button>
           </div>
         </form>
@@ -154,7 +153,7 @@
   <div class="container px-4 pb-4 mx-auto">
     <section class="overflow-hidden bg-white border border-gray-300 shadow-md rounded-xl">
       <div class="overflow-y-auto max-h-[350px]">
-        <table class="w-full text-sm table-auto text-left">
+        <table class="w-full text-sm text-left table-auto">
           <thead class="bg-[#0d3b66] text-white sticky top-0 z-10">
             <tr>
               <th class="px-4 py-3 font-semibold text-left">NO</th>
@@ -170,7 +169,7 @@
           </thead>
           <tbody>
             @foreach($items as $item)
-            <tr id="row-{{ $item->id_halal }}" class="hover:bg-gray-50 transition-colors">
+            <tr id="row-{{ $item->id_halal }}" class="transition-colors hover:bg-gray-50">
               <td class="px-4 py-3">{{ $loop->iteration }}</td>
               <td class="px-4 py-3">{{ $item->nama_usaha }}</td>
               <td class="px-4 py-3">{{ $item->no_sertifikasi_halal }}</td>
@@ -185,19 +184,19 @@
               </td>
               <td class="px-4 py-3">
                 @if($item->sertifikat)
-                  <a href="{{ asset('storage/' . $item->sertifikat) }}" target="_blank" class="text-blue-600 underline hover:text-blue-800 transition">Lihat</a>
+                  <a href="{{ asset('storage/' . $item->sertifikat) }}" target="_blank" class="text-blue-600 underline transition hover:text-blue-800">Lihat</a>
                 @else
                   <span class="text-gray-400">-</span>
                 @endif
               </td>
               <td class="px-4 py-3">
                 <div class="flex space-x-2">
-                  <button onclick="openEditModal({{ json_encode($item) }})" class="text-green-600 hover:text-green-800 transition" title="Edit">
+                  <button onclick="openEditModal({{ json_encode($item) }})" class="text-green-600 transition hover:text-green-800" title="Edit">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" />
                     </svg>
                   </button>
-                  <button onclick="deleteData({{ $item->id_halal }})" class="text-red-600 hover:text-red-800 transition" title="Hapus">
+                  <button onclick="deleteData({{ $item->id_halal }})" class="text-red-600 transition hover:text-red-800" title="Hapus">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0H7m4-3h2a1 1 0 011 1v1H8V5a1 1 0 011-1z" />
                     </svg>
@@ -214,36 +213,36 @@
 </div>
 
 <!-- Fixed Modal Edit -->
-<div id="modalEdit" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden overflow-y-auto">
+<div id="modalEdit" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black bg-opacity-50">
   <div class="min-h-screen px-4 text-center">
     <div class="inline-block w-full max-w-2xl p-6 my-8 text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-      <h3 class="text-xl font-bold mb-6 text-center">Edit Sertifikat Halal</h3>
+      <h3 class="mb-6 text-xl font-bold text-center">Edit Sertifikat Halal</h3>
       
       <form id="formEdit" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <input type="hidden" id="edit_id" name="id_halal">
         
-        <div class="grid md:grid-cols-2 gap-4">
+        <div class="grid gap-4 md:grid-cols-2">
           <div>
             <label class="block mb-1 font-semibold">Nama Usaha</label>
-            <input type="text" id="edit_nama_usaha" name="nama_usaha" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition" required>
+            <input type="text" id="edit_nama_usaha" name="nama_usaha" class="w-full px-4 py-2 text-sm transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
           </div>
           <div>
             <label class="block mb-1 font-semibold">Nomor Sertifikat Halal</label>
-            <input type="text" id="edit_no_sertifikasi_halal" name="no_sertifikasi_halal" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
+            <input type="text" id="edit_no_sertifikasi_halal" name="no_sertifikasi_halal" class="w-full px-4 py-2 text-sm transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
           </div>
           <div>
             <label class="block mb-1 font-semibold">Tanggal Sah</label>
-            <input type="date" id="edit_tanggal_sah" name="tanggal_sah" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition" required>
+            <input type="date" id="edit_tanggal_sah" name="tanggal_sah" class="w-full px-4 py-2 text-sm transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
           </div>
           <div>
             <label class="block mb-1 font-semibold">Tanggal Exp</label>
-            <input type="date" id="edit_tanggal_exp" name="tanggal_exp" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition" required>
+            <input type="date" id="edit_tanggal_exp" name="tanggal_exp" class="w-full px-4 py-2 text-sm transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
           </div>
           <div>
             <label class="block mb-1 font-semibold">Status</label>
-            <select id="edit_status" name="status" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition" required>
+            <select id="edit_status" name="status" class="w-full px-4 py-2 text-sm transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required>
               <option value="Berlaku">Berlaku</option>
               <option value="Perlu Pembaruan">Perlu Pembaruan</option>
             </select>
@@ -259,11 +258,11 @@
         
         <div class="mt-1">
           <label class="block mb-1 font-semibold">Alamat</label>
-          <textarea id="edit_alamat" name="alamat" placeholder="Alamat" class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition" required></textarea>
+          <textarea id="edit_alamat" name="alamat" placeholder="Alamat" class="w-full px-4 py-2 text-sm transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" required></textarea>
         </div>
         
-        <div class="mt-6 flex justify-center gap-4">
-          <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition">Batal</button>
+        <div class="flex justify-center gap-4 mt-6">
+          <button type="button" onclick="closeEditModal()" class="px-4 py-2 transition bg-gray-300 rounded-full hover:bg-gray-400">Batal</button>
           <button type="button" onclick="submitEdit()" class="bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:brightness-110 transitionn">Simpan Perubahan</button>
         </div>
       </form>
