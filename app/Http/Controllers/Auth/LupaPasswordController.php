@@ -119,7 +119,7 @@ class LupaPasswordController extends Controller
                 'min:8',
                 'regex:/[a-zA-Z]/',
                 'regex:/[0-9]/',
-                'regex:/[@$!%*#?&]/',
+                'regex:/[!@#$%^&*()_+\-=\[\]{};\'":\\\\|,.<>\/?]/',
                 'confirmed'                
             ]
         ], [

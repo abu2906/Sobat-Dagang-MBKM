@@ -225,7 +225,8 @@
             const password = form.querySelector('input[name="password"]').value;
             const confirm = form.querySelector('input[name="password_confirmation"]').value;
 
-            const valid = password.length >= 8 && /[a-zA-Z]/.test(password) && /\d/.test(password) && /[^a-zA-Z0-9]/.test(password);
+            const valid = password.length >= 8 && /[a-zA-Z]/.test(password) 
+            && /\d/.test(password) && /[^a-zA-Z0-9]/.test(password);
 
             if (!valid) {
                 e.preventDefault();
