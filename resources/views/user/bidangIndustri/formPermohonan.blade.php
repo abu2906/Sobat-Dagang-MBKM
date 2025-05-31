@@ -43,7 +43,7 @@
                 <option value="">Pilih Draft</option>
                 @foreach($drafts as $d)
                     <option value="{{ $d->id_permohonan }}" {{ request('draft_id') == $d->id_permohonan ? 'selected' : '' }}>
-                        Draft - {{ \Carbon\Carbon::parse($d->tgl_pengajuan)->format('d F Y') }} - 
+                        Draft - {{ \Carbon\Carbon::parse($d->tgl_pengajuan)->translatedFormat('d F Y') }} - 
                         @if($d->jenis_surat == 'surat_rekomendasi_industri')
                             Surat Rekomendasi
                         @elseif($d->jenis_surat == 'surat_keterangan_industri')
@@ -82,6 +82,7 @@
         @csrf
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 font-roboto">
+
             <div>
                 <label for="jenis_surat">Jenis Surat
                     <span class="text-red-500">*</span>
@@ -204,7 +205,7 @@
                         accept=".pdf,.jpg,.jpeg,.png"
                         onchange="document.getElementById('file-npwp').innerText = this.files[0]?.name ?? 'Tidak ada file yang dipilih'">
                 </div>
-                <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF).</p>
+                <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 512KB (PDF, IMAGE).</p>
             </div>
             <div>
                 <label for="file-surat">File Surat Permohonan
