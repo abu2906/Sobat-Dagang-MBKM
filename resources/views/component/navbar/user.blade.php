@@ -7,7 +7,7 @@
                 <img src="{{ asset('assets/img/icon/logo.png') }}" alt="Logo" class="h-10">
             </a>
 
-            <div class="flex items-center space-x-4 md:hidden ml-auto">
+            <div class="flex items-center ml-auto space-x-4 md:hidden">
                 <button aria-label="Profil" class="focus:outline-none" @click="showProfile = true">
                     @php
                         $avatarPath = $user->avatar && file_exists(public_path('storage/foto_profil/' . $user->avatar))
@@ -16,11 +16,11 @@
                     @endphp
 
                     <img src="{{ $avatarPath }}" alt="Foto Profil"
-                        class="h-7 w-7 rounded-full object-cover border-2 border-white hover:opacity-80">
+                        class="object-cover border-2 border-white rounded-full h-7 w-7 hover:opacity-80">
                 </button>
             </div>
 
-            <button id="burger-btn" class="md:hidden focus:outline-none ml-4">
+            <button id="burger-btn" class="ml-4 md:hidden focus:outline-none">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -77,7 +77,7 @@
                 @endphp
 
                 <img src="{{ $avatarPath }}" alt="Foto Profil"
-                    class="h-7 w-7 rounded-full object-cover border-2 border-white hover:opacity-80">
+                    class="object-cover border-2 border-white rounded-full h-7 w-7 hover:opacity-80">
             </button>
         </div>
         </div>
@@ -112,10 +112,11 @@
                         class="object-cover w-20 h-20 mx-auto mb-4 rounded-full">
 
                     <!-- Nama & Detail Profil -->
-                    <div class="max-w-md px-6 py-2 mx-auto mt-2 text-left bg-white rounded-lg shadow-md">
-                        <h3 class="capitalize mb-4 text-3xl font-bold text-center text-gray-900">{{ $user->nama ?? '-' }}</h3>
-                        <div class="space-y-4 text-gray-700">
-
+                    <div class="max-w-md px-6 py-2 mx-auto mt-2 overflow-hidden text-left bg-white rounded-lg shadow-md">
+                        <h3 class="mb-4 text-xl font-bold text-center text-gray-900 capitalize break-words break-all">
+                            {{ $user->nama ?? '-' }}
+                        </h3>
+                        <div class="space-y-3 text-sm text-gray-700"> {{-- text-sm di sini --}}
                             @php
                                 $info = [
                                     'NIK' => $user->nik ?? '-',
@@ -128,16 +129,15 @@
 
                             @foreach ($info as $label => $value)
                                 <div class="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-1 sm:gap-4 items-start capitalize">
-                                    <span class="font-semibold text-gray-800 inline-flex items-center gap-1 sm:block">
-                                        <span>{{$label}}</span>
+                                    <span class="inline-flex items-center gap-1 text-sm font-semibold text-gray-800 break-words sm:block">
+                                        <span>{{ $label }}</span>
                                         <span class="sm:hidden">:</span>
                                     </span>
-                                    <span class="break-words whitespace-normal relative sm:before:content-[':'] sm:before:absolute sm:before:-left-2 sm:pl-4">
-                                        {{$value}}
+                                    <span class="break-all w-full block text-sm relative sm:before:content-[':'] sm:before:absolute sm:before:-left-2 sm:pl-4">
+                                        {{ $value }}
                                     </span>
                                 </div>
                             @endforeach
-
                         </div>
                     </div>
 
@@ -151,7 +151,7 @@
                             <span class="text-xl text-black">›</span>
                         </a>
                         <a href="{{ route('edit.profile') }}"
-                        class="w-full flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-100">
+                        class="flex items-center justify-between w-full p-3 border border-gray-200 rounded-lg hover:bg-gray-100">
                             <div class="flex items-center gap-2">
                                 <span class="text-lg">👤</span>
                                 <span class="text-sm font-medium text-black">Edit Profil</span>

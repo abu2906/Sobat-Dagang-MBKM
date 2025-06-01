@@ -5,43 +5,44 @@
 
 <div class="w-full max-w-full">
   <!-- Fix: Improved Alpine.js state management -->
-  <div x-data="{ 
-    openAdd: false, 
-    openEdit: false, 
-    selectedItem: null,
-    init() {
-      // Handle session-based modal opening after Alpine is fully loaded
-      this.$nextTick(() => {
-        @if(session('openAdd'))
-          this.openAdd = true;
-        @endif
-      });
-    }
-  }">
+  <div class="w-full max-w-full"
+    x-data="{ 
+      openAdd: false, 
+      openEdit: false, 
+      selectedItem: null,
+      init() {
+        this.$nextTick(() => {
+          @if(session('openAdd'))
+            this.openAdd = true;
+          @endif
+        });
+      }
+    }"
+    x-init="init()">
+
   
-  <div class="relative w-full h-64">
-    <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-64">
-      <a href="{{ route('dashboard.industri') }}"
-        class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
-        <span class="text-2xl material-symbols-outlined">
-            arrow_back
-        </span>
-      </a>
+    <div class="relative w-full h-64">
+      <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-64">
+        <a href="{{ route('dashboard.industri') }}"
+          class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+          <span class="text-2xl material-symbols-outlined">
+              arrow_back
+          </span>
+        </a>
     </div>
 
-  <div class="relative flex items-center w-full gap-4 px-6 py-6 mx-auto">
-    <div class="relative flex-1">
-      <form method="GET" action="{{ route('admin.industri.halal') }}">
-          <input type="text" name="search" placeholder="Cari"
-            class="w-full p-3 pl-10 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}" />
-          <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
-      </form>
+    <div class="relative flex items-center w-full gap-4 px-6 py-6 mx-auto">
+      <div class="relative flex-1">
+        <form method="GET" action="{{ route('admin.industri.halal') }}">
+            <input type="text" name="search" placeholder="Cari"
+              class="w-full p-3 pl-10 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}" />
+            <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
+        </form>
     </div>
 
     <button @click="openAdd = true" class="sticky bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
       TAMBAH DATA
     </button>
-  </div>
   </div>
 
   <!-- Fixed Form Tambah Data Modal -->
