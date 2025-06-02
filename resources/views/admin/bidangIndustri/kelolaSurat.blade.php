@@ -72,6 +72,7 @@
                         <th class="px-4 py-3 border-b bg-[#083358]">Jenis Surat</th>
                         <th class="px-4 py-3 border-b bg-[#083358]">Tanggal Dikirim</th>
                         <th class="px-4 py-3 border-b bg-[#083358]">Status</th>
+                        <th class="px-4 py-3 border-b bg-[#083358] text-center">Surat Balasan</th>
                         <th class="px-4 py-3 border-b rounded-tr-xl bg-[#083358]">Aksi</th>
                     </tr>
                 </thead>
@@ -98,6 +99,13 @@
                             <span class="font-medium text-red-600">Ditolak</span>
                             @else
                             <span class="font-medium text-yellow-400">Menunggu</span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-2 text-center">
+                            @if ($item->file_balasan)
+                                <a href="{{ asset('storage/' . $item->file_balasan) }}" target="_blank" class="text-blue-600 underline">Lihat Balasan</a>
+                            @else
+                                <span class="italic text-gray-500">Belum tersedia</span>
                             @endif
                         </td>
                         <td class="px-4 py-2">

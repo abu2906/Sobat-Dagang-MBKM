@@ -22,9 +22,16 @@
             </h2>
         </div>
     </div>
-
     <div class="flex items-center justify-center min-h-screen bg-white">
         <div class="w-full max-w-2xl p-6 bg-white border border-gray-200 shadow-lg rounded-3xl">
+            @if(session('success'))
+                <div class="p-4 mb-4 text-sm text-green-800 bg-green-100 border border-green-300 rounded-lg" role="alert">
+                    <svg class="inline w-5 h-5 mr-2 text-green-700" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1.707-9.293a1 1 0 00-1.414-1.414L9 9.586 8.707 9.293a1 1 0 10-1.414 1.414L9 12.414l3.293-3.293z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="font-medium">Sukses!</span> {{ session('success') }}
+                </div>
+            @endif
             <div class="space-y-4 text-sm">
                 <div class="grid grid-cols-1 md:grid-cols-2 bg-[#ABBED1] p-4 rounded-md">
                     <div class="font-semibold text-black">Nama Lengkap</div>

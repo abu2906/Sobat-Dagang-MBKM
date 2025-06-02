@@ -505,8 +505,9 @@ class DashboardPerdaganganController extends Controller{
             // Simpan perubahan ke database (update status dan file_balasan)
             $permohonan->save();
 
-            // Kembalikan response yang mengarah langsung ke file PDF menggunakan response()->file()
-            return response()->file(storage_path("app/public/surat/{$filename}"));
+            return redirect()
+                ->route('perdagangan.detailSurat', ['id_permohonan' => $id])
+                ->with('success', 'Surat berhasil disimpan dan diunggah.');
         } catch (Exception $e) {
             // Log error jika terjadi masalah
             dd($e->getMessage());
@@ -514,7 +515,6 @@ class DashboardPerdaganganController extends Controller{
     }
 
     public function simpanRekomendasi(Request $request, $id){
-
         
         set_time_limit(300); // waktu dalam detik
 
@@ -570,7 +570,9 @@ class DashboardPerdaganganController extends Controller{
             $permohonan->save();
 
             // Kembalikan response yang mengarah langsung ke file PDF menggunakan response()->file()
-            return response()->file(storage_path("app/public/surat/{$filename}"));
+            return redirect()
+                ->route('perdagangan.detailSurat', ['id_permohonan' => $id])
+                ->with('success', 'Surat berhasil disimpan dan diunggah.');
         } catch (ValidationException $e) {
             dd($e->errors()); // Menampilkan semua error validasi dalam bentuk array
         }
@@ -624,8 +626,9 @@ class DashboardPerdaganganController extends Controller{
             // Simpan perubahan ke database (update status dan file_balasan)
             $permohonan->save();
 
-            // Kembalikan response yang mengarah langsung ke file PDF menggunakan response()->file()
-            return response()->file(storage_path("app/public/surat/{$filename}"));
+            return redirect()
+                ->route('perdagangan.detailSurat', ['id_permohonan' => $id])
+                ->with('success', 'Surat berhasil disimpan dan diunggah.');
         } catch (ValidationException $e) {
             dd($e->errors()); // Menampilkan semua error validasi dalam bentuk array
         }
