@@ -8,7 +8,7 @@
 
         <div class="mb-6">
             <a href="{{ route('user.dashboard') }}" 
-               class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-700 rounded-lg shadow hover:bg-gray-600 transition-all duration-300">
+               class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-[#083358] hover:bg-blue-300 hover:text-black rounded-lg shadow transition-all duration-300">
                 ← Kembali
             </a>
         </div>

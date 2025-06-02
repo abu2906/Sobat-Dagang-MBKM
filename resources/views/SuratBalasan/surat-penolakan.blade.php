@@ -87,11 +87,12 @@
 
         .ttd .ttd_QR {
             display: flex;
-            margin-top: 20px;
         }
 
         .ttd .ttd_QR img {
             height: 100px;
+            margin-left: 200px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -127,7 +128,6 @@
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">
-            <img src="{{ public_path('assets/ttd/contohstempel.png') }}" alt="Contoh Stempel">
             <img src="{{ public_path('assets/ttd/qr.png') }}" alt="QR Code">
         </div>
         <div></div>

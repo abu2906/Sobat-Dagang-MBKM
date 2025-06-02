@@ -77,7 +77,7 @@ class authController extends Controller
             }
 
             Auth::guard('user')->login($user);
-            session(['id_user' => $user->id_user]); // Simpan id_user ke session
+            session(['id_user' => $user->id_user]);
 
             return redirect()->intended(route('user.dashboard'));
         }
@@ -109,7 +109,7 @@ class authController extends Controller
             $token = Str::random(64);
 
             $user = new User;
-            $user->nama = $validated['nama'];
+            $user->nama = $validated['nama']; 
             $user->jenis_kelamin = $validated['jenis_kelamin'];
             $user->kabupaten = $validated['kabupaten'];
             $user->kecamatan = $validated['kecamatan'];
