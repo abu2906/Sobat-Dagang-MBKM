@@ -12,7 +12,7 @@
 
 <div class="px-4 mx-auto my-6 max-w-7xl">
     <div class="overflow-x-auto bg-white border border-gray-200 shadow-md rounded-xl">
-        <div class="overflow-y-auto max-h-80">
+        <div class="overflow-y-auto max-h-[390px]">
             <table class="min-w-full text-sm text-left">
                 <thead class="bg-[#083358] text-white text-center font-semibold sticky top-0 z-10">
                     <tr>
@@ -148,9 +148,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             chatMessages.innerHTML = '';
             data.forEach(chat => {
+                const isFromAdmin = chat.id_disdag !== null;
                 const isMe = chat.id_disdag === adminId;
-                const rawName = chat.user?.nama || chat.disdag?.nama || 'Admin Dinas Perdagangan';
-                const senderName = formatName(rawName);
+
+                let senderName;
+                if (chat.id_disdag !== null) {
+                    senderName = 'Admin Dinas Perdagangan';
+                } else if (chat.user && chat.user.nama) {
+                    senderName = formatName(chat.user.nama);
+                } else {
+                    senderName = 'Pengguna';            
+                }
                 const waktu = new Date(chat.waktu);
                 const waktuFormatted = new Intl.DateTimeFormat('id-ID', {
                     hour: '2-digit',
@@ -178,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 wrapper.innerHTML = isMe ? `${bubble}${avatar}` : `${avatar}${bubble}`;
                 chatMessages.appendChild(wrapper);
             });
-
             chatMessages.scrollTop = chatMessages.scrollHeight;
         } catch (error) {
             console.error('Gagal memuat chat:', error);
