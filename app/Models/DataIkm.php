@@ -64,7 +64,7 @@ class DataIkm extends Model
 
     public function listrik()
     {
-        return $this->hasMany(Listrik::class, 'id_ikm');
+        return $this->hasOne(Listrik::class, 'id_ikm');
     }
 
     public function mesinProduksi()
@@ -112,7 +112,7 @@ class DataIkm extends Model
         $lainnya = $pengeluaran->lainnya ?? 0;
         $nilaiProsesProduksi = $this->penggunaanBahanBakar->sum('nilai_proses_produksi');
         $nilaiPtl = $this->penggunaanBahanBakar->sum('nilai_ptl');
-        $nilaiPenggunaanListrik = $this->listrik->sum('nilai_penggunaan_listrik');
+        $nilai = $listrik?->nilai_penggunaan_listrik ?? 0;
         $awal = $this->persediaan->sum('awal');
         $akhir = $this->persediaan->sum('akhir');
         $nilaiPendapatan = $this->pendapatan->sum('nilai');
@@ -134,7 +134,7 @@ class DataIkm extends Model
             + $lainnya
             + $nilaiProsesProduksi
             + $nilaiPtl
-            + $nilaiPenggunaanListrik
+            + $nilai
             + $awal
             + $akhir
             + $nilaiPendapatan

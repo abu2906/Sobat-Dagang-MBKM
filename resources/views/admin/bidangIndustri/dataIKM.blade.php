@@ -133,20 +133,37 @@
                                     <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
                                     <td class="p-2 text-center">
                                         <div class="flex justify-center gap-2">
-                                            <button type="button" @click='openEdit(@json($ikm))'
-                                                class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-lg">
-                                                Edit
-                                            </button>
+                                            <!-- Tombol Detail -->
+                                            <a href="{{ route('detailIKM', $ikm->id_ikm) }}"
+                                                class="flex items-center gap-1 text-blue-700 bg-blue-100 hover:bg-blue-200 text-xs px-3 py-1 rounded-lg border border-blue-700">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                                                </svg>
+                                                Detail
+                                            </a>
 
+
+                                            <!-- Tombol Hapus -->
                                             <form action="{{ route('destroyIKM', $ikm->id_ikm) }}" method="POST"
                                                 onsubmit="return confirm('Yakin ingin menghapus data ini?');"
                                                 class="inline-block">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">Hapus</button>
+                                                    class="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-lg">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    Hapus
+                                                </button>
                                             </form>
                                         </div>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -155,48 +172,7 @@
                     <p id="noResults" class="text-center mt-4 font-medium text-red-500 hidden">Data tidak ditemukan.</p>
 
                 </div>
-            </section>
-
-            <!-- Overlay -->
-            <div x-show="openModal" x-transition.opacity
-                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40">
-            </div>
-
-            <!-- Modal -->
-            <div x-show="openModal" x-transition class="fixed inset-0 flex items-start justify-center z-50 p-4">
-                <div @click.away="openModal = false" @keydown.escape.window="openModal = false" tabindex="0"
-                    class="relative w-full max-w-3xl bg-white rounded-lg shadow-lg p-8 mt-24 overflow-auto max-h-[80vh]">
-                    <button @click="openModal = false" type="button"
-                        class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none">
-                        &times;
-                    </button>
-
-                    <h2 class="mb-6 text-center text-lg font-bold md:text-xl">EDIT DATA IKM</h2>
-
-                    <form :action="'{{ url('data-IKM/store') }}'" method="POST" class="space-y-6">
-                        @csrf
-                        <input type="hidden" name="id" :value="formData.id_ikm">
-
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <template x-for="(label, name) in fieldMap" :key="name">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1" x-text="label"></label>
-                                    <input type="text" :name="name" x-model="formData[name]" required
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                                </div>
-                            </template>
-                        </div>
-
-                        <div class="flex justify-center">
-                            <button type="submit"
-                                class="rounded-2xl bg-[#083458] px-8 py-3 text-white font-semibold shadow-md hover:shadow-lg transition duration-200">
-                                Simpan Perubahan
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
+            </section>  
         </main>
     @endsection
 
@@ -250,7 +226,6 @@
                     } else {
                         kategoriInvestasi = 'besar';
                     }
-s
                     const rowText = row.textContent.toLowerCase();
 
                     const cocokKecamatan = !selectedKecamatan || rowKecamatan === selectedKecamatan;

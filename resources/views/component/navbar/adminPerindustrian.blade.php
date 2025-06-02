@@ -5,12 +5,12 @@
 
         <button @click="open = !open"
             class="absolute -right-3 top-10 w-7 h-7 bg-white text-[#0c3252] font-bold rounded-full flex items-center justify-center shadow-md hover:scale-105 transition">
-            <svg x-show="open" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
+            <svg x-show="open" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
+            <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
         </button>
@@ -24,23 +24,24 @@
             </div>
 
             <ul class="space-y-2 text-sm">
-               @php
-                $menuItems = [
-                ['href' => route('dashboard.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
-                ['href' => route('dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],
-                ['href' => route('halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Sertifikat Halal'],
-                ['href' => route('kelolaSurat.industri'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
-                ];
+                @php
+                    $menuItems = [
+                        ['href' => route('dashboard.industri'), 'icon' => 'dashboard.png', 'label' => 'Dashboard'],
+                        ['href' => route('dataIKM'), 'icon' => 'folder.png', 'label' => 'Data IKM'],
+                        ['href' => route('halal'), 'icon' => 'sertifikasi_halal.png', 'label' => 'Sertifikat Halal'],
+                        ['href' => route('kelolaSurat.industri'), 'icon' => 'persuratan.png', 'label' => 'Persuratan'],
+                    ];
                 @endphp
 
                 @foreach ($menuItems as $item)
-                <li>
-                    <a href="{{ $item['href'] }}"
-                        class="flex items-center px-3 py-2 transition duration-200 rounded-full hover:bg-blue-500/20 hover:border hover:border-blue-500/40 hover:font-bold">
-                        <img src="{{ asset('assets/img/icon/' . $item['icon']) }}" class="w-5 h-5" alt="{{ $item['label'] }}">
-                        <span x-show="open" class="ml-3">{{ $item['label'] }}</span>
-                    </a>
-                </li>
+                    <li>
+                        <a href="{{ $item['href'] }}"
+                            class="flex items-center px-3 py-2 transition duration-200 rounded-full hover:bg-blue-500/20 hover:border hover:border-blue-500/40 hover:font-bold">
+                            <img src="{{ asset('assets/img/icon/' . $item['icon']) }}" class="w-5 h-5"
+                                alt="{{ $item['label'] }}">
+                            <span x-show="open" class="ml-3">{{ $item['label'] }}</span>
+                        </a>
+                    </li>
                 @endforeach
             </ul>
         </div>
@@ -66,3 +67,13 @@
             </div>
         </div>
     </div>
+    <script>
+        function sidebar() {
+            return {
+                collapsed: false,
+                checkScreen() {
+                    this.collapsed = window.innerWidth < 768;
+                }
+            }
+        }
+    </script>
