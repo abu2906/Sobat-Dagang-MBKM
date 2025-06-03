@@ -12,12 +12,12 @@ use App\Helpers\StatusHelper;
 <div class="min-h-screen p-6 bg-gray-100">
     <!-- Floating Filter Section (sekarang relatif, bukan absolute) -->
     <div class="w-full px-4 sm:px-6 md:px-8 mt-[-60px]">
-        <div class="flex flex-col justify-between gap-4 p-4 shadow-md lg:flex-row lg:items-center rounded-xl bg-white/90 backdrop-blur-md">
+        <div class="flex flex-col justify-between gap-4 p-4 shadow-md lg:flex-row lg:items-center rounded-xl bg-[#0c3252]">
             <!-- Filter Form -->
             <form action="{{ route('management-uttp-metrologi') }}" method="GET"
                 class="flex flex-col flex-1 w-full gap-3 md:flex-row md:items-center md:gap-4">
                 <select name="status" id="statusFilter"
-                    class="w-full px-4 py-2 text-sm border rounded-full shadow md:w-auto"
+                    class="w-full px-4 py-2 text-sm border rounded-full shadow md:w-auto bg-white text-gray-700"
                     onchange="this.form.submit()">
                     <option value="">Semua</option>
                     <option value="Valid" {{ request('status') === 'Valid' ? 'selected' : '' }}>Valid</option>
@@ -26,7 +26,7 @@ use App\Helpers\StatusHelper;
 
                 <div class="relative flex-1">
                     <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}"
-                        class="w-full py-2 pl-10 pr-4 text-sm border rounded-full shadow" />
+                        class="w-full py-2 pl-10 pr-4 text-sm border rounded-full shadow bg-white text-gray-700" />
                     <button type="submit"
                         class="absolute top-0 right-0 h-full px-4 text-gray-400 hover:text-gray-600">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -41,7 +41,7 @@ use App\Helpers\StatusHelper;
             <!-- Button Group -->
             <div class="flex flex-col justify-end w-full gap-3 sm:flex-row sm:w-auto">
                 <a href="{{ route('uttp.download') }}"
-                    class="text-white flex items-center justify-center gap-2 bg-[#0c3252] hover:bg-[#F49F1E] hover:text-black rounded-full px-6 py-2 text-sm">
+                    class="text-[#0c3252] flex items-center justify-center gap-2 bg-white border border-[#0c3252] hover:bg-[#0c3252] hover:text-white rounded-full px-6 py-2 text-sm transition-colors duration-300">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -49,7 +49,7 @@ use App\Helpers\StatusHelper;
                     Download
                 </a>
                 <button onclick="openModal()"
-                    class="text-white flex items-center justify-center gap-2 bg-[#0c3252] hover:bg-[#F49F1E] hover:text-black rounded-full px-8 py-2 text-sm">
+                    class="text-[#0c3252] flex items-center justify-center gap-2 bg-white border border-[#0c3252] hover:bg-[#0c3252] hover:text-white rounded-full px-8 py-2 text-sm transition-colors duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />

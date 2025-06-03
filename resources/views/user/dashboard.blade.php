@@ -30,7 +30,7 @@
         ],
         'METROLOGI' => [
             ['label' => 'Permohonan Tera baru/Tera ulang', 'route' => route('administrasi-metrologi')],
-            ['label' => 'Alat Milik Saya', 'route' => route('directory-metrologi')],
+            ['label' => 'Alat Ukur Valid', 'route' => route('directory-metrologi')],
         ],
     ];
 @endphp

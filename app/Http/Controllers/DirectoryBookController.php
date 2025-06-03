@@ -493,16 +493,30 @@ class DirectoryBookController extends Controller{
     {
         $search = $request->input('search');
         
+        // If search is numeric, try to find exact user ID match first
+        if (is_numeric($search)) {
+            $exactUser = User::where('id_user', $search)
+                ->select('id_user', 'nama', 'nib')
+                ->first();
+                
+            if ($exactUser) {
+                return response()->json([[
+                    'id' => $exactUser->id_user,
+                    'text' => $exactUser->nib ? "({$exactUser->nib}) - {$exactUser->nama}" : $exactUser->nama
+                ]]);
+            }
+        }
+        
+        // If no exact match or not numeric search, perform regular search
         $users = User::where('nama', 'like', "%{$search}%")
             ->orWhere('nib', 'like', "%{$search}%")
             ->select('id_user', 'nama', 'nib')
             ->limit(10)
             ->get()
             ->map(function ($user) {
-                $nib = $user->nib ? $user->nib : '-';
                 return [
                     'id' => $user->id_user,
-                    'text' => "({$nib}) - {$user->nama}"
+                    'text' => $user->nib ? "({$user->nib}) - {$user->nama}" : $user->nama
                 ];
             });
 
