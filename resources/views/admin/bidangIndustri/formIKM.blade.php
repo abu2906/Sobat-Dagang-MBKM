@@ -3,13 +3,13 @@
 
 @section('content')
     <div class="flex h-screen overflow-hidden bg-gray-100">
-        <main class="flex-1 flex flex-col bg-gray-100 min-h-screen overflow-y-auto" x-data="ikmEdit()"
-            x-init="init()">
+        <main class="flex-1 flex flex-col bg-gray-100 min-h-screen overflow-y-auto" x-data>
             <!-- ALERT AREA -->
-            <div x-show="showAlert" x-transition
+            <div x-show="false" x-transition
                 class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-red-100 text-red-800 p-4 rounded-lg shadow-lg z-50 w-fit max-w-md text-center"
                 style="display: none;">
-                <p x-text="alertMessage" class="font-semibold"></p>
+                <p class="font-semibold"></p>
+
             </div>
 
             <header class="relative z-10">
@@ -68,6 +68,11 @@
                     <div class="p-10 w-3/4 mx-auto flex justify-center">
                         <section id="tab-content"
                             class="inline-block bg-[#d0e6ff] rounded-2xl p-10 min-h-[200px] text-center text-blue-900 text-xl font-normal shadow-inner">
+                            @if ($errors->has('konsistensi'))
+                                <div id="backend-error-konsistensi"
+                                    data-error-konsistensi="{{ $errors->first('konsistensi') }}"></div>
+                            @endif
+
                             <form id="form-ikm" method="POST" action="{{ route('dataIKM.store') }}">
                                 @csrf
                                 {{-- DATA IKM --}}
@@ -818,21 +823,34 @@
                                                         placeholder="Masukkan Negara">
                                                 </div>
 
+                                                @php
+                                                    $tahunSekarang = date('Y');
+                                                @endphp
+
                                                 <div>
                                                     <label class="block mb-1 font-medium">Tahun Perolehan</label>
-                                                    <input type="number" name="tahun_perolehan[]" min="1900"
-                                                        required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-full"
-                                                        placeholder="Masukkan Tahun">
+                                                    <select name="tahun_perolehan[]" required
+                                                        class="border border-black outline-black p-2 rounded-2xl w-full">
+                                                        <option value="">Pilih Tahun</option>
+                                                        @for ($tahun = 2000; $tahun <= $tahunSekarang; $tahun++)
+                                                            <option value="{{ $tahun }}">{{ $tahun }}
+                                                            </option>
+                                                        @endfor
+                                                    </select>
                                                 </div>
 
                                                 <div>
                                                     <label class="block mb-1 font-medium">Tahun Pembuatan</label>
-                                                    <input type="number" name="tahun_pembuatan[]" min="1900"
-                                                        required
-                                                        class="border border-black outline-black p-2 rounded-2xl w-full"
-                                                        placeholder="Masukkan Tahun">
+                                                    <select name="tahun_pembuatan[]" required
+                                                        class="border border-black outline-black p-2 rounded-2xl w-full">
+                                                        <option value="">Pilih Tahun</option>
+                                                        @for ($tahun = 2000; $tahun <= $tahunSekarang; $tahun++)
+                                                            <option value="{{ $tahun }}">{{ $tahun }}
+                                                            </option>
+                                                        @endfor
+                                                    </select>
                                                 </div>
+
 
                                                 <div>
                                                     <label class="block mb-1 font-medium">Jumlah Unit</label>
@@ -1008,11 +1026,12 @@
                                     </div>
 
                                     <div>
-                                        <label class="block mb-1 font-medium">Kapasitas Terpasang per Tahun</label>
-                                        <input type="number" id="kapasitas_tahun" name="kapasitas_tahun" min="0"
-                                            required
-                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
-                                            placeholder="Masukkan Kapasitas Terpasang per Tahun">
+                                        <label for="kapasitas_tahun" class="block mb-1 font-medium">Kapasitas Terpasang
+                                            per Tahun</label>
+                                        <select id="kapasitas_tahun" name="kapasitas_tahun" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
+                                            <option value="">Pilih Tahun</option>
+                                        </select>
                                     </div>
 
                                     <div class="col-span-1 md:col-span-2 flex justify-center gap-4 mt-6">
@@ -1353,29 +1372,6 @@
 @endsection
 
 @push('scripts')
-    @if ($errors->has('konsistensi'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Mencegah submit otomatis karena validasi backend gagal
-                if (window.history.replaceState) {
-                    window.history.replaceState(null, null, window.location.href);
-                }
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Data tidak konsisten',
-                    text: @json($errors->first('konsistensi')),
-                    confirmButtonColor: '#e74c3c',
-                    confirmButtonText: 'Periksa Lagi'
-                }).then(() => {
-                    // Arahkan ke tab tenaga kerja
-                    const target = document.getElementById('btn-karyawan');
-                    if (target) target.click();
-                });
-            });
-        </script>
-    @endif
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // ================================
@@ -1411,11 +1407,14 @@
 
                     const isActive = key === idToShow;
 
-                    // Tampilkan sembunyikan form
-                    section.classList.toggle('hidden', !isActive);
-                    section.classList.toggle('grid', isActive);
+                    if (isActive) {
+                        section.classList.remove('hidden');
+                        section.classList.add('grid');
+                    } else {
+                        section.classList.add('hidden');
+                        section.classList.remove('grid');
+                    }
 
-                    // Update style tab
                     tab.classList.remove(
                         'bg-white', 'text-[#083458]', 'font-bold', 'border-b-4', 'border-[#083458]',
                         'bg-[#083458]', 'text-white', 'hover:bg-blue-200', 'hover:text-[#083458]',
@@ -1433,8 +1432,6 @@
             }
 
 
-            showForm('btn-data-ikm');
-
             function initTabSwitching() {
                 tabs.forEach(tab => {
                     tab.addEventListener('click', () => {
@@ -1442,9 +1439,6 @@
                     });
                 });
             }
-
-            initTabSwitching();
-            showForm('btn-data-ikm');
 
             // ================================
             // WILAYAH (KECAMATAN & KELURAHAN)
@@ -1456,12 +1450,19 @@
                 const kelurahanSelect = document.getElementById('kelurahan');
 
                 if (parepareKabupaten && kecamatanSelect) {
-                    // Populate kecamatan options
+                    // Bersihkan isi dropdown kecamatan sebelum diisi ulang
+                    kecamatanSelect.innerHTML = '<option value="" disabled selected>Pilih Kecamatan</option>';
+
+                    // Populate kecamatan options tanpa duplikat
+                    const added = new Set();
                     parepareKabupaten.kecamatan.forEach(kec => {
-                        const opt = document.createElement('option');
-                        opt.value = kec.name;
-                        opt.textContent = kec.name;
-                        kecamatanSelect.appendChild(opt);
+                        if (!added.has(kec.name)) {
+                            const opt = document.createElement('option');
+                            opt.value = kec.name;
+                            opt.textContent = kec.name;
+                            kecamatanSelect.appendChild(opt);
+                            added.add(kec.name);
+                        }
                     });
 
                     // Handle kecamatan change
@@ -1486,6 +1487,7 @@
                 }
             }
 
+
             // ================================
             // FORM NAVIGATION (NEXT/PREV)
             // ================================
@@ -1494,7 +1496,7 @@
                     button.addEventListener('click', e => {
                         e.preventDefault();
                         const currentBtnId = button.id.replace('next-',
-                        'btn-'); // ubah ke id tombol
+                            'btn-'); // ubah ke id tombol
                         const btnIds = Object.keys(contents);
                         const currentIndex = btnIds.indexOf(currentBtnId);
                         if (currentIndex !== -1 && currentIndex + 1 < btnIds.length) {
@@ -1518,7 +1520,6 @@
                     }
                 });
             }
-
 
             // ================================
             // DYNAMIC FORM MANAGEMENT
@@ -1610,10 +1611,17 @@
             // ================================
             function prefillDummyData() {
                 const form = document.getElementById('form-ikm');
-                form?.querySelectorAll('input')?.forEach(el => {
+                if (!form) return;
+
+                const inputs = form.querySelectorAll('input');
+                const selects = form.querySelectorAll('select');
+
+                // Isi input
+                inputs.forEach(el => {
                     if (el.name !== '_token' && el.type !== 'hidden') {
                         if (el.type === 'number') {
-                            el.value = el.id.includes('tahun') ? Math.max(el.value, 1900) : 98;
+                            el.value = el.id && el.id.includes('tahun') ? Math.max(el.value || 0, 1900) :
+                                98;
                         } else if (el.type === 'tel') {
                             el.value = '081234567890';
                         } else {
@@ -1621,10 +1629,41 @@
                         }
                     }
                 });
-            }
 
+                // Isi select
+                selects.forEach(select => {
+                    if (select.name === 'kecamatan') {
+                        // Pilih kecamatan dan trigger change agar kelurahan aktif
+                        const option = Array.from(select.options).find(opt => opt.value && !opt.disabled);
+                        if (option) {
+                            select.value = option.value;
+                            select.dispatchEvent(new Event('change'));
+                        }
+                    } else if (select.name === 'kelurahan') {
+                        // Tunggu kelurahan terisi dulu baru isi
+                        const observer = new MutationObserver(() => {
+                            const validOption = Array.from(select.options).find(opt => opt.value &&
+                                !opt.disabled);
+                            if (validOption) {
+                                select.value = validOption.value;
+                                observer.disconnect();
+                            }
+                        });
+                        observer.observe(select, {
+                            childList: true
+                        });
+                    } else {
+                        // Select biasa → langsung pilih opsi pertama valid
+                        const defaultOption = Array.from(select.options).find(opt => opt.value && !opt
+                            .disabled);
+                        if (defaultOption) {
+                            select.value = defaultOption.value;
+                        }
+                    }
+                });
+            }
             // ================================
-            // FORM VALIDATION & SUBMISSION
+            // FORM VALIDATION INIT
             // ================================
             function initFormValidation() {
                 const submitButton = document.getElementById('submit-semua');
@@ -1633,65 +1672,220 @@
                 submitButton.addEventListener('click', function(e) {
                     e.preventDefault();
 
-                    // Skip jika ada error backend
-                    if (document.querySelector('[data-error-konsistensi]')) {
+                    let adaInputKosong = false;
+                    let inputPertamaKosong = null;
+
+                    for (let formId of formIds) {
+                        const bagian = document.getElementById(formId);
+                        if (!bagian) continue;
+
+                        const inputs = bagian.querySelectorAll('input, select, textarea');
+                        for (let input of inputs) {
+                            if (input.hasAttribute('required') && !input.disabled && !input.value.trim()) {
+                                adaInputKosong = true;
+                                if (!inputPertamaKosong) {
+                                    inputPertamaKosong = {
+                                        input: input,
+                                        formId: formId,
+                                        label: input.closest('div')?.querySelector('label')?.textContent
+                                            ?.trim() || input.name
+                                    };
+                                }
+                                break;
+                            }
+                        }
+                        if (adaInputKosong) break;
+                    }
+
+                    if (adaInputKosong && inputPertamaKosong) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Isian belum lengkap',
+                            text: `Bagian "${inputPertamaKosong.label}" wajib diisi.`,
+                            confirmButtonText: 'Oke, isi dulu',
+                            confirmButtonColor: '#F49F1E'
+                        }).then(() => {
+                            const tabBtn = document.querySelector(
+                                `.tab-button[id="btn-${inputPertamaKosong.formId.replace('form-', '')}"]`
+                            );
+                            if (tabBtn) tabBtn.click();
+                            setTimeout(() => {
+                                inputPertamaKosong.input.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
+                                inputPertamaKosong.input.focus();
+                            }, 300);
+                        });
                         return;
                     }
 
-                    // Validasi semua form
-                    for (let formId of formIds) {
-                        const section = document.getElementById(formId);
-                        if (!section) continue;
+                    submitFormData();
+                });
+            }
 
-                        const inputs = section.querySelectorAll('input, select, textarea');
-                        for (let input of inputs) {
-                            if (input.hasAttribute('required') && !input.disabled && !input.value.trim()) {
-                                const label = input.closest('div')?.querySelector('label')?.textContent
-                                    ?.trim() || input.name;
+            // ================================
+            // SUBMIT FORM DATA TO BACKEND
+            // ================================
+            function submitFormData() {
+                const form = document.getElementById('form-ikm');
+                const formData = new FormData(form);
 
+                Swal.fire({
+                    title: 'Menyimpan...',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                                'content') || formData.get('_token')
+                        }
+                    })
+                    .then(response => response.json().catch(() => ({
+                        success: false,
+                        errors: {
+                            msg: ['Response JSON tidak valid']
+                        }
+                    })))
+                    .then(data => {
+                        Swal.close();
+
+                        if (data.success && !data.errors) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: 'Data berhasil disimpan!',
+                                confirmButtonText: 'Oke',
+                                confirmButtonColor: '#22c55e'
+                            }).then(() => {
+                                window.location.href = "/data-IKM";
+                            });
+                        } else {
+                            const errors = data.errors || {};
+                            const tabMapping = {};
+                            const form = document.getElementById('form-ikm');
+
+                            const fieldToTabIdMap = {
+                                konsistensi_pemilik: 'persentase-pemilik',
+                                konsistensi_karyawan: 'karyawan',
+                                konsistensi_bahan: 'pemakaian-bahan',
+                                konsistensi_bahan_bakar: 'bahan-bakar',
+                                konsistensi_listrik: 'listrik',
+                                konsistensi_mesin: 'mesin-produksi',
+                                konsistensi_produksi: 'produksi',
+                                msg: 'data-ikm'
+                            };
+
+                            if (Object.keys(errors).length === 0) {
                                 Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Isian belum lengkap',
-                                    text: `Bagian "${label}" wajib diisi.`,
-                                    confirmButtonText: 'Oke, isi dulu',
-                                    confirmButtonColor: '#F49F1E'
-                                }).then(() => {
-                                    // Pindah ke tab yang bermasalah
-                                    const tabBtn = document.getElementById('btn-' + formId.replace(
-                                        'form-', ''));
-                                    if (tabBtn) tabBtn.click();
-
-                                    // Focus ke input bermasalah
-                                    setTimeout(() => {
-                                        input.scrollIntoView({
-                                            behavior: 'smooth',
-                                            block: 'center'
-                                        });
-                                        input.focus();
-                                    }, 300);
+                                    icon: 'error',
+                                    title: 'Terjadi kesalahan',
+                                    text: 'Terjadi kesalahan yang tidak diketahui.',
+                                    confirmButtonText: 'Oke',
+                                    confirmButtonColor: '#e74c3c'
                                 });
                                 return;
                             }
-                        }
-                    }
 
-                    // Jika semua validasi berhasil
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: 'Data berhasil disubmit!',
-                        confirmButtonText: 'Oke',
-                        confirmButtonColor: '#22c55e'
-                    }).then(() => {
-                        submitButton.closest('form').submit();
+                            Object.keys(errors).forEach(field => {
+                                const messages = Array.isArray(errors[field]) ? errors[field] : [errors[
+                                    field]];
+                                const baseField = field.split('.')[0];
+                                const formField = form.querySelector(`[name="${baseField}"]`) || form
+                                    .querySelector(`[name^="${baseField}"]`);
+                                const formSection = formField?.closest('[id^="form-"]');
+                                const tabId = formSection?.id.replace('form-', '') || fieldToTabIdMap[
+                                    field] || 'unknown';
+
+                                if (!tabMapping[tabId]) tabMapping[tabId] = [];
+                                messages.forEach(msg => tabMapping[tabId].push(msg));
+                            });
+
+                            let html = '<div style="text-align:left;font-size:14px">';
+                            Object.entries(tabMapping).forEach(([tabId, messages]) => {
+                                html +=
+                                    `<div style="margin-bottom:10px"><b>${getTabDisplayName(tabId)}</b><ul>`;
+                                messages.forEach(msg => {
+                                    html += `<li>${msg}</li>`;
+                                });
+                                html += '</ul></div>';
+                            });
+                            html += '</div>';
+
+                            const tabToFocus = Object.keys(tabMapping)[0];
+                            const firstErrorField = Object.keys(errors)[0];
+                            const elementToFocus = form.querySelector(
+                                `[name^="${firstErrorField.split('.')[0]}"]`);
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Data yang diinput tidak sesuai',
+                                html: html,
+                                confirmButtonText: 'Periksa Lagi',
+                                confirmButtonColor: '#e74c3c'
+                            }).then(() => {
+                                const tabBtn = document.querySelector(
+                                        `.tab-button[id="btn-${tabToFocus}"]`) || document
+                                    .querySelector(`#btn-${tabToFocus}`);
+                                if (tabBtn) tabBtn.click();
+                                setTimeout(() => {
+                                    if (elementToFocus && typeof elementToFocus
+                                        .scrollIntoView === 'function') {
+                                        elementToFocus.scrollIntoView({
+                                            behavior: 'smooth',
+                                            block: 'center'
+                                        });
+                                        elementToFocus.focus();
+                                    }
+                                }, 400);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.close();
+                        console.error('Kesalahan AJAX:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi kesalahan',
+                            text: 'Server error saat menyimpan data. Cek konsol/log.',
+                            confirmButtonText: 'Oke',
+                            confirmButtonColor: '#e74c3c'
+                        });
                     });
-                });
             }
+
+            function getTabDisplayName(tabId) {
+                const tabNames = {
+                    'data-ikm': 'Data IKM',
+                    'persentase-pemilik': 'Persentase Pemilik',
+                    'karyawan': 'Data Karyawan',
+                    'pemakaian-bahan': 'Pemakaian Bahan',
+                    'penggunaan-air': 'Penggunaan Air',
+                    'pengeluaran': 'Pengeluaran',
+                    'bahan-bakar': 'Bahan Bakar',
+                    'listrik': 'Listrik',
+                    'mesin-produksi': 'Mesin Produksi',
+                    'produksi': 'Produksi',
+                    'persediaan': 'Persediaan',
+                    'pendapatan': 'Pendapatan Lain',
+                    'modal': 'Modal',
+                    'bentuk-pengelolaan': 'Pengelolaan Limbah'
+                };
+                return tabNames[tabId] || (tabId.charAt(0).toUpperCase() + tabId.slice(1));
+            }
+
 
             // ================================
             // INISIALISASI SEMUA FUNGSI
             // ================================
             function init() {
+                console.log("Inisialisasi dijalankan");
                 initTabSwitching();
                 initWilayahDropdown();
                 initFormNavigation();
@@ -1699,14 +1893,38 @@
                 prefillDummyData();
                 initFormValidation();
 
-                // Show first form
-                if (formIds.length > 0) {
-                    showForm('btn-' + formIds[0].replace('form-', ''));
-                }
+                showForm('btn-data-ikm');
             }
 
-            // Jalankan inisialisasi
             init();
+
+            const closeBtn = document.getElementById('closeModal');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    const modal = document.getElementById('modal');
+                    if (modal) modal.classList.add('hidden');
+                });
+            }
+
+
+
+            // ================================
+            // HANDLE ERROR KONSISTENSI DARI SERVER (jika ada reload halaman dengan error)
+            // ================================
+            @if ($errors->has('konsistensi'))
+                // Jika halaman di-reload dengan error konsistensi, tampilkan pesan
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data tidak konsisten',
+                    text: @json($errors->first('konsistensi')),
+                    confirmButtonText: 'Periksa Lagi',
+                    confirmButtonColor: '#e74c3c'
+                }).then(() => {
+                    const tabBtn = document.getElementById('btn-karyawan');
+                    if (tabBtn) tabBtn.click();
+                });
+            @endif
+
         });
     </script>
 @endpush

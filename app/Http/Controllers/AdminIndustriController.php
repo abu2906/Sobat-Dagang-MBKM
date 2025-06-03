@@ -21,6 +21,25 @@ use App\Exports\DataIkmExport;
 use Maatwebsite\Excel\Facades\Excel;;
 use App\Http\Controllers\user;
 
+use Illuminate\Support\Facades\Validator;
+
+use App\Models\Pengeluaran;
+use App\Models\Persediaan;
+use App\Models\Karyawan;
+use App\Models\BentukPengelolaanLimbah;
+use App\Models\Pendapatan;
+use App\Models\PersentasePemilik;
+use App\Models\Produksi;
+use App\Models\Listrik;
+use App\Models\PenggunaanAir;
+use App\Models\PenggunaanBahanBakar;
+use App\Models\PemakaianBahan;
+use App\Models\MesinProduksi;
+
+
+
+
+
 class AdminIndustriController extends Controller
 {
     public function showDashboard(Request $request)
@@ -372,6 +391,290 @@ class AdminIndustriController extends Controller
         return view('admin.bidangindustri.editIKM', compact('ikm'));
     }
 
+    public function detailIKM($id)
+    {
+        $ikm = DataIkm::with([
+            'karyawan',
+            'persentasePemilik',
+            'pemakaianBahan',
+            'penggunaanAir',
+            'pengeluaran',
+            'penggunaanBahanBakar',
+            'listrik',
+            'mesinProduksi',
+            'produksi',
+            'persediaan',
+            'pendapatan',
+            'modal',
+            'bentukPengelolaanLimbah',
+        ])->findOrFail($id);
+
+        return view('admin.bidangIndustri.detailIKM', compact('ikm'));
+    }
+
+    public function updateIKM(Request $request)
+    {
+        $ikm = DataIkm::find($request->id_ikm);
+
+        if (!$ikm) {
+            return back()->withErrors(['msg' => 'Data IKM tidak ditemukan.']);
+        }
+
+        $ikm->update($request->only([
+            'nama_ikm',
+            'nama_pemilik',
+            'jenis_kelamin',
+            'kecamatan',
+            'kelurahan',
+            'alamat',
+            'luas',
+            'komoditi',
+            'jenis_industri',
+            'nib',
+            'no_telp',
+            'tenaga_kerja'
+        ]));
+
+        return back()->with('success', 'Data IKM berhasil diperbarui!');
+    }
+
+
+    public function updatePengeluaran(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:pengeluaran,id_pengeluaran',
+            'upah_gaji' => 'nullable|numeric',
+            'pengeluaran_industri_distribusi' => 'nullable|numeric',
+            'pengeluaran_rnd' => 'nullable|numeric',
+            'pengeluaran_tanah' => 'nullable|numeric',
+            'pengeluaran_gedung' => 'nullable|numeric',
+            'pengeluaran_mesin' => 'nullable|numeric',
+            'lainnya' => 'nullable|numeric',
+        ]);
+
+        $pengeluaran = Pengeluaran::findOrFail($request->id);
+        $pengeluaran->update($request->except('id'));
+
+        return redirect()->back()->with('success', 'Data pengeluaran berhasil diperbarui.');
+    }
+
+
+    public function updatePersediaan(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:persediaan,id_persediaan',
+            'jenis_persediaan' => 'required|string',
+            'awal' => 'required|numeric',
+            'akhir' => 'required|numeric',
+        ]);
+
+        $persediaan = Persediaan::findOrFail($request->id);
+        $persediaan->update($request->only(['jenis_persediaan', 'awal', 'akhir']));
+
+        return redirect()->back()->with('success', 'Data persediaan berhasil diperbarui.');
+    }
+
+
+    public function updateKaryawan(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:karyawan,id_karyawan',
+            'tenaga_kerja_tetap' => 'nullable|integer|min:0',
+            'tenaga_kerja_tidak_tetap' => 'nullable|integer|min:0',
+            'tenaga_kerja_laki_laki' => 'nullable|integer|min:0',
+            'tenaga_kerja_perempuan' => 'nullable|integer|min:0',
+            'sd' => 'nullable|integer|min:0',
+            'smp' => 'nullable|integer|min:0',
+            'sma_smk' => 'nullable|integer|min:0',
+            'd1_d3' => 'nullable|integer|min:0',
+            's1_d4' => 'nullable|integer|min:0',
+            's2' => 'nullable|integer|min:0',
+            's3' => 'nullable|integer|min:0',
+        ]);
+
+        $karyawan = Karyawan::findOrFail($request->id);
+        $karyawan->update($request->except('id'));
+
+        return redirect()->back()->with('success', 'Data tenaga kerja berhasil diperbarui.');
+    }
+
+
+    public function updateLimbah(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:bentuk_pengelolaan_limbah,id_limbah',
+            'jenis_limbah' => 'nullable|string',
+            'jumlah_limbah' => 'nullable|numeric',
+            'jenis_limbah_b3' => 'nullable|string',
+            'jumlah_limbah_b3' => 'nullable|numeric',
+            'tps_limbah_b3' => 'nullable|string',
+            'pihak_berizin' => 'nullable|string',
+            'internal_industri' => 'nullable|string',
+            'parameter_limbah_cair' => 'nullable|string',
+            'jumlah_limbah_cair' => 'nullable|numeric',
+        ]);
+
+        $limbah = BentukPengelolaanLimbah::findOrFail($request->id);
+        $limbah->update($request->except('id'));
+
+        return redirect()->back()->with('success', 'Data pengelolaan limbah berhasil diperbarui.');
+    }
+
+
+    public function updatePendapatan(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:pendapatan,id_pendapatan',
+            'sumber' => 'required|string',
+            'nilai' => 'required|numeric',
+        ]);
+
+        $pendapatan = Pendapatan::findOrFail($request->id);
+        $pendapatan->update($request->only(['sumber', 'nilai']));
+
+        return redirect()->back()->with('success', 'Data pendapatan berhasil diperbarui.');
+    }
+
+
+    public function updatePersentase(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:persentase_pemilik,id_persentase',
+            'pemerintah_pusat' => 'required|numeric|min:0|max:100',
+            'pemerintah_daerah' => 'required|numeric|min:0|max:100',
+            'swasta_nasional' => 'required|numeric|min:0|max:100',
+            'asing' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $persentase = PersentasePemilik::findOrFail($request->id);
+        $persentase->update($request->except('id'));
+
+        return redirect()->back()->with('success', 'Data persentase kepemilikan berhasil diperbarui.');
+    }
+
+
+    public function updateProduksi(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:produksi,id_produksi',
+            'jenis_produksi' => 'required|string',
+            'kbli' => 'nullable|string',
+            'kode_hs' => 'nullable|string',
+            'spesifikasi' => 'nullable|string',
+            'banyaknya' => 'required|numeric',
+            'nilai' => 'required|numeric',
+            'satuan' => 'required|string',
+            'presentase_produk_ekspor' => 'nullable|numeric',
+            'negara_tujuan_ekspor' => 'nullable|string',
+            'kapasitas_terpasang_per_tahun' => 'nullable|numeric',
+        ]);
+
+        $produksi = Produksi::findOrFail($request->id);
+        $produksi->update($request->except('id'));
+
+        return redirect()->back()->with('success', 'Data produksi berhasil diperbarui.');
+    }
+
+
+    public function updateListrik(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:listrik,id_listrik',
+            'sumber' => 'required|string',
+            'banyaknya' => 'required|numeric',
+            'nilai' => 'required|numeric',
+            'peruntukkan' => 'required|string',
+        ]);
+
+        $listrik = Listrik::findOrFail($request->id);
+        $listrik->update($request->only(['sumber', 'banyaknya', 'nilai', 'peruntukkan']));
+
+        return redirect()->back()->with('success', 'Data penggunaan listrik berhasil diperbarui.');
+    }
+
+    public function updatePenggunaanAir(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:penggunaan_air,id_air',
+            'sumber_air' => 'required|string',
+            'banyaknya_penggunaan_m3' => 'required|numeric',
+            'biaya' => 'required|numeric',
+        ]);
+
+        $air = PenggunaanAir::findOrFail($request->id);
+        $air->update($validated);
+
+        return redirect()->back()->with('success', 'Data penggunaan air berhasil diperbarui.');
+    }
+
+
+    public function updatePemakaianBahan(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:pemakaian_bahan,id_pemakaian_bahan',
+            'nama_bahan' => 'required|string',
+            'jenis_bahan' => 'required|string',
+            'spesifikasi' => 'nullable|string',
+            'kode_hs' => 'nullable|string',
+            'satuan_standar' => 'required|string',
+            'jumlah_dalam_negeri' => 'required|numeric',
+            'nilai_dalam_negeri' => 'required|numeric',
+            'jumlah_impor' => 'required|numeric',
+            'nilai_impor' => 'required|numeric',
+            'negara_asal_impor' => 'nullable|string',
+        ]);
+
+        $bahan = PemakaianBahan::findOrFail($request->id);
+        $bahan->update($validated);
+
+        return redirect()->back()->with('success', 'Data pemakaian bahan berhasil diperbarui.');
+    }
+
+
+
+    public function updateBahanBakar(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:penggunaan_bahan_bakar,id_bahan_bakar',
+            'jenis_bahan_bakar' => 'required|string',
+            'satuan_standar' => 'required|string',
+            'banyaknya_proses_produksi' => 'required|numeric',
+            'nilai_proses_produksi' => 'required|numeric',
+            'banyaknya_pembangkit_tenaga_listrik' => 'required|numeric',
+            'nilai_pembangkit_tenaga_listrik' => 'required|numeric',
+        ]);
+
+        $bahanBakar = PenggunaanBahanBakar::findOrFail($request->id);
+        $bahanBakar->update($validated);
+
+        return redirect()->back()->with('success', 'Data bahan bakar berhasil diperbarui.');
+    }
+
+    public function updateMesinProduksi(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:mesin_produksi,id_mesin',
+            'jenis_mesin' => 'required|string',
+            'nama_mesin' => 'required|string',
+            'merk_type' => 'required|string',
+            'teknologi' => 'nullable|string',
+            'negara_pembuat' => 'nullable|string',
+            'tahun_perolehan' => 'required|numeric',
+            'tahun_pembuatan' => 'required|numeric',
+            'jumlah_unit' => 'required|numeric',
+        ]);
+
+        $mesin = MesinProduksi::where('id_mesin', $request->id)->firstOrFail();
+        $mesin->update($validated);
+
+        return redirect()->back()->with('success', 'Data mesin produksi berhasil diperbarui.');
+    }
+
+
+
+
+
+
     public function destroyIKM($id)
     {
         \App\Models\DataIkm::destroy($id);
@@ -399,7 +702,19 @@ class AdminIndustriController extends Controller
 
     public function storeDataIKM(Request $request)
     {
-        $validatedDataIKM = $request->validate([
+
+        $validate = function (array $rules) use ($request) {
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()
+                ]);
+            }
+            return $validator->validated();
+        };
+
+        $validatedDataIKM = $validate([
             'nama_ikm' => 'required|string|max:255',
             'luas' => 'required|string|max:255',
             'nama_pemilik' => 'required|string|max:255',
@@ -414,26 +729,41 @@ class AdminIndustriController extends Controller
             'tenaga_kerja' => 'required|integer|min:0',
         ]);
 
-        // 🛠️ Jika ID dikirim, artinya edit — bukan tambah
+        if ($validatedDataIKM instanceof \Illuminate\Http\JsonResponse) return $validatedDataIKM;
+
         if ($request->filled('id')) {
             $ikm = \App\Models\DataIKM::find($request->id);
-            if ($ikm) {
-                $ikm->update($validatedDataIKM);
-            }
+            if ($ikm) $ikm->update($validatedDataIKM);
+            $idIkm = $ikm->id;
         } else {
-            // Tambah data baru
-            \App\Models\DataIKM::create($validatedDataIKM);
+            $ikm = \App\Models\DataIKM::create($validatedDataIKM);
+            $idIkm = $ikm->id;
         }
 
-        $validatedPersentasePemilik = $request->validate([
+        $validatedPersentasePemilik = $validate([
             'pemerintah_pusat' => 'required|numeric|min:0|max:100',
             'pemerintah_daerah' => 'required|numeric|min:0|max:100',
             'swasta_nasional' => 'required|numeric|min:0|max:100',
             'asing' => 'required|numeric|min:0|max:100',
         ]);
+        if ($validatedPersentasePemilik instanceof \Illuminate\Http\JsonResponse) return $validatedPersentasePemilik;
 
+        $totalPersentase =
+            (float) $request->pemerintah_pusat +
+            (float) $request->pemerintah_daerah +
+            (float) $request->swasta_nasional +
+            (float) $request->asing;
 
-        $validatedKaryawan = $request->validate([
+        if (round($totalPersentase, 2) !== 100.00) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_pemilik' => 'Total persentase kepemilikan harus 100%.'
+                ]
+            ]);
+        }
+
+        $validatedKaryawan = $validate([
             // Status Tenaga Kerja
             'tenaga_kerja_tetap' => 'required|integer|min:0',
             'tenaga_kerja_tidak_tetap' => 'required|integer|min:0',
@@ -451,27 +781,26 @@ class AdminIndustriController extends Controller
             's2' => 'required|integer|min:0',
             's3' => 'required|integer|min:0',
         ]);
+        if ($validatedKaryawan instanceof \Illuminate\Http\JsonResponse) return $validatedKaryawan;
 
-        $totalIkm = (int) $request->tenaga_kerja;
-
-        $totalStatus = (int) ($request->tenaga_kerja_tetap ?? 0) + (int) ($request->tenaga_kerja_tidak_tetap ?? 0);
-        $totalGender = (int) ($request->tenaga_kerja_laki_laki ?? 0) + (int) ($request->tenaga_kerja_perempuan ?? 0);
-        $totalPendidikan = (int) ($request->sd ?? 0)
-            + (int) ($request->smp ?? 0)
-            + (int) ($request->sma_smk ?? 0)
-            + (int) ($request->d1_d3 ?? 0)
-            + (int) ($request->s1_d4 ?? 0)
-            + (int) ($request->s2 ?? 0)
-            + (int) ($request->s3 ?? 0);
-
-        if ($totalStatus !== $totalIkm || $totalGender !== $totalIkm || $totalPendidikan !== $totalIkm) {
-            return back()->withErrors([
-                'konsistensi' => 'Jumlah tenaga kerja tidak konsisten. Pastikan semua total (status, gender, pendidikan) = total tenaga kerja.'
-            ])->withInput();
+        // 🔎 Cek konsistensi tenaga kerja
+        $total = (int) $request->tenaga_kerja;
+        $cek = [
+            (int) ($request->tenaga_kerja_tetap ?? 0) + (int) ($request->tenaga_kerja_tidak_tetap ?? 0),
+            (int) ($request->tenaga_kerja_laki_laki ?? 0) + (int) ($request->tenaga_kerja_perempuan ?? 0),
+            (int) ($request->sd ?? 0) + (int) ($request->smp ?? 0) + (int) ($request->sma_smk ?? 0) + (int) ($request->d1_d3 ?? 0) +
+                (int) ($request->s1_d4 ?? 0) + (int) ($request->s2 ?? 0) + (int) ($request->s3 ?? 0),
+        ];
+        if (in_array(false, array_map(fn($x) => $x === $total, $cek), true)) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_karyawan' => 'Jumlah tenaga kerja tidak konsisten. Pastikan total status, gender, dan pendidikan sama dengan total.'
+                ]
+            ]);
         }
 
-
-        $validatedPemakaianBahan = $request->validate([
+        $validatedPemakaianBahan = $validate([
             'nama_bahan' => 'required|array',
             'nama_bahan.*' => 'required|string|max:255',
 
@@ -502,14 +831,43 @@ class AdminIndustriController extends Controller
             'negara_asal_impor' => 'required|array',
             'negara_asal_impor.*' => 'required|string|max:255',
         ]);
+        if ($validatedPemakaianBahan instanceof \Illuminate\Http\JsonResponse) return $validatedPemakaianBahan;
 
-        $validatedPenggunaanAir = $request->validate([
+        $bahanFields = [
+            'nama_bahan',
+            'jenis_bahan',
+            'spesifikasi',
+            'kode_hs',
+            'satuan_standar_bahan',
+            'jumlah_dalam_negeri',
+            'nilai_dalam_negeri',
+            'jumlah_impor',
+            'nilai_impor',
+            'negara_asal_impor'
+        ];
+
+        $panjangPertama = count($request->nama_bahan);
+        $semuaSama = collect($bahanFields)->every(function ($field) use ($request, $panjangPertama) {
+            return is_array($request->$field) && count($request->$field) === $panjangPertama;
+        });
+
+        if (!$semuaSama) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_bahan' => 'Jumlah entri pada kolom pemakaian bahan tidak konsisten. Pastikan semua kolom memiliki jumlah baris yang sama.'
+                ]
+            ]);
+        }
+
+        $validatedPenggunaanAir = $validate([
             'sumber_air' => 'required|string|in:air_permukaan,air_tanah,perusahaan_penyedia_air,air_daur_ulang',
             'banyaknya_penggunaan_m3' => 'required|numeric|min:0.01',
             'biaya' => 'required|numeric|min:0',
         ]);
 
-        $validatedPengeluaran = $request->validate([
+
+        $validatedPengeluaran = $validate([
             'upah_gaji' => 'required|numeric|min:0',
             'pengeluaran_industri_distribusi' => 'required|numeric|min:0',
             'pengeluaran_rnd' => 'required|numeric|min:0',
@@ -518,8 +876,9 @@ class AdminIndustriController extends Controller
             'pengeluaran_mesin' => 'required|numeric|min:0',
             'lainnya' => 'required|numeric|min:0',
         ]);
+        if ($validatedPengeluaran instanceof \Illuminate\Http\JsonResponse) return $validatedPengeluaran;
 
-        $validatedPenggunaanBahanBakar = $request->validate([
+        $validatedPenggunaanBahanBakar = $validate([
             'jenis_bahan_bakar' => 'required|array',
             'jenis_bahan_bakar.*' => 'required|string|in:bensin,solar_hsd_ado,batubara,briket_batubara,gas_dari_pgn,gas_bukan_dari_pgn,cng,lpg,pelumas',
 
@@ -538,15 +897,53 @@ class AdminIndustriController extends Controller
             'nilai_ptl' => 'required|array',
             'nilai_ptl.*' => 'required|numeric|min:0',
         ]);
+        if ($validatedPenggunaanBahanBakar instanceof \Illuminate\Http\JsonResponse) return $validatedPenggunaanBahanBakar;
 
-        $validatedListrik = $request->validate([
+        $bakarFields = [
+            'jenis_bahan_bakar',
+            'satuan_standar',
+            'banyaknya_proses_produksi',
+            'nilai_proses_produksi',
+            'banyaknya_ptl',
+            'nilai_ptl'
+        ];
+
+        $jumlahData = count($request->jenis_bahan_bakar);
+        $semuaKonsisten = collect($bakarFields)->every(function ($field) use ($request, $jumlahData) {
+            return is_array($request->$field) && count($request->$field) === $jumlahData;
+        });
+
+        if (!$semuaKonsisten) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_bahan_bakar' => 'Mohon lengkapi semua kolom data bahan bakar untuk setiap baris. Setiap entri harus terisi secara lengkap.'
+                ]
+            ]);
+        }
+
+        $validatedListrik = $validate([
             'sumber_listrik' => 'required|string|in:pln,non_pln,pembangkit_sendiri',
             'banyaknya_penggunaan_listrik' => 'required|numeric|min:0',
             'nilai_penggunaan_listrik' => 'required|numeric|min:0',
             'peruntukkan_listrik' => 'required|string|max:255',
         ]);
+        if ($validatedListrik instanceof \Illuminate\Http\JsonResponse) return $validatedListrik;
 
-        $validatedMesinProduksi = $request->validate([
+        if (
+            (float) $request->banyaknya_penggunaan_listrik > 0 &&
+            (float) $request->nilai_penggunaan_listrik === 0.0 &&
+            $request->sumber_listrik !== 'pembangkit_sendiri'
+        ) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_listrik' => 'Jika terdapat penggunaan listrik, nilai tagihan tidak boleh nol kecuali menggunakan pembangkit sendiri.'
+                ]
+            ]);
+        }
+
+        $validatedMesinProduksi = $validate([
             'jenis_mesin' => 'required|array',
             'jenis_mesin.*' => 'required|string|in:Mesin,Peralatan',
 
@@ -571,8 +968,33 @@ class AdminIndustriController extends Controller
             'jumlah_unit' => 'required|array',
             'jumlah_unit.*' => 'required|integer|min:1',
         ]);
+        if ($validatedMesinProduksi instanceof \Illuminate\Http\JsonResponse) return $validatedMesinProduksi;
+        $mesinFields = [
+            'jenis_mesin',
+            'nama_mesin',
+            'merk_type',
+            'teknologi',
+            'negara_pembuat',
+            'tahun_perolehan',
+            'tahun_pembuatan',
+            'jumlah_unit'
+        ];
 
-        $validatedProduksi = $request->validate([
+        $panjangPertama = count($request->jenis_mesin);
+        $semuaSama = collect($mesinFields)->every(function ($field) use ($request, $panjangPertama) {
+            return is_array($request->$field) && count($request->$field) === $panjangPertama;
+        });
+
+        if (!$semuaSama) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_mesin' => 'Jumlah entri pada kolom mesin tidak konsisten. Pastikan semua kolom mesin memiliki jumlah baris yang sama.'
+                ]
+            ]);
+        }
+
+        $validatedProduksi = $validate([
             'jenis_produksi' => 'required|string|max:255',
             'kbli' => 'required|string|max:255',
             'produksi_kode_hs' => 'required|string|max:255',
@@ -584,19 +1006,35 @@ class AdminIndustriController extends Controller
             'negara_ekspor' => 'nullable|string|max:255',
             'kapasitas_tahun' => 'required|integer|min:0',
         ]);
+        if ($validatedProduksi instanceof \Illuminate\Http\JsonResponse) return $validatedProduksi;
 
-        $validatedPersediaan = $request->validate([
+        if (
+            (float) $request->persentase_ekspor > 0 &&
+            empty($request->negara_ekspor)
+        ) {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'konsistensi_produksi' => 'Anda mengisi ekspor, tapi belum menyebutkan negara tujuan. Mohon isi negara ekspor jika ada kegiatan ekspor.'
+                ]
+            ]);
+        }
+
+
+        $validatedPersediaan = $validate([
             'jenis_persediaan' => 'required|string|in:persediaan_bahan,setengah_jadi,barang_jadi',
             'awal' => 'required|numeric|min:0',
             'akhir' => 'required|numeric|min:0',
         ]);
+        if ($validatedPersediaan instanceof \Illuminate\Http\JsonResponse) return $validatedPersediaan;
 
-        $validatedPendapatan = $request->validate([
+        $validatedPendapatan = $validate([
             'sumber' => 'required|string|max:255',
             'nilai' => 'required|numeric|min:0',
         ]);
+        if ($validatedPendapatan instanceof \Illuminate\Http\JsonResponse) return $validatedPendapatan;
 
-        $validatedModal = $request->validate([
+        $validatedModal = $validate([
             'jenis_barang' => 'required|array',
             'jenis_barang.*' => 'required|string|in:tanah,gedung,mesin dan perlengkapan,kendaraan,software/database',
 
@@ -612,8 +1050,9 @@ class AdminIndustriController extends Controller
             'nilai_taksiran' => 'required|array',
             'nilai_taksiran.*' => 'required|numeric|min:0',
         ]);
+        if ($validatedModal instanceof \Illuminate\Http\JsonResponse) return $validatedModal;
 
-        $validatedBentukPengelolaan = $request->validate([
+        $validatedBentukPengelolaan = $validate([
             'jenis_limbah' => 'required|string|max:255',
             'jumlah_limbah' => 'required|numeric|min:0',
 
@@ -627,6 +1066,8 @@ class AdminIndustriController extends Controller
             'parameter_limbah_cair' => 'required|string|in:debit_inlet,debit_outlet,cod_inlet,cod_outlet,sludge_removed',
             'jumlah_limbah_cair' => 'required|numeric|min:0',
         ]);
+        if ($validatedBentukPengelolaan instanceof \Illuminate\Http\JsonResponse) return $validatedBentukPengelolaan;
+
 
         DB::beginTransaction();
 
@@ -646,19 +1087,21 @@ class AdminIndustriController extends Controller
             $this->saveModal($idIkm, $validatedModal);
             $this->saveBentukPengelolaan($idIkm, $validatedBentukPengelolaan);
 
-
-
             DB::commit();
-
-            return redirect()->route('dataIKM')->with('success', 'Data berhasil disimpan.');
+            return response()->json(['success' => true]);
         } catch (\Exception $e) {
             DB::rollBack();
-
-            return back()->withErrors([
-                'msg' => 'Terjadi kesalahan: ' . $e->getMessage()
-            ])->withInput();
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'msg' => 'Terjadi kesalahan: ' . $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]
+            ]);
         }
     }
+
     protected function saveDataIKM(array $data)
     {
         return DB::table('data_ikm')->insertGetId([
