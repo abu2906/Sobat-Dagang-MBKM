@@ -193,8 +193,22 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::get('/form-IKM', [AdminIndustriController::class, 'ShowformIKM'])->name('formIKM');
     Route::post('data-IKM/store', [AdminIndustriController::class, 'storeDataIKM'])->name('dataIKM.store');
     Route::get('data-IKM/{id}/edit', [AdminIndustriController::class, 'editIKM'])->name('editIKM');
+    Route::get('data-ikm/{id}/detail', [AdminIndustriController::class, 'detailIKM'])->name('detailIKM');
     Route::delete('data-IKM/{id}', [AdminIndustriController::class, 'destroyIKM'])->name('destroyIKM');
     Route::get('/data-IKM/export', [AdminIndustriController::class, 'exportIKM'])->name('exportIKM');
+    Route::post('/data-IKM/update', [AdminIndustriController::class, 'updateIKM'])->name('updateIKM');
+    Route::post('data-IKM/pengeluaran/update', [AdminIndustriController::class, 'updatePengeluaran'])->name('updatePengeluaran');
+    Route::post('data-IKM/persediaan/update', [AdminIndustriController::class, 'updatePersediaan'])->name('updatePersediaan');
+    Route::post('/data-IKM/karyawan/update', [AdminIndustriController::class, 'updateKaryawan'])->name('updateKaryawan');
+    Route::post('/data-IKM/limbah/update', [AdminIndustriController::class, 'updateLimbah'])->name('updateLimbah');
+    Route::post('/data-IKM/pendapatan/update', [AdminIndustriController::class, 'updatePendapatan'])->name('updatePendapatan');
+    Route::post('/data-IKM/persentase/update', [AdminIndustriController::class, 'updatePersentase'])->name('updatePersentase');
+    Route::post('/data-IKM/produksi/update', [AdminIndustriController::class, 'updateProduksi'])->name('updateProduksi');
+    Route::post('/data-IKM/penggunaan-listrik/update', [AdminIndustriController::class, 'updateListrik'])->name('updateListrik');
+    Route::post('/data-IKM/penggunaan-air/update', [AdminIndustriController::class, 'updatePenggunaanAir'])->name('updatePenggunaanAir');
+    Route::post('/data-IKM/pemakaian-bahan/update', [AdminIndustriController::class, 'updatePemakaianBahan'])->name('updatePemakaianBahan');
+    Route::post('/data-IKM/bahan-bakar/update', [AdminIndustriController::class, 'updateBahanBakar'])->name('updateBahanBakar');
+    Route::post('/data-IKM/mesin-produksi/update', [AdminIndustriController::class, 'updateMesinProduksi'])->name('updateMesinProduksi');
 });
 
 //Admin Metrologi

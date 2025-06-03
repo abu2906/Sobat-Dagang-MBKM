@@ -25,10 +25,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 
-<body x-data="{ open: true }" class="overflow-hidden font-sans bg-white">
+<body x-data="{ open: true }" class="overflow-hidden font-sans relative bg-white">
 
     @if ($user)
         @switch($user->role)
@@ -76,6 +76,7 @@
     </div>
     <script src="{{ asset('/assets/js/app.js') }}"></script>
     <script src="{{ asset('/assets/js/showDokumen.js') }}"></script>
+    @stack('modals')
     @stack('scripts')
 </body>
 

@@ -4,7 +4,7 @@
     @section('content')
         <main class="flex flex-col flex-1 min-h-screen bg-gray-100" x-data="ikmEdit()" x-init="init()">
             <header class="relative z-10">
-                <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover" alt="Header">
+                <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-44 object-cover" alt="Header">
 
                 <div
                     class="absolute bottom-0 z-20 flex flex-wrap items-stretch justify-between w-11/12 gap-4 px-4 py-4 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg left-1/2 rounded-xl md:flex-nowrap">
@@ -36,7 +36,6 @@
                             <option value="">Investasi</option>
                             <option value="Kecil">Kecil</option>
                             <option value="Menengah">Menengah</option>
-                            <option value="Besar">Besar</option>
                         </select>
                         <i class="absolute w-4 h-4 -translate-y-1/2 pointer-events-none fas fa-sliders-h right-3 top-1/2"></i>
                     </div>
@@ -91,116 +90,85 @@
                 @endforeach
             </section>
 
-            <div class="container px-4 pb-4 mx-auto">
-                <section class="px-6 pb-16 mt-12 overflow-hidden">
-                    <div class="overflow-x-auto overflow-y-auto max-h-[350px] rounded-lg">
-                        <table class="w-full text-sm bg-white border-collapse shadow-md table-auto">
-                            <thead class="text-white bg-[#083458] sticky top-0 z-10">
-                                <tr>
-                                    <th class="p-3 rounded-tl-xl">NO.</th>
-                                    <th class="p-3">NAMA USAHA</th>
-                                    <th class="p-3">NAMA PEMILIK</th>
-                                    <th class="p-3">JENIS KELAMIN</th>
-                                    <th class="p-3">LUAS USAHA</th>
-                                    <th class="p-3">ALAMAT</th>
-                                    <th class="p-3">KELURAHAN</th>
-                                    <th class="p-3">KECAMATAN</th>
-                                    <th class="p-3">KOMODITI</th>
-                                    <th class="p-3">JENIS INDUSTRI</th>
-                                    <th class="p-3">TELEPON</th>
-                                    <th class="p-3">TENAGA KERJA</th>
-                                    <th class="p-3">INVESTASI</th>
-                                    <th class="p-3 rounded-tr-xl">AKSI</th>
-                                </tr>
-                            </thead>
+            <section class="mt-12 px-6 pb-16">
+                <div class="overflow-x-auto rounded-lg">
+                    <table class="w-full border-collapse text-sm bg-white shadow-md">
+                        <thead>
+                            <tr class="text-white bg-[#083458]">
+                                <th class="p-3 rounded-tl-xl">NO.</th>
+                                <th class="p-3">NAMA USAHA</th>
+                                <th class="p-3">NAMA PEMILIK</th>
+                                <th class="p-3">JENIS KELAMIN</th>
+                                <th class="p-3">LUAS USAHA</th>
+                                <th class="p-3">ALAMAT</th>
+                                <th class="p-3">KELURAHAN</th>
+                                <th class="p-3">KECAMATAN</th>
+                                <th class="p-3">KOMODITI</th>
+                                <th class="p-3">JENIS INDUSTRI</th>
+                                <th class="p-3">TELEPON</th>
+                                <th class="p-3">TENAGA KERJA</th>
+                                <th class="p-3">INVESTASI</th>
+                                <th class="p-3 rounded-tr-xl">AKSI</th>
+                            </tr>
+                        </thead>
 
-                            <tbody>
-                                @foreach ($dataIkm as $index => $ikm)
-                                    <tr class="bg-white border-b row-ikm" data-kecamatan="{{ $ikm->kecamatan }}"
-                                        data-industri="{{ $ikm->jenis_industri }}" data-investasi-nilai="{{ $ikm->level }}">
-                                        <td class="p-2 text-center">{{ $index + 1 }}</td>
-                                        <td class="p-2">{{ $ikm->nama_ikm }}</td>
-                                        <td class="p-2">{{ $ikm->nama_pemilik }}</td>
-                                        <td class="p-2 text-center">{{ $ikm->jenis_kelamin }}</td>
-                                        <td class="p-2">{{ $ikm->luas }}</td>
-                                        <td class="p-2">{{ $ikm->alamat }}</td>
-                                        <td class="p-2">{{ $ikm->kelurahan }}</td>
-                                        <td class="p-2">{{ $ikm->kecamatan }}</td>
-                                        <td class="p-2">{{ $ikm->komoditi }}</td>
-                                        <td class="p-2">{{ $ikm->jenis_industri }}</td>
-                                        <td class="p-2">{{ $ikm->no_telp }}</td>
-                                        <td class="p-2 text-center">{{ $ikm->tenaga_kerja }}</td>
-                                        <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
-                                        <td class="p-2 text-center">
-                                            <div class="flex justify-center gap-2">
-                                                <button type="button" @click='openEdit(@json($ikm))'
-                                                    class="px-3 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600">
-                                                    Edit
+                        <tbody>
+                            @foreach ($dataIkm as $index => $ikm)
+                                <tr class="bg-white border-b row-ikm" data-kecamatan="{{ $ikm->kecamatan }}"
+                                    data-industri="{{ $ikm->jenis_industri }}" data-investasi-nilai="{{ $ikm->level }}">
+                                    <td class="p-2 text-center">{{ $index + 1 }}</td>
+                                    <td class="p-2">{{ $ikm->nama_ikm }}</td>
+                                    <td class="p-2">{{ $ikm->nama_pemilik }}</td>
+                                    <td class="p-2 text-center">{{ $ikm->jenis_kelamin }}</td>
+                                    <td class="p-2">{{ $ikm->luas }}</td>
+                                    <td class="p-2">{{ $ikm->alamat }}</td>
+                                    <td class="p-2">{{ $ikm->kelurahan }}</td>
+                                    <td class="p-2">{{ $ikm->kecamatan }}</td>
+                                    <td class="p-2">{{ $ikm->komoditi }}</td>
+                                    <td class="p-2">{{ $ikm->jenis_industri }}</td>
+                                    <td class="p-2">{{ $ikm->no_telp }}</td>
+                                    <td class="p-2 text-center">{{ $ikm->tenaga_kerja }}</td>
+                                    <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
+                                    <td class="p-2 text-center">
+                                        <div class="flex justify-center gap-2">
+                                            <!-- Tombol Detail -->
+                                            <a href="{{ route('detailIKM', $ikm->id_ikm) }}"
+                                                class="flex items-center gap-1 text-blue-700 bg-blue-100 hover:bg-blue-200 text-xs px-3 py-1 rounded-lg border border-blue-700">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                                                </svg>
+                                                Detail
+                                            </a>
+
+
+                                            <!-- Tombol Hapus -->
+                                            <form action="{{ route('destroyIKM', $ikm->id_ikm) }}" method="POST"
+                                                onsubmit="return confirm('Yakin ingin menghapus data ini?');"
+                                                class="inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-lg">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                    Hapus
                                                 </button>
+                                            </form>
+                                        </div>
 
-                                                <form action="{{ route('destroyIKM', $ikm->id_ikm) }}" method="POST"
-                                                    onsubmit="return confirm('Yakin ingin menghapus data ini?');"
-                                                    class="inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="px-3 py-1 text-xs text-white bg-red-500 rounded-lg hover:bg-red-600">Hapus</button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <p id="noResults" class="hidden mt-4 font-medium text-center text-red-500">Data tidak ditemukan.</p>
-
-                    </div>
-                </section>
-            </div>
-
-            <!-- Overlay -->
-            <div x-show="openModal" x-transition.opacity
-                class="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm">
-            </div>
-
-            <!-- Modal -->
-             <style>
-                [x-cloak] { display: none !important; }
-                </style>
-            <div x-show="openModal" x-cloak class="fixed inset-0 z-50 flex items-start justify-center p-4">
-                <div @click.away="openModal = false" @keydown.escape.window="openModal = false" tabindex="0"
-                    class="relative w-full max-w-3xl bg-white rounded-lg shadow-lg p-8 mt-24 overflow-auto max-h-[80vh]">
-                    <button @click="openModal = false" type="button"
-                        class="absolute text-2xl font-bold leading-none top-4 right-4 hover:text-gray-700 focus:outline-none">
-                        &times;
-                    </button>
-
-                    <h2 class="mb-6 text-lg font-bold text-center md:text-xl">EDIT DATA IKM</h2>
-
-                    <form :action="'{{ url('data-IKM/store') }}'" method="POST" class="space-y-6">
-                        @csrf
-                        <input type="hidden" name="id" :value="formData.id_ikm">
-
-                        <div class="grid gap-6 md:grid-cols-2">
-                            <template x-for="(label, name) in fieldMap" :key="name">
-                                <div>
-                                    <label class="block mb-1 text-sm font-medium text-gray-700" x-text="label"></label>
-                                    <input type="text" :name="name" x-model="formData[name]" required
-                                        class="w-full px-4 py-2 text-sm transition border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                </div>
-                            </template>
-                        </div>
-
-                        <div class="flex justify-center">
-                            <button type="submit"
-                                class="rounded-2xl bg-[#083458] px-8 py-3 text-white font-semibold shadow-md hover:shadow-lg transition duration-200">
-                                Simpan Perubahan
-                            </button>
-                        </div>
-                    </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-
+            </section>  
         </main>
     @endsection
 
@@ -254,7 +222,6 @@
                     } else {
                         kategoriInvestasi = 'besar';
                     }
-
                     const rowText = row.textContent.toLowerCase();
 
                     const cocokKecamatan = !selectedKecamatan || rowKecamatan === selectedKecamatan;

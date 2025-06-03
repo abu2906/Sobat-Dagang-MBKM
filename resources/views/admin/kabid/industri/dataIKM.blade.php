@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="relative">
-    <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover"
+    <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-44 object-cover"
         alt="Header">
 
     <div class="flex-1 flex flex-col w-full">
