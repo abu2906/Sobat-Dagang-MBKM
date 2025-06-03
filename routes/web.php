@@ -95,12 +95,10 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
     Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
-    
-    Route::get('/verify-old-password', [LupaPasswordController::class, 'showVerifyForm'])->name('password.verifyOldForm'); // Form tampilan input password lama
-    Route::post('/verify-old-password', [LupaPasswordController::class, 'checkOldPassword'])->name('password.checkOld'); // Proses verifikasi password lama
-
-    Route::get('/new-password', [LupaPasswordController::class, 'resetPass'])->name('password.resetPass'); // Form password baru
-    Route::post('/new-password', [LupaPasswordController::class, 'updateNewPassword'])->name('password.updateNew'); // Simpan password baru
+    Route::get('/verify-old-password', [LupaPasswordController::class, 'showVerifyForm'])->name('password.verifyOldForm'); 
+    Route::post('/verify-old-password', [LupaPasswordController::class, 'checkOldPassword'])->name('password.checkOld');
+    Route::get('/new-password', [LupaPasswordController::class, 'resetPass'])->name('password.resetPass');
+    Route::post('/new-password', [LupaPasswordController::class, 'updateNewPassword'])->name('password.updateNew');
 
     Route::get('/profile/edit', [HomeController::class, 'editProfile'])->name('edit.profile');
     Route::put('/profile/update', [HomeController::class, 'updateProfile'])->name('profile.update');

@@ -90,7 +90,53 @@ class authController extends Controller
         Log::info('Data registrasi yang diterima:', $request->all());
 
         try {
-            $validated = $request->validate([
+            $messages = [
+                'nama.required' => 'Nama wajib diisi.',
+                'nama.string' => 'Nama harus berupa teks.',
+                'nama.max' => 'Nama maksimal 255 karakter.',
+
+                'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih.',
+                'jenis_kelamin.in' => 'Jenis kelamin harus "Laki-laki" atau "Perempuan".',
+
+                'kabupaten.required' => 'Kabupaten wajib diisi.',
+                'kabupaten.string' => 'Kabupaten harus berupa teks.',
+                'kabupaten.max' => 'Kabupaten maksimal 255 karakter.',
+
+                'kecamatan.required' => 'Kecamatan wajib diisi.',
+                'kecamatan.string' => 'Kecamatan harus berupa teks.',
+                'kecamatan.max' => 'Kecamatan maksimal 255 karakter.',
+
+                'kelurahan.required' => 'Kelurahan wajib diisi.',
+                'kelurahan.string' => 'Kelurahan harus berupa teks.',
+                'kelurahan.max' => 'Kelurahan maksimal 255 karakter.',
+
+                'email.required' => 'Email wajib diisi.',
+                'email.string' => 'Email harus berupa teks.',
+                'email.email' => 'Format email tidak valid.',
+                'email.max' => 'Email maksimal 255 karakter.',
+                'email.unique' => 'Email sudah terdaftar.',
+
+                'telp.required' => 'Nomor telepon wajib diisi.',
+                'telp.string' => 'Nomor telepon harus berupa teks.',
+                'telp.max' => 'Nomor telepon maksimal 15 karakter.',
+
+                'password.required' => 'Password wajib diisi.',
+                'password.string' => 'Password harus berupa teks.',
+                'password.min' => 'Password minimal 8 karakter.',
+                'password.confirmed' => 'Konfirmasi password tidak cocok.',
+
+                'alamat_lengkap.required' => 'Alamat lengkap wajib diisi.',
+                'alamat_lengkap.string' => 'Alamat lengkap harus berupa teks.',
+
+                'nik.required' => 'NIK wajib diisi.',
+                'nik.unique' => 'NIK sudah terdaftar.',
+                'nik.regex' => 'NIK harus berupa 16 digit angka.',
+
+                'nib.alpha_num' => 'NIB hanya boleh terdiri dari huruf dan angka tanpa spasi atau simbol.',
+                'nib.min' => 'NIB minimal 10 karakter.',
+                'nib.max' => 'NIB maksimal 20 karakter.',
+            ];
+                $validated = $request->validate([
                 'nama' => 'required|string|max:255',
                 'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
                 'kabupaten' => 'required|string|max:255',
@@ -100,9 +146,9 @@ class authController extends Controller
                 'telp' => 'required|string|max:15',
                 'password' => 'required|string|min:8|confirmed',
                 'alamat_lengkap' => 'required|string',
-                'nik' => 'required|string|unique:user,nik',
-                'nib' => 'nullable|string',
-            ]);
+                'nik' => ['required', 'unique:user,nik', 'regex:/^\d{16}$/'],
+                'nib' => 'nullable|alpha_num|min:10|max:20',
+            ], $messages);
 
             Log::info('Validasi berhasil, data valid:', $validated);
 

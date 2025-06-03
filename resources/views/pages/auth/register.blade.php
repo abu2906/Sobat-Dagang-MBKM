@@ -13,7 +13,6 @@
 <body class="flex h-screen font-sans bg-primary">
     <div class="flex flex-col w-full h-full sm:flex-row">
 
-        <!-- Kiri -->
         <div class="w-full sm:w-2/3 bg-white p-8 flex flex-col justify-center items-center rounded-[40px] sm:rounded-br-[40px] sm:rounded-tr-[40px] sm:rounded-tl-none sm:rounded-bl-none shadow-xl">
             <h3 class="mb-6 text-2xl font-bold text-center">Daftar ke Akun Anda</h3>
 

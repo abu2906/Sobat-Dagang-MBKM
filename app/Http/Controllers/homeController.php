@@ -55,9 +55,16 @@ class HomeController extends Controller
     $user = \App\Models\User::find($userId);
 
     $request->validate([
-            'nama' => 'required|string|max:255',
+           'nama' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z\s]+$/u'
+            ],
             'email' => 'required|email|max:255',
             'telp' => 'nullable|string|max:20',
+            'nik' => 'required|digits:16',
+            'nib' => 'nullable|alpha_num|min:10|max:20',
             'alamat_lengkap' => 'nullable|string|max:500',
             'jenis_kelamin' => 'nullable|in:Laki-laki,Perempuan',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:512', // max 512 KB (0.5MB)
@@ -67,6 +74,8 @@ class HomeController extends Controller
         $user->nama = $request->nama;
         $user->email = $request->email;
         $user->telp = $request->telp;
+        $user->nik = $request->nik;
+        $user->nib = $request->nib;
         $user->alamat_lengkap = $request->alamat_lengkap;
         $user->jenis_kelamin = $request->jenis_kelamin;
 
