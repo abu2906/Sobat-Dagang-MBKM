@@ -14,9 +14,9 @@
 </head>
 
 <body class="min-h-screen flex flex-col bg-gray-100">
-
+    @include('component.navbar.user')
+    
     <div class="relative">
-        @include('component.navbar.user')
         <!-- Gambar Background -->
         <div class="h-[150px] w-full bg-cover bg-[center_87%] relative"
             style="background-image: url('/assets/img/background/user_metrologi.png');">
@@ -32,13 +32,10 @@
 
             <!-- Tombol Tab -->
             @yield('tab')
-
         </div>
-
     </div>
 
     {{-- Konten utama --}}
-    
     <main class="flex-grow relative mx-5 md:mx-20 p-6 rounded-lg min-h-[calc(100vh-250px)]">
         @yield('content')
     </main>
