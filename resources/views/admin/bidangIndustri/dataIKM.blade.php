@@ -4,7 +4,7 @@
     @section('content')
         <main class="flex flex-col flex-1 min-h-screen bg-gray-100" x-data="ikmEdit()" x-init="init()">
             <header class="relative z-10">
-                <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover" alt="Header">
+                <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-44 object-cover" alt="Header">
 
                 <div
                     class="absolute bottom-0 z-20 flex flex-wrap items-stretch justify-between w-11/12 gap-4 px-4 py-4 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg left-1/2 rounded-xl md:flex-nowrap">

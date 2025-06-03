@@ -8,7 +8,7 @@
   class="relative"
 >
 
-  <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-48">
+  <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner" class="object-cover w-full h-44">
  
 
   <div class="container px-4 mx-auto -mt-8">
