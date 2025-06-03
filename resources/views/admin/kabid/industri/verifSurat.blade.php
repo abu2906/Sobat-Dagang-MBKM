@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Dashboard Kabid Bidang Industri')
+@section('title', 'Persuratan Kabid Industri')
 @section('content')
 
 <div class="relative w-full h-44">

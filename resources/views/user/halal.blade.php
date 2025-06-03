@@ -9,7 +9,7 @@
 
   <!-- Banner -->
   <div class="relative">
-    <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Banner" class="object-cover w-full h-60">
+    <img src="{{ asset('assets\img\background\user_industri.png') }}" alt="Banner" class="object-cover w-full h-44">
     <a href="{{ route('user.dashboard') }}"
         class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
         <span class="text-2xl material-symbols-outlined">
@@ -17,7 +17,7 @@
         </span>
     </a>
    <!-- Search Bar di tengah -->
-    <div class="absolute w-11/12 transform -translate-x-1/2 top-32 left-1/2 md:w-3/4">
+    <div class="absolute w-11/12 transform -translate-x-1/2 top-40 left-1/2 md:w-3/4">
       <form action="{{ route('halal.user') }}" method="GET" class="relative">
         <input
           type="text"
