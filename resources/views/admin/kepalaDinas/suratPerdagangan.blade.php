@@ -16,9 +16,7 @@
     </a>
 </div>
 <div class="min-h-screen p-6 bg-white">
-    
     <h1 class="mb-4 text-2xl font-bold text-black">Data Surat Bidang Perdagangan</h1>
-
     <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3">
         <a href="#" class="flex items-center p-5 space-x-4 transition bg-white shadow-md rounded-2xl hover:shadow-lg">
             <img src="{{ asset('assets/img/icon/folder-download.png') }}" alt="Surat Masuk" class="w-12 h-12">
