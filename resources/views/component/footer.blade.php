@@ -18,7 +18,7 @@
 
       <div class="flex items-center space-x-3">
         <img src="{{ asset('assets/img/icon/instagram.png') }}" alt="Instagram" class="w-5 h-5">
-        <a href="https://www.instagram.com/puslantekcot/@disdagparepare_" target="_blank">@disdagparepare_</a>
+        <a href="https://www.instagram.com/disdagparepare_?igsh=MWJyYmVkNXJxZTMydw==" target="_blank">@disdagparepare_</a>
       </div>
     </div>
 
@@ -33,5 +33,10 @@
         <span>(0421) 21426</span>
       </div>
     </div>
+
+  </div>
+
+  <div class="pt-4 mt-8 text-sm text-center text-gray-300 border-t border-white/20">
+    &copy; 2025 MBKM Institut Teknologi B.J. Habibie. All rights reserved.
   </div>
 </footer>

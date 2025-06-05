@@ -169,7 +169,7 @@ class DashboardPerdaganganController extends Controller{
         ];
     }
 
-    public function kelolaSurat(){
+    public function kelolaSurat(Request $request){
         $rekapSurat = $this->getSuratPerdaganganData();
         $dataSurat = PermohonanSurat::with('user')
             ->where('status', '!=', 'disimpan')
@@ -177,6 +177,25 @@ class DashboardPerdaganganController extends Controller{
             ->whereIn('status', ['menunggu', 'ditolak', 'diterima'])
             ->orderBy('created_at', 'desc')
             ->get();
+
+        $query = PermohonanSurat::with('user')
+        ->where('status', '!=', 'disimpan')
+        ->whereIn('jenis_surat', ['surat_rekomendasi_perdagangan', 'surat_keterangan_perdagangan'])
+        ->whereIn('status', ['menunggu', 'ditolak', 'diterima']);
+
+    if ($request->filled('search')) {
+        $search = strtolower(trim($request->search));
+        
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('user', function ($userQuery) use ($search) {
+                $userQuery->whereRaw('LOWER(nama) LIKE ?', ["%$search%"]);
+            })
+            ->orWhereRaw('LOWER(jenis_surat) LIKE ?', ["%$search%"])
+            ->orWhereRaw('LOWER(status) LIKE ?', ["%$search%"]);
+        });
+    }
+
+    $dataSurat = $query->orderBy('created_at', 'desc')->get();
 
         return view('admin.bidangPerdagangan.kelolaSurat', [
             'dataSurat' => $dataSurat,
