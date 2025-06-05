@@ -14,15 +14,12 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Models\User;
 
-class LupaPasswordController extends Controller
-{
-    public function showForm()
-    {
+class LupaPasswordController extends Controller{
+    public function showForm(){
         return view('pages.auth.forgotpass');
     }
 
-    public function sendLink(Request $request)
-    {
+    public function sendLink(Request $request){
         $request->validate([
             'email' => 'required|email|exists:user,email'
         ]);
@@ -45,16 +42,14 @@ class LupaPasswordController extends Controller
         return back()->with('status', 'Link reset kata sandi telah dikirim ke email Anda.');
     }
 
-    public function showResetForm(Request $request, $token)
-    {
+    public function showResetForm(Request $request, $token){
         return view('pages.auth.resetpass', [
             'token' => $token,
             'email' => $request->email
         ]);
     }
 
-    public function resetPassword(Request $request)
-    {
+    public function resetPassword(Request $request){
         $request->validate([
             'email' => 'required|email|exists:user,email',
             'password' => 'required|confirmed|min:6',
@@ -78,13 +73,11 @@ class LupaPasswordController extends Controller
         return redirect('/login')->with('status', 'Kata sandi berhasil direset!');
     }
 
-    public function showVerifyForm()
-    {
-        return view('pages.auth.changepass'); // Halaman input password lama
+    public function showVerifyForm(){
+        return view('pages.auth.changepass');
     }   
 
-    public function checkOldPassword(Request $request)
-    {
+    public function checkOldPassword(Request $request){
         $request->validate([
             'old_password' => 'required',
         ]);
@@ -100,8 +93,7 @@ class LupaPasswordController extends Controller
         return redirect()->route('password.resetPass');
     }
 
-    public function resetPass()
-    {
+    public function resetPass(){
         if (!session('verified_old_password')) {
             return redirect()->route('password.verifyOldForm');
         }
@@ -109,8 +101,7 @@ class LupaPasswordController extends Controller
         return view('pages.auth.resetNewPassword');
     }
 
-    public function updateNewPassword(Request $request)
-    {
+    public function updateNewPassword(Request $request){
         $request->validate([
             'password' => [
                 'required',

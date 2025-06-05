@@ -9,8 +9,8 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NotifikasiUttpKadaluarsa extends Mailable
-{
+class NotifikasiUttpKadaluarsa extends Mailable{
+    
     use Queueable, SerializesModels;
 
     public $dataAlatUkur;
