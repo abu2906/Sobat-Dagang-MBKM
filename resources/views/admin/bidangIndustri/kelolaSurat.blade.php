@@ -18,7 +18,7 @@
         <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
             <form method="GET" action="{{ route('kelolaSurat.industri') }}">
             <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
-            <input type="text" placeholder="Cari" name="search"
+            <input type="text" placeholder="Cari Nama Pengguna" name="search"
                 class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" 
                 value="{{ request('search') }}"/>
             </form>

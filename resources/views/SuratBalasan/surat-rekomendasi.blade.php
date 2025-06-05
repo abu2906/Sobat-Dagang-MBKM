@@ -209,7 +209,7 @@
         <p>KOTA PAREPARE</p>
         <div></div>
         <div class="ttd_QR">
-            <img src="{{ public_path('assets/ttd/qr.png') }}" alt="QR Code">
+            <img src="{{ public_path('assets/ttd/ttd_kadis.png') }}" alt="QR Code">
         </div>
         <div></div>
         <p class="nama_kadis">HJ A WISNAH T SE MSI</p>

@@ -29,7 +29,7 @@
         </button>
     </div>
 </div>
-<div class="max-w-4xl p-6 mx-auto mb-16 bg-white shadow-lg rounded-4xl mt-1">
+<div class="max-w-4xl p-6 mx-auto mt-1 mb-16 bg-white shadow-lg rounded-4xl">
     <h2 class="mb-6 text-xl font-semibold text-center">Formulir Surat Permohonan</h2>
 
     <form method="GET" action="{{ route('bidangIndustri.formPermohonan') }}">
@@ -38,7 +38,7 @@
                 Pilih Draft yang Pernah Disimpan
             </label>
             <select id="draftSelect" name="draft_id"
-                class="block w-full px-4 py-2 text-gray-700 transition bg-white border border-gray-300 shadow-sm rounded-full focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                class="block w-full px-4 py-2 text-gray-700 transition bg-white border border-gray-300 rounded-full shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                 onchange="this.form.submit()">
                 <option value="">Pilih Draft</option>
                 @foreach($drafts as $d)
