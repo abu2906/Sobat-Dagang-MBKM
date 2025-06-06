@@ -99,55 +99,40 @@ class DataIkm extends Model
 
     public function hitungLevel()
     {
-        $nilaiDalamNegeri = $this->pemakaianBahan->sum('nilai_dalam_negeri');
-        $nilaiImpor = $this->pemakaianBahan->sum('nilai_impor');
-        $biaya = $this->penggunaanAir->biaya ?? 0;
+        $this->loadMissing([
+            'pemakaianBahan',
+            'penggunaanAir',
+            'pengeluaran',
+            'penggunaanBahanBakar',
+            'listrik',
+            'persediaan',
+            'pendapatan',
+            'modal',
+        ]);
+
         $pengeluaran = $this->pengeluaran;
-        $upahGaji = $pengeluaran->upah_gaji ?? 0;
-        $pengeluaranIndustriDistribusi = $pengeluaran->pengeluaran_industri_distribusi ?? 0;
-        $pengeluaranRnd = $pengeluaran->pengeluaran_rnd ?? 0;
-        $pengeluaranTanah = $pengeluaran->pengeluaran_tanah ?? 0;
-        $pengeluaranGedung = $pengeluaran->pengeluaran_gedung ?? 0;
-        $pengeluaranMesin = $pengeluaran->pengeluaran_mesin ?? 0;
-        $lainnya = $pengeluaran->lainnya ?? 0;
-        $nilaiProsesProduksi = $this->penggunaanBahanBakar->sum('nilai_proses_produksi');
-        $nilaiPtl = $this->penggunaanBahanBakar->sum('nilai_ptl');
-        $nilai = $listrik?->nilai_penggunaan_listrik ?? 0;
-        $awal = $this->persediaan->sum('awal');
-        $akhir = $this->persediaan->sum('akhir');
-        $nilaiPendapatan = $this->pendapatan->sum('nilai');
-        $pembelianPenambahanPerbaikan = $this->modal->sum('pembelian_penambahan_perbaikan');
-        $penguranganBarangModal = $this->modal->sum('pengurangan_barang_modal');
-        $penyusutanBarang = $this->modal->sum('penyusutan_barang');
-        $nilaiTaksiran = $this->modal->sum('nilai_taksiran');
+        $listrik = $this->listrik;
 
         return
-            $nilaiDalamNegeri
-            + $nilaiImpor
-            + $biaya
-            + $upahGaji
-            + $pengeluaranIndustriDistribusi
-            + $pengeluaranRnd
-            + $pengeluaranTanah
-            + $pengeluaranGedung
-            + $pengeluaranMesin
-            + $lainnya
-            + $nilaiProsesProduksi
-            + $nilaiPtl
-            + $nilai
-            + $awal
-            + $akhir
-            + $nilaiPendapatan
-            + $pembelianPenambahanPerbaikan
-            + $penguranganBarangModal
-            + $penyusutanBarang
-            + $nilaiTaksiran;
-    }
-
-    protected static function booted()
-    {
-        static::saving(function ($model) {
-            $model->level = $model->hitungLevel();
-        });
+            $this->pemakaianBahan->sum('nilai_dalam_negeri') +
+            $this->pemakaianBahan->sum('nilai_impor') +
+            ($this->penggunaanAir->biaya ?? 0) +
+            ($pengeluaran->upah_gaji ?? 0) +
+            ($pengeluaran->pengeluaran_industri_distribusi ?? 0) +
+            ($pengeluaran->pengeluaran_rnd ?? 0) +
+            ($pengeluaran->pengeluaran_tanah ?? 0) +
+            ($pengeluaran->pengeluaran_gedung ?? 0) +
+            ($pengeluaran->pengeluaran_mesin ?? 0) +
+            ($pengeluaran->lainnya ?? 0) +
+            $this->penggunaanBahanBakar->sum('nilai_proses_produksi') +
+            $this->penggunaanBahanBakar->sum('nilai_pembangkit_tenaga_listrik') +
+            ($listrik->nilai ?? 0) +
+            $this->persediaan->sum('awal') +
+            $this->persediaan->sum('akhir') +
+            $this->pendapatan->sum('nilai') +
+            $this->modal->sum('pembelian_penambahan_perbaikan') +
+            $this->modal->sum('pengurangan_barang_modal') +
+            $this->modal->sum('penyusutan_barang') +
+            $this->modal->sum('nilai_taksiran');
     }
 }
