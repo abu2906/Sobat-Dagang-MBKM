@@ -209,6 +209,7 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
     Route::post('/data-IKM/pemakaian-bahan/update', [AdminIndustriController::class, 'updatePemakaianBahan'])->name('updatePemakaianBahan');
     Route::post('/data-IKM/bahan-bakar/update', [AdminIndustriController::class, 'updateBahanBakar'])->name('updateBahanBakar');
     Route::post('/data-IKM/mesin-produksi/update', [AdminIndustriController::class, 'updateMesinProduksi'])->name('updateMesinProduksi');
+    Route::post('/data-IKM/modal/update', [AdminIndustriController::class, 'updateModal'])->name('updateModal');
 });
 
 //Admin Metrologi

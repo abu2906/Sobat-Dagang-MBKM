@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Models\DataIkm;
+use App\Traits\UpdatesIkmLevel;
+
 
 class Modal extends Model
 {
     use HasFactory;
+    use UpdatesIkmLevel;
 
     protected $table = 'modal';
     protected $primaryKey = 'id_modal';

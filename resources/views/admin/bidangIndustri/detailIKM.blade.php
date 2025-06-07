@@ -4,7 +4,6 @@
 @section('content')
     <main class="relative min-h-screen px-4 py-6" x-data="ikmModalEdit()" x-init="init()">
 
-
         {{-- Header --}}
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-3">
             {{-- Judul (kiri) --}}
@@ -13,7 +12,7 @@
             </h1>
 
             {{-- Tombol kembali (kanan) --}}
-            <a href="{{ route('dataIKM') }}"
+            <a href="{{ route('dataIKM') }}"    
                 class="inline-flex items-center gap-1 px-4 py-2 bg-[#CAE2F6] text-[#083458] text-sm font-medium rounded-md hover:bg-blue-200 transition duration-150">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg">
@@ -22,8 +21,6 @@
                 Kembali ke Daftar
             </a>
         </div>
-
-
 
         {{-- Wrapper dua panel berdampingan --}}
         <div class="flex flex-col lg:flex-row gap-6">
@@ -730,12 +727,12 @@
                         @endif
                     </div>
                 </div>
-
                 {{-- Modal Edit Pengelolaan Limbah --}}
                 <div x-show="openModalLimbah" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 text-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
                         class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative ml-52">
+
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
                             &times;
@@ -743,76 +740,104 @@
 
                         <h2 class="text-xl font-bold text-center text-[#083458] mb-6">EDIT PENGELOLAAN LIMBAH</h2>
 
-                        <form :action="'{{ url('data-IKM/limbah/update') }}'" method="POST" class="space-y-4">
+                        <form :action="'{{ url('data-IKM/limbah/update') }}'" method="POST" class="space-y-6">
                             @csrf
                             <input type="hidden" name="id" :value="formLimbah.id_limbah">
 
                             {{-- Limbah Padat --}}
-                            <div class="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Limbah Padat</label>
-                                    <input type="text" name="jenis_limbah" x-model="formLimbah.jenis_limbah"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Limbah Padat
-                                        (kg)</label>
-                                    <input type="number" name="jumlah_limbah" x-model="formLimbah.jumlah_limbah"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
+                            <div>
+                                <label class="block text-sm font-semibold text-[#083458] mb-2 text-center">Limbah
+                                    Padat</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">Jenis Limbah</label>
+                                        <input type="text" name="jenis_limbah" x-model="formLimbah.jenis_limbah"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]"
+                                            placeholder="Masukkan jenis limbah padat">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">Jumlah (kg)</label>
+                                        <input type="number" name="jumlah_limbah" x-model="formLimbah.jumlah_limbah"
+                                            min="0" step="0.01"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]"
+                                            placeholder="Masukkan jumlah limbah padat">
+                                    </div>
                                 </div>
                             </div>
 
                             {{-- Limbah B3 --}}
-                            <div class="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Limbah B3</label>
-                                    <input type="text" name="jenis_limbah_b3" x-model="formLimbah.jenis_limbah_b3"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Limbah B3
-                                        (kg)</label>
-                                    <input type="number" name="jumlah_limbah_b3" x-model="formLimbah.jumlah_limbah_b3"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                                </div>
-                            </div>
-
-                            {{-- TPS dan Pengelolaan --}}
-                            <div class="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">TPS Limbah B3</label>
-                                    <input type="text" name="tps_limbah_b3" x-model="formLimbah.tps_limbah_b3"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pihak Berizin</label>
-                                    <input type="text" name="pihak_berizin" x-model="formLimbah.pihak_berizin"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                                </div>
-                            </div>
-
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Pengelolaan Internal
-                                    Industri</label>
-                                <input type="text" name="internal_industri" x-model="formLimbah.internal_industri"
-                                    class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
+                                <label class="block text-sm font-semibold text-[#083458] mb-2 text-center">Limbah
+                                    B3</label>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">Jenis Limbah</label>
+                                        <input type="text" name="jenis_limbah_b3" x-model="formLimbah.jenis_limbah_b3"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]"
+                                            placeholder="Masukkan jenis limbah B3">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">Jumlah (kg)</label>
+                                        <input type="number" name="jumlah_limbah_b3"
+                                            x-model="formLimbah.jumlah_limbah_b3" min="0" step="0.01"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]"
+                                            placeholder="Masukkan jumlah limbah B3">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">TPS Limbah B3</label>
+                                        <input type="text" name="tps_limbah_b3" x-model="formLimbah.tps_limbah_b3"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]"
+                                            placeholder="Masukkan lokasi TPS">
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Pengelolaan --}}
+                            <div>
+                                <label
+                                    class="block text-sm font-semibold text-[#083458] mb-2 text-center">Pengelolaan</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">Pihak Berizin</label>
+                                        <input type="text" name="pihak_berizin" x-model="formLimbah.pihak_berizin"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]"
+                                            placeholder="Masukkan nama mitra">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">Internal
+                                            Industri</label>
+                                        <input type="text" name="internal_industri"
+                                            x-model="formLimbah.internal_industri"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]"
+                                            placeholder="Masukkan pemanfaatan internal">
+                                    </div>
+                                </div>
                             </div>
 
                             {{-- Limbah Cair --}}
-                            <div class="grid md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Parameter Limbah
-                                        Cair</label>
-                                    <input type="text" name="parameter_limbah_cair"
-                                        x-model="formLimbah.parameter_limbah_cair"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Limbah Cair
-                                        (liter)</label>
-                                    <input type="number" name="jumlah_limbah_cair"
-                                        x-model="formLimbah.jumlah_limbah_cair"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
+                            <div>
+                                <label class="block text-sm font-semibold text-[#083458] mb-2 text-center">Limbah
+                                    Cair</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">Parameter</label>
+                                        <select name="parameter_limbah_cair" x-model="formLimbah.parameter_limbah_cair"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]">
+                                            <option value="" disabled>-- Pilih Parameter --</option>
+                                            <option value="debit_inlet">Debit Limbah Cair di Inlet (m³)</option>
+                                            <option value="debit_outlet">Debit Limbah Cair di Outlet (m³)</option>
+                                            <option value="cod_inlet">COD pada Saluran Inlet (mg/L)</option>
+                                            <option value="cod_outlet">COD pada Saluran Outlet (mg/L)</option>
+                                            <option value="sludge_removed">Sludge Removed (kg)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-1 text-center">Jumlah</label>
+                                        <input type="number" name="jumlah_limbah_cair"
+                                            x-model="formLimbah.jumlah_limbah_cair" min="0" step="0.01"
+                                            class="w-full rounded-2xl border border-gray-300 px-4 py-2 text-sm text-center focus:outline-2 focus:outline-[#083458]"
+                                            placeholder="Masukkan jumlah">
+                                    </div>
                                 </div>
                             </div>
 
@@ -825,7 +850,6 @@
                         </form>
                     </div>
                 </div>
-
 
                 {{-- Detail Pendapatan --}}
                 <div class="bg-white rounded-lg shadow border border-[#CAE2F6] md:w-full">
@@ -870,6 +894,7 @@
                         @endif
                     </div>
                 </div>
+                
                 {{-- Modal Edit Pendapatan --}}
                 <div x-show="openModalPendapatan" x-transition.opacity
                     class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
@@ -910,7 +935,6 @@
                         </form>
                     </div>
                 </div>
-
             </div>
             <div class="lg:w-1/3 flex flex-col gap-5">
                 {{-- Detail Persentase Kepemilikan --}}
@@ -1029,8 +1053,6 @@
                     </div>
                 </div>
 
-
-
                 {{-- Detail Produksi --}}
                 <div class="bg-white rounded-lg shadow border border-[#CAE2F6] md:w-full">
                     <div
@@ -1101,12 +1123,11 @@
                         @endif
                     </div>
                 </div>
-
                 {{-- Modal Edit Produksi --}}
                 <div x-show="openModalProduksi" x-transition.opacity
                     class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-md-l max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative ml-52">
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
                             &times;
@@ -1193,9 +1214,6 @@
                         </form>
                     </div>
                 </div>
-
-
-
 
                 {{-- Detail Penggunaan Listrik --}}
                 <div class="bg-white rounded-lg shadow border border-[#CAE2F6] md:w-full">
@@ -1285,8 +1303,6 @@
                     </div>
                 </div>
 
-
-
                 {{-- Detail Penggunaan Air --}}
                 <div class="bg-white rounded-lg shadow border border-[#CAE2F6] md:w-full">
                     <div
@@ -1375,9 +1391,6 @@
                         </form>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
 
@@ -1433,7 +1446,6 @@
                     @endif
                 </div>
             </div>
-
             <!-- MODAL PEMAKAIAN BAHAN -->
             <div x-show="openModalPemakaianBahan" x-transition.opacity
                 class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
@@ -1521,7 +1533,6 @@
                     @endif
                 </div>
             </div>
-
             <!-- OVERLAY MODAL -->
             <div x-show="openModalBahanBakar" x-transition.opacity
                 class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
@@ -1544,7 +1555,8 @@
                             <template x-for="(label, name) in fieldMapBahanBakar" :key="name">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1" x-text="label"></label>
-                                    <input type="text" :name="name" x-model="formBahanBakar[name]" required
+                                    <input type="text" :name="name" x-model="formBahanBakar[name]"
+                                        required
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
                                 </div>
                             </template>
@@ -1644,6 +1656,122 @@
                     </form>
                 </div>
             </div>
+
+            {{-- Detail Modal --}}
+            <div class="bg-white rounded-lg shadow border border-[#CAE2F6] md:w-full">
+                <div class="border-b px-4 py-2 bg-[#083458] text-[#CAE2F6] rounded-t font-semibold">Modal</div>
+                <div class="p-4 overflow-x-auto">
+                    @if ($ikm->modal->count())
+                        <table class="w-full text-sm border border-gray-200 rounded-md overflow-hidden">
+                            <thead class="bg-[#CAE2F6] text-[#083458]">
+                                <tr>
+                                    <th class="px-4 py-2">Jenis Barang Modal</th>
+                                    <th class="px-4 py-2 text-right">Pembelian / Penambahan</th>
+                                    <th class="px-4 py-2 text-right">Pengurangan</th>
+                                    <th class="px-4 py-2 text-right">Penyusutan</th>
+                                    <th class="px-4 py-2 text-right">Nilai Taksiran</th>
+                                    <th class="px-4 py-2 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 bg-white">
+                                @foreach ($ikm->modal as $modal)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-2">{{ ucfirst($modal->jenis_barang) }}</td>
+                                        <td class="px-4 py-2 text-right">Rp
+                                            {{ number_format($modal->pembelian_penambahan_perbaikan, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-2 text-right">Rp
+                                            {{ number_format($modal->pengurangan_barang_modal, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-2 text-right">Rp
+                                            {{ number_format($modal->penyusutan_barang, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-2 text-right">Rp
+                                            {{ number_format($modal->nilai_taksiran, 0, ',', '.') }}</td>
+                                        <td class="px-4 py-2 text-center">
+                                            <button type="button" @click='openEditModal(@json($modal))'
+                                                class="bg-[#F49F1E] hover:bg-[#e38c0f] text-white text-xs px-3 py-1 rounded-lg">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        <p class="italic text-gray-500">Tidak ada data modal.</p>
+                    @endif
+                </div>
+            </div>
+            <!-- MODAL EDIT MODAL -->
+            <div x-show="openModalModal" x-transition.opacity
+                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                <div @click.away="closeModal" @keydown.escape.window="closeModal"
+                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-52">
+
+                    <button @click="closeModal" type="button"
+                        class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
+                        &times;
+                    </button>
+
+                    <h2 class="text-xl font-bold text-center text-[#083458] mb-6">EDIT MODAL</h2>
+
+                    <form :action="'{{ url('data-IKM/modal/update') }}'" method="POST" class="space-y-6">
+                        @csrf
+                        <input type="hidden" name="id_modal" :value="formModal.id_modal">
+
+                        {{-- Jenis Barang Modal --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Barang Modal</label>
+                            <select name="jenis_barang" x-model="formModal.jenis_barang"
+                                class="w-full rounded-xl border px-4 py-2 text-sm">
+                                <option value="">-- Pilih --</option>
+                                <option value="tanah">Tanah</option>
+                                <option value="gedung">Gedung</option>
+                                <option value="mesin dan perlengkapan">Mesin dan Perlengkapan</option>
+                                <option value="kendaraan">Kendaraan</option>
+                                <option value="software/database">Software/Database</option>
+                            </select>
+                        </div>
+
+                        {{-- Pembelian / Penambahan --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pembelian / Penambahan</label>
+                            <input type="number" name="pembelian_penambahan_perbaikan"
+                                x-model="formModal.pembelian_penambahan_perbaikan"
+                                class="w-full rounded-xl border px-4 py-2 text-sm" required>
+                        </div>
+
+                        {{-- Pengurangan --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pengurangan</label>
+                            <input type="number" name="pengurangan_barang_modal"
+                                x-model="formModal.pengurangan_barang_modal"
+                                class="w-full rounded-xl border px-4 py-2 text-sm" required>
+                        </div>
+
+                        {{-- Penyusutan --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Penyusutan</label>
+                            <input type="number" name="penyusutan_barang" x-model="formModal.penyusutan_barang"
+                                class="w-full rounded-xl border px-4 py-2 text-sm" required>
+                        </div>
+
+                        {{-- Nilai Taksiran --}}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai Taksiran</label>
+                            <input type="number" name="nilai_taksiran" x-model="formModal.nilai_taksiran"
+                                class="w-full rounded-xl border px-4 py-2 text-sm" required>
+                        </div>
+
+                        {{-- Tombol Submit --}}
+                        <div class="flex justify-center pt-2">
+                            <button type="submit"
+                                class="rounded-2xl bg-blue-500 px-8 py-3 text-white font-semibold shadow-md hover:shadow-lg transition duration-200">
+                                Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </main>
 @endsection
@@ -1665,6 +1793,7 @@
                 openModalMesin: false,
                 openModalAir: false,
                 openModalPersentase: false,
+                openModalModal: false,
 
                 formIKM: {},
                 formPengeluaran: {},
@@ -1679,6 +1808,7 @@
                 formMesin: {},
                 formAir: {},
                 formPersentase: {},
+                formModal: {},
 
                 fieldMapBahan: {
                     nama_bahan: 'Nama Bahan',
@@ -1712,6 +1842,15 @@
                     tahun_pembuatan: 'Tahun Pembuatan',
                     jumlah_unit: 'Jumlah',
                 },
+
+                fieldMapModal: {
+                    jenis_barang: 'Jenis Barang Modal',
+                    pembelian_penambahan_perbaikan: 'Pembelian / Penambahan',
+                    pengurangan_barang_modal: 'Pengurangan',
+                    penyusutan_barang: 'Penyusutan',
+                    nilai_taksiran: 'Nilai Taksiran',
+                },
+
 
                 openIKM(data) {
                     this.formIKM = {
@@ -1819,7 +1958,18 @@
                     document.body.style.overflow = 'hidden';
                 },
 
+                openEditModal(data) {
+                    this.formModal = {
+                        ...data
+                    };
+                    this.openModalModal = true;
+                    document.body.style.overflow = 'hidden';
+                },
+
+
+
                 closeModal() {
+                    this.openModalModal = false;
                     this.openModalProduksi = false;
                     this.openModalListrik = false;
                     this.openModalPemakaianBahan = false;

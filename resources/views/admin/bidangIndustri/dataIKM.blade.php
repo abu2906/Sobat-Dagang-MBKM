@@ -89,86 +89,81 @@
                     </div>
                 @endforeach
             </section>
-
             <section class="mt-12 px-6 pb-16">
                 <div class="overflow-x-auto rounded-lg">
-                    <table class="w-full border-collapse text-sm bg-white shadow-md">
-                        <thead>
-                            <tr class="text-white bg-[#083458]">
-                                <th class="p-3 rounded-tl-xl">NO.</th>
-                                <th class="p-3">NAMA USAHA</th>
-                                <th class="p-3">NAMA PEMILIK</th>
-                                <th class="p-3">JENIS KELAMIN</th>
-                                <th class="p-3">LUAS USAHA</th>
-                                <th class="p-3">ALAMAT</th>
-                                <th class="p-3">KELURAHAN</th>
-                                <th class="p-3">KECAMATAN</th>
-                                <th class="p-3">KOMODITI</th>
-                                <th class="p-3">JENIS INDUSTRI</th>
-                                <th class="p-3">TELEPON</th>
-                                <th class="p-3">TENAGA KERJA</th>
-                                <th class="p-3">INVESTASI</th>
-                                <th class="p-3 rounded-tr-xl">AKSI</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach ($dataIkm as $index => $ikm)
-                                <tr class="bg-white border-b row-ikm" data-kecamatan="{{ $ikm->kecamatan }}"
-                                    data-industri="{{ $ikm->jenis_industri }}" data-investasi-nilai="{{ $ikm->level }}">
-                                    <td class="p-2 text-center">{{ $index + 1 }}</td>
-                                    <td class="p-2">{{ $ikm->nama_ikm }}</td>
-                                    <td class="p-2">{{ $ikm->nama_pemilik }}</td>
-                                    <td class="p-2 text-center">{{ $ikm->jenis_kelamin }}</td>
-                                    <td class="p-2">{{ $ikm->luas }}</td>
-                                    <td class="p-2">{{ $ikm->alamat }}</td>
-                                    <td class="p-2">{{ $ikm->kelurahan }}</td>
-                                    <td class="p-2">{{ $ikm->kecamatan }}</td>
-                                    <td class="p-2">{{ $ikm->komoditi }}</td>
-                                    <td class="p-2">{{ $ikm->jenis_industri }}</td>
-                                    <td class="p-2">{{ $ikm->no_telp }}</td>
-                                    <td class="p-2 text-center">{{ $ikm->tenaga_kerja }}</td>
-                                    <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
-                                    <td class="p-2 text-center">
-                                        <div class="flex justify-center gap-2">
-                                            <!-- Tombol Detail -->
-                                            <a href="{{ route('detailIKM', $ikm->id_ikm) }}"
-                                                class="flex items-center gap-1 text-blue-700 bg-blue-100 hover:bg-blue-200 text-xs px-3 py-1 rounded-lg border border-blue-700">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
-                                                </svg>
-                                                Detail
-                                            </a>
-
-
-                                            <!-- Tombol Hapus -->
-                                            <form action="{{ route('destroyIKM', $ikm->id_ikm) }}" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menghapus data ini?');"
-                                                class="inline-block">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-lg">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                        stroke-width="2" viewBox="0 0 24 24"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    Hapus
-                                                </button>
-                                            </form>
-                                        </div>
-
-                                    </td>
+                    <div class="max-h-[580px] overflow-y-auto">
+                        <table class="w-full border-collapse text-sm bg-white shadow-md">
+                            <thead class="sticky top-0 z-10 text-white bg-[#083458]">
+                                <tr>
+                                    <th class="p-3 rounded-tl-xl">NO.</th>
+                                    <th class="p-3">NAMA USAHA</th>
+                                    <th class="p-3">NAMA PEMILIK</th>
+                                    <th class="p-3">JENIS KELAMIN</th>
+                                    <th class="p-3">LUAS USAHA</th>
+                                    <th class="p-3">ALAMAT</th>
+                                    <th class="p-3">KELURAHAN</th>
+                                    <th class="p-3">KECAMATAN</th>
+                                    <th class="p-3">KOMODITI</th>
+                                    <th class="p-3">JENIS INDUSTRI</th>
+                                    <th class="p-3">TELEPON</th>
+                                    <th class="p-3">TENAGA KERJA</th>
+                                    <th class="p-3">INVESTASI</th>
+                                    <th class="p-3 rounded-tr-xl">AKSI</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($dataIkm as $index => $ikm)
+                                    <tr class="bg-white border-b row-ikm" data-kecamatan="{{ $ikm->kecamatan }}"
+                                        data-industri="{{ $ikm->jenis_industri }}" data-investasi-nilai="{{ $ikm->level }}">
+                                        <td class="p-2 text-center">{{ $index + 1 }}</td>
+                                        <td class="p-2">{{ $ikm->nama_ikm }}</td>
+                                        <td class="p-2">{{ $ikm->nama_pemilik }}</td>
+                                        <td class="p-2 text-center">{{ $ikm->jenis_kelamin }}</td>
+                                        <td class="p-2">{{ $ikm->luas }}</td>
+                                        <td class="p-2">{{ $ikm->alamat }}</td>
+                                        <td class="p-2">{{ $ikm->kelurahan }}</td>
+                                        <td class="p-2">{{ $ikm->kecamatan }}</td>
+                                        <td class="p-2">{{ $ikm->komoditi }}</td>
+                                        <td class="p-2">{{ $ikm->jenis_industri }}</td>
+                                        <td class="p-2">{{ $ikm->no_telp }}</td>
+                                        <td class="p-2 text-center">{{ $ikm->tenaga_kerja }}</td>
+                                        <td class="p-3">{{ 'Rp ' . number_format($ikm->level, 0, ',', '.') }}</td>
+                                        <td class="p-2 text-center">
+                                            <div class="flex justify-center gap-2">
+                                                <a href="{{ route('detailIKM', $ikm->id_ikm) }}"
+                                                    class="flex items-center gap-1 text-blue-700 bg-blue-100 hover:bg-blue-200 text-xs px-3 py-1 rounded-lg border border-blue-700">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                                                    </svg>
+                                                    Detail
+                                                </a>
+                                                <form action="{{ route('destroyIKM', $ikm->id_ikm) }}" method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menghapus data ini?');"
+                                                    class="inline-block">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-lg">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </section>  
+            </section>
+
         </main>
     @endsection
 

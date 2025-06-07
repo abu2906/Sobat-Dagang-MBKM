@@ -1028,11 +1028,11 @@
                                     <div>
                                         <label for="kapasitas_tahun" class="block mb-1 font-medium">Kapasitas Terpasang
                                             per Tahun</label>
-                                        <select id="kapasitas_tahun" name="kapasitas_tahun" required
-                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2">
-                                            <option value="">Pilih Tahun</option>
-                                        </select>
+                                        <input type="number" id="kapasitas_tahun" name="kapasitas_tahun" required
+                                            class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
+                                            placeholder="Masukkan kapasitas per tahun">
                                     </div>
+
 
                                     <div class="col-span-1 md:col-span-2 flex justify-center gap-4 mt-6">
                                         <button type="button"
@@ -1357,8 +1357,6 @@
                                             class="bg-[#F49F1E] text-white px-6 py-2 rounded-3xl hover:opacity-90">
                                             Simpan
                                         </button>
-
-
                                     </div>
                                 </section>
                             </form>
@@ -1662,15 +1660,24 @@
                     }
                 });
             }
+
             // ================================
             // FORM VALIDATION INIT
             // ================================
+            let sedangSubmit = false;
+
             function initFormValidation() {
                 const submitButton = document.getElementById('submit-semua');
                 if (!submitButton) return;
 
                 submitButton.addEventListener('click', function(e) {
                     e.preventDefault();
+
+                    // PENTING: Cek dulu apakah sedang submit
+                    if (sedangSubmit) {
+                        console.log('Form sedang diproses, menunggu...');
+                        return;
+                    }
 
                     let adaInputKosong = false;
                     let inputPertamaKosong = null;
@@ -1717,9 +1724,10 @@
                                 inputPertamaKosong.input.focus();
                             }, 300);
                         });
-                        return;
+                        return; // VALIDASI GAGAL - TIDAK LANJUT KE SUBMIT
                     }
 
+                    // Jika validasi lolos, baru panggil submit
                     submitFormData();
                 });
             }
@@ -1728,12 +1736,26 @@
             // SUBMIT FORM DATA TO BACKEND
             // ================================
             function submitFormData() {
+                // PENTING: Double check untuk mencegah multiple submit
+                if (sedangSubmit) {
+                    console.log('Submit sedang berjalan, dibatalkan');
+                    return;
+                }
+
+                // SET FLAG SUBMIT = TRUE
+                sedangSubmit = true;
+
                 const form = document.getElementById('form-ikm');
+                const submitButton = document.getElementById('submit-semua');
                 const formData = new FormData(form);
+
+                // DISABLE BUTTON
+                if (submitButton) submitButton.disabled = true;
 
                 Swal.fire({
                     title: 'Menyimpan...',
                     allowOutsideClick: false,
+                    allowEscapeKey: false,
                     didOpen: () => Swal.showLoading()
                 });
 
@@ -1747,16 +1769,24 @@
                                 'content') || formData.get('_token')
                         }
                     })
-                    .then(response => response.json().catch(() => ({
-                        success: false,
-                        errors: {
-                            msg: ['Response JSON tidak valid']
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
                         }
-                    })))
+                        return response.json().catch(() => ({
+                            success: false,
+                            errors: {
+                                msg: ['Response JSON tidak valid']
+                            }
+                        }));
+                    })
                     .then(data => {
                         Swal.close();
 
-                        if (data.success && !data.errors) {
+                        // SUKSES - Data berhasil disimpan
+                        if (data.success === true && (!data.errors || Object.keys(data.errors).length === 0)) {
+                            // TIDAK RESET FLAG DI SINI - BIARKAN TETAP TRUE UNTUK PREVENT DOUBLE SUBMIT
+
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
@@ -1766,90 +1796,21 @@
                             }).then(() => {
                                 window.location.href = "/data-IKM";
                             });
-                        } else {
-                            const errors = data.errors || {};
-                            const tabMapping = {};
-                            const form = document.getElementById('form-ikm');
 
-                            const fieldToTabIdMap = {
-                                konsistensi_pemilik: 'persentase-pemilik',
-                                konsistensi_karyawan: 'karyawan',
-                                konsistensi_bahan: 'pemakaian-bahan',
-                                konsistensi_bahan_bakar: 'bahan-bakar',
-                                konsistensi_listrik: 'listrik',
-                                konsistensi_mesin: 'mesin-produksi',
-                                konsistensi_produksi: 'produksi',
-                                msg: 'data-ikm'
-                            };
-
-                            if (Object.keys(errors).length === 0) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Terjadi kesalahan',
-                                    text: 'Terjadi kesalahan yang tidak diketahui.',
-                                    confirmButtonText: 'Oke',
-                                    confirmButtonColor: '#e74c3c'
-                                });
-                                return;
-                            }
-
-                            Object.keys(errors).forEach(field => {
-                                const messages = Array.isArray(errors[field]) ? errors[field] : [errors[
-                                    field]];
-                                const baseField = field.split('.')[0];
-                                const formField = form.querySelector(`[name="${baseField}"]`) || form
-                                    .querySelector(`[name^="${baseField}"]`);
-                                const formSection = formField?.closest('[id^="form-"]');
-                                const tabId = formSection?.id.replace('form-', '') || fieldToTabIdMap[
-                                    field] || 'unknown';
-
-                                if (!tabMapping[tabId]) tabMapping[tabId] = [];
-                                messages.forEach(msg => tabMapping[tabId].push(msg));
-                            });
-
-                            let html = '<div style="text-align:left;font-size:14px">';
-                            Object.entries(tabMapping).forEach(([tabId, messages]) => {
-                                html +=
-                                    `<div style="margin-bottom:10px"><b>${getTabDisplayName(tabId)}</b><ul>`;
-                                messages.forEach(msg => {
-                                    html += `<li>${msg}</li>`;
-                                });
-                                html += '</ul></div>';
-                            });
-                            html += '</div>';
-
-                            const tabToFocus = Object.keys(tabMapping)[0];
-                            const firstErrorField = Object.keys(errors)[0];
-                            const elementToFocus = form.querySelector(
-                                `[name^="${firstErrorField.split('.')[0]}"]`);
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Data yang diinput tidak sesuai',
-                                html: html,
-                                confirmButtonText: 'Periksa Lagi',
-                                confirmButtonColor: '#e74c3c'
-                            }).then(() => {
-                                const tabBtn = document.querySelector(
-                                        `.tab-button[id="btn-${tabToFocus}"]`) || document
-                                    .querySelector(`#btn-${tabToFocus}`);
-                                if (tabBtn) tabBtn.click();
-                                setTimeout(() => {
-                                    if (elementToFocus && typeof elementToFocus
-                                        .scrollIntoView === 'function') {
-                                        elementToFocus.scrollIntoView({
-                                            behavior: 'smooth',
-                                            block: 'center'
-                                        });
-                                        elementToFocus.focus();
-                                    }
-                                }, 400);
-                            });
+                            // FLAG AKAN DIRESET OTOMATIS SAAT PAGE REDIRECT
+                            return;
                         }
+
+                        // GAGAL - Ada error dari server
+                        handleFormErrors(data, form, submitButton);
                     })
                     .catch(error => {
                         Swal.close();
                         console.error('Kesalahan AJAX:', error);
+
+                        // RESET FLAG DAN BUTTON PADA NETWORK/SERVER ERROR
+                        resetSubmitState(submitButton);
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Terjadi kesalahan',
@@ -1858,6 +1819,95 @@
                             confirmButtonColor: '#e74c3c'
                         });
                     });
+            }
+
+            // ================================
+            // HELPER FUNCTIONS
+            // ================================
+            function resetSubmitState(submitButton) {
+                sedangSubmit = false;
+                if (submitButton) submitButton.disabled = false;
+            }
+
+            function handleFormErrors(data, form, submitButton) {
+                // RESET FLAG DAN BUTTON KARENA ADA ERROR VALIDASI
+                resetSubmitState(submitButton);
+
+                const errors = data.errors || {};
+                const tabMapping = {};
+
+                const fieldToTabIdMap = {
+                    konsistensi_pemilik: 'persentase-pemilik',
+                    konsistensi_karyawan: 'karyawan',
+                    konsistensi_bahan: 'pemakaian-bahan',
+                    konsistensi_bahan_bakar: 'bahan-bakar',
+                    konsistensi_listrik: 'listrik',
+                    konsistensi_mesin: 'mesin-produksi',
+                    konsistensi_produksi: 'produksi',
+                    msg: 'data-ikm'
+                };
+
+                if (Object.keys(errors).length === 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi kesalahan',
+                        text: 'Terjadi kesalahan yang tidak diketahui.',
+                        confirmButtonText: 'Oke',
+                        confirmButtonColor: '#e74c3c'
+                    });
+                    return;
+                }
+
+                // MAPPING ERRORS KE TAB
+                Object.keys(errors).forEach(field => {
+                    const messages = Array.isArray(errors[field]) ? errors[field] : [errors[field]];
+                    const baseField = field.split('.')[0];
+                    const formField = form.querySelector(`[name="${baseField}"]`) || form.querySelector(
+                        `[name^="${baseField}"]`);
+                    const formSection = formField?.closest('[id^="form-"]');
+                    const tabId = formSection?.id.replace('form-', '') || fieldToTabIdMap[field] ||
+                        'unknown';
+
+                    if (!tabMapping[tabId]) tabMapping[tabId] = [];
+                    messages.forEach(msg => tabMapping[tabId].push(msg));
+                });
+
+                // BUILD ERROR HTML
+                let html = '<div style="text-align:left;font-size:14px">';
+                Object.entries(tabMapping).forEach(([tabId, messages]) => {
+                    html += `<div style="margin-bottom:10px"><b>${getTabDisplayName(tabId)}</b><ul>`;
+                    messages.forEach(msg => {
+                        html += `<li>${msg}</li>`;
+                    });
+                    html += '</ul></div>';
+                });
+                html += '</div>';
+
+                // SHOW ERROR DIALOG
+                const tabToFocus = Object.keys(tabMapping)[0];
+                const firstErrorField = Object.keys(errors)[0];
+                const elementToFocus = form.querySelector(`[name^="${firstErrorField.split('.')[0]}"]`);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data yang diinput tidak sesuai',
+                    html: html,
+                    confirmButtonText: 'Periksa Lagi',
+                    confirmButtonColor: '#e74c3c'
+                }).then(() => {
+                    const tabBtn = document.querySelector(`.tab-button[id="btn-${tabToFocus}"]`) ||
+                        document.querySelector(`#btn-${tabToFocus}`);
+                    if (tabBtn) tabBtn.click();
+                    setTimeout(() => {
+                        if (elementToFocus && typeof elementToFocus.scrollIntoView === 'function') {
+                            elementToFocus.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                            elementToFocus.focus();
+                        }
+                    }, 400);
+                });
             }
 
             function getTabDisplayName(tabId) {
