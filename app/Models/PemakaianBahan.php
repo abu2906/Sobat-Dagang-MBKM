@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\DataIkm;
+use App\Traits\UpdatesIkmLevel;
+
 
 class PemakaianBahan extends Model
 {
     use HasFactory;
+    use UpdatesIkmLevel;
 
     protected $table = 'pemakaian_bahan';
     protected $primaryKey = 'id_pemakaian_bahan';

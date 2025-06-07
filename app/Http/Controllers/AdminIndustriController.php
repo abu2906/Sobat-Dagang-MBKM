@@ -36,6 +36,7 @@ use App\Models\PenggunaanAir;
 use App\Models\PenggunaanBahanBakar;
 use App\Models\PemakaianBahan;
 use App\Models\MesinProduksi;
+use App\Models\Modal;
 
 
 
@@ -593,6 +594,24 @@ class AdminIndustriController extends Controller
         return redirect()->back()->with('success', 'Data mesin produksi berhasil diperbarui.');
     }
 
+    public function updateModal(Request $request)
+    {
+        $validated = $request->validate([
+            'id_modal' => 'required|exists:modal,id_modal',
+            'jenis_barang' => 'required|string',
+            'pembelian_penambahan_perbaikan' => 'required|numeric',
+            'pengurangan_barang_modal' => 'required|numeric',
+            'penyusutan_barang' => 'required|numeric',
+            'nilai_taksiran' => 'required|numeric',
+        ]);
+
+        $modal = Modal::where('id_modal', $request->id_modal)->firstOrFail();
+        $modal->update($validated);
+
+        return redirect()->back()->with('success', 'Data modal berhasil diperbarui.');
+    }
+
+
     public function destroyIKM($id)
     {
         \App\Models\DataIkm::destroy($id);
@@ -964,7 +983,10 @@ class AdminIndustriController extends Controller
         // ======================
         if (
             !$validatedDataIKM || !$validatedPersentasePemilik || !$validatedKaryawan ||
-            !$validatedPemakaianBahan || !$validatedPenggunaanAir
+            !$validatedPemakaianBahan || !$validatedPenggunaanAir || !$validatedPengeluaran ||
+            !$validatedBahanBakar || !$validatedListrik || !$validatedMesinProduksi ||
+            !$validatedProduksi || !$validatedPersediaan || !$validatedPendapatan ||
+            !$validatedModal || !$validatedBentukPengelolaan
         ) {
             return response()->json([
                 'success' => false,
@@ -1016,7 +1038,6 @@ class AdminIndustriController extends Controller
             $this->saveKaryawan($idIkm, $validatedKaryawan);
             $this->savePemakaianBahan($idIkm, $validatedPemakaianBahan);
             $this->savePenggunaanAir($idIkm, $validatedPenggunaanAir);
-
             $this->savePengeluaran($idIkm, $validatedPengeluaran);
             $this->savePenggunaanBahanBakar($idIkm, $validatedBahanBakar);
             $this->saveListrik($idIkm, $validatedListrik);

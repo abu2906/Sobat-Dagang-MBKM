@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Models\DataIkm;
+use App\Traits\UpdatesIkmLevel;
+
 
 class Pengeluaran extends Model
 {
     use HasFactory;
+    use UpdatesIkmLevel;
 
     protected $table = 'pengeluaran';
     protected $primaryKey = 'id_pengeluaran';
