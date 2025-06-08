@@ -40,9 +40,11 @@
                     </div>
 
                     <a href="{{ route('formIKM') }}"
-                        class="bg-[#003366] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
+                        class="bg-white text-[#003366] font-semibold rounded-lg px-4 py-2 shadow-md border border-[#003366]
+           hover:bg-[#003366] hover:text-white hover:border-[#003366] transition duration-300">
                         TAMBAH DATA
                     </a>
+
 
                     <form method="GET" action="{{ route('exportIKM') }}" id="exportForm">
                         <input type="hidden" name="kecamatan" id="inputKecamatan">
@@ -50,7 +52,7 @@
                         <div id="inputJenisContainer"></div>
                         <input type="hidden" name="investasi[]" id="inputInvestasi">
                         <button type="submit"
-                            class="bg-[#0A4D68] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#0A4D68] border border-transparent hover:border-[#0A4D68] transition duration-300">
+                            class="bg-[#003366] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
                             UNDUH DATA
                         </button>
                     </form>
@@ -172,7 +174,7 @@
                     <p id="noResults" class="text-center mt-4 font-medium text-red-500 hidden">Data tidak ditemukan.</p>
 
                 </div>
-            </section>  
+            </section>
         </main>
     @endsection
 
