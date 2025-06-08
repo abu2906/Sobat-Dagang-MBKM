@@ -108,9 +108,9 @@
                 </div>
                 {{-- Modal Edit Data IKM --}}
                 <div x-show="openModalIKM" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative ml-24">
 
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -284,9 +284,9 @@
                 </div>
                 {{-- Modal Edit Pengeluaran --}}
                 <div x-show="openModalPengeluaran" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center text-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] justify-center items-center overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] justify-center items-center overflow-y-auto relative ml-24">
 
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -408,9 +408,9 @@
                 </div>
                 {{-- Modal Edit Persediaan --}}
                 <div x-show="openModalPersediaan" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-24">
 
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -543,9 +543,9 @@
                 </div>
                 {{-- Modal Edit Tenaga Kerja --}}
                 <div x-show="openModalTenagaKerja" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center text-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] justify-center items-center overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] justify-center items-center overflow-y-auto relative ml-24">
 
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -729,9 +729,9 @@
                 </div>
                 {{-- Modal Edit Pengelolaan Limbah --}}
                 <div x-show="openModalLimbah" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 text-center">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative ml-24">
 
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -897,9 +897,9 @@
                 
                 {{-- Modal Edit Pendapatan --}}
                 <div x-show="openModalPendapatan" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-24">
 
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -999,9 +999,9 @@
                 </div>
                 {{-- Modal Edit Persentase Kepemilikan --}}
                 <div x-show="openModalPersentase" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-24">
 
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -1125,9 +1125,9 @@
                 </div>
                 {{-- Modal Edit Produksi --}}
                 <div x-show="openModalProduksi" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative ml-24">
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
                             &times;
@@ -1185,7 +1185,7 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">% Produk Ekspor</label>
-                                <input type="number" name="presentase_produk_ekspor"
+                                <input type="number" name="presentase_produk_ekspor" step="0.01" 
                                     x-model="formProduksi.presentase_produk_ekspor" required
                                     class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:ring-blue-500 focus:border-blue-500 shadow-sm transition">
                             </div>
@@ -1261,9 +1261,9 @@
                 </div>
                 {{-- Modal Edit Penggunaan Listrik --}}
                 <div x-show="openModalListrik" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-24">
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
                             &times;
@@ -1319,9 +1319,9 @@
                         </button>
                     </div>
 
-                    <div class="p-1 overflow-x-auto">
+                    <div class="overflow-x-auto p-1">
                         @if ($ikm->penggunaanAir)
-                            <table class="w-full text-sm border border-gray-200 rounded-md overflow-hidden">
+                            <table class="min-w-full text-sm border border-gray-200 rounded-md overflow-hidden">
                                 <tbody class="divide-y divide-gray-100 bg-white">
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-2 font-medium text-[#083458]">Sumber Air</td>
@@ -1345,11 +1345,12 @@
                         @endif
                     </div>
                 </div>
+
                 {{-- Modal Penggunaan Air --}}
                 <div x-show="openModalAir" x-transition.opacity
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                     <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-52">
+                        class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-24">
 
                         <button @click="closeModal" type="button"
                             class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -1371,7 +1372,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Banyaknya Penggunaan
                                     (m³)</label>
-                                <input type="number" name="banyaknya_penggunaan_m3"
+                                <input type="number" name="banyaknya_penggunaan_m3" step="0.01" 
                                     x-model="formAir.banyaknya_penggunaan_m3" required
                                     class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition">
                             </div>
@@ -1394,13 +1395,13 @@
             </div>
         </div>
 
-        <div class="flex flex-col pt-6 gap-6 justify-center items-center">
+        <div class="flex flex-col pt-6 gap-6 justify-center items-stretch">
             {{-- Detail Pemakaian Bahan --}}
             <div class="bg-white rounded-lg shadow border border-[#CAE2F6] md:w-full">
                 <div class="border-b px-4 py-2 bg-[#083458] text-[#CAE2F6] rounded-t font-semibold">Pemakaian Bahan</div>
                 <div class="p-4 overflow-x-auto">
                     @if ($ikm->pemakaianBahan->count())
-                        <table class="w-full text-sm border border-gray-200 rounded-md overflow-hidden">
+                        <table class="min-w-full text-sm border border-gray-200 rounded-md overflow-hidden">
                             <thead class="bg-[#CAE2F6] text-[#083458]">
                                 <tr>
                                     <th class="px-4 py-2">Nama</th>
@@ -1446,11 +1447,12 @@
                     @endif
                 </div>
             </div>
+
             <!-- MODAL PEMAKAIAN BAHAN -->
             <div x-show="openModalPemakaianBahan" x-transition.opacity
-                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                 <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative ml-52">
+                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative ml-24">
 
                     <button @click="closeModal" type="button"
                         class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -1506,7 +1508,7 @@
                             <tbody class="divide-y divide-gray-100 bg-white">
                                 @foreach ($ikm->penggunaanBahanBakar as $bahanBakar)
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-4 py-2">{{ $bahanBakar->jenis_bahan_bakar }}</td>
+                                        <td class="px-4 py-2"> {{ (str_replace(['_', '-'], ' ', $bahanBakar->jenis_bahan_bakar)) }}</td>
                                         <td class="px-4 py-2">{{ $bahanBakar->satuan_standar }}</td>
                                         <td class="px-4 py-2 text-right">{{ $bahanBakar->banyaknya_proses_produksi }}
                                         </td>
@@ -1535,10 +1537,10 @@
             </div>
             <!-- OVERLAY MODAL -->
             <div x-show="openModalBahanBakar" x-transition.opacity
-                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                 <!-- MODAL -->
                 <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative ml-52">
+                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative ml-24">
 
                     <button @click="closeModal" type="button"
                         class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -1622,9 +1624,9 @@
             </div>
             <!-- OVERLAY MODAL MESIN -->
             <div x-show="openModalMesin" x-transition.opacity
-                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                 <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative ml-52">
+                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto relative ml-24">
 
                     <button @click="closeModal" type="button"
                         class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -1702,9 +1704,9 @@
             </div>
             <!-- MODAL EDIT MODAL -->
             <div x-show="openModalModal" x-transition.opacity
-                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4">
+                class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center px-4 sm:justify-center">
                 <div @click.away="closeModal" @keydown.escape.window="closeModal"
-                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-52">
+                    class="bg-white rounded-xl shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto relative ml-24">
 
                     <button @click="closeModal" type="button"
                         class="absolute top-4 right-4 text-2xl font-bold leading-none hover:text-gray-700 focus:outline-none z-10">
@@ -1853,6 +1855,7 @@
 
 
                 openIKM(data) {
+                    this.closeModal();
                     this.formIKM = {
                         ...data
                     };
@@ -1861,6 +1864,7 @@
                 },
 
                 openEditPengeluaran(data) {
+                    this.closeModal();
                     this.formPengeluaran = {
                         ...data
                     };
@@ -1869,6 +1873,7 @@
                 },
 
                 openEditPersediaan(data) {
+                    this.closeModal();
                     this.formPersediaan = {
                         ...data
                     };
@@ -1878,6 +1883,7 @@
 
 
                 openEditTenagaKerja(data) {
+                    this.closeModal();
                     this.formTenagaKerja = {
                         ...data
                     };
@@ -1887,6 +1893,7 @@
 
 
                 openEditLimbah(data) {
+                    this.closeModal();
                     this.formLimbah = {
                         ...data
                     };
@@ -1895,6 +1902,7 @@
                 },
 
                 openEditPendapatan(data) {
+                    this.closeModal();
                     this.formPendapatan = {
                         ...data
                     };
@@ -1903,6 +1911,7 @@
                 },
 
                 openEditProduksi(data) {
+                    this.closeModal();
                     this.formProduksi = {
                         ...data
                     };
@@ -1911,6 +1920,7 @@
                 },
 
                 openEditListrik(data) {
+                    this.closeModal();
                     this.formListrik = {
                         ...data
                     };
@@ -1919,6 +1929,7 @@
                 },
 
                 openEditAir(data) {
+                    this.closeModal();
                     this.formAir = {
                         ...data
                     };
@@ -1927,6 +1938,7 @@
                 },
 
                 openEditBahan(data) {
+                    this.closeModal();
                     this.formPemakaianBahan = {
                         ...data
                     };
@@ -1935,6 +1947,7 @@
                 },
 
                 openEditBahanBakar(data) {
+                    this.closeModal();
                     this.formBahanBakar = {
                         ...data
                     };
@@ -1943,6 +1956,7 @@
                 },
 
                 openEditMesin(data) {
+                    this.closeModal();
                     this.formMesin = {
                         ...data
                     };
@@ -1951,6 +1965,7 @@
                 },
 
                 openEditPersentase(data) {
+                    this.closeModal();
                     this.formPersentase = {
                         ...data
                     };
@@ -1959,14 +1974,13 @@
                 },
 
                 openEditModal(data) {
+                    this.closeModal();
                     this.formModal = {
                         ...data
                     };
                     this.openModalModal = true;
                     document.body.style.overflow = 'hidden';
                 },
-
-
 
                 closeModal() {
                     this.openModalModal = false;
