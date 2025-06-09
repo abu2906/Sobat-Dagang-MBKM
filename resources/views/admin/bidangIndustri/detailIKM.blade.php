@@ -387,7 +387,7 @@
                                 <tbody class="divide-y divide-gray-100 bg-white">
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-2 font-medium text-[#083458]">Jenis Persediaan</td>
-                                        <td class="px-4 py-2 text-right">{{ $persediaan->jenis_persediaan }}</td>
+                                        <td class="px-4 py-2 text-right">{{ $persediaan->jenis_persediaan ? ucwords(str_replace('_', ' ', $persediaan->jenis_persediaan)) : '-' }}</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-2 font-medium text-[#083458]">Nilai Awal</td>
@@ -714,7 +714,7 @@
                                     {{-- Limbah Cair --}}
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-2 font-medium text-[#083458]">Parameter Limbah Cair</td>
-                                        <td class="px-4 py-2 text-right">{{ $limbah->parameter_limbah_cair ?? '-' }}</td>
+                                        <td class="px-4 py-2 text-right">{{ $limbah->parameter_limbah_cair ? ucwords(str_replace('_', ' ', $limbah->parameter_limbah_cair)) : '-' }}</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-2 font-medium text-[#083458]">Jumlah Limbah Cair (liter)</td>
@@ -1325,7 +1325,7 @@
                                 <tbody class="divide-y divide-gray-100 bg-white">
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-2 font-medium text-[#083458]">Sumber Air</td>
-                                        <td class="px-4 py-2 text-right">{{ $ikm->penggunaanAir->sumber_air }}</td>
+                                        <td class="px-4 py-2 text-right">{{ $ikm->penggunaanAir->sumber_air ? ucwords(str_replace('_', ' ', $ikm->penggunaanAir->sumber_air)) : '-' }}</td>
                                     </tr>
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-2 font-medium text-[#083458]">Banyaknya Penggunaan (m³)</td>
@@ -1409,8 +1409,8 @@
                                     <th class="px-4 py-2">Spesifikasi</th>
                                     <th class="px-4 py-2">Kode HS</th>
                                     <th class="px-4 py-2">Satuan</th>
-                                    <th class="px-4 py-2 text-right">Jumlah DN</th>
-                                    <th class="px-4 py-2 text-right">Nilai DN</th>
+                                    <th class="px-4 py-2 text-right">Jumlah Dalam Negeri</th>
+                                    <th class="px-4 py-2 text-right">Nilai Dalam Negeri</th>
                                     <th class="px-4 py-2 text-right">Jumlah Impor</th>
                                     <th class="px-4 py-2 text-right">Nilai Impor</th>
                                     <th class="px-4 py-2">Negara Asal</th>
@@ -1818,8 +1818,8 @@
                     spesifikasi: 'Spesifikasi',
                     kode_hs: 'Kode HS',
                     satuan_standar: 'Satuan',
-                    jumlah_dalam_negeri: 'Jumlah DN',
-                    nilai_dalam_negeri: 'Nilai DN',
+                    jumlah_dalam_negeri: 'Jumlah Dalam Negeri',
+                    nilai_dalam_negeri: 'Nilai Dalam Negeri',
                     jumlah_impor: 'Jumlah Impor',
                     nilai_impor: 'Nilai Impor',
                     negara_asal_impor: 'Negara Asal',

@@ -31,18 +31,23 @@
         </a>
     </div>
 
-    <div class="relative flex items-center w-full gap-4 px-6 py-6 mx-auto">
-      <div class="relative flex-1">
-        <form method="GET" action="{{ route('admin.industri.halal') }}">
-            <input type="text" name="search" placeholder="Cari"
-              class="w-full p-3 pl-10 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ request('search') }}" />
-            <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
-        </form>
-    </div>
+    <div class="container px-4 mx-auto -mt-8">
+      <div class="flex justify-center mb-6 gap-6">
+        <div class="relative w-1/2 bg-white rounded-full shadow-xl shadow-gray-400/40">
+          <form method="GET" action="{{ route('admin.industri.halal') }}">
+              <span class="absolute text-gray-500 transform -translate-y-1/2 material-symbols-outlined left-3 top-1/2">search</span>
+              <input type="text" placeholder="Cari Sertifikat Halal" name="search"
+                  class="w-full p-3 pl-10 bg-transparent border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                  value="{{ request('search') }}"/>
+          </form>
+        </div>
+      
 
-    <button @click="openAdd = true" class="sticky bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
-      TAMBAH DATA
-    </button>
+        <button @click="openAdd = true" class="sticky bg-[#002B4E] text-white font-semibold rounded-full px-6 py-3 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
+          TAMBAH DATA
+        </button> 
+      </div>  
+    
   </div>
 
   <!-- Fixed Form Tambah Data Modal -->
