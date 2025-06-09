@@ -68,6 +68,14 @@
             margin: 4px 0;
         }
 
+        .isi_surat, 
+        .isi_surat p,
+        .isi_surat div,
+        .isi_surat span {
+            text-align: justify !important;
+            text-justify: inter-word;
+        }
+
         .isi_surat p {
             margin-bottom: 10px;
         }
@@ -99,6 +107,8 @@
 
         .ttd .ttd_QR img {
             height: 100px;
+            margin-left: 200px;
+            margin-bottom: 10px;
         }
 
         .judul {
@@ -169,14 +179,15 @@
         </tr>
     </table><br>
 
-    {!! $isi_surat !!}
+    <div style="text-align: justify; text-justify: inter-word;">
+        {!! $isi_surat !!}
+    </div>
+
     <div class="ttd">
         <p>KEPALA DINAS PERDAGANGAN</p>
         <p>KOTA PAREPARE</p>
-        <div></div>
         <div class="ttd_QR">
-            <img src="{{ public_path('assets/ttd/contohstempel.png') }}" alt="">
-            <img src="{{ public_path('assets/ttd/qr.png') }}" alt="">
+            <img src="{{ public_path('assets/ttd/qr.png') }}" alt="QR Code">
         </div>
         <div></div>
         <p class="nama_kadis">HJ A WISNAH T SE MSI</p>
