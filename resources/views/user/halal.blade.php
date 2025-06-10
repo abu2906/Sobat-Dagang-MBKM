@@ -27,7 +27,7 @@
           class="w-full px-6 py-2 pl-10 bg-white rounded-full shadow-md focus:outline-none">
 
         <!-- Ikon pencarian -->
-        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" fill="none"
+        <svg class="absolute w-5 h-5 text-gray-500 transform -translate-y-1/2 left-3 top-1/2" fill="none"
             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round"
                 d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
@@ -38,10 +38,9 @@
 
 
 
-  <div class="flex-1 px-6 py-10
-   m-4">
-    <h2 class="text-5xl text-center font-bold mb-5">Data Sertifikat Halal</h2>
-    <div class="overflow-auto shadow rounded-xl border border-gray-200">
+  <div class="flex-1 px-6 py-10 m-4">
+    <h2 class="mb-5 text-5xl font-bold text-center">Data Sertifikat Halal</h2>
+    <div class="overflow-auto border border-gray-200 shadow rounded-xl">
       <table class="min-w-full text-sm rounded-lg">
         <thead class="bg-[#0d3b66] text-white text-center">
           <tr>
@@ -61,7 +60,7 @@
               <td class="px-4 py-2 text-center">{{ \Carbon\Carbon::parse($item->tanggal_sah)->format('d M Y') }}</td>
               <td class="px-4 py-2 text-left">{{ $item->alamat }}</td>
               <td class="px-4 py-2 text-center">{{ $item->no_sertifikasi_halal }}</td>
-              <td class="px-4 py-2">
+              <td class="px-4 py-2 text-center">
                 @if ($item->sertifikat)
                   <a href="{{ asset('storage/' . $item->sertifikat) }}" target="_blank" class="text-blue-600 underline">Sertifikat Halal</a>
                 @else
@@ -71,7 +70,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="7" class="text-center py-4 text-gray-500">Tidak ada data sertifikat halal.</td>
+              <td colspan="7" class="py-4 text-center text-gray-500">Tidak ada data sertifikat halal.</td>
             </tr>
           @endforelse
         </tbody>
