@@ -29,7 +29,7 @@
             ['label' => 'Data Sertifikat Halal', 'route' => route('halal.user')],
         ],
         'METROLOGI' => [
-            ['label' => 'Permohonan Tera baru/Tera ulang', 'route' => route('administrasi-metrologi')],
+            ['label' => 'Permohonan Tera/Tera ulang', 'route' => route('administrasi-metrologi')],
             ['label' => 'Alat Ukur Valid', 'route' => route('directory-metrologi')],
         ],
     ];
