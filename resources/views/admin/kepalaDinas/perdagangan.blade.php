@@ -35,7 +35,7 @@
             </div>
 
             <div class="p-4 bg-white shadow rounded-xl">
-                <h2 class="mb-2 text-lg font-semibold text-gray-700">Perkembangan Harga Pupuk</h2>
+                <h2 class="mb-2 text-lg font-semibold text-gray-700">Perkembangan Data Penyaluran Pupuk</h2>
                 <div class="w-full h-[300px]">
                     <canvas id="lineChart"></canvas>
                 </div>
