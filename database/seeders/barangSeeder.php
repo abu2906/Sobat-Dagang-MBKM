@@ -88,7 +88,7 @@ class BarangSeeder extends Seeder
             ['nama_barang' => 'Pisang Ambon/Sisir', 'id_index_kategori' => 31],
             ['nama_barang' => 'Sawi Hijau', 'id_index_kategori' => 32],
             ['nama_barang' => 'Tomat', 'id_index_kategori' => 10],
-            ['nama_barang' => 'Ketimun', 'id_index_kategori' => 22],
+            ['nama_barang' => 'Ketimun', 'id_index_kategori' => 32],
             ['nama_barang' => 'Kentang', 'id_index_kategori' => 33],
             ['nama_barang' => 'Kangkung', 'id_index_kategori' => 34],
             ['nama_barang' => 'Kacang Panjang', 'id_index_kategori' => 35],
