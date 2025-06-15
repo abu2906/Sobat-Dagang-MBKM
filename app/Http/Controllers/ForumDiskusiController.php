@@ -12,7 +12,7 @@ class ForumDiskusiController extends Controller
     public function index(){
     // Hanya untuk user
     if (!Auth::guard('user')->check()) {
-        abort(403); // Unauthorized jika bukan user
+        abort(403);
     }
 
     $chats = ForumDiskusi::with('user', 'disdag')
@@ -26,7 +26,7 @@ class ForumDiskusiController extends Controller
     {
         // Hanya untuk admin (disdag)
         if (!Auth::guard('disdag')->check()) {
-            abort(403); // Unauthorized jika bukan disdag
+            abort(403);
         }
 
         $chats = ForumDiskusi::with('user', 'disdag')

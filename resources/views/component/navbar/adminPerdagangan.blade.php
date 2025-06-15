@@ -30,6 +30,7 @@
             ['href' => route('updateHarga.update'), 'icon' => 'tag.png', 'label' => 'Update Harga Barang'],
             ['href' => route('dashboard-perdagangan.hapus-barang'), 'icon' => 'delete.png', 'label' => 'Hapus Data Barang'],
             ['href' => route('lihat.laporan.distribusi'), 'icon' => 'report-filled.png', 'label' => 'Lihat Laporan Distribusi'],
+            ['href' => route('admin.pengaduan.index'), 'icon' => 'forum.png', 'label' => 'Pengaduan Distributor'],
             ];
             @endphp
 
