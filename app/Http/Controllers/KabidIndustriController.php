@@ -31,7 +31,9 @@ class KabidIndustriController extends Controller
         ];
 
         return [
-            'totalSuratIndustri' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->count(),
+            'totalSuratIndustri' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)
+            ->where('status', '!=', 'disimpan') // hanya hitung status selain disimpan
+            ->count(),
             'totalSuratTerverifikasi' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'diterima')->count(),
             'totalSuratDitolak' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'ditolak')->count(),
             'totalSuratDraft' => DB::table('form_permohonan')->whereIn('jenis_surat', $jenis)->where('status', 'draft')->count(),
