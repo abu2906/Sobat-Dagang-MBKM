@@ -119,6 +119,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/input-data-distribusi/{id_toko}', [PelaporanController::class, 'showDataDistribusi'])->name('pelaporan.showDataDistribusi');
     Route::post('/input-data-distribusi', [PelaporanController::class, 'inputDataDistribusi'])->name('pelaporan.inputDataDistribusi');
     Route::delete('/toko/{id}', [PelaporanController::class, 'destroy'])->name('toko.destroy');
+    Route::post('/pengaduan-distributor', [PelaporanController::class, 'storePengaduanDistributor'])->name('pelaporan.pengaduan.store');
 
     //perdagangan
     Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
@@ -147,6 +148,8 @@ Route::middleware(['check.role:admin_perdagangan'])->group(function () {
     // Pelaporan
     Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
     Route::get('/lihat-laporan-distribusi-pupuk', [DashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');
+    Route::get('/admin/pengaduan-distributor', [PelaporanController::class, 'indexPengaduan'])->name('admin.pengaduan.index');
+    Route::patch('/admin/pengaduan-distributor/{id}/selesai', [PelaporanController::class, 'tandaiSelesai'])->name('admin.pengaduan.selesai');
     // sobat Harga
     Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
     Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');

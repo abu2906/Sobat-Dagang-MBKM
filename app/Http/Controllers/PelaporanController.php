@@ -12,8 +12,9 @@ use App\Models\RencanaKebutuhanDistributor;
 use App\Models\Toko;
 use Carbon\Carbon;
 use App\Models\StokOpname;
+use App\Models\PengaduanDistributor;
+use Illuminate\Support\Facades\Auth;
 
-// Berisikan seluruh fungsi yang digunakan dalam hal pelaporan baik admin maupun distributor
 class PelaporanController extends Controller
 {
     public function pelaporanPenyaluran()
@@ -78,12 +79,15 @@ class PelaporanController extends Controller
             }
             ksort($mingguData);
         }
+        $user = Auth::guard('user')->user();
+        // dd(Auth::guard('user')->user());
 
         return view('user.bidangPerdagangan.pelaporan', [
             'tokoview' => $tokoview,
             'tokos' => $tokos,
             'dataByMinggu' => $dataByMinggu,
             'mingguBelumTerisi' => $mingguBelumTerisi,
+            'user' => $user,
         ]);
     }
 
@@ -348,9 +352,23 @@ class PelaporanController extends Controller
         }
     }
 
+    public function storePengaduanDistributor(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'isi' => 'required|string',
+        ]);
+        
+        $userId = Auth::guard('user')->id();
 
+        PengaduanDistributor::create([
+            'user_id' => $userId,
+            'judul' => $request->judul,
+            'isi' => $request->isi,
+        ]);
 
-
+        return back()->with('success', 'Pengaduan distributor berhasil dikirim.');
+}
 
     public function showDataDistribusi($id_toko)
     {
@@ -369,6 +387,19 @@ class PelaporanController extends Controller
         $toko->delete();
 
         return redirect()->back()->with('success', 'Toko berhasil dihapus.');
+    }
+
+    public function indexPengaduan(){
+        $pengaduan = \App\Models\PengaduanDistributor::with('user')->latest()->get();
+        return view('admin.bidangPerdagangan.pengaduanDistributor', compact('pengaduan'));
+    }
+
+    public function tandaiSelesai($id){
+        $pengaduan = \App\Models\PengaduanDistributor::findOrFail($id);
+        $pengaduan->status = 'selesai';
+        $pengaduan->save();
+
+        return redirect()->back()->with('success', 'Status pengaduan berhasil diperbarui.');
     }
 
 }
