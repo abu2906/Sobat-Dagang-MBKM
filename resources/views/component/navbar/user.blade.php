@@ -57,7 +57,7 @@
                         <li class="dropdown-submenu">
                             <a href="#"><strong>METROLOGI</strong></a>
                             <ul class="submenu">
-                                <li><a href="{{ route('administrasi-metrologi') }}"><strong>Permohonan Tera baru/Tera ulang</strong></a></li>
+                                <li><a href="{{ route('administrasi-metrologi') }}"><strong>Permohonan Tera/Tera ulang</strong></a></li>
                                 <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Ukur Valid</strong></a></li>
                             </ul>
                         </li>
