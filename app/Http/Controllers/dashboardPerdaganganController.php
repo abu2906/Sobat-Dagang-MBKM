@@ -18,7 +18,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StokOpname;
+use App\Models\Toko;
 use App\Models\Berita;
+use Illuminate\Support\Facades\Log;
 
 class DashboardPerdaganganController extends Controller{
     public function index(Request $request)
@@ -367,6 +369,14 @@ class DashboardPerdaganganController extends Controller{
         foreach ($stokOpnames as $record) {
             $toko = $record->toko->nama_toko ?? 'Tidak diketahui';
             $barang = strtoupper($record->nama_barang);
+            $idToko = $record->toko->id_toko ?? null; // ambil id_toko
+        
+            if (!isset($data[$toko])) {
+                $data[$toko] = [
+                    'id_toko' => $idToko,
+                    'pupuk' => [],
+                ];
+            }
 
             // Data Tabel
             if (!isset($data[$toko][$barang])) {
@@ -767,5 +777,117 @@ class DashboardPerdaganganController extends Controller{
             DB::rollBack();
             return back()->withErrors(['msg' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
+    }
+
+    public function updateStokAwal(Request $request)
+    {
+        // Validasi input dari form
+        $request->validate([
+            'id_stok_opname' => 'required|exists:stok_opname,id_stok_opname',
+            'stok_awal' => 'required|integer|min:0',
+        ]);
+
+        try {
+            // Log input untuk debugging
+            Log::info('Permintaan update stok_awal:', $request->all());
+
+            // Ambil data stok_opname berdasarkan ID
+            $stok = StokOpname::find($request->id_stok_opname);
+
+            if (!$stok) {
+                Log::warning('Data stok_opname tidak ditemukan. ID: ' . $request->id_stok_opname);
+                return back()->with('error', 'Data tidak ditemukan.');
+            }
+
+            // Update stok_awal dan stok_akhir (dihitung otomatis)
+            $stok->stok_awal = $request->stok_awal;
+            $stok->stok_akhir = $request->stok_awal - $stok->penyaluran;
+            $stok->save();
+
+            Log::info('Stok berhasil diperbarui untuk ID: ' . $stok->id_stok_opname);
+            return back()->with('success', 'Stok berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            Log::error('Gagal update stok: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat memperbarui data.');
+        }
+    }
+    public function updatePenyaluran(Request $request)
+    {
+        $request->validate([
+            'id_stok_opname' => 'required|exists:stok_opname,id_stok_opname',
+            'penyaluran' => 'required|integer|min:0',
+        ]);
+
+        $stok = StokOpname::findOrFail($request->id_stok_opname);
+        $stok->penyaluran = $request->penyaluran;
+
+        // Perhitungan ulang stok_akhir
+        $stok->stok_akhir = $stok->stok_awal - $stok->penyaluran;
+
+        $stok->save();
+
+        return back()->with('success', 'Data penyaluran berhasil diperbarui dan stok akhir dihitung ulang.');
+    }
+
+    public function EditlaporanPupuk($id_toko, Request $request)
+    {
+        $toko = Toko::findOrFail($id_toko);
+        $jumlah = null;
+
+        if ($request->has(['jenis_pupuk', 'tahun', 'bulan', 'minggu'])) {
+            // Hitung rentang tanggal untuk minggu ke-n
+            $tanggalAwal = Carbon::create($request->tahun, $request->bulan, 1)->startOfMonth();
+            $tanggalMulai = $tanggalAwal->copy()->addDays(($request->minggu - 1) * 7);
+            $tanggalAkhir = $tanggalMulai->copy()->addDays(6);
+
+            // Ambil data dari stok_opname
+            $laporan = StokOpname::where('id_toko', $id_toko)
+                ->where('nama_barang', strtoupper($request->jenis_pupuk))
+                ->whereDate('tanggal', '>=', $tanggalMulai)
+                ->whereDate('tanggal', '<=', $tanggalAkhir)
+                ->first();
+
+            // Ambil jumlah penyaluran atau 0 jika tidak ada
+            $jumlah = $laporan->penyaluran ?? 0;
+        }
+
+        return view('admin.bidangPerdagangan.edit', compact('toko', 'jumlah'));
+    }
+
+    public function CarilaporanPupuk(Request $request)
+    {
+        $id_toko = $request->id_toko;
+        $nama_barang = $request->nama_barang;
+
+        if (!$id_toko) {
+            return back()->with('error', 'ID Toko tidak ditemukan');
+        }
+
+        $toko = Toko::findOrFail($id_toko);
+        $jumlah = null;
+        $stokAwal = collect();
+
+        if ($request->has(['nama_barang', 'tahun', 'bulan', 'minggu'])) {
+            $tanggalAwal = Carbon::create($request->tahun, $request->bulan, 1)->startOfMonth();
+            $tanggalMulai = $tanggalAwal->copy()->addDays(($request->minggu - 1) * 7);
+            $tanggalAkhir = $tanggalMulai->copy()->addDays(6);
+
+            $stokAwal = StokOpname::select('id_stok_opname', 'tanggal', 'stok_awal')
+                ->where('id_toko', $id_toko)
+                ->where('nama_barang', strtoupper($nama_barang))
+                ->whereDate('tanggal', '>=', $tanggalMulai)
+                ->whereDate('tanggal', '<=', $tanggalAkhir)
+                ->get();
+
+            $penyaluran = StokOpname::where('id_toko', $id_toko)
+                ->where('nama_barang', strtoupper($nama_barang))
+                ->whereDate('tanggal', '>=', $tanggalMulai)
+                ->whereDate('tanggal', '<=', $tanggalAkhir)
+                ->first(); // hanya satu input penyaluran per minggu
+            }
+
+        return view('admin.bidangPerdagangan.edit', compact('toko', 'jumlah', 'stokAwal', 'penyaluran'))
+            ->with('filter', $request->all());
     }
 }

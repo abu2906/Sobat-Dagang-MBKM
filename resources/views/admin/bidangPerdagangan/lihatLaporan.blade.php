@@ -73,6 +73,7 @@
                     <th colspan="3" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">STOK AWAL</th>
                     <th colspan="3" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">PENYALURAN</th>
                     <th colspan="3" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">STOK AKHIR</th>
+                    <th rowspan="2" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">Edit</th>
                 </tr>
                 <tr>
                     <th class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">UREA</th>
@@ -105,6 +106,11 @@
                         <td class="text-center border">{{ $barang['UREA']['stok_akhir'] ?? 0 }}</td>
                         <td class="text-center border">{{ $barang['NPK']['stok_akhir'] ?? 0 }}</td>
                         <td class="text-center border">{{ $barang['NPK-FK']['stok_akhir'] ?? 0 }}</td>
+                        <td class="text-center border">
+                            <a href="{{ route('edit.laporan.distribusi', ['id_toko' => $barang['id_toko']]) }}" class="text-blue-600 hover:underline">
+                                Edit
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

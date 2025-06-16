@@ -148,8 +148,13 @@ Route::middleware(['check.role:admin_perdagangan'])->group(function () {
     // Pelaporan
     Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
     Route::get('/lihat-laporan-distribusi-pupuk', [DashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');
+    Route::get('/lihat-laporan-distribusi-pupuk/edit-laporan/{id_toko}', [DashboardPerdaganganController::class, 'EditlaporanPupuk'])->name('edit.laporan.distribusi');
+    Route::get('/lihat-laporan-distribusi-pupuk/cari-laporan', [DashboardPerdaganganController::class, 'CarilaporanPupuk'])->name('admin.editLaporanPupuk');
+    Route::put('/lihat-laporan-distribusi-pupuk/edit-laporan/update', [DashboardPerdaganganController::class, 'updateStokAwal'])->name('admin.updateStokAwal');
+    Route::post('/lihat-laporan-distribusi-pupuk/update-penyaluran', [DashboardPerdaganganController::class, 'updatePenyaluran'])->name('admin.updatePenyaluran');
     Route::get('/admin/pengaduan-distributor', [PelaporanController::class, 'indexPengaduan'])->name('admin.pengaduan.index');
     Route::patch('/admin/pengaduan-distributor/{id}/selesai', [PelaporanController::class, 'tandaiSelesai'])->name('admin.pengaduan.selesai');
+
     // sobat Harga
     Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
     Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
