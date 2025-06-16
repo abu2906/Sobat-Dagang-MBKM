@@ -18,7 +18,6 @@
     </div>
 </div>
 
-<!-- Tabel -->
 <div class="container p-6 mx-auto mt-8">
     <div class="judul-tabel">
         <p class="px-6 py-3 text-xl font-bold font-istok rounded-3xl text-[#083458]">TOKO</p>
@@ -41,7 +40,7 @@
                         <td class="px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $toko->kecamatan }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $toko->no_register }}</td>
                         <td class="px-6 py-4 text-sm text-gray-700 border-r-2 border-[#889EAF]">{{ $toko->rencana->jumlah ?? 'N/A' }} sak</td>
-                        <!-- kolom lain -->
+                        
                         <td class="flex items-center justify-center gap-2 px-6 py-4 text-sm text-gray-700">
                             <a href="{{ route('pelaporan.showDataDistribusi', ['id_toko' => $toko->id_toko]) }}">
                                 <button class="px-3 py-1 text-xs font-semibold rounded-md text-white bg-[#083458] hover:bg-[#0a416d] transition">
@@ -49,7 +48,6 @@
                                 </button>
                             </a>
 
-                            <!-- Tombol untuk membuka modal -->
                             <button 
                                 class="px-3 py-1 text-xs font-semibold text-white transition bg-red-600 rounded-md hover:bg-red-700"
                                 onclick="openModal('{{ $toko->id_toko }}')"
@@ -64,7 +62,6 @@
     </div>
     <div class="flex justify-center mt-6">
             <nav class="inline-flex -space-x-px">
-                {{-- Tombol Sebelumnya --}}
                 @if ($tokos->onFirstPage())
                     <span class="px-4 py-2 text-gray-400 bg-gray-100 border border-gray-300 rounded-l-lg">«</span>
                 @else
@@ -88,14 +85,75 @@
                 @endif
             </nav>
         </div>
-    <div class="py-6 tambahkan-data">
-        <a href="{{ route('pelaporan.showInputForm') }}">
-            <p class="px-6 py-3 text-sm font-bold font-istok rounded-xl text-white bg-[#083458] w-fit">
-                Tambahkan Data untuk Toko
-            </p>
-        </a>
-    </div>
+        <div class="py-6 flex flex-wrap items-center gap-4">
+            <a href="{{ route('pelaporan.showInputForm') }}">
+                <p class="px-6 py-3 text-sm font-bold font-istok rounded-xl text-white bg-[#083458] w-fit">
+                    Tambahkan Data untuk Toko
+                </p>
+            </a>
+
+            <button 
+                data-modal-target="modalPengaduan" 
+                data-modal-toggle="modalPengaduan"
+                class="px-6 py-3 text-sm font-bold font-istok rounded-xl text-white bg-red-600 w-fit"
+            >
+                Pengaduan Distributor
+            </button>
+        </div>
 </div>
+
+<div id="modalPengaduan" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/50">
+  <div class="flex items-center justify-center min-h-screen px-4 py-6">
+    <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
+      
+      <h2 class="text-lg font-bold mb-4 text-center text-gray-800">Formulir Pengaduan Distributor</h2>
+      <form action="{{ route('pelaporan.pengaduan.store') }}" method="POST" class="space-y-4">
+        @csrf
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Nama Pengirim</label>
+          <input type="text" class="w-full border border-gray-300 p-2 rounded-xl bg-gray-100" value="{{ ucwords(auth()->guard('user')->user()->nama) }}" readonly>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Judul Pengaduan</label>
+          <input type="text" name="judul" class="w-full border border-gray-300 p-2 rounded-xl" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Isi Pengaduan</label>
+          <textarea name="isi" rows="4" class="w-full border border-gray-300 p-2 rounded-xl" required></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="button" onclick="document.getElementById('modalPengaduan').classList.add('hidden')" class="px-5 py-2 bg-gray-300 text-gray-700 rounded-full hover:bg-gray-400 transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2 bg-[#083458]  text-white rounded-full hover:bg-blue-300 hover:text-black transition">
+            Kirim
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+@if(session('success'))
+<div id="modalSukses" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 sm:px-6">
+  <div class="bg-white relative rounded-2xl shadow-xl w-full max-w-sm sm:max-w-md md:max-w-lg p-6 sm:p-8 text-center">
+
+    <button onclick="document.getElementById('modalSukses').classList.add('hidden')" 
+      class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl font-bold focus:outline-none">
+      &times;
+    </button>
+
+    <h2 class="text-lg sm:text-xl font-bold text-green-600 mb-2">Berhasil!</h2>
+    <p class="text-sm sm:text-base text-gray-700 mb-2">{{ session('success') }}</p>
+
+  </div>
+</div>
+@endif
 
 <div class="container p-6 mx-auto mt-8 overflow-x-hidden">
     <form method="GET" id="filterForm">
@@ -228,8 +286,6 @@
         // Kirim form
         document.getElementById('filterForm').submit();
     });
-</script>
-<script>
     function openModal(id) {
         const modal = document.getElementById('confirmModal');
         const form = document.getElementById('deleteForm');
@@ -241,5 +297,12 @@
     function closeModal() {
         document.getElementById('confirmModal').classList.add('hidden');
     }
+    
+    document.querySelectorAll('[data-modal-toggle]').forEach(button => {
+        const target = button.getAttribute('data-modal-target');
+        button.addEventListener('click', () => {
+        document.getElementById(target).classList.remove('hidden');
+        });
+    });
 </script>
 @endsection
