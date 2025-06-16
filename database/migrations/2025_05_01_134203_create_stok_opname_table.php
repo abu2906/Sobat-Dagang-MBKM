@@ -25,7 +25,6 @@ return new class extends Migration
             $table->integer('stok_akhir');
             $table->date('tanggal');
             $table->text('nama_barang');
-
             $table->timestamps();
         });
     }
