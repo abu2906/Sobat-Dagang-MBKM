@@ -2,13 +2,22 @@
 @section('title', 'Lihat Laporan Distribusi Barang')
 
 @section('content')
-<div class="max-w-3xl p-6 mx-auto bg-white rounded shadow">
-    <h2 class="mb-4 text-xl font-semibold">Cari Laporan Pupuk</h2>
+<div class="relative w-full h-36">
+    <img src="{{ asset('assets\img\background\dagang.jpg') }}" alt="Background" class="object-cover w-full h-full" />
+    <a href="{{ route('lihat.laporan.distribusi') }}"
+            class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+            <span class="text-2xl material-symbols-outlined">
+                arrow_back
+            </span>
+    </a>
+</div>
+<div class="max-w-3xl p-6 mx-auto bg-white rounded shadow  mt-6">
+    <h2 class="mb-4 text-2xl font-bold text-center">Cari Laporan Pupuk</h2>
 
     {{-- Info Toko --}}
     <div class="mb-4">
         <label class="block font-medium">Nama Toko:</label>
-        <input type="text" value="{{ $toko->nama_toko }}" disabled class="w-full p-2 bg-gray-100 border rounded">
+        <input type="text" value="{{ ucwords($toko->nama_toko) }}" disabled class="w-full p-2 bg-gray-100 border rounded-xl">
     </div>
 
     {{-- Form Filter --}}
@@ -18,7 +27,7 @@
         {{-- Jenis Pupuk --}}
         <div class="mb-4">
             <label class="block font-medium">Jenis Pupuk:</label>
-            <select name="nama_barang" class="w-full p-2 border rounded" required>
+            <select name="nama_barang" class="w-full p-2 border rounded-xl" required>
                 <option value="">Pilih Jenis Pupuk</option>
                 <option value="NPK" {{ request('nama_barang') == 'NPK' ? 'selected' : '' }}>NPK</option>
                 <option value="UREA" {{ request('nama_barang') == 'UREA' ? 'selected' : '' }}>UREA</option>
@@ -29,7 +38,7 @@
         {{-- Tahun --}}
         <div class="mb-4">
             <label class="block font-medium">Tahun:</label>
-            <select name="tahun" class="w-full p-2 border rounded" required>
+            <select name="tahun" class="w-full p-2 border rounded-xl" required>
                 <option value="">Pilih Tahun</option>
                 @for ($year = date('Y'); $year >= 2020; $year--)
                     <option value="{{ $year }}" {{ request('tahun') == $year ? 'selected' : '' }}>{{ $year }}</option>
@@ -40,7 +49,7 @@
         {{-- Bulan --}}
         <div class="mb-4">
             <label class="block font-medium">Bulan:</label>
-            <select name="bulan" class="w-full p-2 border rounded" required>
+            <select name="bulan" class="w-full p-2 border rounded-xl" required>
                 <option value="">Pilih Bulan</option>
                 @foreach (range(1, 12) as $month)
                     <option value="{{ $month }}" {{ request('bulan') == $month ? 'selected' : '' }}>
@@ -53,7 +62,7 @@
         {{-- Minggu --}}
         <div class="mb-4">
             <label class="block font-medium">Minggu:</label>
-            <select name="minggu" class="w-full p-2 border rounded" required>
+            <select name="minggu" class="w-full p-2 border rounded-xl" required>
                 <option value="">Pilih Minggu</option>
                 <option value="1" {{ request('minggu') == 1 ? 'selected' : '' }}>Minggu 1 (1–7)</option>
                 <option value="2" {{ request('minggu') == 2 ? 'selected' : '' }}>Minggu 2 (8–14)</option>
@@ -62,7 +71,7 @@
             </select>
         </div>
 
-        <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">
+        <button type="submit" class="px-4 py-2 rounded-xl text-white bg-[#083458] rounded hover:bg-blue-300 hover:text-black">
             Cari Data
         </button>
     </form>
@@ -96,26 +105,30 @@
             @if(count($stokAwal) > 0)
                 <div class="flex justify-center">
                     <div class="w-full max-w-3xl overflow-auto">
-                        <table class="w-full border border-collapse border-gray-300 rounded-lg shadow table-auto">
-                            <thead class="bg-gray-100">
-                                <tr class="text-center">
-                                    <th class="px-4 py-2 border">Tanggal</th>
+                        <table class="w-full border border-collapse border-gray-300 shadow table-auto overflow-hidden rounded-2xl">
+                            <thead class="bg-[#083458] text-white">
+                                <tr>
+                                    <th class="px-4 py-2 border rounded-tl-xl">Tanggal</th>
                                     <th class="px-4 py-2 border">Jumlah</th>
-                                    <th class="px-4 py-2 border">Aksi</th>
+                                    <th class="px-4 py-2 border rounded-tr-xl">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($stokAwal as $item)
-                                    <tr class="text-center">
-                                        <td class="px-4 py-2 border">{{ $item->tanggal }}</td>
+                                    <tr class="text-center {{ $loop->last ? 'rounded-b-xl' : '' }}">
+                                        <td class="px-4 py-2 border">
+                                            {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
+                                        </td>
                                         <td class="px-4 py-2 border">{{ $item->stok_awal }}</td>
                                         <td class="px-4 py-2 border">
                                             <button
                                                 data-id="{{ $item->id_stok_opname }}"
                                                 data-tanggal="{{ $item->tanggal }}"
                                                 data-jumlah="{{ $item->stok_awal }}"
-                                                class="px-3 py-1 text-white transition bg-yellow-500 rounded hover:bg-yellow-600 open-modal-stok-awal">
-                                                Edit
+                                                class="open-modal-stok-awal text-[#083458] hover:text-blue-600 transition"
+                                                title="Edit"
+                                            >
+                                                <i class="fas fa-pen"></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -130,7 +143,6 @@
         </div>
     @endif
 
-
     {{-- Hasil Penyaluran --}}
     @if(isset($penyaluran))
         <div class="mt-8 text-center">
@@ -138,30 +150,34 @@
             @if($penyaluran)
                 <div class="flex justify-center">
                     <div class="w-full max-w-3xl overflow-auto">
-                        <table class="w-full border border-collapse border-gray-300 rounded-lg shadow table-auto">
-                            <thead class="bg-gray-100">
-                                <tr class="text-center">
-                                    <th class="px-4 py-2 border">Tanggal</th>
-                                    <th class="px-4 py-2 border">Jumlah Penyaluran</th>
-                                    <th class="px-4 py-2 border">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="text-center">
-                                    <td class="px-4 py-2 border">{{ $penyaluran->tanggal }}</td>
-                                    <td class="px-4 py-2 border">{{ $penyaluran->penyaluran }}</td>
-                                    <td class="px-4 py-2 border">
-                                        <button
-                                            data-id="{{ $penyaluran->id_stok_opname }}"
-                                            data-tanggal="{{ $penyaluran->tanggal }}"
-                                            data-jumlah="{{ $penyaluran->penyaluran }}"
-                                            class="px-3 py-1 text-white transition bg-yellow-500 rounded hover:bg-yellow-600 open-modal-penyaluran">
-                                            Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <table class="w-full border border-collapse border-gray-300 shadow table-auto overflow-hidden rounded-2xl">
+                        <thead class="bg-[#083458] text-white">
+                            <tr>
+                                <th class="px-4 py-2 border rounded-tl-xl">Tanggal</th>
+                                <th class="px-4 py-2 border">Jumlah Penyaluran</th>
+                                <th class="px-4 py-2 border rounded-tr-xl">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center">
+                                <td class="px-4 py-2 border rounded-bl-xl">
+                                    {{ \Carbon\Carbon::parse($penyaluran->tanggal)->translatedFormat('d F Y') }}
+                                </td>
+                                <td class="px-4 py-2 border">{{ $penyaluran->penyaluran }}</td>
+                                <td class="px-4 py-2 border rounded-br-xl">
+                                    <button
+                                        data-id="{{ $penyaluran->id_stok_opname }}"
+                                        data-tanggal="{{ $penyaluran->tanggal }}"
+                                        data-jumlah="{{ $penyaluran->penyaluran }}"
+                                        class="open-modal-penyaluran text-[#083458] hover:text-blue-600 transition"
+                                        title="Edit"
+                                    >
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     </div>
                 </div>
             @else
@@ -173,32 +189,34 @@
 </div>
 
 <!-- Modal Edit Stok Awal -->
-<div id="modalStokAwal" class="fixed top-0 left-0 z-50 hidden w-full h-full bg-black bg-opacity-50">
-    <div class="p-6 mx-auto mt-32 bg-white rounded shadow w-96">
-        <h2 class="mb-4 text-lg font-semibold">Edit Stok Awal</h2>
+<div id="modalStokAwal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-start justify-start pt-32">
+    <div class="p-6 bg-white rounded shadow w-full max-w-md ml-24 mr-6 sm:ml-24 sm:mr-6 md:ml-auto md:mr-auto">
+        <h2 class="mb-4 text-lg font-bold text-center">Edit Stok Awal</h2>
         <form id="formEditStokAwal" method="POST" action="{{ route('admin.updateStokAwal') }}">
             @csrf
             @method('PUT')
             <input type="hidden" name="id_stok_opname" id="edit-id">
             <div class="mb-4">
-                <label class="block">Tanggal:</label>
+                <label class="block font-medium">Tanggal:</label>
                 <input type="text" name="tanggal" id="edit-tanggal" class="w-full p-2 bg-gray-100 border rounded" readonly>
             </div>
             <div class="mb-4">
-                <label class="block">Jumlah:</label>
+                <label class="block font-medium">Jumlah:</label>
                 <input type="number" name="stok_awal" id="edit-jumlah" class="w-full p-2 border rounded" required>
             </div>
             <div class="flex justify-end">
-                <button type="button" id="closeModalStok" class="px-4 py-2 mr-2 text-white bg-gray-400 rounded">Batal</button>
-                <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded">Simpan</button>
+                <button type="button" id="closeModalStok" class="px-4 py-2 mr-2 text-white bg-gray-400 rounded-2xl">Batal</button>
+                <button type="submit" class="px-4 py-2 text-white bg-[#083458] hover:text-black hover:bg-blue-300 rounded-2xl
+                ">Simpan</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- Modal Edit Penyaluran -->
-<div id="modalEditPenyaluran" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
-    <div class="w-full max-w-md p-6 bg-white rounded shadow">
+<div id="modalEditPenyaluran" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-start justify-start pt-32">
+    <div class="p-6 bg-white rounded shadow w-full max-w-md ml-24 mr-6 sm:ml-24 sm:mr-6 md:ml-auto md:mr-auto">
+        <h2 class="mb-4 text-lg font-bold text-center">Edit Data Penyaluran</h2>
         <form action="{{ route('admin.updatePenyaluran') }}" method="POST">
             @csrf
             <input type="hidden" name="id_stok_opname" id="penyaluran_id">
@@ -214,16 +232,29 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="button" class="px-4 py-2 mr-2 text-white bg-gray-400 rounded close-modal">Batal</button>
-                <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded">Simpan</button>
+                <button type="button" class="px-4 py-2 mr-2 text-white bg-gray-400 rounded-2xl close-modal">Batal</button>
+                <button type="submit" class="px-4 py-2 text-white bg-[#083458] hover:text-black hover:bg-blue-300 rounded-2xl">Simpan</button>
             </div>
         </form>
     </div>
 </div>
 
-
-
 <script>
+
+    function formatTanggalIndo(tanggalString) {
+        const bulanIndo = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+
+        const tanggalObj = new Date(tanggalString);
+        const tanggal = String(tanggalObj.getDate()).padStart(2, '0');
+        const bulan = bulanIndo[tanggalObj.getMonth()];
+        const tahun = tanggalObj.getFullYear();
+
+        return `${tanggal} ${bulan} ${tahun}`;
+    }
+
     document.querySelectorAll('.open-modal-stok-awal').forEach(button => {
         button.addEventListener('click', () => {
             const id = button.dataset.id;
@@ -231,7 +262,7 @@
             const jumlah = button.dataset.jumlah;
 
             document.getElementById('edit-id').value = id;
-            document.getElementById('edit-tanggal').value = tanggal;
+            document.getElementById('edit-tanggal').value = formatTanggalIndo(tanggal);
             document.getElementById('edit-jumlah').value = jumlah;
 
             document.getElementById('modalStokAwal').classList.remove('hidden');
@@ -241,8 +272,7 @@
     document.getElementById('closeModalStok').addEventListener('click', () => {
         document.getElementById('modalStokAwal').classList.add('hidden');
     });
-</script>
-<script>
+
     document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('modalEditPenyaluran');
         const openButtons = document.querySelectorAll('.open-modal-penyaluran');
@@ -251,7 +281,8 @@
         openButtons.forEach(btn => {
             btn.addEventListener('click', function () {
                 document.getElementById('penyaluran_id').value = this.dataset.id;
-                document.getElementById('penyaluran_tanggal').value = this.dataset.tanggal;
+                const tanggalRaw = this.dataset.tanggal;
+                document.getElementById('penyaluran_tanggal').value = formatTanggalIndo(tanggalRaw);
                 document.getElementById('penyaluran_jumlah').value = this.dataset.jumlah;
                 modal.classList.remove('hidden');
             });
@@ -264,7 +295,4 @@
         });
     });
 </script>
-
-
-
 @endsection

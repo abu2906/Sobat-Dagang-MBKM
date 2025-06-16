@@ -65,15 +65,16 @@
     {{-- Tabel Laporan --}}
     @if (!empty($data))
     <h3 class="mb-4 text-lg font-semibold text-center">Detail Laporan</h3>
-    <div class="px-4 py-2 mt-4 mb-6 overflow-x-auto text-center border shadow text-center-gray-200 rounded-2xl">
-        <table class="min-w-full border table-auto text-center-collapse rounded-2xl">
+    <div class="px-4 py-2 mt-4 mb-6 overflow-x-auto text-center border shadow rounded-2xl bg-white">
+    <div class="overflow-hidden rounded-2xl">
+        <table class="min-w-full table-auto text-center border-collapse">
             <thead>
                 <tr>
                     <th rowspan="2" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">TOKO</th>
                     <th colspan="3" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">STOK AWAL</th>
                     <th colspan="3" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">PENYALURAN</th>
                     <th colspan="3" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">STOK AKHIR</th>
-                    <th rowspan="2" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">Edit</th>
+                    <th rowspan="2" class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">Aksi</th>
                 </tr>
                 <tr>
                     <th class="px-6 py-3 text-center text-sm font-medium text-white bg-[#083458] border text-center-2 border text-center-[#889EAF]">UREA</th>
@@ -90,7 +91,7 @@
             <tbody class="text-xs bg-white">
                 @foreach ($data as $toko => $barang)
                     <tr>
-                        <td class="px-2 py-1 text-center border">{{ $toko }}</td>
+                        <td class="px-2 py-1 text-center border">{{ ucwords(strtolower($toko)) }}</td>
 
                         {{-- Stok Awal --}}
                         <td class="text-center border">{{ $barang['UREA']['stok_awal'] ?? 0 }}</td>
@@ -107,14 +108,15 @@
                         <td class="text-center border">{{ $barang['NPK']['stok_akhir'] ?? 0 }}</td>
                         <td class="text-center border">{{ $barang['NPK-FK']['stok_akhir'] ?? 0 }}</td>
                         <td class="text-center border">
-                            <a href="{{ route('edit.laporan.distribusi', ['id_toko' => $barang['id_toko']]) }}" class="text-blue-600 hover:underline">
-                                Edit
+                            <a href="{{ route('edit.laporan.distribusi', ['id_toko' => $barang['id_toko']]) }}" class="text-[#083458] hover:text-blue-600">
+                                <i class="fas fa-pen"></i>
                             </a>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+    </div>
     </div>
     @else
     <div class="px-4 py-2 mt-4 mb-6 overflow-x-auto text-center border shadow text-center-gray-200 rounded-2xl">
