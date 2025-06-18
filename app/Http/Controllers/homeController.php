@@ -6,7 +6,7 @@ use App\Models\Faq;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;;
 
-class HomeController extends Controller
+class homeController extends Controller
 {
     // Menampilkan halaman utama dengan daftar berita
     public function index()

@@ -22,7 +22,7 @@ use App\Models\Toko;
 use App\Models\Berita;
 use Illuminate\Support\Facades\Log;
 
-class DashboardPerdaganganController extends Controller{
+class dashboardPerdaganganController extends Controller{
     public function index(Request $request)
     {
         // Ambil data surat perdagangan

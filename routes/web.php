@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PelaporanController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\authController;
+use App\Http\Controllers\homeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DashboardMetrologiController;
 use App\Http\Controllers\AdminIndustriController;
@@ -13,7 +13,7 @@ use App\Http\Controllers\DirectoryBookController;
 use App\Http\Controllers\DataIKMController;
 use App\Http\Controllers\WilayahController;
 use App\Http\Controllers\PersuratanController;
-use App\Http\Controllers\DashboardPerdaganganController;
+use App\Http\Controllers\dashboardPerdaganganController;
 use App\Http\Controllers\PelaporanPenyaluranController;
 use App\Http\Controllers\SobatHargaController;
 use App\Http\Controllers\KabidPerdaganganController;
@@ -53,21 +53,21 @@ Route::get('/verifikasi-akun', function (Request $request) {
 });
 
 // Controller untuk halaman utama (homepage)
-Route::get('/', [HomeController::class, 'index'])->name('Home');
-Route::get('/about', [HomeController::class, 'showAboutPage'])->name('about');
-Route::get('/faq', [HomeController::class, 'showFaqPage'])->name('faq');
+Route::get('/', [homeController::class, 'index'])->name('Home');
+Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
+Route::get('/faq', [homeController::class, 'showFaqPage'])->name('faq');
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
 Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
-Route::get('/berita/{id}', [HomeController::class, 'show'])->name('berita.utama');
+Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 
 // Controller untuk authentication
-Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'submitFormLogin'])->name('login.submit');
-Route::get('/register', [AuthController::class, 'showFormRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'submitRegister'])->name('register.submit');
-Route::get('/forgot-password', [AuthController::class, 'showforgotPassword'])->name('forgot.password');
-Route::get('/change-password', [AuthController::class, 'showChangePassword'])->name('change.password');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/login', [authController::class, 'showFormLogin'])->name('login');
+Route::post('/login', [authController::class, 'submitFormLogin'])->name('login.submit');
+Route::get('/register', [authController::class, 'showFormRegister'])->name('register');
+Route::post('/register', [authController::class, 'submitRegister'])->name('register.submit');
+Route::get('/forgot-password', [authController::class, 'showforgotPassword'])->name('forgot.password');
+Route::get('/change-password', [authController::class, 'showChangePassword'])->name('change.password');
+Route::post('/logout', [authController::class, 'logout'])->name('logout');
 Route::get('/lupa-password', [LupaPasswordController::class, 'showForm'])->name('password.request');
 Route::post('/lupa-password', [LupaPasswordController::class, 'sendLink'])->name('password.email');
 
@@ -78,9 +78,9 @@ Route::post('/reset-password', [LupaPasswordController::class, 'resetPassword'])
 // guest
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
 Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [homeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'showAboutPage'])->name('about');
-Route::get('/berita/{id}', [HomeController::class, 'show'])->name('berita.utama');
+Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
 Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
 Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
@@ -100,8 +100,8 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/new-password', [LupaPasswordController::class, 'resetPass'])->name('password.resetPass');
     Route::post('/new-password', [LupaPasswordController::class, 'updateNewPassword'])->name('password.updateNew');
 
-    Route::get('/profile/edit', [HomeController::class, 'editProfile'])->name('edit.profile');
-    Route::put('/profile/update', [HomeController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/edit', [homeController::class, 'editProfile'])->name('edit.profile');
+    Route::put('/profile/update', [homeController::class, 'updateProfile'])->name('profile.update');
 
     //pengaduan
     Route::post('/forum-chat/send', [ForumDiskusiController::class, 'kirimPesan'])->name('forum.kirim');
@@ -122,9 +122,9 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::post('/pengaduan-distributor', [PelaporanController::class, 'storePengaduanDistributor'])->name('pelaporan.pengaduan.store');
 
     //perdagangan
-    Route::get('/bidang-perdagangan/form-permohonan', [DashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
-    Route::get('/bidang-perdagangan/riwayat-surat', [DashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
-    Route::post('/bidang-perdagangan/ajukan-permohonan', [DashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan_perdagangan');
+    Route::get('/bidang-perdagangan/form-permohonan', [dashboardPerdaganganController::class, 'formPermohonan'])->name('bidangPerdagangan.formPermohonan');
+    Route::get('/bidang-perdagangan/riwayat-surat', [dashboardPerdaganganController::class, 'riwayatSurat'])->name('bidangPerdagangan.riwayatSurat');
+    Route::post('/bidang-perdagangan/ajukan-permohonan', [dashboardPerdaganganController::class, 'ajukanPermohonan'])->name('ajukanPermohonan_perdagangan');
 
     // Metrologi
     Route::get('/administrasi-metrologi', [PersuratanController::class, 'showAdministrasiMetrologi'])->name('administrasi-metrologi');
@@ -144,34 +144,34 @@ Route::middleware(['auth.role:user'])->group(function () {
 
 // Admin Perdagangan
 Route::middleware(['check.role:admin_perdagangan'])->group(function () {
-    Route::get('/dashboard-perdagangan', [DashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
+    Route::get('/dashboard-perdagangan', [dashboardPerdaganganController::class, 'index'])->name('dashboard.perdagangan');
     // Pelaporan
     Route::get('/review-pengajuan', [PelaporanController::class, 'reviewPengajuan']);
-    Route::get('/lihat-laporan-distribusi-pupuk', [DashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');
-    Route::get('/lihat-laporan-distribusi-pupuk/edit-laporan/{id_toko}', [DashboardPerdaganganController::class, 'EditlaporanPupuk'])->name('edit.laporan.distribusi');
-    Route::get('/lihat-laporan-distribusi-pupuk/cari-laporan', [DashboardPerdaganganController::class, 'CarilaporanPupuk'])->name('admin.editLaporanPupuk');
-    Route::put('/lihat-laporan-distribusi-pupuk/edit-laporan/update', [DashboardPerdaganganController::class, 'updateStokAwal'])->name('admin.updateStokAwal');
-    Route::post('/lihat-laporan-distribusi-pupuk/update-penyaluran', [DashboardPerdaganganController::class, 'updatePenyaluran'])->name('admin.updatePenyaluran');
+    Route::get('/lihat-laporan-distribusi-pupuk', [dashboardPerdaganganController::class, 'laporanPupuk'])->name('lihat.laporan.distribusi');
+    Route::get('/lihat-laporan-distribusi-pupuk/edit-laporan/{id_toko}', [dashboardPerdaganganController::class, 'EditlaporanPupuk'])->name('edit.laporan.distribusi');
+    Route::get('/lihat-laporan-distribusi-pupuk/cari-laporan', [dashboardPerdaganganController::class, 'CarilaporanPupuk'])->name('admin.editLaporanPupuk');
+    Route::put('/lihat-laporan-distribusi-pupuk/edit-laporan/update', [dashboardPerdaganganController::class, 'updateStokAwal'])->name('admin.updateStokAwal');
+    Route::post('/lihat-laporan-distribusi-pupuk/update-penyaluran', [dashboardPerdaganganController::class, 'updatePenyaluran'])->name('admin.updatePenyaluran');
     Route::get('/admin/pengaduan-distributor', [PelaporanController::class, 'indexPengaduan'])->name('admin.pengaduan.index');
     Route::patch('/admin/pengaduan-distributor/{id}/selesai', [PelaporanController::class, 'tandaiSelesai'])->name('admin.pengaduan.selesai');
 
     // sobat Harga
-    Route::get('/tambah-barang', [DashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
-    Route::post('/tambah-barang', [DashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
-    Route::get('/update-harga', [DashboardPerdaganganController::class, 'formUpdateHarga'])->name('updateHarga.store');
-    Route::post('/update-harga', [DashboardPerdaganganController::class, 'update'])->name('updateHarga.update');
-    Route::get('/get-barang-by-kategori/{id}', [DashboardPerdaganganController::class, 'getByKategori']);
-    Route::get('/hapus-barang', [DashboardPerdaganganController::class, 'deleteBarang'])->name('dashboard-perdagangan.hapus-barang');
-    Route::delete('/dashboard-perdagangan/barang/{id}', [DashboardPerdaganganController::class, 'destroy'])->name('barang.destroy');
+    Route::get('/tambah-barang', [dashboardPerdaganganController::class, 'formTambahBarang'])->name('dashboard-perdagangan.form-tambah-barang');
+    Route::post('/tambah-barang', [dashboardPerdaganganController::class, 'storeBarang'])->name('dashboard-perdagangan.tambah-barang');
+    Route::get('/update-harga', [dashboardPerdaganganController::class, 'formUpdateHarga'])->name('updateHarga.store');
+    Route::post('/update-harga', [dashboardPerdaganganController::class, 'update'])->name('updateHarga.update');
+    Route::get('/get-barang-by-kategori/{id}', [dashboardPerdaganganController::class, 'getByKategori']);
+    Route::get('/hapus-barang', [dashboardPerdaganganController::class, 'deleteBarang'])->name('dashboard-perdagangan.hapus-barang');
+    Route::delete('/dashboard-perdagangan/barang/{id}', [dashboardPerdaganganController::class, 'destroy'])->name('barang.destroy');
     // Persuratan
-    Route::get('/kelola-surat', [DashboardPerdaganganController::class, 'kelolaSurat'])->name('perdagangan.kelolaSurat');
-    Route::get('/detail-surat/{id_permohonan}', [DashboardPerdaganganController::class, 'detailSurat'])
+    Route::get('/kelola-surat', [dashboardPerdaganganController::class, 'kelolaSurat'])->name('perdagangan.kelolaSurat');
+    Route::get('/detail-surat/{id_permohonan}', [dashboardPerdaganganController::class, 'detailSurat'])
         ->where('id_permohonan', '[0-9a-fA-F\-]+')
         ->name('perdagangan.detailSurat');
-    Route::put('/permohonan/{id}/tolak', [DashboardPerdaganganController::class, 'tolak'])->name('permohonan.tolak');
-    Route::put('/permohonan/{id}/keterangan', [DashboardPerdaganganController::class, 'simpanketerangan'])->name('permohonan.keterangan');
-    Route::put('/permohonan/{id}/rekomendasi', [DashboardPerdaganganController::class, 'simpanRekomendasi'])->name('permohonan.rekomendasi');
-    Route::get('/detail-surat/{id}/view-{type}', [DashboardPerdaganganController::class, 'viewDokumen'])
+    Route::put('/permohonan/{id}/tolak', [dashboardPerdaganganController::class, 'tolak'])->name('permohonan.tolak');
+    Route::put('/permohonan/{id}/keterangan', [dashboardPerdaganganController::class, 'simpanketerangan'])->name('permohonan.keterangan');
+    Route::put('/permohonan/{id}/rekomendasi', [dashboardPerdaganganController::class, 'simpanRekomendasi'])->name('permohonan.rekomendasi');
+    Route::get('/detail-surat/{id}/view-{type}', [dashboardPerdaganganController::class, 'viewDokumen'])
         ->where('type', 'NIB|NPWP|KTP|AKTA|SURAT|USAHA')
         ->name('dokumen.view');
 });
@@ -262,7 +262,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/berita/{id}/edit', [HomeController::class, 'edit'])->name('berita.edit');   
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');   
     #Kelola FAQ
     Route::get('/admin/kelola-faq', [FAQController::class, 'index'])->name('faq-controller');
     Route::post('/admin/faq/store', [FAQController::class, 'store'])->name('faq-store');
