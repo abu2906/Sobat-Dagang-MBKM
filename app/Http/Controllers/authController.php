@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegisterVerificationMail;
 
-class authController extends Controller
+class AuthController extends Controller
 {
     public function showFormLogin()
     {

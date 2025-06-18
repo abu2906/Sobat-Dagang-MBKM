@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\homeController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DashboardMetrologiController;
 use App\Http\Controllers\AdminIndustriController;
@@ -53,12 +53,12 @@ Route::get('/verifikasi-akun', function (Request $request) {
 });
 
 // Controller untuk halaman utama (homepage)
-Route::get('/', [homeController::class, 'index'])->name('Home');
-Route::get('/about', [homeController::class, 'showAboutPage'])->name('about');
-Route::get('/faq', [homeController::class, 'showFaqPage'])->name('faq');
+Route::get('/', [HomeController::class, 'index'])->name('Home');
+Route::get('/about', [HomeController::class, 'showAboutPage'])->name('about');
+Route::get('/faq', [HomeController::class, 'showFaqPage'])->name('faq');
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
 Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
-Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
+Route::get('/berita/{id}', [HomeController::class, 'show'])->name('berita.utama');
 
 // Controller untuk authentication
 Route::get('/login', [AuthController::class, 'showFormLogin'])->name('login');
@@ -78,9 +78,9 @@ Route::post('/reset-password', [LupaPasswordController::class, 'resetPassword'])
 // guest
 Route::get('/harga-pasar/{kategori}', [SobatHargaController::class, 'index'])->name('harga-pasar.kategori');
 Route::get('/sobat-harga/{kategori}', [SobatHargaController::class, 'index'])->name('sobatHarga.kategori');
-Route::get('/', [homeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'showAboutPage'])->name('about');
-Route::get('/berita/{id}', [homeController::class, 'show'])->name('berita.utama');
+Route::get('/berita/{id}', [HomeController::class, 'show'])->name('berita.utama');
 Route::get('/user/profil', [DashboardController::class, 'showProfile'])->name('profile');
 Route::put('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
 Route::post('/user/profil', [DashboardController::class, 'updateProfile'])->name('profile.update');
@@ -262,7 +262,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');   
+    Route::get('/berita/{id}/edit', [HomeController::class, 'edit'])->name('berita.edit');   
     #Kelola FAQ
     Route::get('/admin/kelola-faq', [FAQController::class, 'index'])->name('faq-controller');
     Route::post('/admin/faq/store', [FAQController::class, 'store'])->name('faq-store');
