@@ -20,7 +20,7 @@ class CreateProduksiTable extends Migration
             $table->string('kbli');
             $table->string('kode_hs');
             $table->string('spesifikasi');
-            $table->integer('banyaknya')->default(0);
+            $table->float('banyaknya')->default(0);
             $table->bigInteger('nilai')->default(0);
             $table->string('satuan');
             $table->float('presentase_produk_ekspor')->default(0);
