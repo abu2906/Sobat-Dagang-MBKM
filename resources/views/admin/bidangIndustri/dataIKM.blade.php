@@ -4,7 +4,16 @@
     @section('content')
         <main class="flex flex-col flex-1 min-h-screen bg-gray-100" x-data="ikmEdit()" x-init="init()">
             <header class="relative z-10">
-                <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-44 object-cover" alt="Header">
+                <div class="relative w-full h-44">
+                    <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner"
+                        class="object-cover w-full h-44">
+                    <a href="{{ route('dashboard.industri') }}"
+                        class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+                        <span class="text-2xl material-symbols-outlined">
+                            arrow_back
+                        </span>
+                    </a>
+                </div>
 
                 <div
                     class="absolute bottom-0 z-20 flex flex-wrap items-stretch justify-between w-11/12 gap-4 px-4 py-4 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg left-1/2 rounded-xl md:flex-nowrap">
@@ -26,7 +35,8 @@
                             <option value="Bacukiki">Bacukiki</option>
                             <option value="BacukikiBarat">Bacukiki Barat</option>
                         </select>
-                        <i class="absolute w-4 h-4 -translate-y-1/2 pointer-events-none fas fa-sliders-h right-3 top-1/2"></i>
+                        <i
+                            class="absolute w-4 h-4 -translate-y-1/2 pointer-events-none fas fa-sliders-h right-3 top-1/2"></i>
                     </div>
 
                     {{-- Filter Investasi --}}
@@ -37,15 +47,17 @@
                             <option value="Kecil">Kecil</option>
                             <option value="Menengah">Menengah</option>
                         </select>
-                        <i class="absolute w-4 h-4 -translate-y-1/2 pointer-events-none fas fa-sliders-h right-3 top-1/2"></i>
+                        <i
+                            class="absolute w-4 h-4 -translate-y-1/2 pointer-events-none fas fa-sliders-h right-3 top-1/2"></i>
                     </div>
 
                     {{-- Tambah Data --}}
                     <a href="{{ route('formIKM') }}"
                         class="bg-white text-[#003366] font-semibold rounded-lg px-4 py-2 shadow-md border border-[#003366]
-           hover:bg-[#003366] hover:text-white hover:border-[#003366] transition duration-300">
+           hover:bg-[#CAE2F6] hover:text-[#003366] hover:border-[#003366] transition duration-300">
                         TAMBAH DATA
                     </a>
+                    
 
 
                     <form method="GET" action="{{ route('exportIKM') }}" id="exportForm">
@@ -54,7 +66,7 @@
                         <div id="inputJenisContainer"></div>
                         <input type="hidden" name="investasi[]" id="inputInvestasi">
                         <button type="submit"
-                            class="bg-[#003366] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-white hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
+                            class="bg-[#003366] text-white font-semibold rounded-lg px-4 py-2 shadow-md hover:bg-[#CAE2F6] hover:text-[#003366] border border-transparent hover:border-[#003366] transition duration-300">
                             UNDUH DATA
                         </button>
                     </form>
@@ -115,7 +127,8 @@
                             <tbody>
                                 @foreach ($dataIkm as $index => $ikm)
                                     <tr class="bg-white border-b row-ikm" data-kecamatan="{{ $ikm->kecamatan }}"
-                                        data-industri="{{ $ikm->jenis_industri }}" data-investasi-nilai="{{ $ikm->level }}">
+                                        data-industri="{{ $ikm->jenis_industri }}"
+                                        data-investasi-nilai="{{ $ikm->level }}">
                                         <td class="p-2 text-center">{{ $index + 1 }}</td>
                                         <td class="p-2">{{ $ikm->nama_ikm }}</td>
                                         <td class="p-2">{{ $ikm->nama_pemilik }}</td>
@@ -133,8 +146,8 @@
                                             <div class="flex justify-center gap-2">
                                                 <a href="{{ route('detailIKM', $ikm->id_ikm) }}"
                                                     class="flex items-center gap-1 text-blue-700 bg-blue-100 hover:bg-blue-200 text-xs px-3 py-1 rounded-lg border border-blue-700">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                                                        viewBox="0 0 24 24">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
                                                     </svg>
@@ -147,8 +160,8 @@
                                                     @method('DELETE')
                                                     <button type="submit"
                                                         class="flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-1 rounded-lg">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                                                            viewBox="0 0 24 24">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                            stroke-width="2" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                                 d="M6 18L18 6M6 6l12 12" />
                                                         </svg>

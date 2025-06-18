@@ -12,19 +12,16 @@
 
             </div>
 
-            <header class="relative z-10">
-                <img src="{{ asset('/assets/img/background/user_industri.png') }}" class="w-full h-[210px] object-cover"
-                    alt="Header">
-
+            <div class="relative w-full h-44">
+                <img src="{{ asset('/assets/img/background/user_industri.png') }}" alt="Banner"
+                    class="object-cover w-full h-44">
                 <a href="{{ route('dataIKM') }}"
-                    class="absolute top-6 right-6 inline-flex items-center gap-1.5 bg-white bg-opacity-90 backdrop-blur-md text-[#083458] font-semibold px-3 py-1.5 rounded-2xl shadow-md hover:bg-[#083458] hover:text-white transition duration-300 text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 stroke-current" fill="none"
-                        viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                    Kembali
+                    class="absolute flex items-center justify-center w-12 h-12 text-black transition-all duration-300 transform -translate-y-1/2 rounded-full shadow-lg left-14 top-1/2 bg-white/80 hover:bg-black hover:text-white hover:border-white hover:scale-110">
+                    <span class="text-2xl material-symbols-outlined">
+                        arrow_back
+                    </span>
                 </a>
-            </header>
+            </div>
 
             <section class="bg-[#f0f4f9] flex justify-center items-start">
                 <div class="w-full max-w-[1200px] m-4 px-6 bg-white rounded-2xl shadow-md">
@@ -971,10 +968,11 @@
                                     <div>
                                         <label class="block mb-1 font-medium">Jumlah Produksi</label>
                                         <input type="number" id="jumlah_produksi" name="jumlah_produksi" min="0"
-                                            required
+                                            step="any" required
                                             class="border border-black outline-black p-2 rounded-2xl w-full focus:outline-2"
                                             placeholder="Masukkan Jumlah Produksi">
                                     </div>
+
 
                                     <div>
                                         <label class="block mb-1 font-medium">Nilai</label>
