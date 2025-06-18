@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Jun 2025 pada 14.29
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.2.12
+-- Generation Time: Jun 18, 2025 at 06:19 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang`
+-- Table structure for table `barang`
 --
 
 CREATE TABLE `barang` (
@@ -36,7 +36,7 @@ CREATE TABLE `barang` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `barang`
+-- Dumping data for table `barang`
 --
 
 INSERT INTO `barang` (`id_barang`, `nama_barang`, `id_index_kategori`, `created_at`, `updated_at`) VALUES
@@ -126,7 +126,7 @@ INSERT INTO `barang` (`id_barang`, `nama_barang`, `id_index_kategori`, `created_
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `barang_pelaporan`
+-- Table structure for table `barang_pelaporan`
 --
 
 CREATE TABLE `barang_pelaporan` (
@@ -140,7 +140,7 @@ CREATE TABLE `barang_pelaporan` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `bentuk_pengelolaan_limbah`
+-- Table structure for table `bentuk_pengelolaan_limbah`
 --
 
 CREATE TABLE `bentuk_pengelolaan_limbah` (
@@ -159,10 +159,18 @@ CREATE TABLE `bentuk_pengelolaan_limbah` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `bentuk_pengelolaan_limbah`
+--
+
+INSERT INTO `bentuk_pengelolaan_limbah` (`id_bentuk`, `id_ikm`, `jenis_limbah`, `jumlah_limbah`, `jenis_limbah_b3`, `jumlah_limbah_b3`, `tps_limbah_b3`, `pihak_berizin`, `internal_industri`, `parameter_limbah_cair`, `jumlah_limbah_cair`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Contoh', 98, 'Contoh', 98, 'Contoh', 'Contoh', 'Contoh', 'debit_inlet', 98, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'Contoh', 98, 'Contoh', 98, 'Contoh', 'Contoh', 'Contoh', 'debit_inlet', 98, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `berita`
+-- Table structure for table `berita`
 --
 
 CREATE TABLE `berita` (
@@ -176,10 +184,17 @@ CREATE TABLE `berita` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `berita`
+--
+
+INSERT INTO `berita` (`id_berita`, `id_disdag`, `judul`, `isi`, `lampiran`, `tanggal`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Dinas Perdagangan Gelar Operasi Pasar Murah untuk Stabilkan Harga Bahan Pokok', '<p data-start=\"60\" data-end=\"499\" style=\"text-align: justify; \">Dalam upaya menjaga stabilitas harga bahan pokok menjelang Hari Raya Idul Fitri, Dinas Perdagangan Kota Surabaya menggelar Operasi Pasar Murah di 10 titik strategis mulai 2 hingga 10 Mei 2025. Kegiatan ini bertujuan untuk membantu masyarakat memperoleh kebutuhan pokok dengan harga yang lebih terjangkau.</p><p data-start=\"501\" data-end=\"781\" style=\"text-align: justify;\">Kepala Dinas Perdagangan, Bapak Hadi Santoso, mengatakan bahwa kegiatan ini merupakan hasil kerja sama dengan Bulog dan beberapa distributor besar. Barang-barang yang disediakan meliputi beras, minyak goreng, gula pasir, tepung terigu, dan telur dengan harga di bawah harga pasar.</p><p data-start=\"501\" data-end=\"781\" style=\"text-align: justify;\">\"Operasi pasar ini merupakan bentuk nyata kehadiran pemerintah dalam menjamin ketersediaan dan keterjangkauan harga kebutuhan pokok bagi masyarakat,\" ujar Hadi.</p><p>\r\n\r\n\r\n</p><p data-start=\"945\" data-end=\"1215\" style=\"text-align: justify; \">Masyarakat menyambut baik kegiatan ini, terutama warga di wilayah padat penduduk seperti Kecamatan Tambaksari dan Simokerto. Selain menekan inflasi daerah, kegiatan ini juga diharapkan mampu mendorong daya beli masyarakat di tengah naiknya kebutuhan menjelang hari raya.</p>', 'lampiran/kMl4Mxsqj4o83GppVN2APmgwk8JM03AVDPqWNkoF.jpg', '2025-06-09', '2025-06-09 07:37:52', '2025-06-09 07:37:52');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `cache`
+-- Table structure for table `cache`
 --
 
 CREATE TABLE `cache` (
@@ -191,7 +206,7 @@ CREATE TABLE `cache` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `cache_locks`
+-- Table structure for table `cache_locks`
 --
 
 CREATE TABLE `cache_locks` (
@@ -203,7 +218,7 @@ CREATE TABLE `cache_locks` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `data_alat_ukur`
+-- Table structure for table `data_alat_ukur`
 --
 
 CREATE TABLE `data_alat_ukur` (
@@ -216,10 +231,18 @@ CREATE TABLE `data_alat_ukur` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `data_alat_ukur`
+--
+
+INSERT INTO `data_alat_ukur` (`id_data_alat`, `id_uttp`, `tanggal_exp`, `notifikasi_terkirim`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, '2025-06-17', 1, 'Valid', '2025-06-09 21:19:30', '2025-06-09 21:20:00'),
+(2, 2, '2025-06-17', 1, 'Valid', '2025-06-09 23:38:18', '2025-06-09 23:38:57');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `data_ikm`
+-- Table structure for table `data_ikm`
 --
 
 CREATE TABLE `data_ikm` (
@@ -241,10 +264,18 @@ CREATE TABLE `data_ikm` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `data_ikm`
+--
+
+INSERT INTO `data_ikm` (`id_ikm`, `nama_ikm`, `luas`, `nama_pemilik`, `jenis_kelamin`, `kecamatan`, `kelurahan`, `komoditi`, `jenis_industri`, `alamat`, `nib`, `no_telp`, `tenaga_kerja`, `level`, `created_at`, `updated_at`) VALUES
+(1, 'Ternak udang', 'Contoh', 'Uceng Gacor', 'Laki-laki', 'Bacukiki', 'WT. Bacukiki', 'Komoditi 1', 'Sandang', 'Contoh', 'Contoh', '081234567890', 98, 1960, '2025-06-09 21:09:43', '2025-06-09 21:10:08'),
+(2, 'Air Besih', 'Contoh', 'Bahrul', 'Laki-laki', 'Bacukiki Barat', 'Lumpue', 'Komoditi 1', 'Pangan', 'Contoh', 'Contoh', '081234567890', 98, 110200688, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `disdag`
+-- Table structure for table `disdag`
 --
 
 CREATE TABLE `disdag` (
@@ -259,7 +290,7 @@ CREATE TABLE `disdag` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `disdag`
+-- Dumping data for table `disdag`
 --
 
 INSERT INTO `disdag` (`id_disdag`, `password`, `nip`, `email`, `telp`, `role`, `created_at`, `updated_at`) VALUES
@@ -275,7 +306,7 @@ INSERT INTO `disdag` (`id_disdag`, `password`, `nip`, `email`, `telp`, `role`, `
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `distributor`
+-- Table structure for table `distributor`
 --
 
 CREATE TABLE `distributor` (
@@ -287,10 +318,18 @@ CREATE TABLE `distributor` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `distributor`
+--
+
+INSERT INTO `distributor` (`id_distributor`, `id_user`, `nib`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'nib_dokumen/1749482938_Tugas Diskusi ERD.pdf', 'diterima', '2025-06-09 07:28:58', '2025-06-09 07:29:45'),
+(2, 3, 'nib_dokumen/1749541400_Tugas Diskusi ERD.pdf', 'diterima', '2025-06-09 23:43:20', '2025-06-09 23:44:27');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `document_user`
+-- Table structure for table `document_user`
 --
 
 CREATE TABLE `document_user` (
@@ -305,10 +344,21 @@ CREATE TABLE `document_user` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `document_user`
+--
+
+INSERT INTO `document_user` (`id_document`, `id_permohonan`, `npwp`, `akta_perusahaan`, `foto_ktp`, `foto_usaha`, `dokument_nib`, `created_at`, `updated_at`) VALUES
+(1, '8a7d2f66-e700-44fe-9df5-4cb659bc4441', 'DokumentUser/znbGnZ0Rcm9fw7xFU2S4Q36Cn5L8ToApbB51adIp.pdf', 'DokumentUser/2Pn8syo5qTa7Q9NK061270gWHXcCS2slKfSQ7H6f.pdf', 'DokumentUser/sp8qAVTSL8GWXe2eGNi9a5nRU72cmDHcJ0LZ6TlD.jpg', 'DokumentUser/rPgFnKIAo3Ite0RZVzlfZ5E2uVQDD2WPSSLECQm0.jpg', 'DokumentUser/bff2dxO7TtLtJ8NR9Y8NFuQYPUXq9aQRHB7Q3Gwe.pdf', '2025-06-09 07:21:54', '2025-06-09 07:21:54'),
+(2, '53531f96-0dd0-4d16-81dc-7e72998c59d2', 'DokumentUser/e4vIlQTl6txdRCVh1USsf3T57Q6myi7w6VtXmMT7.pdf', 'DokumentUser/tRrX6ffOuWlgSCugki5xMzqKwItWNd1cYbIciCAQ.pdf', 'DokumentUser/gVZqbC7wRUNDbamaPiYXLEN8sKXRaR4TOXmBz6gZ.jpg', 'DokumentUser/kceZkY1O1Mffmwb3L1GgLuHc7oJswI6N16GNrpw1.jpg', 'DokumentUser/kcqgAj0JZ4xwTIfSOkRzF2IiHs6HJNEjrIgS7P1x.pdf', '2025-06-09 08:31:44', '2025-06-09 08:33:11'),
+(3, 'a0780478-e8f7-4801-988c-0b34ea4a228a', 'DokumentUser/J9KQN7Wn7LXdHdFeIK6yB53JIxeFTEkSBMeDuAc0.pdf', NULL, 'DokumentUser/AyuYbYawZg0NxWewlWmPH3bbR4gwBn1x3zqRE3Nd.jpg', 'DokumentUser/QEjcQ1Dik7B7aZ4UOF3JOXe7thGi83QWhPnY0RnV.jpg', 'DokumentUser/o1iWcTzzldDgIMoJFEPTG8NnnXPhVCSMdF4ze47q.pdf', '2025-06-09 20:36:59', NULL),
+(4, '3e233770-942b-49a4-ae1a-c80d7db790e1', 'DokumentUser/DR1sxXSWwSZqvj5pjvXQaXTr56D6hMV0OuatLL5g.pdf', 'DokumentUser/HXcgkdXVLL6KZ0hefVieogkGsNpuBCIRaAtQzgj9.pdf', 'DokumentUser/Xmp6pjYQ7p2bXGtw3FU0X8lCQvFO5uT0lhptIamk.jpg', 'DokumentUser/YsTUQTwE5RjZeWVs8fB926npatMC1Xfz0GJv9gMY.jpg', 'DokumentUser/nXxoIhsXu9zbTHpik9IeDMQFHazszHGH3cIwXU4b.pdf', '2025-06-09 20:36:59', '2025-06-09 20:37:20'),
+(5, 'e861e3ab-2317-4f65-9a43-50c73676c8c4', 'DokumentUser/hMkbTvvcnJj3l7l8wbDN8Xv4ctxqEKxgP3fwWti7.pdf', 'DokumentUser/uEUS2LU0OvxE24uTS7gDPqgfMHhISClFFmR2PNP8.pdf', 'DokumentUser/XFdu4rDVRRXThl0WPYy72uhdOOUA3oTfuQq3X6Zo.jpg', 'DokumentUser/aPhWfsR9x3wgh12M3JVDNJ2kR8gh04iRP8bvfQTR.jpg', 'DokumentUser/0lPzEiybuInzmUIXfC8jjtPmckArsVJnaRW2W4wh.pdf', '2025-06-09 22:39:32', '2025-06-09 22:39:48');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `failed_jobs`
+-- Table structure for table `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
@@ -324,7 +374,7 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `faq`
+-- Table structure for table `faq`
 --
 
 CREATE TABLE `faq` (
@@ -335,10 +385,17 @@ CREATE TABLE `faq` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `faq`
+--
+
+INSERT INTO `faq` (`id`, `pertanyaan`, `jawaban`, `created_at`, `updated_at`) VALUES
+(1, 'Apakah Bumi Datar ?', 'Tidak', '2025-06-10 00:04:31', '2025-06-10 00:04:31');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `form_permohonan`
+-- Table structure for table `form_permohonan`
 --
 
 CREATE TABLE `form_permohonan` (
@@ -356,10 +413,21 @@ CREATE TABLE `form_permohonan` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `form_permohonan`
+--
+
+INSERT INTO `form_permohonan` (`id_permohonan`, `id_user`, `kecamatan`, `kelurahan`, `tgl_pengajuan`, `jenis_surat`, `titik_koordinat`, `file_surat`, `file_balasan`, `status`, `created_at`, `updated_at`) VALUES
+('3e233770-942b-49a4-ae1a-c80d7db790e1', 1, 'bacukiki_barat', 'sumpang_minangae', '2025-06-10', 'surat_rekomendasi_industri', '-4.023224535629776, 119.63393738026438', 'DokumentUser/cQpp1QSSh49QnIV22R6nzuj4PIUq7giF5iC65E4F.pdf', 'surat/rekomendasi-fee9aa41-b18a-49f9-8995-e4d841bf16bf.pdf', 'diterima', '2025-06-09 20:36:59', '2025-06-09 20:51:16'),
+('53531f96-0dd0-4d16-81dc-7e72998c59d2', 1, 'bacukiki_barat', 'kampung_baru', '2025-06-09', 'surat_keterangan_perdagangan', '-4.023224535629776, 119.63393738026438', 'DokumentUser/FAyeFqmxoJpm471ZAdGg4JAHnH1NZuEksA8GAaHR.pdf', 'surat/rekomendasi-b9e8c4e8-04fb-4ba0-93d3-32320e8e21d2.pdf', 'diterima', '2025-06-09 08:31:44', '2025-06-10 00:15:52'),
+('8a7d2f66-e700-44fe-9df5-4cb659bc4441', 1, 'soreang', 'ujung_lare', '2025-06-09', 'surat_rekomendasi_perdagangan', '-4.023224535629776, 119.63393738026438', 'DokumentUser/ANUUvffgzAllJHe1jhCUu6taHpTp63Uk5LAzshDM.pdf', 'surat/rekomendasi-264826ec-5de4-4dc7-b5ae-e6eb27e815fd.pdf', 'diterima', '2025-06-09 07:21:54', '2025-06-09 07:27:32'),
+('a0780478-e8f7-4801-988c-0b34ea4a228a', 1, 'bacukiki_barat', 'sumpang_minangae', '2025-06-10', 'surat_rekomendasi_industri', '-4.023224535629776, 119.63393738026438', 'DokumentUser/t7GGgbKzjGbSuBZAMMpAM6DL0kBNPfEG00pLZPSz.pdf', NULL, 'disimpan', '2025-06-09 20:36:59', NULL),
+('e861e3ab-2317-4f65-9a43-50c73676c8c4', 3, 'soreang', 'lakessi', '2025-06-10', 'surat_rekomendasi_industri', '-83472399.3723973', 'DokumentUser/mNLw75hlj597t9N7H9r5DyUOPCRdVOD2P7XqQk2q.pdf', 'surat/rekomendasi-59cd2add-e8f0-45c9-8446-fe3f321fec8b.pdf', 'diterima', '2025-06-09 22:39:32', '2025-06-09 22:48:58');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `forum_diskusi`
+-- Table structure for table `forum_diskusi`
 --
 
 CREATE TABLE `forum_diskusi` (
@@ -373,10 +441,23 @@ CREATE TABLE `forum_diskusi` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `forum_diskusi`
+--
+
+INSERT INTO `forum_diskusi` (`id_pengaduan`, `id_user`, `id_disdag`, `chat`, `waktu`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, 'hai', '2025-06-09 21:06:11', 'user', '2025-06-09 21:06:11', '2025-06-09 21:06:11'),
+(2, NULL, 1, 'hai juga bang', '2025-06-09 21:07:16', 'terkirim', '2025-06-09 21:07:16', '2025-06-09 21:07:16'),
+(4, 3, NULL, 'Haii', '2025-06-09 23:50:29', 'user', '2025-06-09 23:50:29', '2025-06-09 23:50:29'),
+(5, 3, NULL, 'hallo', '2025-06-09 23:51:15', 'user', '2025-06-09 23:51:15', '2025-06-09 23:51:15'),
+(6, NULL, 1, 'haloooo', '2025-06-09 23:51:35', 'terkirim', '2025-06-09 23:51:35', '2025-06-09 23:51:35'),
+(7, 3, NULL, 'hai contoh', '2025-06-09 23:59:58', 'user', '2025-06-09 23:59:58', '2025-06-09 23:59:58'),
+(8, NULL, 1, 'hai contoh juga', '2025-06-10 00:00:31', 'terkirim', '2025-06-10 00:00:31', '2025-06-10 00:00:31');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `index_harga`
+-- Table structure for table `index_harga`
 --
 
 CREATE TABLE `index_harga` (
@@ -391,7 +472,7 @@ CREATE TABLE `index_harga` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `index_harga`
+-- Dumping data for table `index_harga`
 --
 
 INSERT INTO `index_harga` (`id_index`, `id_barang`, `id_index_kategori`, `harga`, `tanggal`, `lokasi`, `created_at`, `updated_at`) VALUES
@@ -558,12 +639,55 @@ INSERT INTO `index_harga` (`id_index`, `id_barang`, `id_index_kategori`, `harga`
 (161, 79, 22, 25000.00, '2025-06-09', 'Pasar Lakessi', '2025-06-09 12:26:12', '2025-06-09 12:26:12'),
 (162, 80, 33, 10000.00, '2025-06-09', 'Pasar Lakessi', '2025-06-09 12:26:12', '2025-06-09 12:26:12'),
 (163, 81, 34, 15000.00, '2025-06-09', 'Pasar Lakessi', '2025-06-09 12:26:12', '2025-06-09 12:26:12'),
-(164, 82, 35, 10000.00, '2025-06-09', 'Pasar Lakessi', '2025-06-09 12:26:12', '2025-06-09 12:26:12');
+(164, 82, 35, 10000.00, '2025-06-09', 'Pasar Lakessi', '2025-06-09 12:26:12', '2025-06-09 12:26:12'),
+(165, 1, 1, 13273.00, '2025-06-02', 'Pasar Sumpang', NULL, NULL),
+(166, 1, 1, 13301.00, '2025-06-03', 'Pasar Sumpang', NULL, NULL),
+(167, 1, 1, 13329.00, '2025-06-04', 'Pasar Sumpang', NULL, NULL),
+(168, 1, 1, 13303.00, '2025-06-05', 'Pasar Sumpang', NULL, NULL),
+(169, 1, 1, 13377.00, '2025-06-06', 'Pasar Sumpang', NULL, NULL),
+(170, 1, 1, 13400.00, '2025-06-07', 'Pasar Sumpang', NULL, NULL),
+(171, 1, 1, 13420.00, '2025-06-08', 'Pasar Sumpang', NULL, NULL),
+(172, 1, 1, 13825.00, '2025-06-02', 'Pasar Lakessi', NULL, NULL),
+(173, 1, 1, 13847.00, '2025-06-03', 'Pasar Lakessi', NULL, NULL),
+(174, 1, 1, 13851.00, '2025-06-04', 'Pasar Lakessi', NULL, NULL),
+(175, 1, 1, 13858.00, '2025-06-05', 'Pasar Lakessi', NULL, NULL),
+(176, 1, 1, 13877.00, '2025-06-06', 'Pasar Lakessi', NULL, NULL),
+(177, 1, 1, 13899.00, '2025-06-07', 'Pasar Lakessi', NULL, NULL),
+(178, 1, 1, 13905.00, '2025-06-08', 'Pasar Lakessi', NULL, NULL),
+(179, 2, 1, 13180.00, '2025-06-02', 'Pasar Sumpang', NULL, NULL),
+(180, 2, 1, 13190.00, '2025-06-03', 'Pasar Sumpang', NULL, NULL),
+(181, 2, 1, 13200.00, '2025-06-04', 'Pasar Sumpang', NULL, NULL),
+(182, 2, 1, 13222.00, '2025-06-05', 'Pasar Sumpang', NULL, NULL),
+(183, 2, 1, 13220.00, '2025-06-06', 'Pasar Sumpang', NULL, NULL),
+(184, 2, 1, 13240.00, '2025-06-07', 'Pasar Sumpang', NULL, NULL),
+(185, 2, 1, 13255.00, '2025-06-08', 'Pasar Sumpang', NULL, NULL),
+(186, 2, 1, 14028.00, '2025-06-02', 'Pasar Lakessi', NULL, NULL),
+(187, 2, 1, 14050.00, '2025-06-03', 'Pasar Lakessi', NULL, NULL),
+(188, 2, 1, 14074.00, '2025-06-04', 'Pasar Lakessi', NULL, NULL),
+(189, 2, 1, 14091.00, '2025-06-05', 'Pasar Lakessi', NULL, NULL),
+(190, 2, 1, 14104.00, '2025-06-06', 'Pasar Lakessi', NULL, NULL),
+(191, 2, 1, 14120.00, '2025-06-07', 'Pasar Lakessi', NULL, NULL),
+(192, 2, 1, 14140.00, '2025-06-08', 'Pasar Lakessi', NULL, NULL),
+(193, 3, 1, 13887.00, '2025-06-02', 'Pasar Sumpang', NULL, NULL),
+(194, 3, 1, 13909.00, '2025-06-03', 'Pasar Sumpang', NULL, NULL),
+(195, 3, 1, 13917.00, '2025-06-04', 'Pasar Sumpang', NULL, NULL),
+(196, 3, 1, 13968.00, '2025-06-05', 'Pasar Sumpang', NULL, NULL),
+(197, 3, 1, 13959.00, '2025-06-06', 'Pasar Sumpang', NULL, NULL),
+(198, 3, 1, 13970.00, '2025-06-07', 'Pasar Sumpang', NULL, NULL),
+(199, 3, 1, 13980.00, '2025-06-08', 'Pasar Sumpang', NULL, NULL),
+(200, 3, 1, 12977.00, '2025-06-02', 'Pasar Lakessi', NULL, NULL),
+(201, 3, 1, 12993.00, '2025-06-03', 'Pasar Lakessi', NULL, NULL),
+(202, 3, 1, 12999.00, '2025-06-04', 'Pasar Lakessi', NULL, NULL),
+(203, 3, 1, 13031.00, '2025-06-05', 'Pasar Lakessi', NULL, NULL),
+(204, 3, 1, 13093.00, '2025-06-06', 'Pasar Lakessi', NULL, NULL),
+(205, 3, 1, 13110.00, '2025-06-07', 'Pasar Lakessi', NULL, NULL),
+(206, 3, 1, 13125.00, '2025-06-08', 'Pasar Lakessi', NULL, NULL),
+(207, 1, 1, 13000.00, '2025-06-10', 'Pasar Lakessi', '2025-06-09 20:40:53', '2025-06-09 20:40:53');
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `index_kategori`
+-- Table structure for table `index_kategori`
 --
 
 CREATE TABLE `index_kategori` (
@@ -574,7 +698,7 @@ CREATE TABLE `index_kategori` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `index_kategori`
+-- Dumping data for table `index_kategori`
 --
 
 INSERT INTO `index_kategori` (`id_index_kategori`, `nama_kategori`, `created_at`, `updated_at`) VALUES
@@ -617,7 +741,7 @@ INSERT INTO `index_kategori` (`id_index_kategori`, `nama_kategori`, `created_at`
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `jobs`
+-- Table structure for table `jobs`
 --
 
 CREATE TABLE `jobs` (
@@ -633,7 +757,7 @@ CREATE TABLE `jobs` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `job_batches`
+-- Table structure for table `job_batches`
 --
 
 CREATE TABLE `job_batches` (
@@ -652,7 +776,7 @@ CREATE TABLE `job_batches` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `karyawan`
+-- Table structure for table `karyawan`
 --
 
 CREATE TABLE `karyawan` (
@@ -673,10 +797,18 @@ CREATE TABLE `karyawan` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `karyawan`
+--
+
+INSERT INTO `karyawan` (`id_karyawan`, `id_ikm`, `tenaga_kerja_tetap`, `tenaga_kerja_tidak_tetap`, `tenaga_kerja_laki_laki`, `tenaga_kerja_perempuan`, `sd`, `smp`, `sma_smk`, `d1_d3`, `s1_d4`, `s2`, `s3`, `created_at`, `updated_at`) VALUES
+(1, 1, 98, 0, 98, 0, 98, 0, 0, 0, 0, 0, 0, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 98, 0, 98, 0, 98, 0, 0, 0, 0, 0, 0, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `kategori_barang_pelaporan`
+-- Table structure for table `kategori_barang_pelaporan`
 --
 
 CREATE TABLE `kategori_barang_pelaporan` (
@@ -689,7 +821,7 @@ CREATE TABLE `kategori_barang_pelaporan` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `listrik`
+-- Table structure for table `listrik`
 --
 
 CREATE TABLE `listrik` (
@@ -703,10 +835,18 @@ CREATE TABLE `listrik` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `listrik`
+--
+
+INSERT INTO `listrik` (`id_listrik`, `id_ikm`, `sumber`, `banyaknya`, `nilai`, `peruntukkan`, `created_at`, `updated_at`) VALUES
+(1, 1, 'pln', 98, 98, 'Contoh', '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'pln', 98, 98, 'Contoh', '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `mesin_produksi`
+-- Table structure for table `mesin_produksi`
 --
 
 CREATE TABLE `mesin_produksi` (
@@ -724,10 +864,18 @@ CREATE TABLE `mesin_produksi` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `mesin_produksi`
+--
+
+INSERT INTO `mesin_produksi` (`id_mesin`, `id_ikm`, `jenis_mesin`, `nama_mesin`, `merk_type`, `teknologi`, `negara_pembuat`, `tahun_perolehan`, `tahun_pembuatan`, `jumlah_unit`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Mesin', 'Contoh', 'Contoh', 'Contoh', 'Contoh', 2000, 2000, 98, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'Mesin', 'Contoh', 'Contoh', 'Contoh', 'Contoh', 2000, 2000, 98, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `migrations`
+-- Table structure for table `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -737,7 +885,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data untuk tabel `migrations`
+-- Dumping data for table `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -779,12 +927,13 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (36, '2025_05_18_171042_create_bentuk_pengelolaan_limbah_table', 1),
 (37, '2025_05_20_123024_create_sertifikasi_halal_table', 1),
 (38, '2025_05_26_194815_create_faq_table', 1),
-(39, '2025_05_28_062844_create_password_resets_table', 1);
+(39, '2025_05_28_062844_create_password_resets_table', 1),
+(40, '2025_06_16_000840_create_pengaduan_distributors_table', 2);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `modal`
+-- Table structure for table `modal`
 --
 
 CREATE TABLE `modal` (
@@ -799,10 +948,18 @@ CREATE TABLE `modal` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `modal`
+--
+
+INSERT INTO `modal` (`id_modal`, `id_ikm`, `jenis_barang`, `pembelian_penambahan_perbaikan`, `pengurangan_barang_modal`, `penyusutan_barang`, `nilai_taksiran`, `created_at`, `updated_at`) VALUES
+(1, 1, 'tanah', 98, 98, 98, 98, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'mesin dan perlengkapan', 100000000, 10000, 100, 100000, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `password_resets`
+-- Table structure for table `password_resets`
 --
 
 CREATE TABLE `password_resets` (
@@ -814,7 +971,7 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pemakaian_bahan`
+-- Table structure for table `pemakaian_bahan`
 --
 
 CREATE TABLE `pemakaian_bahan` (
@@ -834,10 +991,18 @@ CREATE TABLE `pemakaian_bahan` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `pemakaian_bahan`
+--
+
+INSERT INTO `pemakaian_bahan` (`id_pemakaian_bahan`, `id_ikm`, `nama_bahan`, `jenis_bahan`, `spesifikasi`, `kode_hs`, `satuan_standar`, `jumlah_dalam_negeri`, `nilai_dalam_negeri`, `jumlah_impor`, `nilai_impor`, `negara_asal_impor`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Contoh', 'Bahan Baku', 'Contoh', 'Contoh', 'kg', 98, 98, 98, 98, 'Contoh', '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'Contoh', 'Bahan Baku', 'Contoh', 'Contoh', 'ton', 98, 98, 98, 98, 'Contoh', '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pendapatan`
+-- Table structure for table `pendapatan`
 --
 
 CREATE TABLE `pendapatan` (
@@ -849,10 +1014,34 @@ CREATE TABLE `pendapatan` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `pendapatan`
+--
+
+INSERT INTO `pendapatan` (`id_pendapatan`, `id_ikm`, `nilai`, `sumber`, `created_at`, `updated_at`) VALUES
+(1, 1, 98, 'Contoh', '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 10000000, 'Contoh', '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pengeluaran`
+-- Table structure for table `pengaduan_distributors`
+--
+
+CREATE TABLE `pengaduan_distributors` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `judul` varchar(191) NOT NULL,
+  `isi` text NOT NULL,
+  `status` enum('menunggu','selesai') NOT NULL DEFAULT 'menunggu',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pengeluaran`
 --
 
 CREATE TABLE `pengeluaran` (
@@ -869,10 +1058,18 @@ CREATE TABLE `pengeluaran` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `pengeluaran`
+--
+
+INSERT INTO `pengeluaran` (`id_pengeluaran`, `id_ikm`, `upah_gaji`, `pengeluaran_industri_distribusi`, `pengeluaran_rnd`, `pengeluaran_tanah`, `pengeluaran_gedung`, `pengeluaran_mesin`, `lainnya`, `created_at`, `updated_at`) VALUES
+(1, 1, 98, 98, 98, 98, 98, 98, 98, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 10000, 10000, 10000, 10000, 10000, 10000, 10000, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `penggunaan_air`
+-- Table structure for table `penggunaan_air`
 --
 
 CREATE TABLE `penggunaan_air` (
@@ -885,10 +1082,18 @@ CREATE TABLE `penggunaan_air` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `penggunaan_air`
+--
+
+INSERT INTO `penggunaan_air` (`id_air`, `id_ikm`, `sumber_air`, `banyaknya_penggunaan_m3`, `biaya`, `created_at`, `updated_at`) VALUES
+(1, 1, 'air_permukaan', 98, 98, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'perusahaan_penyedia_air', 98, 98, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `penggunaan_bahan_bakar`
+-- Table structure for table `penggunaan_bahan_bakar`
 --
 
 CREATE TABLE `penggunaan_bahan_bakar` (
@@ -904,10 +1109,18 @@ CREATE TABLE `penggunaan_bahan_bakar` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `penggunaan_bahan_bakar`
+--
+
+INSERT INTO `penggunaan_bahan_bakar` (`id_bahan_bakar`, `id_ikm`, `jenis_bahan_bakar`, `satuan_standar`, `banyaknya_proses_produksi`, `nilai_proses_produksi`, `banyaknya_pembangkit_tenaga_listrik`, `nilai_pembangkit_tenaga_listrik`, `created_at`, `updated_at`) VALUES
+(1, 1, 'bensin', 'liter', 98, 98, 98, 98, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'pelumas', 'liter', 98, 98, 98, 98, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `persediaan`
+-- Table structure for table `persediaan`
 --
 
 CREATE TABLE `persediaan` (
@@ -920,10 +1133,18 @@ CREATE TABLE `persediaan` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `persediaan`
+--
+
+INSERT INTO `persediaan` (`id_persediaan`, `id_ikm`, `jenis_persediaan`, `awal`, `akhir`, `created_at`, `updated_at`) VALUES
+(1, 1, 'persediaan_bahan', 98, 98, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'persediaan_bahan', 10000, 10000, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `persentase_pemilik`
+-- Table structure for table `persentase_pemilik`
 --
 
 CREATE TABLE `persentase_pemilik` (
@@ -937,10 +1158,18 @@ CREATE TABLE `persentase_pemilik` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `persentase_pemilik`
+--
+
+INSERT INTO `persentase_pemilik` (`id_persentase`, `id_ikm`, `pemerintah_pusat`, `pemerintah_daerah`, `swasta_nasional`, `asing`, `created_at`, `updated_at`) VALUES
+(1, 1, 10.00, 10.00, 10.00, 70.00, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 10.00, 10.00, 10.00, 70.00, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `produksi`
+-- Table structure for table `produksi`
 --
 
 CREATE TABLE `produksi` (
@@ -960,10 +1189,18 @@ CREATE TABLE `produksi` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `produksi`
+--
+
+INSERT INTO `produksi` (`id_produksi`, `id_ikm`, `jenis_produksi`, `kbli`, `kode_hs`, `spesifikasi`, `banyaknya`, `nilai`, `satuan`, `presentase_produk_ekspor`, `negara_tujuan_ekspor`, `kapasitas_terpasang_per_tahun`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Contoh', 'Contoh', 'Contoh', 'Contoh', 98, 98, 'kg', 98, 'Contoh', 1900, '2025-06-09 21:09:43', '2025-06-09 21:09:43'),
+(2, 2, 'Minya VCO', 'Contoh', 'Contoh', 'Contoh', 100, 98, 'liter', 98, 'Contoh', 1900, '2025-06-09 23:10:01', '2025-06-09 23:10:01');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `rencana_kebutuhan_distributor`
+-- Table structure for table `rencana_kebutuhan_distributor`
 --
 
 CREATE TABLE `rencana_kebutuhan_distributor` (
@@ -975,10 +1212,18 @@ CREATE TABLE `rencana_kebutuhan_distributor` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `rencana_kebutuhan_distributor`
+--
+
+INSERT INTO `rencana_kebutuhan_distributor` (`id_rancangan`, `id_barang_pelaporan`, `tahun`, `jumlah`, `created_at`, `updated_at`) VALUES
+(1, NULL, '2025', 10000, '2025-06-09 07:30:32', '2025-06-09 07:30:32'),
+(2, NULL, '2025', 10000, '2025-06-09 23:45:23', '2025-06-09 23:45:23');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `sertifikasi_halal`
+-- Table structure for table `sertifikasi_halal`
 --
 
 CREATE TABLE `sertifikasi_halal` (
@@ -996,10 +1241,17 @@ CREATE TABLE `sertifikasi_halal` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `sertifikasi_halal`
+--
+
+INSERT INTO `sertifikasi_halal` (`id_halal`, `id_user`, `id_ikm`, `nama_usaha`, `alamat`, `no_sertifikasi_halal`, `tanggal_sah`, `tanggal_exp`, `sertifikat`, `status`, `created_at`, `updated_at`) VALUES
+(2, NULL, NULL, 'Air Bersih', 'Jl, macan', '0928322', '2025-05-01', '2025-06-10', 'sertifikat_halal/1749540054Data.pdf', 'Berlaku', '2025-06-09 23:20:23', '2025-06-09 23:20:54');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `sessions`
+-- Table structure for table `sessions`
 --
 
 CREATE TABLE `sessions` (
@@ -1011,10 +1263,18 @@ CREATE TABLE `sessions` (
   `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('lMg46mbO68SjVkowEiTGBeHWTQ04qaQ1nUnIh8na', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiN0RLRG5BYmc1WW5jc1diRjU0cmJNdEVrMmxsbTRFWlBRN0pkMHBUVyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTI6Imh0dHA6Ly9zb2JhdGRhZ2FuZy5nby5pZC9rYWJpZC1wZXJkYWdhbmdhbi9kYXNoYm9hcmQiO31zOjUzOiJsb2dpbl9kaXNkYWdfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo1O3M6OToiaWRfZGlzZGFnIjtpOjU7fQ==', 1750085431),
+('PZ7svx4vO9ih3xcJZOn1ihSxRvzbxtRTPM03wwMB', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36 Edg/137.0.0.0', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiQXl5RmVvSGlHOThTYlJvOW1hakZDaWI4Mk41ejFYWmJ5cE1OS0NaYSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1750085008);
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `stok_opname`
+-- Table structure for table `stok_opname`
 --
 
 CREATE TABLE `stok_opname` (
@@ -1030,10 +1290,24 @@ CREATE TABLE `stok_opname` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `stok_opname`
+--
+
+INSERT INTO `stok_opname` (`id_stok_opname`, `id_distributor`, `id_toko`, `stok_awal`, `penyaluran`, `stok_akhir`, `tanggal`, `nama_barang`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 10, 9, 1, '2025-06-01', 'UREA', '2025-06-09 07:31:15', '2025-06-09 07:31:15'),
+(2, 1, 1, 22, 18, 4, '2025-06-01', 'NPK', '2025-06-09 07:31:45', '2025-06-16 04:45:58'),
+(3, 1, 1, 19, 17, 2, '2025-06-01', 'NPK-FK', '2025-06-09 07:32:01', '2025-06-09 07:32:01'),
+(4, 1, 1, 18, 15, 3, '2025-06-09', 'NPK', '2025-06-09 07:32:23', '2025-06-09 07:32:23'),
+(5, 1, 1, 20, 19, 1, '2025-06-09', 'UREA', '2025-06-09 07:32:39', '2025-06-09 07:32:39'),
+(6, 1, 1, 21, 19, 2, '2025-06-09', 'NPK-FK', '2025-06-09 07:32:53', '2025-06-09 07:32:53'),
+(7, 2, 2, 20, 19, 1, '2025-06-01', 'NPK', '2025-06-09 23:46:47', '2025-06-09 23:46:47'),
+(8, 2, 2, 20, 17, 3, '2025-06-10', 'NPK', '2025-06-09 23:47:45', '2025-06-09 23:47:45');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `surat_keluar_metrologi`
+-- Table structure for table `surat_keluar_metrologi`
 --
 
 CREATE TABLE `surat_keluar_metrologi` (
@@ -1050,10 +1324,18 @@ CREATE TABLE `surat_keluar_metrologi` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `surat_keluar_metrologi`
+--
+
+INSERT INTO `surat_keluar_metrologi` (`id_surat_balasan`, `id_surat`, `tanggal`, `path_dokumen`, `isi_surat`, `status_surat_keluar`, `status_kepalaBidang`, `status_kadis`, `keterangan_kadis`, `created_at`, `updated_at`) VALUES
+('01/02/Perdagangan', '58/01/Industri', '2025-06-10', 'surat_balasan/01_02_Perdagangan_20250610_045241.pdf', '<p>scdfgggggfgdgfd</p>', 'Menunggu', 'Disetujui', 'Disetujui', NULL, '2025-06-09 20:52:54', '2025-06-09 20:53:51'),
+('02/02/Perdagangan', '15/0/Metro', '2025-06-10', 'surat_balasan/02_02_Perdagangan_20250610_073210.pdf', '<p>Diterima</p>', 'Menunggu', 'Disetujui', 'Disetujui', NULL, '2025-06-09 23:32:23', '2025-06-09 23:34:08');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `surat_metrologi`
+-- Table structure for table `surat_metrologi`
 --
 
 CREATE TABLE `surat_metrologi` (
@@ -1069,10 +1351,18 @@ CREATE TABLE `surat_metrologi` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `surat_metrologi`
+--
+
+INSERT INTO `surat_metrologi` (`id_surat`, `user_id`, `alamat_alat`, `jenis_surat`, `dokumen`, `keterangan`, `status_surat_masuk`, `status_admin`, `created_at`, `updated_at`) VALUES
+('15/0/Metro', 3, '-129923.384384', 'tera', 'surat_masuk_metrologi/15_0_Metro_3.pdf', NULL, 'Disetujui', 'Diterima', '2025-06-09 23:27:01', '2025-06-09 23:34:08'),
+('58/01/Industri', 1, '-42291829.0293201', 'tera', 'surat_masuk_metrologi/58_01_Industri_1.pdf', NULL, 'Disetujui', 'Diterima', '2025-06-09 20:38:00', '2025-06-09 20:53:51');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `toko`
+-- Table structure for table `toko`
 --
 
 CREATE TABLE `toko` (
@@ -1086,10 +1376,18 @@ CREATE TABLE `toko` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `toko`
+--
+
+INSERT INTO `toko` (`id_toko`, `id_rancangan`, `id_distributor`, `nama_toko`, `no_register`, `kecamatan`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'Kepiting Gacor', '0921332', 'Bacukiki Barat', '2025-06-09 07:30:32', '2025-06-09 07:30:32'),
+(2, 2, 2, 'Toko Uceng', '0923', 'Soreang', '2025-06-09 23:45:23', '2025-06-09 23:45:23');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -1112,10 +1410,18 @@ CREATE TABLE `user` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id_user`, `kecamatan`, `kelurahan`, `kabupaten`, `password`, `nik`, `nib`, `nama`, `alamat_lengkap`, `jenis_kelamin`, `telp`, `email`, `avatar`, `verifikasi_token`, `is_verified`, `created_at`, `updated_at`) VALUES
+(1, 'Bacukiki', 'WT. Bacukiki', 'Kota Parepare', '$2y$12$hAGNGNoxHUJrxD66p03cuOYydrMdLHmrrMsB94TT8qFVvH0x6L0pq', '3275091401010003', '2144123281', 'Robert smith y', 'jl,singa', 'Laki-laki', '083155990993', 'robertsmithy185@gmail.com', '1749530326_Robert Item.jpg', NULL, 1, '2025-06-09 05:51:28', '2025-06-09 20:38:46'),
+(3, 'Ujung', 'Ujung Bulu', 'Kota Parepare', '$2y$12$j2oWUrk/mRYPTIAXCqkIjOg6Ga7lxQelCZ9uYwr/TA./2bRlicprK', '3275091401010001', '1234567889', 'Andi magfira maqbul', 'andifff12@gmail.com', 'Perempuan', '083155990993', 'andifff12@gmail.com', '1749537321_Robert Item.jpg', NULL, 1, '2025-06-09 22:33:26', '2025-06-09 22:36:17');
+
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -1132,7 +1438,7 @@ CREATE TABLE `users` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `uttp`
+-- Table structure for table `uttp`
 --
 
 CREATE TABLE `uttp` (
@@ -1158,64 +1464,72 @@ CREATE TABLE `uttp` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Dumping data for table `uttp`
+--
+
+INSERT INTO `uttp` (`id_uttp`, `id_user`, `tanggal_penginputan`, `no_registrasi`, `nama_usaha`, `jenis_alat`, `nama_alat`, `merk_type`, `nomor_seri`, `jumlah_alat`, `alat_penguji`, `ctt`, `spt_keperluan`, `tanggal_selesai`, `terapan`, `keterangan`, `sertifikat_path`, `created_at`, `updated_at`) VALUES
+(1, 1, '2024-06-17', '2039112', 'Ternak udang', 'MAS-TE', '100', 'Udang Gacor', '21203', NULL, 'AT', 'SL6', '20122321', '2024-06-17', NULL, 'Tera Ulang', 'sertifikat/rDzhIpMnmCscPQ7anVx7CUGFxRfFnCcnvdd5ExKC.pdf', '2025-06-09 21:19:30', '2025-06-09 21:19:30'),
+(2, 3, '2024-06-17', '2039111', 'PT Pertamina', 'VOL-PUBBM', '10000', 'Bensin', '21203', NULL, 'BUS', 'J4', '20122321', '2024-06-17', NULL, 'Tera', 'sertifikat/TgyOYVHa8rCN7UW2LqJSNEFqCMnFo5M98dCKrtt3.pdf', '2025-06-09 23:38:18', '2025-06-09 23:38:18');
+
+--
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `barang`
+-- Indexes for table `barang`
 --
 ALTER TABLE `barang`
   ADD PRIMARY KEY (`id_barang`),
   ADD KEY `barang_id_index_kategori_foreign` (`id_index_kategori`);
 
 --
--- Indeks untuk tabel `barang_pelaporan`
+-- Indexes for table `barang_pelaporan`
 --
 ALTER TABLE `barang_pelaporan`
   ADD PRIMARY KEY (`id_barang_pelaporan`),
   ADD KEY `barang_pelaporan_id_kategori_barang_pelaporan_foreign` (`id_kategori_barang_pelaporan`);
 
 --
--- Indeks untuk tabel `bentuk_pengelolaan_limbah`
+-- Indexes for table `bentuk_pengelolaan_limbah`
 --
 ALTER TABLE `bentuk_pengelolaan_limbah`
   ADD PRIMARY KEY (`id_bentuk`),
   ADD KEY `bentuk_pengelolaan_limbah_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `berita`
+-- Indexes for table `berita`
 --
 ALTER TABLE `berita`
   ADD PRIMARY KEY (`id_berita`),
   ADD KEY `berita_id_disdag_foreign` (`id_disdag`);
 
 --
--- Indeks untuk tabel `cache`
+-- Indexes for table `cache`
 --
 ALTER TABLE `cache`
   ADD PRIMARY KEY (`key`);
 
 --
--- Indeks untuk tabel `cache_locks`
+-- Indexes for table `cache_locks`
 --
 ALTER TABLE `cache_locks`
   ADD PRIMARY KEY (`key`);
 
 --
--- Indeks untuk tabel `data_alat_ukur`
+-- Indexes for table `data_alat_ukur`
 --
 ALTER TABLE `data_alat_ukur`
   ADD PRIMARY KEY (`id_data_alat`),
   ADD KEY `data_alat_ukur_id_uttp_foreign` (`id_uttp`);
 
 --
--- Indeks untuk tabel `data_ikm`
+-- Indexes for table `data_ikm`
 --
 ALTER TABLE `data_ikm`
   ADD PRIMARY KEY (`id_ikm`);
 
 --
--- Indeks untuk tabel `disdag`
+-- Indexes for table `disdag`
 --
 ALTER TABLE `disdag`
   ADD PRIMARY KEY (`id_disdag`),
@@ -1223,41 +1537,41 @@ ALTER TABLE `disdag`
   ADD UNIQUE KEY `disdag_email_unique` (`email`);
 
 --
--- Indeks untuk tabel `distributor`
+-- Indexes for table `distributor`
 --
 ALTER TABLE `distributor`
   ADD PRIMARY KEY (`id_distributor`),
   ADD KEY `distributor_id_user_foreign` (`id_user`);
 
 --
--- Indeks untuk tabel `document_user`
+-- Indexes for table `document_user`
 --
 ALTER TABLE `document_user`
   ADD PRIMARY KEY (`id_document`),
   ADD KEY `document_user_id_permohonan_foreign` (`id_permohonan`);
 
 --
--- Indeks untuk tabel `failed_jobs`
+-- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Indeks untuk tabel `faq`
+-- Indexes for table `faq`
 --
 ALTER TABLE `faq`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `form_permohonan`
+-- Indexes for table `form_permohonan`
 --
 ALTER TABLE `form_permohonan`
   ADD PRIMARY KEY (`id_permohonan`),
   ADD KEY `form_permohonan_id_user_foreign` (`id_user`);
 
 --
--- Indeks untuk tabel `forum_diskusi`
+-- Indexes for table `forum_diskusi`
 --
 ALTER TABLE `forum_diskusi`
   ADD PRIMARY KEY (`id_pengaduan`),
@@ -1265,7 +1579,7 @@ ALTER TABLE `forum_diskusi`
   ADD KEY `forum_diskusi_id_disdag_foreign` (`id_disdag`);
 
 --
--- Indeks untuk tabel `index_harga`
+-- Indexes for table `index_harga`
 --
 ALTER TABLE `index_harga`
   ADD PRIMARY KEY (`id_index`),
@@ -1273,141 +1587,148 @@ ALTER TABLE `index_harga`
   ADD KEY `index_harga_id_index_kategori_foreign` (`id_index_kategori`);
 
 --
--- Indeks untuk tabel `index_kategori`
+-- Indexes for table `index_kategori`
 --
 ALTER TABLE `index_kategori`
   ADD PRIMARY KEY (`id_index_kategori`);
 
 --
--- Indeks untuk tabel `jobs`
+-- Indexes for table `jobs`
 --
 ALTER TABLE `jobs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `jobs_queue_index` (`queue`);
 
 --
--- Indeks untuk tabel `job_batches`
+-- Indexes for table `job_batches`
 --
 ALTER TABLE `job_batches`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `karyawan`
+-- Indexes for table `karyawan`
 --
 ALTER TABLE `karyawan`
   ADD PRIMARY KEY (`id_karyawan`),
   ADD KEY `karyawan_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `kategori_barang_pelaporan`
+-- Indexes for table `kategori_barang_pelaporan`
 --
 ALTER TABLE `kategori_barang_pelaporan`
   ADD PRIMARY KEY (`id_kategori_barang_pelaporan`);
 
 --
--- Indeks untuk tabel `listrik`
+-- Indexes for table `listrik`
 --
 ALTER TABLE `listrik`
   ADD PRIMARY KEY (`id_listrik`),
   ADD KEY `listrik_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `mesin_produksi`
+-- Indexes for table `mesin_produksi`
 --
 ALTER TABLE `mesin_produksi`
   ADD PRIMARY KEY (`id_mesin`),
   ADD KEY `mesin_produksi_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `migrations`
+-- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indeks untuk tabel `modal`
+-- Indexes for table `modal`
 --
 ALTER TABLE `modal`
   ADD PRIMARY KEY (`id_modal`),
   ADD KEY `modal_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `password_resets`
+-- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indeks untuk tabel `pemakaian_bahan`
+-- Indexes for table `pemakaian_bahan`
 --
 ALTER TABLE `pemakaian_bahan`
   ADD PRIMARY KEY (`id_pemakaian_bahan`),
   ADD KEY `pemakaian_bahan_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `pendapatan`
+-- Indexes for table `pendapatan`
 --
 ALTER TABLE `pendapatan`
   ADD PRIMARY KEY (`id_pendapatan`),
   ADD KEY `pendapatan_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `pengeluaran`
+-- Indexes for table `pengaduan_distributors`
+--
+ALTER TABLE `pengaduan_distributors`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pengaduan_distributors_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `pengeluaran`
 --
 ALTER TABLE `pengeluaran`
   ADD PRIMARY KEY (`id_pengeluaran`),
   ADD KEY `pengeluaran_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `penggunaan_air`
+-- Indexes for table `penggunaan_air`
 --
 ALTER TABLE `penggunaan_air`
   ADD PRIMARY KEY (`id_air`),
   ADD KEY `penggunaan_air_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `penggunaan_bahan_bakar`
+-- Indexes for table `penggunaan_bahan_bakar`
 --
 ALTER TABLE `penggunaan_bahan_bakar`
   ADD PRIMARY KEY (`id_bahan_bakar`),
   ADD KEY `penggunaan_bahan_bakar_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `persediaan`
+-- Indexes for table `persediaan`
 --
 ALTER TABLE `persediaan`
   ADD PRIMARY KEY (`id_persediaan`),
   ADD KEY `persediaan_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `persentase_pemilik`
+-- Indexes for table `persentase_pemilik`
 --
 ALTER TABLE `persentase_pemilik`
   ADD PRIMARY KEY (`id_persentase`),
   ADD KEY `persentase_pemilik_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `produksi`
+-- Indexes for table `produksi`
 --
 ALTER TABLE `produksi`
   ADD PRIMARY KEY (`id_produksi`),
   ADD KEY `produksi_id_ikm_foreign` (`id_ikm`);
 
 --
--- Indeks untuk tabel `rencana_kebutuhan_distributor`
+-- Indexes for table `rencana_kebutuhan_distributor`
 --
 ALTER TABLE `rencana_kebutuhan_distributor`
   ADD PRIMARY KEY (`id_rancangan`),
   ADD KEY `rencana_kebutuhan_distributor_id_barang_pelaporan_foreign` (`id_barang_pelaporan`);
 
 --
--- Indeks untuk tabel `sertifikasi_halal`
+-- Indexes for table `sertifikasi_halal`
 --
 ALTER TABLE `sertifikasi_halal`
   ADD PRIMARY KEY (`id_halal`);
 
 --
--- Indeks untuk tabel `sessions`
+-- Indexes for table `sessions`
 --
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`id`),
@@ -1415,7 +1736,7 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
--- Indeks untuk tabel `stok_opname`
+-- Indexes for table `stok_opname`
 --
 ALTER TABLE `stok_opname`
   ADD PRIMARY KEY (`id_stok_opname`),
@@ -1423,21 +1744,21 @@ ALTER TABLE `stok_opname`
   ADD KEY `stok_opname_id_toko_foreign` (`id_toko`);
 
 --
--- Indeks untuk tabel `surat_keluar_metrologi`
+-- Indexes for table `surat_keluar_metrologi`
 --
 ALTER TABLE `surat_keluar_metrologi`
   ADD PRIMARY KEY (`id_surat_balasan`),
   ADD KEY `surat_keluar_metrologi_id_surat_foreign` (`id_surat`);
 
 --
--- Indeks untuk tabel `surat_metrologi`
+-- Indexes for table `surat_metrologi`
 --
 ALTER TABLE `surat_metrologi`
   ADD PRIMARY KEY (`id_surat`),
   ADD KEY `surat_metrologi_user_id_foreign` (`user_id`);
 
 --
--- Indeks untuk tabel `toko`
+-- Indexes for table `toko`
 --
 ALTER TABLE `toko`
   ADD PRIMARY KEY (`id_toko`),
@@ -1445,7 +1766,7 @@ ALTER TABLE `toko`
   ADD KEY `toko_id_distributor_foreign` (`id_distributor`);
 
 --
--- Indeks untuk tabel `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`),
@@ -1453,411 +1774,423 @@ ALTER TABLE `user`
   ADD UNIQUE KEY `user_email_unique` (`email`);
 
 --
--- Indeks untuk tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- Indeks untuk tabel `uttp`
+-- Indexes for table `uttp`
 --
 ALTER TABLE `uttp`
   ADD PRIMARY KEY (`id_uttp`),
   ADD KEY `uttp_id_user_foreign` (`id_user`);
 
 --
--- AUTO_INCREMENT untuk tabel yang dibuang
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT untuk tabel `barang`
+-- AUTO_INCREMENT for table `barang`
 --
 ALTER TABLE `barang`
   MODIFY `id_barang` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
--- AUTO_INCREMENT untuk tabel `barang_pelaporan`
+-- AUTO_INCREMENT for table `barang_pelaporan`
 --
 ALTER TABLE `barang_pelaporan`
   MODIFY `id_barang_pelaporan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `bentuk_pengelolaan_limbah`
+-- AUTO_INCREMENT for table `bentuk_pengelolaan_limbah`
 --
 ALTER TABLE `bentuk_pengelolaan_limbah`
-  MODIFY `id_bentuk` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_bentuk` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `berita`
+-- AUTO_INCREMENT for table `berita`
 --
 ALTER TABLE `berita`
-  MODIFY `id_berita` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_berita` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `data_alat_ukur`
+-- AUTO_INCREMENT for table `data_alat_ukur`
 --
 ALTER TABLE `data_alat_ukur`
-  MODIFY `id_data_alat` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_data_alat` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `data_ikm`
+-- AUTO_INCREMENT for table `data_ikm`
 --
 ALTER TABLE `data_ikm`
-  MODIFY `id_ikm` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_ikm` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `disdag`
+-- AUTO_INCREMENT for table `disdag`
 --
 ALTER TABLE `disdag`
   MODIFY `id_disdag` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `distributor`
+-- AUTO_INCREMENT for table `distributor`
 --
 ALTER TABLE `distributor`
-  MODIFY `id_distributor` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_distributor` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `document_user`
+-- AUTO_INCREMENT for table `document_user`
 --
 ALTER TABLE `document_user`
-  MODIFY `id_document` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_document` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT untuk tabel `failed_jobs`
+-- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `faq`
+-- AUTO_INCREMENT for table `faq`
 --
 ALTER TABLE `faq`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT untuk tabel `forum_diskusi`
+-- AUTO_INCREMENT for table `forum_diskusi`
 --
 ALTER TABLE `forum_diskusi`
-  MODIFY `id_pengaduan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pengaduan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `index_harga`
+-- AUTO_INCREMENT for table `index_harga`
 --
 ALTER TABLE `index_harga`
-  MODIFY `id_index` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+  MODIFY `id_index` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
 
 --
--- AUTO_INCREMENT untuk tabel `index_kategori`
+-- AUTO_INCREMENT for table `index_kategori`
 --
 ALTER TABLE `index_kategori`
   MODIFY `id_index_kategori` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
--- AUTO_INCREMENT untuk tabel `jobs`
+-- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `karyawan`
+-- AUTO_INCREMENT for table `karyawan`
 --
 ALTER TABLE `karyawan`
-  MODIFY `id_karyawan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_karyawan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `kategori_barang_pelaporan`
+-- AUTO_INCREMENT for table `kategori_barang_pelaporan`
 --
 ALTER TABLE `kategori_barang_pelaporan`
   MODIFY `id_kategori_barang_pelaporan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `listrik`
+-- AUTO_INCREMENT for table `listrik`
 --
 ALTER TABLE `listrik`
-  MODIFY `id_listrik` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_listrik` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `mesin_produksi`
+-- AUTO_INCREMENT for table `mesin_produksi`
 --
 ALTER TABLE `mesin_produksi`
-  MODIFY `id_mesin` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_mesin` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `migrations`
+-- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
--- AUTO_INCREMENT untuk tabel `modal`
+-- AUTO_INCREMENT for table `modal`
 --
 ALTER TABLE `modal`
-  MODIFY `id_modal` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_modal` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `pemakaian_bahan`
+-- AUTO_INCREMENT for table `pemakaian_bahan`
 --
 ALTER TABLE `pemakaian_bahan`
-  MODIFY `id_pemakaian_bahan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pemakaian_bahan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `pendapatan`
+-- AUTO_INCREMENT for table `pendapatan`
 --
 ALTER TABLE `pendapatan`
-  MODIFY `id_pendapatan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pendapatan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `pengeluaran`
+-- AUTO_INCREMENT for table `pengaduan_distributors`
+--
+ALTER TABLE `pengaduan_distributors`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pengeluaran`
 --
 ALTER TABLE `pengeluaran`
-  MODIFY `id_pengeluaran` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pengeluaran` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `penggunaan_air`
+-- AUTO_INCREMENT for table `penggunaan_air`
 --
 ALTER TABLE `penggunaan_air`
-  MODIFY `id_air` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_air` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `penggunaan_bahan_bakar`
+-- AUTO_INCREMENT for table `penggunaan_bahan_bakar`
 --
 ALTER TABLE `penggunaan_bahan_bakar`
-  MODIFY `id_bahan_bakar` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_bahan_bakar` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `persediaan`
+-- AUTO_INCREMENT for table `persediaan`
 --
 ALTER TABLE `persediaan`
-  MODIFY `id_persediaan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_persediaan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `persentase_pemilik`
+-- AUTO_INCREMENT for table `persentase_pemilik`
 --
 ALTER TABLE `persentase_pemilik`
-  MODIFY `id_persentase` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_persentase` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `produksi`
+-- AUTO_INCREMENT for table `produksi`
 --
 ALTER TABLE `produksi`
-  MODIFY `id_produksi` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_produksi` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `rencana_kebutuhan_distributor`
+-- AUTO_INCREMENT for table `rencana_kebutuhan_distributor`
 --
 ALTER TABLE `rencana_kebutuhan_distributor`
-  MODIFY `id_rancangan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_rancangan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `sertifikasi_halal`
+-- AUTO_INCREMENT for table `sertifikasi_halal`
 --
 ALTER TABLE `sertifikasi_halal`
-  MODIFY `id_halal` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_halal` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `stok_opname`
+-- AUTO_INCREMENT for table `stok_opname`
 --
 ALTER TABLE `stok_opname`
-  MODIFY `id_stok_opname` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_stok_opname` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT untuk tabel `toko`
+-- AUTO_INCREMENT for table `toko`
 --
 ALTER TABLE `toko`
-  MODIFY `id_toko` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_toko` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT untuk tabel `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_user` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT untuk tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT untuk tabel `uttp`
+-- AUTO_INCREMENT for table `uttp`
 --
 ALTER TABLE `uttp`
-  MODIFY `id_uttp` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_uttp` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `barang`
+-- Constraints for table `barang`
 --
 ALTER TABLE `barang`
   ADD CONSTRAINT `barang_id_index_kategori_foreign` FOREIGN KEY (`id_index_kategori`) REFERENCES `index_kategori` (`id_index_kategori`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `barang_pelaporan`
+-- Constraints for table `barang_pelaporan`
 --
 ALTER TABLE `barang_pelaporan`
   ADD CONSTRAINT `barang_pelaporan_id_kategori_barang_pelaporan_foreign` FOREIGN KEY (`id_kategori_barang_pelaporan`) REFERENCES `kategori_barang_pelaporan` (`id_kategori_barang_pelaporan`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `bentuk_pengelolaan_limbah`
+-- Constraints for table `bentuk_pengelolaan_limbah`
 --
 ALTER TABLE `bentuk_pengelolaan_limbah`
   ADD CONSTRAINT `bentuk_pengelolaan_limbah_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `berita`
+-- Constraints for table `berita`
 --
 ALTER TABLE `berita`
   ADD CONSTRAINT `berita_id_disdag_foreign` FOREIGN KEY (`id_disdag`) REFERENCES `disdag` (`id_disdag`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `data_alat_ukur`
+-- Constraints for table `data_alat_ukur`
 --
 ALTER TABLE `data_alat_ukur`
   ADD CONSTRAINT `data_alat_ukur_id_uttp_foreign` FOREIGN KEY (`id_uttp`) REFERENCES `uttp` (`id_uttp`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `distributor`
+-- Constraints for table `distributor`
 --
 ALTER TABLE `distributor`
   ADD CONSTRAINT `distributor_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `document_user`
+-- Constraints for table `document_user`
 --
 ALTER TABLE `document_user`
   ADD CONSTRAINT `document_user_id_permohonan_foreign` FOREIGN KEY (`id_permohonan`) REFERENCES `form_permohonan` (`id_permohonan`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `form_permohonan`
+-- Constraints for table `form_permohonan`
 --
 ALTER TABLE `form_permohonan`
   ADD CONSTRAINT `form_permohonan_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `forum_diskusi`
+-- Constraints for table `forum_diskusi`
 --
 ALTER TABLE `forum_diskusi`
   ADD CONSTRAINT `forum_diskusi_id_disdag_foreign` FOREIGN KEY (`id_disdag`) REFERENCES `disdag` (`id_disdag`) ON DELETE CASCADE,
   ADD CONSTRAINT `forum_diskusi_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `index_harga`
+-- Constraints for table `index_harga`
 --
 ALTER TABLE `index_harga`
   ADD CONSTRAINT `index_harga_id_barang_foreign` FOREIGN KEY (`id_barang`) REFERENCES `barang` (`id_barang`) ON DELETE CASCADE,
   ADD CONSTRAINT `index_harga_id_index_kategori_foreign` FOREIGN KEY (`id_index_kategori`) REFERENCES `index_kategori` (`id_index_kategori`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `karyawan`
+-- Constraints for table `karyawan`
 --
 ALTER TABLE `karyawan`
   ADD CONSTRAINT `karyawan_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `listrik`
+-- Constraints for table `listrik`
 --
 ALTER TABLE `listrik`
   ADD CONSTRAINT `listrik_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `mesin_produksi`
+-- Constraints for table `mesin_produksi`
 --
 ALTER TABLE `mesin_produksi`
   ADD CONSTRAINT `mesin_produksi_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `modal`
+-- Constraints for table `modal`
 --
 ALTER TABLE `modal`
   ADD CONSTRAINT `modal_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `pemakaian_bahan`
+-- Constraints for table `pemakaian_bahan`
 --
 ALTER TABLE `pemakaian_bahan`
   ADD CONSTRAINT `pemakaian_bahan_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `pendapatan`
+-- Constraints for table `pendapatan`
 --
 ALTER TABLE `pendapatan`
   ADD CONSTRAINT `pendapatan_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `pengeluaran`
+-- Constraints for table `pengaduan_distributors`
+--
+ALTER TABLE `pengaduan_distributors`
+  ADD CONSTRAINT `pengaduan_distributors_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `pengeluaran`
 --
 ALTER TABLE `pengeluaran`
   ADD CONSTRAINT `pengeluaran_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `penggunaan_air`
+-- Constraints for table `penggunaan_air`
 --
 ALTER TABLE `penggunaan_air`
   ADD CONSTRAINT `penggunaan_air_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `penggunaan_bahan_bakar`
+-- Constraints for table `penggunaan_bahan_bakar`
 --
 ALTER TABLE `penggunaan_bahan_bakar`
   ADD CONSTRAINT `penggunaan_bahan_bakar_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `persediaan`
+-- Constraints for table `persediaan`
 --
 ALTER TABLE `persediaan`
   ADD CONSTRAINT `persediaan_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `persentase_pemilik`
+-- Constraints for table `persentase_pemilik`
 --
 ALTER TABLE `persentase_pemilik`
   ADD CONSTRAINT `persentase_pemilik_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `produksi`
+-- Constraints for table `produksi`
 --
 ALTER TABLE `produksi`
   ADD CONSTRAINT `produksi_id_ikm_foreign` FOREIGN KEY (`id_ikm`) REFERENCES `data_ikm` (`id_ikm`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `rencana_kebutuhan_distributor`
+-- Constraints for table `rencana_kebutuhan_distributor`
 --
 ALTER TABLE `rencana_kebutuhan_distributor`
   ADD CONSTRAINT `rencana_kebutuhan_distributor_id_barang_pelaporan_foreign` FOREIGN KEY (`id_barang_pelaporan`) REFERENCES `barang_pelaporan` (`id_barang_pelaporan`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `stok_opname`
+-- Constraints for table `stok_opname`
 --
 ALTER TABLE `stok_opname`
   ADD CONSTRAINT `stok_opname_id_distributor_foreign` FOREIGN KEY (`id_distributor`) REFERENCES `distributor` (`id_distributor`) ON DELETE CASCADE,
   ADD CONSTRAINT `stok_opname_id_toko_foreign` FOREIGN KEY (`id_toko`) REFERENCES `toko` (`id_toko`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `surat_keluar_metrologi`
+-- Constraints for table `surat_keluar_metrologi`
 --
 ALTER TABLE `surat_keluar_metrologi`
   ADD CONSTRAINT `surat_keluar_metrologi_id_surat_foreign` FOREIGN KEY (`id_surat`) REFERENCES `surat_metrologi` (`id_surat`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `surat_metrologi`
+-- Constraints for table `surat_metrologi`
 --
 ALTER TABLE `surat_metrologi`
   ADD CONSTRAINT `surat_metrologi_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `toko`
+-- Constraints for table `toko`
 --
 ALTER TABLE `toko`
   ADD CONSTRAINT `toko_id_distributor_foreign` FOREIGN KEY (`id_distributor`) REFERENCES `distributor` (`id_distributor`) ON DELETE CASCADE,
   ADD CONSTRAINT `toko_id_rancangan_foreign` FOREIGN KEY (`id_rancangan`) REFERENCES `rencana_kebutuhan_distributor` (`id_rancangan`) ON DELETE CASCADE;
 
 --
--- Ketidakleluasaan untuk tabel `uttp`
+-- Constraints for table `uttp`
 --
 ALTER TABLE `uttp`
   ADD CONSTRAINT `uttp_id_user_foreign` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE;
