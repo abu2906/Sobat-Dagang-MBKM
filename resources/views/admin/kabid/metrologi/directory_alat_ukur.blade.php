@@ -83,10 +83,13 @@ use App\Helpers\StatusHelper;
                         {{ optional($data)->tanggal_exp ? \Carbon\Carbon::parse($data->tanggal_exp)->format('d F Y') : '-' }}
                     </td>
                     <td class="px-5 py-3 text-center border-b">
+                        @php
+                            $currentStatus = \Carbon\Carbon::parse($data->tanggal_exp)->isPast() ? 'Kadaluarsa' : 'Valid';
+                        @endphp
                         <span class="
                             font-semibold
-                            {{ $data->status === 'Valid' ? 'text-green-600' : ($data->status === 'Kadaluarsa' ? 'text-red-600' : 'text-gray-500') }}">
-                            {{ $data->status === 'Valid' ? 'Valid' : StatusHelper::formatStatus($data->status) }}
+                            {{ $currentStatus === 'Valid' ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $currentStatus === 'Valid' ? 'Valid' : StatusHelper::formatStatus($currentStatus) }}
                         </span>
                     </td>
                     <td class="px-5 py-3 text-center border-b">
