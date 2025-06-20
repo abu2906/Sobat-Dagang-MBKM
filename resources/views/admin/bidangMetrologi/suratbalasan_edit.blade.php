@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
 <!-- Add SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
 
 <style>
     .ck-editor__editable_inline {
@@ -77,6 +78,12 @@
 
 <script>
     let editorInstance;
+
+    CKEDITOR.replace('editor', {
+        height: 300,
+        contentsCss: '/css/app.css',
+        bodyClass: 'form-control'
+    });
 
     function validateNomorSuratBalasan(input) {
         const nomorSurat = input.value.trim();

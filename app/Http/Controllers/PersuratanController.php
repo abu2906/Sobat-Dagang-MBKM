@@ -90,7 +90,7 @@ class PersuratanController extends Controller
 
     public function createSuratBalasan(Request $request, $id)
     {
-        set_time_limit(300); // Tambah waktu jadi 2 menit
+        set_time_limit(300);
         $id_surat_masuk = str_replace('_', '/', $id);
 
         // Validasi input

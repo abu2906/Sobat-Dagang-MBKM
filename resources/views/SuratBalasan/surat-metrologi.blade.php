@@ -125,6 +125,15 @@
         .judul p {
             margin-top: -10px;
         }
+
+        .isi_surat ol, .isi_surat ul {
+            margin-left: 20px;
+            padding-left: 15px;
+        }
+
+        .isi_surat li {
+            margin-bottom: 6px;
+        }
     </style>
 </head>
 
