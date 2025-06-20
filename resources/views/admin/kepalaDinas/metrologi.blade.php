@@ -133,7 +133,7 @@
                                 @endif
 
                                 <!-- TOMBOL PREVIEW -->
-                                <button onclick="openPreview('{{ asset('storage/' . $surat->path_dokumen) }}')"
+                                <button onclick="window.open('{{ asset('storage/' . $surat->path_dokumen) }}', '_blank')"
                                     class="text-[#0c3252] hover:scale-105 transition duration-200 inline-flex items-center justify-center" 
                                     title="Lihat Surat">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
