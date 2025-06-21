@@ -118,7 +118,7 @@
                                         <td class="px-2 py-2 text-center border-b sm:px-4 sm:py-3">
                                             <div class="flex flex-col items-center justify-center gap-2 sm:flex-row">
                                                 <button
-                                                    onclick="handleViewDocument('{{ asset('storage/' . $item->dokumen) }}', 'Surat Permohonan')"
+                                                    onclick="window.open('{{ asset('storage/' . $item->dokumen) }}', '_blank')"
                                                     class="w-full sm:w-auto px-3 py-1 text-xs sm:text-sm text-[#1e3a8a] border border-[#1e3a8a] rounded-full hover:bg-[#1e3a8a] hover:text-white transition-colors">
                                                     Lihat Surat
                                                 </button>
@@ -127,6 +127,8 @@
                                                     <button
                                                         onclick="handleViewDocument('{{ asset('storage/' . $item->suratBalasan->path_dokumen) }}', 'Surat Balasan')"
                                                         class="w-full px-3 py-1 text-xs text-green-700 transition-colors border border-green-700 rounded-full sm:w-auto sm:text-sm hover:bg-green-700 hover:text-white">
+                                                        onclick="window.open('{{ asset('storage/' . $item->suratBalasan->path_dokumen) }}', '_blank')"
+                                                        class="w-full sm:w-auto px-3 py-1 text-xs sm:text-sm text-green-700 border border-green-700 rounded-full hover:bg-green-700 hover:text-white transition-colors">
                                                         Lihat Balasan
                                                     </button>
                                                 @endif
@@ -362,14 +364,7 @@
         });
 
         function handleViewDocument(url, title) {
-            // Check if screen width is mobile (less than 640px)
-            if (window.innerWidth < 640) {
-                // For mobile, open in new page
-                window.open(url, '_blank');
-            } else {
-                // For desktop, show in modal
-                toggleModal(true, url, title);
-            }
+            window.open(url, '_blank');
         }
     </script>
 @endsection

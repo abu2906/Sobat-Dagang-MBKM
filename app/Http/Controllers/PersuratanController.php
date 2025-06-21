@@ -112,10 +112,8 @@ class PersuratanController extends Controller
                 ->withErrors(['id_surat_balasan' => 'Nomor surat balasan ini sudah digunakan. Silakan gunakan nomor surat yang berbeda.']);
         }
 
-        // Cek apakah ini adalah draft
         $isDraft = $request->input('action') === 'draft';
 
-        // Simpan lampiran jika ada
         $lampiranPath = '-';
         if ($request->hasFile('lampiran')) {
             $lampiranPath = $request->file('lampiran')->store('lampiran_surat', 'public');

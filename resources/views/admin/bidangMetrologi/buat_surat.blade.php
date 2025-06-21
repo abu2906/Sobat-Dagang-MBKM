@@ -80,6 +80,12 @@
 <script>
     let editorInstance;
 
+    CKEDITOR.replace('editor', {
+        height: 300,
+        contentsCss: '/css/app.css',
+        bodyClass: 'form-control'
+    });
+
     function validatePenerima(input) {
         const penerima = input.value.trim();
         const errorElement = document.getElementById('penerima-error');
