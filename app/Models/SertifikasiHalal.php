@@ -13,39 +13,25 @@ class SertifikasiHalal extends Model
 
     protected $primaryKey = 'id_halal';
 
-    // Jika primaryKey bukan auto increment dan bertipe string, tambahkan property ini:
-    // public $incrementing = false;
-    // protected $keyType = 'string';
-
     protected $fillable = [
-        'id_user',
-        'id_ikm',
+        'id_user',                      
+        'id_ikm',                       
         'nama_usaha',
         'alamat',
         'no_sertifikasi_halal',
         'tanggal_sah',
         'tanggal_exp',
         'sertifikat',
-        'status',
+        'status',                      
+
+        'umur_sertifikat_teks',
+        'klasifikasi_risiko',
+        'rekomendasi_tindakan',
+        'sisa_berlaku_teks',
     ];
 
-    // Kolom tanggal agar otomatis diparse ke Carbon instance
-    protected $dates = [
-        'tanggal_sah',
-        'tanggal_exp',
-        'created_at',
-        'updated_at',
+    protected $casts = [
+        'tanggal_sah' => 'date',
+        'tanggal_exp' => 'date',
     ];
-
-    // Jika kamu ingin menambahkan relasi (misal ke User atau IKM), kamu bisa tambah seperti ini:
-
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class, 'id_user');
-    // }
-
-    // public function ikm()
-    // {
-    //     return $this->belongsTo(Ikm::class, 'id_ikm');
-    // }
 }

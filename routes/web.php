@@ -95,7 +95,7 @@ Route::middleware(['auth.role:user'])->group(function () {
     Route::get('/user/profil', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/forgotpass', [authController::class, 'showForgotPassword'])->name('forgotpass');
     Route::get('/resetpass', [authController::class, 'showChangePassword'])->name('resetpass');
-    Route::get('/verify-old-password', [LupaPasswordController::class, 'showVerifyForm'])->name('password.verifyOldForm'); 
+    Route::get('/verify-old-password', [LupaPasswordController::class, 'showVerifyForm'])->name('password.verifyOldForm');
     Route::post('/verify-old-password', [LupaPasswordController::class, 'checkOldPassword'])->name('password.checkOld');
     Route::get('/new-password', [LupaPasswordController::class, 'resetPass'])->name('password.resetPass');
     Route::post('/new-password', [LupaPasswordController::class, 'updateNewPassword'])->name('password.updateNew');
@@ -178,7 +178,7 @@ Route::middleware(['check.role:admin_perdagangan'])->group(function () {
 
 //Admin Industri
 Route::middleware(['check.role:admin_industri'])->group(function () {
-     // Dashboard
+    // Dashboard
     Route::get('/admin/industri', [AdminIndustriController::class, 'showDashboard'])->name('dashboard.industri');
     Route::get('/admin/surat-industri', [AdminIndustriController::class, 'kelolaSuratt'])->name('kelolaSurat.industri');
     Route::get('/admin/detail-surat/{id_permohonan}', [AdminIndustriController::class, 'detailSuratt'])
@@ -192,7 +192,7 @@ Route::middleware(['check.role:admin_industri'])->group(function () {
         ->name('dokumen.viewi');
     Route::put('/admin/industri/sertifikat-halal/{halal}', [HalalController::class, 'update'])->name('admin.industri.halal.update');
     Route::get('/admin/industri/sertifikat-halal', [HalalController::class, 'index'])->name('admin.industri.halal');
-    Route::post('/admin/industri/sertifikat-halal/store', [HalalController::class, 'store'])->name('admin.industri.halal.store');
+    Route::post('/admin/industri/sertifikat-halal', [HalalController::class, 'store'])->name('admin.industri.halal.store');
     Route::put('/admin/industri/sertifikat-halal/{id}/edit', [HalalController::class, 'edit'])->name('admin.industri.halal.edit');
     Route::delete('/admin/industri/sertifikat-halal/{id}', [HalalController::class, 'destroy'])->name('admin.industri.halal.destroy');
 
@@ -262,7 +262,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/kelola-berita', [BeritaController::class, 'tambahberita'])->name('tambah.berita');
     Route::put('/admin/{id_berita}', [BeritaController::class, 'update'])->name('berita.update');
     Route::delete('/admin/{id_berita}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');   
+    Route::get('/berita/{id}/edit', [homeController::class, 'edit'])->name('berita.edit');
     #Kelola FAQ
     Route::get('/admin/kelola-faq', [FAQController::class, 'index'])->name('faq-controller');
     Route::post('/admin/faq/store', [FAQController::class, 'store'])->name('faq-store');
@@ -274,7 +274,7 @@ Route::middleware(['check.role:master_admin'])->group(function () {
     Route::post('/admin/manajemen-pengguna', [UserManagementController::class, 'store'])->name('manajemen.pengguna.store');
     Route::get('/admin/manajemen-pengguna/{id}/edit', [UserManagementController::class, 'edit'])->name('manajemen.pengguna.edit');
     Route::put('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'update'])->name('manajemen.pengguna.update');
-    Route::delete('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'destroy'])->name('manajemen.pengguna.destroy'); 
+    Route::delete('/admin/manajemen-pengguna/{id}', [UserManagementController::class, 'destroy'])->name('manajemen.pengguna.destroy');
     // Manajement admin
     Route::get('/admin/manajemen-admin', [AdminManagementController::class, 'index'])->name('manajemen.admin');
     Route::get('/admin/manajemen-admin/tambah', [AdminManagementController::class, 'create'])->name('manajemen.admin.create');

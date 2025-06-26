@@ -2,159 +2,139 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SertifikasiHalal;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Response;
+use App\Models\SertifikasiHalal;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class HalalController extends Controller
 {
-        
-    public function index(Request $request)
+    public function index()
     {
-        $data = SertifikasiHalal::orderBy('tanggal_sah', 'desc')->get()->map(function ($item) {
-            return [
-                'id_halal' => $item->id_halal,
-                'nama_usaha' => $item->nama_usaha,
-                'no_sertifikasi_halal' => $item->no_sertifikasi_halal,
-                'tanggal_sah' => $item->tanggal_sah
-                    ? Carbon::parse($item->tanggal_sah)->format('Y-m-d')
-                    : null,
-                'tanggal_exp' => $item->tanggal_exp
-                    ? Carbon::parse($item->tanggal_exp)->format('Y-m-d')
-                    : null,
-
-                'tanggal_sah_formatted' => $item->tanggal_sah
-                    ? Carbon::parse($item->tanggal_sah)->translatedFormat('d F Y')
-                    : '-',
-                'tanggal_exp_formatted' => $item->tanggal_exp
-                    ? Carbon::parse($item->tanggal_exp)->translatedFormat('d F Y')
-                    : '-',
-
-                'alamat' => $item->alamat,
-                'status' => $item->status,  
-                'sertifikat' => $item->sertifikat,
-            ];
-        });
-
-       
-        $query = SertifikasiHalal::query();
-
-        if ($searchTerm = request('search')) {
-            $search = strtolower(trim($searchTerm));
-
-            $query->where(function ($q) use ($search) {
-                $q->whereRaw('LOWER(nama_usaha) LIKE ?', ["%$search%"])
-                    ->orWhereRaw('LOWER(no_sertifikasi_halal) LIKE ?', ["%$search%"])
-                    ->orWhereRaw('LOWER(alamat) LIKE ?', ["%$search%"])
-                    ->orWhereRaw('DATE_FORMAT(tanggal_sah, "%d-%m-%Y") LIKE ?', ["%$search%"])
-                    ->orWhereRaw('DATE_FORMAT(tanggal_exp, "%d-%m-%Y") LIKE ?', ["%$search%"]);
-            });
-        }
-
-        $items = $query->orderBy('created_at', 'desc')->get();
-
-        return view('admin.bidangIndustri.halal',[
-            'data' => $data,
-            'items' => $items,
-           
-        ]);
+        $items = SertifikasiHalal::latest()->get();
+        return view('admin.bidangIndustri.halal', compact('items'));
     }
-
 
     public function store(Request $request)
     {
-        try {
-            $rules =[
-                'nama_usaha'            => 'required|string|max:255',
-                'no_sertifikasi_halal'  => 'nullable|string|max:255',
-                'tanggal_sah'           => 'required|date',
-                'tanggal_exp'           => 'required|date|after_or_equal:tanggal_sah',
-                'alamat'                => 'required|string',
-                'status'                => 'required|string|in:Berlaku,Perlu Pembaruan',
-                'sertifikat'            => 'required|file|mimes:pdf|max:512',
-            ];
+        $validatedData = $request->validate([
+            'nama_usaha' => 'required|string|max:255',
+            'no_sertifikasi_halal' => 'nullable|string|max:255',
+            'tanggal_sah' => 'required|date',
+            'tanggal_exp' => 'required|date|after_or_equal:tanggal_sah',
+            'alamat' => 'required|string',
+            'sertifikat' => 'required|file|mimes:pdf|max:2048',
+            'form_type' => 'required|string',
+        ]);
 
-            $messages = [ 'status' => 'Status sertifikat wajib diisi.',
-                    'sertifikat.required' => 'File sertifikat wajib diunggah.',
-                    'sertifikat.mimes' => 'File sertifikat harus berformat pdf.',
-                    'sertifikat.max' => 'File sertifikat tidak boleh lebih dari 512 kilobyte.',
-                ];
+        // 1. Panggil API sistem pakar
+        $hasilAnalisis = $this->getExpertSystemAnalysis(
+            $validatedData['tanggal_sah'],
+            $validatedData['tanggal_exp']
+        );
 
-            $validated = $request->validate($rules, $messages);
+        // 2. Gabungkan form + hasil API
+        $dataToCreate = array_merge($validatedData, $hasilAnalisis);
+        $dataToCreate['status'] = $hasilAnalisis['status_sistem'];
+        unset($dataToCreate['status_sistem']);
 
-        
-            if ($request->hasFile('sertifikat')) {
-                $file = $request->file('sertifikat');
-                $fileName = time() . '' . preg_replace('/\s+/', '', $file->getClientOriginalName());
-                $filePath = $file->storeAs('sertifikat_halal', $fileName, 'public');
-                $validated['sertifikat'] = $filePath;
-            }
+        // 3. Simpan file
+        $filePath = $request->file('sertifikat')->store('sertifikat-halal', 'public');
+        $dataToCreate['sertifikat'] = $filePath;
 
-            SertifikasiHalal::create($validated);
+        SertifikasiHalal::create($dataToCreate);
 
-            return redirect()->route('admin.industri.halal')->with('success', 'Data sertifikasi halal berhasil ditambahkan.');
-
-        } catch (\Exception $e) {
-            Log::error("Gagal menambahkan sertifikasi halal: " . $e->getMessage());
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->with('openAdd', true);
-        }
+        return redirect()->route('admin.industri.halal')->with('success', 'Data berhasil ditambahkan.');
     }
-    
 
     public function update(Request $request, $id)
     {
-        $item = SertifikasiHalal::findOrFail($id);
+        $halal = SertifikasiHalal::findOrFail($id);
 
-        $validated = $request->validate([
-            'nama_usaha'            => 'required|string|max:255',
-            'no_sertifikasi_halal'  => 'nullable|string|max:255',
-            'tanggal_sah'           => 'required|date',
-            'tanggal_exp'           => 'required|date|after_or_equal:tanggal_sah',
-            'alamat'                => 'required|string',
-            'status'                => 'required|string|in:Berlaku,Perlu Pembaruan',
-            'sertifikat'            => 'nullable|file|mimes:pdf|max:512',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'nama_usaha' => 'required|string|max:255',
+                'no_sertifikasi_halal' => 'nullable|string|max:255',
+                'tanggal_sah' => 'required|date',
+                'tanggal_exp' => 'required|date|after_or_equal:tanggal_sah',
+                'alamat' => 'required|string',
+                'sertifikat' => 'nullable|file|mimes:pdf|max:512',
+                'status' => 'required|string',
+                'form_type' => 'required|string',
+            ]);
+        } catch (ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('form_type', 'edit')
+                ->with('old_input', $request->all());
+        }
+
+        $hasilAnalisis = $this->getExpertSystemAnalysis(
+            $validatedData['tanggal_sah'],
+            $validatedData['tanggal_exp']
+        );
 
         if ($request->hasFile('sertifikat')) {
-            if ($item->sertifikat && Storage::disk('public')->exists($item->sertifikat)) {
-                Storage::disk('public')->delete($item->sertifikat);
-            }
-
-            $file = $request->file('sertifikat');
-            $fileName = time() . '' . preg_replace('/\s+/', '', $file->getClientOriginalName());
-            $filePath = $file->storeAs('sertifikat_halal', $fileName, 'public');
-            $validated['sertifikat'] = $filePath;
+            Storage::disk('public')->delete($halal->sertifikat);
+            $filePath = $request->file('sertifikat')->store('sertifikat-halal', 'public');
+            $validatedData['sertifikat'] = $filePath;
         }
 
-        $item->update($validated);
+        $dataToUpdate = array_merge($validatedData, $hasilAnalisis);
+        $dataToUpdate['status'] = $hasilAnalisis['status_sistem'];
+        unset($dataToUpdate['status_sistem']);
 
-        if ($request->ajax()) {
-            return response()->json(['message' => 'Data berhasil diupdate.'], 200);
-        }
+        $halal->update($dataToUpdate);
 
-        return redirect()->route('halal')
-            ->with('success', 'Data berhasil diupdate.');
+        return redirect()->route('admin.industri.halal')
+            ->with('success', 'Data berhasil diupdate dengan analisis risiko terbaru.');
     }
 
-
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        $item = SertifikasiHalal::findOrFail($id);
+        $halal = SertifikasiHalal::findOrFail($id);
+        Storage::disk('public')->delete($halal->sertifikat);
+        $halal->delete();
 
-        if ($item->sertifikat && Storage::disk('public')->exists($item->sertifikat)) {
-            Storage::disk('public')->delete($item->sertifikat);
+        return redirect()->route('admin.industri.halal')->with('success', 'Data berhasil dihapus.');
+    }
+
+    private function getExpertSystemAnalysis($tanggalSah, $tanggalExp)
+    {
+        $apiUrl = env('EXPERT_SYSTEM_API_URL', 'http://localhost:8001/api/cek-sertifikat');
+
+        try {
+            $response = Http::timeout(10)->post($apiUrl, [
+                'tanggal_diterbitkan' => $tanggalSah,
+                'berlaku_sampai' => $tanggalExp,
+            ]);
+
+            //  dd($response->json(), $response->status(), $response->body());
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                return [
+                    'status_sistem'         => $data['status_sistem'] ?? 'Tidak diketahui',
+                    'umur_sertifikat_teks'  => $data['umur_sertifikat_teks'] ?? '-',
+                    'klasifikasi_risiko'    => $data['klasifikasi'] ?? '-',
+                    'rekomendasi_tindakan'  => $data['rekomendasi'] ?? '-',
+                    'sisa_berlaku_teks'     => $data['sisa_berlaku_teks'] ?? '-',
+                ];
+            }
+        } catch (\Exception $e) {
+            Log::error('Gagal menghubungi API Sistem Pakar: ' . $e->getMessage());
         }
 
-        $item->delete();
-
-        if ($request->ajax()) {
-            return response()->json(['message' => 'Data berhasil dihapus.'], 200);
-        }
-
-        return redirect()->route('halal')
-            ->with('success', 'Data berhasil dihapus.');
+        return [
+            'status_sistem'         => 'Gagal Analisis',
+            'umur_sertifikat_teks'  => '-',
+            'klasifikasi_risiko'    => '-',
+            'rekomendasi_tindakan'  => 'Tidak tersedia',
+            'sisa_berlaku_teks'     => '-',
+        ];
     }
 }
