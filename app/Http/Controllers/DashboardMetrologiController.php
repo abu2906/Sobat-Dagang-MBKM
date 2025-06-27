@@ -395,18 +395,18 @@ class DashboardMetrologiController extends Controller
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
                 $q->where('id_surat', 'like', "%{$searchTerm}%")
-                  ->orWhere('alamat_alat', 'like', "%{$searchTerm}%")
-                  ->orWhere('jenis_surat', 'like', "%{$searchTerm}%")
-                  ->orWhereHas('user', function($q) use ($searchTerm) {
-                      $q->where('nama', 'like', "%{$searchTerm}%")
+                ->orWhere('alamat_alat', 'like', "%{$searchTerm}%")
+                ->orWhere('jenis_surat', 'like', "%{$searchTerm}%")
+                ->orWhereHas('user', function($q) use ($searchTerm) {
+                    $q->where('nama', 'like', "%{$searchTerm}%")
                         ->orWhere('id_user', 'like', "%{$searchTerm}%");
-                  });
+                });
             });
         }
 
         $suratList = $query->orderBy('created_at', 'desc')
-                          ->paginate(10)
-                          ->withQueryString();
+                        ->paginate(10)
+                        ->withQueryString();
 
         $dataJumlahSurat = $this->getJumlahSurat();
         $dataSuratAdmin = $this->getJumlahSuratAdmin();
@@ -437,18 +437,18 @@ class DashboardMetrologiController extends Controller
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
                 $q->where('id_surat', 'like', "%{$searchTerm}%")
-                  ->orWhere('alamat_alat', 'like', "%{$searchTerm}%")
-                  ->orWhere('jenis_surat', 'like', "%{$searchTerm}%")
-                  ->orWhereHas('user', function($q) use ($searchTerm) {
-                      $q->where('nama', 'like', "%{$searchTerm}%")
+                ->orWhere('alamat_alat', 'like', "%{$searchTerm}%")
+                ->orWhere('jenis_surat', 'like', "%{$searchTerm}%")
+                ->orWhereHas('user', function($q) use ($searchTerm) {
+                    $q->where('nama', 'like', "%{$searchTerm}%")
                         ->orWhere('id_user', 'like', "%{$searchTerm}%");
-                  });
+                });
             });
         }
 
         $suratList = $query->orderBy('created_at', 'desc')
-                          ->paginate(10)
-                          ->withQueryString();
+                        ->paginate(10)
+                        ->withQueryString();
             
         $dataJumlahSurat = $this->getJumlahSurat();
 
@@ -496,17 +496,17 @@ class DashboardMetrologiController extends Controller
             $searchTerm = $request->search;
             $query->whereHas('uttp', function($q) use ($searchTerm) {
                 $q->where('no_registrasi', 'like', "%{$searchTerm}%")
-                  ->orWhere('nama_usaha', 'like', "%{$searchTerm}%")
-                  ->orWhere('jenis_alat', 'like', "%{$searchTerm}%")
-                  ->orWhere('nama_alat', 'like', "%{$searchTerm}%")
-                  ->orWhere('merk_type', 'like', "%{$searchTerm}%")
-                  ->orWhere('nomor_seri', 'like', "%{$searchTerm}%");
+                ->orWhere('nama_usaha', 'like', "%{$searchTerm}%")
+                ->orWhere('jenis_alat', 'like', "%{$searchTerm}%")
+                ->orWhere('nama_alat', 'like', "%{$searchTerm}%")
+                ->orWhere('merk_type', 'like', "%{$searchTerm}%")
+                ->orWhere('nomor_seri', 'like', "%{$searchTerm}%");
             });
         }
 
         $alatUkur = $query->orderBy('created_at', 'desc')
-                         ->paginate(10)
-                         ->withQueryString();
+                        ->paginate(10)
+                        ->withQueryString();
 
         return view('admin.kabid.metrologi.directory_alat_ukur', compact('alatUkur'));
     }
@@ -526,20 +526,20 @@ class DashboardMetrologiController extends Controller
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
                 $q->where('surat_keluar_metrologi.id_surat_balasan', 'like', "%{$searchTerm}%")
-                  ->orWhereHas('suratMetrologi', function($q) use ($searchTerm) {
-                      $q->where('alamat_alat', 'like', "%{$searchTerm}%")
+                ->orWhereHas('suratMetrologi', function($q) use ($searchTerm) {
+                    $q->where('alamat_alat', 'like', "%{$searchTerm}%")
                         ->orWhere('jenis_surat', 'like', "%{$searchTerm}%")
                         ->orWhereHas('user', function($q) use ($searchTerm) {
                             $q->where('nama', 'like', "%{$searchTerm}%")
-                              ->orWhere('id_user', 'like', "%{$searchTerm}%");
+                            ->orWhere('id_user', 'like', "%{$searchTerm}%");
                         });
-                  });
+                });
             });
         }
 
         $suratList = $query->orderBy('created_at', 'desc')
-                          ->paginate(10)
-                          ->withQueryString();
+                        ->paginate(10)
+                        ->withQueryString();
 
         // Get statistics for letters visible to kepala dinas
         $totalSurat = suratBalasan::where('status_kepalaBidang', 'Disetujui')->count();
