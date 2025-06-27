@@ -9,11 +9,6 @@ use App\Models\Barang;
 
 class ApiPerdaganganController extends ApiController
 {
-    public function index(Request $request)
-    {
-        $this->validateAppKey($request);
-        return response()->json(['message' => 'API aktif']);
-    }
 
     public function getKategori(Request $request)
     {
