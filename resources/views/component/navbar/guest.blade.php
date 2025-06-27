@@ -8,7 +8,7 @@
 
     <div class="burger-menu md:hidden">
         <button id="burger-btn" class="focus:outline-none">
-            <svg class="w-6 h-6  text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M4 6h16M4 12h16M4 18h16"></path>
@@ -16,8 +16,8 @@
         </button>
     </div>
     </div>
-    <div id="nav-menu" class="navbar-center hidden md:flex flex-col md:flex-row md:items-center md:space-x-6">
-        <ul class="nav-menu flex flex-col md:flex-row">
+    <div id="nav-menu" class="flex-col hidden navbar-center md:flex md:flex-row md:items-center md:space-x-6">
+        <ul class="flex flex-col nav-menu md:flex-row">
             <li><a href="https://peraturan.bpk.go.id/"><strong>REGULASI</strong></a></li>
             <li><a href="{{ route('about') }}"><strong>ABOUT US</strong></a></li>
 
@@ -44,8 +44,8 @@
                     <li class="dropdown-submenu">
                         <a href="#"><strong>METROLOGI</strong></a>
                         <ul class="submenu">
-                            <li><a href="{{ route('administrasi-metrologi') }}"><strong>Permohonan Tera/Teraulang</strong></a></li>
-                            <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Milik Saya</strong></a></li>
+                            <li><a href="{{ route('administrasi-metrologi') }}"><strong>Permohonan Tera/Tera ulang</strong></a></li>
+                            <li><a href="{{ route('directory-metrologi') }}"><strong>Alat Ukur Valid</strong></a></li>
                         </ul>
                     </li>
                 </ul>
@@ -53,13 +53,13 @@
 
             <li><a href="{{ route('pelaporan') }}"><strong>PELAPORAN</strong></a></li>
             <li><a href="{{ route('faq') }}" id="open-chat"><strong>FAQ</strong></a></li>
-            <div class="navbar-right mt-4 md:mt-0 md:hidden">
+            <div class="mt-4 navbar-right md:mt-0 md:hidden">
                 <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
             </div>
         </ul>
     </div>
 
-    <div class="navbar-right hidden md:block">
+    <div class="hidden navbar-right md:block">
         <a href="{{ route('login') }}" class="btn-login"><strong>Login</strong></a>
     </div>
 </nav>

@@ -17,7 +17,7 @@ use App\Helpers\StatusHelper;
             <form action="{{ route('management-uttp-metrologi') }}" method="GET"
                 class="flex flex-col flex-1 w-full gap-3 md:flex-row md:items-center md:gap-4">
                 <select name="status" id="statusFilter"
-                    class="w-full px-4 py-2 text-sm border rounded-full shadow md:w-auto bg-white text-gray-700"
+                    class="w-full px-4 py-2 text-sm text-gray-700 bg-white border rounded-full shadow md:w-auto"
                     onchange="this.form.submit()">
                     <option value="">Semua</option>
                     <option value="Valid" {{ request('status') === 'Valid' ? 'selected' : '' }}>Valid</option>
@@ -26,7 +26,7 @@ use App\Helpers\StatusHelper;
 
                 <div class="relative flex-1">
                     <input type="text" name="search" placeholder="Cari" value="{{ request('search') }}"
-                        class="w-full py-2 pl-10 pr-4 text-sm border rounded-full shadow bg-white text-gray-700" />
+                        class="w-full py-2 pl-10 pr-4 text-sm text-gray-700 bg-white border rounded-full shadow" />
                     <button type="submit"
                         class="absolute top-0 right-0 h-full px-4 text-gray-400 hover:text-gray-600">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -63,7 +63,7 @@ use App\Helpers\StatusHelper;
 
 
     <!-- Modal Popup Review -->
-    <div id="popupDetailAlat" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-26 bg-black bg-opacity-50 sm:justify-center">
+    <div id="popupDetailAlat" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 ml-26 sm:justify-center">
         <div class="bg-white p-4 sm:p-6 rounded-xl w-[90%] sm:w-[85%] md:w-[70%] lg:w-[50%] max-w-[600px] relative shadow-xl mx-auto ml-[calc(16.666667%+1rem)] sm:ml-[calc(16.666667%+2rem)] mr-[calc(1%+1rem)] sm:mr-[calc(1%+2rem)]">
             <button onclick="togglePopup(false)" class="absolute text-xl font-bold text-gray-500 top-2 right-3 hover:text-black">&times;</button>
             <h2 class="mb-4 text-base font-bold text-center sm:text-lg">
@@ -79,7 +79,7 @@ use App\Helpers\StatusHelper;
     </div>
 
     <!-- Modal Tambah Alat Ukur -->
-    <div id="modalTambahAlat" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 ml-26 bg-black bg-opacity-50 sm:justify-center">
+    <div id="modalTambahAlat" class="fixed inset-0 z-50 flex items-center justify-center hidden px-4 bg-black bg-opacity-50 ml-26 sm:justify-center">
         <div class="fixed inset-0 bg-black bg-opacity-30"></div>
         <div class="relative bg-white w-[90%] sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] rounded-lg shadow-lg p-4 sm:p-6 my-4 sm:my-8 max-h-[90vh] overflow-y-auto mx-auto ml-[calc(16.666667%+1rem)] sm:ml-[calc(16.666667%+2rem)] mr-[calc(1%+1rem)] sm:mr-[calc(1%+2rem)]">
             <div class="flex items-center justify-between pb-3 mb-4 border-b">
@@ -234,10 +234,13 @@ use App\Helpers\StatusHelper;
                         {{ optional($data)->tanggal_exp ? \Carbon\Carbon::parse($data->tanggal_exp)->format('d F Y') : '-' }}
                     </td>
                     <td class="px-5 py-3 text-center border-b">
+                        @php
+                            $currentStatus = \Carbon\Carbon::parse($data->tanggal_exp)->isPast() ? 'Kadaluarsa' : 'Valid';
+                        @endphp
                         <span class="
                             font-semibold
-                            {{ $data->status === 'Valid' ? 'text-green-600' : ($data->status === 'Kadaluarsa' ? 'text-red-600' : 'text-gray-500') }}">
-                            {{ $data->status === 'Valid' ? 'Valid' : StatusHelper::formatStatus($data->status) }}
+                            {{ $currentStatus === 'Valid' ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $currentStatus === 'Valid' ? 'Valid' : StatusHelper::formatStatus($currentStatus) }}
                         </span>
                     </td>
                     <td class="px-5 py-3 text-center border-b">
@@ -320,7 +323,7 @@ use App\Helpers\StatusHelper;
                 <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Tanggal Mulai</td><td class="px-2 py-2 sm:px-4">: ${data.tanggal_penginputan ?? '-'}</td></tr>
                 <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Tanggal Selesai</td><td class="px-2 py-2 sm:px-4">: ${data.tanggal_selesai ?? '-'}</td></tr>
                 <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Keterangan</td><td class="px-2 py-2 sm:px-4">: ${data.keterangan ?? '-'}</td></tr>
-                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Sertifikat</td><td class="px-2 py-2 sm:px-4">: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
+                <tr class="hover:bg-gray-50"><td class="px-2 py-2 font-semibold sm:px-4">Sertifikat</td><td class="px-2 py-2 sm:px-4">: ${data.sertifikat_path ? <a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a> : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
             `;
 
             togglePopup(true);
@@ -390,7 +393,7 @@ use App\Helpers\StatusHelper;
                         // Tampilkan pesan error untuk setiap field
                         if (data.errors) {
                             Object.keys(data.errors).forEach(field => {
-                                const input = form.querySelector(`[name="${field}"]`);
+                                const input = form.querySelector([name="${field}"]);
                                 if (input) {
                                     const errorDiv = document.createElement('div');
                                     errorDiv.className = 'error-message text-red-500 text-sm mt-1';
@@ -524,7 +527,7 @@ use App\Helpers\StatusHelper;
         // Handle user selection
         if (data.id_user) {
             // Fetch user data and set it in Select2
-            fetch(`/admin/users/search?search=${data.id_user}`)
+            fetch(/admin/users/search?search=${data.id_user})
                 .then(response => response.json())
                 .then(users => {
                     if (users.length > 0) {
@@ -569,7 +572,7 @@ use App\Helpers\StatusHelper;
             if (userId) {
                 // Jika dari persuratan, set user dan disable select
                 if (fromPersuratan === 'true') {
-                    fetch(`/admin/users/search?search=${userId}`)
+                    fetch(/admin/users/search?search=${userId})
                         .then(response => response.json())
                         .then(users => {
                             if (users.length > 0) {
@@ -582,7 +585,7 @@ use App\Helpers\StatusHelper;
                         .catch(error => console.error('Error loading user:', error));
                 } else {
                     // Jika bukan dari persuratan, set user tapi tetap bisa diubah
-                    fetch(`/admin/users/search?search=${userId}`)
+                    fetch(/admin/users/search?search=${userId})
                         .then(response => response.json())
                         .then(users => {
                             if (users.length > 0) {
