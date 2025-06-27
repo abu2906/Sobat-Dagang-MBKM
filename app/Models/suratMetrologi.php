@@ -11,7 +11,7 @@ class suratMetrologi extends Model
 {
     use HasFactory;
 
-     protected $table = 'surat_metrologi';
+    protected $table = 'surat_metrologi';
     protected $primaryKey = 'id_surat';
     public $incrementing = false;
     protected $keyType = 'string';

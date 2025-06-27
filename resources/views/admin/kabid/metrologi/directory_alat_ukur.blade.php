@@ -83,10 +83,13 @@ use App\Helpers\StatusHelper;
                         {{ optional($data)->tanggal_exp ? \Carbon\Carbon::parse($data->tanggal_exp)->format('d F Y') : '-' }}
                     </td>
                     <td class="px-5 py-3 text-center border-b">
+                        @php
+                            $currentStatus = \Carbon\Carbon::parse($data->tanggal_exp)->isPast() ? 'Kadaluarsa' : 'Valid';
+                        @endphp
                         <span class="
                             font-semibold
-                            {{ $data->status === 'Valid' ? 'text-green-600' : ($data->status === 'Kadaluarsa' ? 'text-red-600' : 'text-gray-500') }}">
-                            {{ $data->status === 'Valid' ? 'Valid' : StatusHelper::formatStatus($data->status) }}
+                            {{ $currentStatus === 'Valid' ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $currentStatus === 'Valid' ? 'Valid' : StatusHelper::formatStatus($currentStatus) }}
                         </span>
                     </td>
                     <td class="px-5 py-3 text-center border-b">
@@ -182,7 +185,7 @@ use App\Helpers\StatusHelper;
                 <tr><td class="py-1 font-semibold">Tanggal Mulai</td><td>: ${data.tanggal_penginputan ?? '-'}</td></tr>
                 <tr><td class="py-1 font-semibold">Tanggal Selesai</td><td>: ${data.tanggal_selesai ?? '-'}</td></tr>
                 <tr><td class="py-1 font-semibold">Keterangan</td><td>: ${data.keterangan ?? '-'}</td></tr>
-                <tr><td class="py-1 font-semibold">Sertifikat</td><td>: ${data.sertifikat_path ? `<a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a>` : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
+                <tr><td class="py-1 font-semibold">Sertifikat</td><td>: ${data.sertifikat_path ? <a href="/storage/${data.sertifikat_path}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat Sertifikat</a> : '<span class="text-gray-500">Belum di upload oleh admin</span>'}</td></tr>
             `;
 
             togglePopup(true);
@@ -193,4 +196,4 @@ use App\Helpers\StatusHelper;
         });
     }
 </script>
-@endsection 
+@endsection

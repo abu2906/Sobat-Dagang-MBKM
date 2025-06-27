@@ -254,5 +254,5 @@ function confirmAction(action, id) {
 }
 </style>
 
-@endsection 
+@endsection
 
