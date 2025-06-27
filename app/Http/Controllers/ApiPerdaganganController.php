@@ -1,15 +1,45 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
 
-class ApiPerdaganganController extends ApiController{
-    
+use Illuminate\Http\Request;
+use App\Models\IndexHarga;
+use App\Models\IndexKategori;
+use App\Models\Barang;
+
+class ApiPerdaganganController extends ApiController
+{
     public function index(Request $request)
     {
-        //ini adalah contoh penggunaan method validateAppKey dari ApiController
         $this->validateAppKey($request);
+        return response()->json(['message' => 'API aktif']);
+    }
 
-        return response()->json();
+    public function getKategori(Request $request)
+    {
+        $this->validateAppKey($request);
+        $data = IndexKategori::all();
+        return response()->json(['data' => $data]);
+    }
+
+    public function getBarang(Request $request)
+    {
+        $this->validateAppKey($request);
+        $data = Barang::with('kategori')->get();
+        return response()->json(['data' => $data]);
+    }
+
+    public function getIndeksHarga(Request $request)
+    {
+        $this->validateAppKey($request);
+        $data = IndexHarga::with(['barang', 'kategori'])->orderBy('tanggal', 'desc')->get();
+        return response()->json(['data' => $data]);
+    }
+
+    public function getLokasi(Request $request)
+    {
+        $this->validateAppKey($request);
+        $data = IndexHarga::select('lokasi')->distinct()->get();
+        return response()->json(['data' => $data]);
     }
 }
