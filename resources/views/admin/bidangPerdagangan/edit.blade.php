@@ -11,7 +11,7 @@
             </span>
     </a>
 </div>
-<div class="max-w-3xl p-6 mx-auto bg-white rounded shadow  mt-6">
+<div class="max-w-3xl p-6 mx-auto mt-6 bg-white rounded shadow">
     <h2 class="mb-4 text-2xl font-bold text-center">Cari Laporan Pupuk</h2>
 
     {{-- Info Toko --}}
@@ -105,7 +105,7 @@
             @if(count($stokAwal) > 0)
                 <div class="flex justify-center">
                     <div class="w-full max-w-3xl overflow-auto">
-                        <table class="w-full border border-collapse border-gray-300 shadow table-auto overflow-hidden rounded-2xl">
+                        <table class="w-full overflow-hidden border border-collapse border-gray-300 shadow table-auto rounded-2xl">
                             <thead class="bg-[#083458] text-white">
                                 <tr>
                                     <th class="px-4 py-2 border rounded-tl-xl">Tanggal</th>
@@ -150,7 +150,7 @@
             @if($penyaluran)
                 <div class="flex justify-center">
                     <div class="w-full max-w-3xl overflow-auto">
-                    <table class="w-full border border-collapse border-gray-300 shadow table-auto overflow-hidden rounded-2xl">
+                    <table class="w-full overflow-hidden border border-collapse border-gray-300 shadow table-auto rounded-2xl">
                         <thead class="bg-[#083458] text-white">
                             <tr>
                                 <th class="px-4 py-2 border rounded-tl-xl">Tanggal</th>
@@ -189,8 +189,8 @@
 </div>
 
 <!-- Modal Edit Stok Awal -->
-<div id="modalStokAwal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-start justify-start pt-32">
-    <div class="p-6 bg-white rounded shadow w-full max-w-md ml-24 mr-6 sm:ml-24 sm:mr-6 md:ml-auto md:mr-auto">
+<div id="modalStokAwal" class="fixed inset-0 z-50 flex items-start justify-start hidden pt-32 bg-black bg-opacity-50">
+    <div class="w-full max-w-md p-6 ml-24 mr-6 bg-white rounded shadow sm:ml-24 sm:mr-6 md:ml-auto md:mr-auto">
         <h2 class="mb-4 text-lg font-bold text-center">Edit Stok Awal</h2>
         <form id="formEditStokAwal" method="POST" action="{{ route('admin.updateStokAwal') }}">
             @csrf
@@ -214,8 +214,8 @@
 </div>
 
 <!-- Modal Edit Penyaluran -->
-<div id="modalEditPenyaluran" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-start justify-start pt-32">
-    <div class="p-6 bg-white rounded shadow w-full max-w-md ml-24 mr-6 sm:ml-24 sm:mr-6 md:ml-auto md:mr-auto">
+<div id="modalEditPenyaluran" class="fixed inset-0 z-50 flex items-start justify-start hidden pt-32 bg-black bg-opacity-50">
+    <div class="w-full max-w-md p-6 ml-24 mr-6 bg-white rounded shadow sm:ml-24 sm:mr-6 md:ml-auto md:mr-auto">
         <h2 class="mb-4 text-lg font-bold text-center">Edit Data Penyaluran</h2>
         <form action="{{ route('admin.updatePenyaluran') }}" method="POST">
             @csrf
