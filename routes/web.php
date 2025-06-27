@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Models\User;
 
+
 Route::get('/verifikasi-akun', function (Request $request) {
     $user = User::where('verifikasi_token', $request->token)->first();
 
