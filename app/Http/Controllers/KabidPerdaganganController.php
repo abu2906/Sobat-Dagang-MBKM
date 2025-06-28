@@ -225,7 +225,7 @@ class KabidPerdaganganController extends Controller
             'dataHarga' => $dataHarga,
             'topHargaNaik' => $topHargaNaik,
             'topHargaTurun' => $topHargaTurun,
-            'barChartData' => $barChartData,  
+            'barChartData' => $barChartData,
         ]);
     }
     public function distribusiPupuk(Request $request)

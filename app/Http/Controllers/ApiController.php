@@ -14,5 +14,4 @@ class ApiController extends Controller{
             abort(response()->json(['message' => 'Unauthorized.'], 401));
         }
     }
-
 }
