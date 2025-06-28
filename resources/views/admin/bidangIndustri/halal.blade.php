@@ -99,7 +99,7 @@
             } else {
                 item.status = 'Berlaku';
             }
-        },
+        },git
     
     
         // Fungsi untuk menghitung status secara otomatis
