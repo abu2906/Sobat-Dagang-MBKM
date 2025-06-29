@@ -74,17 +74,17 @@ class DataIkm extends Model
 
     public function produksi()
     {
-        return $this->hasMany(Produksi::class, 'id_ikm', 'id_ikm');
+        return $this->hasOne(Produksi::class, 'id_ikm', 'id_ikm');
     }
 
     public function persediaan()
     {
-        return $this->hasMany(Persediaan::class, 'id_ikm', 'id_ikm');
+        return $this->hasOne(Persediaan::class, 'id_ikm', 'id_ikm');
     }
 
     public function pendapatan()
     {
-        return $this->hasMany(Pendapatan::class, 'id_ikm', 'id_ikm');
+        return $this->hasOne(Pendapatan::class, 'id_ikm', 'id_ikm');
     }
 
     public function modal()
@@ -126,10 +126,7 @@ class DataIkm extends Model
             ($pengeluaran->lainnya ?? 0) +
             $this->penggunaanBahanBakar->sum('nilai_proses_produksi') +
             $this->penggunaanBahanBakar->sum('nilai_pembangkit_tenaga_listrik') +
-            ($listrik->nilai ?? 0) +
-            $this->persediaan->sum('awal') +
-            $this->persediaan->sum('akhir') +
-            $this->pendapatan->sum('nilai') +
+            ($listrik->nilai ?? 0) + ($persediaan->awal ?? 0) + ($persediaan->akhir?? 0)+
             $this->modal->sum('pembelian_penambahan_perbaikan') +
             $this->modal->sum('pengurangan_barang_modal') +
             $this->modal->sum('penyusutan_barang') +

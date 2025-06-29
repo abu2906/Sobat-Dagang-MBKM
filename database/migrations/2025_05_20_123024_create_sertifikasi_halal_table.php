@@ -8,8 +8,6 @@ return new class extends Migration {
     {
         Schema::create('sertifikasi_halal', function (Blueprint $table) {
             $table->id('id_halal');
-            $table->unsignedBigInteger('id_user')->nullable();
-            $table->unsignedBigInteger('id_ikm')->nullable();
             $table->string('nama_usaha');
             $table->text('alamat');
             $table->string('no_sertifikasi_halal');

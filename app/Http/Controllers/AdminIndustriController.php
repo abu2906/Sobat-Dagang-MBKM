@@ -472,8 +472,7 @@ class AdminIndustriController extends Controller
         ]);
 
         $persediaan = Persediaan::findOrFail($request->id);
-        $persediaan->update($request->only(['jenis_persediaan', 'awal', 'akhir']));
-
+        $persediaan->update($request->except('id'));
         return redirect()->back()->with('success', 'Data persediaan berhasil diperbarui.');
     }
 
